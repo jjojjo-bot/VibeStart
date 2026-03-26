@@ -1,65 +1,75 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
-export default function Home() {
+const STEPS = [
+  {
+    number: "1",
+    title: "간단한 질문",
+    description: "OS와 만들고 싶은 것만 알려주세요",
+  },
+  {
+    number: "2",
+    title: "맞춤 안내",
+    description: "필요한 도구를 단계별로 알려드려요",
+  },
+  {
+    number: "3",
+    title: "복사 & 붙여넣기",
+    description: "명령어를 복사해서 실행하면 끝!",
+  },
+];
+
+export default function LandingPage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="flex min-h-screen flex-col items-center justify-center px-6 py-24">
+      <div className="mx-auto max-w-2xl text-center">
+        {/* 히어로 */}
+        <div className="mb-4 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm text-primary">
+          바이브코딩의 첫걸음
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+          AI로 코딩하고 싶은데
+          <br />
+          <span className="text-primary">어디서부터 시작하지?</span>
+        </h1>
+        <p className="mt-6 text-lg leading-relaxed text-muted-foreground">
+          개발 도구 설치가 어려워서 포기하셨나요?
+          <br />
+          VibeStart가 하나하나 안내해드릴게요.
+        </p>
+
+        {/* CTA */}
+        <div className="mt-10">
+          <Link href="/onboarding">
+            <Button size="lg" className="h-12 px-8 text-base">
+              시작하기
+            </Button>
+          </Link>
         </div>
-      </main>
-    </div>
+
+        {/* 진행 방식 소개 */}
+        <div className="mt-20 grid gap-6 sm:grid-cols-3">
+          {STEPS.map((step) => (
+            <div
+              key={step.number}
+              className="rounded-xl border border-border/50 bg-card p-6 text-left"
+            >
+              <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary">
+                {step.number}
+              </div>
+              <h3 className="font-semibold">{step.title}</h3>
+              <p className="mt-1.5 text-sm text-muted-foreground">
+                {step.description}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        {/* 안심 메시지 */}
+        <p className="mt-16 text-sm text-muted-foreground/70">
+          코딩 경험이 전혀 없어도 괜찮아요. 천천히 따라오시면 됩니다.
+        </p>
+      </div>
+    </main>
   );
 }
