@@ -3,11 +3,11 @@
 import { useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { ScriptBlock } from "@/components/onboarding/script-block";
 import { getSetupSteps } from "@/lib/setup-steps";
 import {
   type OS,
-  type AITool,
   type Goal,
 } from "@/lib/onboarding";
 
@@ -16,11 +16,10 @@ function SetupContent() {
   const router = useRouter();
 
   const os = (searchParams.get("os") ?? "windows") as OS;
-  const tool = (searchParams.get("tool") ?? "claude-code") as AITool;
-  const goal = (searchParams.get("goal") ?? "website") as Goal;
+  const goal = (searchParams.get("goal") ?? "web-nextjs") as Goal;
   const projectName = searchParams.get("project") ?? "my-first-app";
 
-  const steps = getSetupSteps(os, tool, goal, projectName);
+  const steps = getSetupSteps(os, goal, projectName);
 
   const [completed, setCompleted] = useState<Set<string>>(new Set());
 
@@ -48,7 +47,7 @@ function SetupContent() {
       <div className="mx-auto max-w-2xl">
         <h1 className="mb-2 text-center text-3xl font-bold">단계별 설치</h1>
         <p className="mb-4 text-center text-muted-foreground">
-          각 단계의 명령어를 복사해서 터미널에 붙여넣으세요
+          각 단계의 명령어를 <strong className="text-foreground">복사 버튼</strong>으로 복사해서 터미널에 붙여넣으세요
         </p>
 
         {/* 진행 상황 */}
@@ -88,7 +87,14 @@ function SetupContent() {
                       {done ? "✓" : i + 1}
                     </div>
                     <div>
-                      <h3 className="font-semibold">{step.title}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold">{step.title}</h3>
+                        {step.environment && (
+                          <Badge variant="outline" className="text-xs font-normal">
+                            {step.environment}
+                          </Badge>
+                        )}
+                      </div>
                       <p className="text-sm text-muted-foreground">
                         {step.description}
                       </p>
@@ -107,6 +113,16 @@ function SetupContent() {
                 {active && step.script && (
                   <div className="mb-4">
                     <ScriptBlock script={step.script} />
+                  </div>
+                )}
+
+                {/* CLAUDE.md 파일 저장 안내 */}
+                {active && step.claudeMdContent && (
+                  <div className="mb-4">
+                    <div className="mb-2 rounded-lg bg-primary/5 p-3 text-sm text-muted-foreground">
+                      아래 내용을 복사해서 프로젝트 루트에 <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">CLAUDE.md</code> 파일로 저장해주세요.
+                    </div>
+                    <ScriptBlock script={step.claudeMdContent} />
                   </div>
                 )}
 
@@ -131,7 +147,10 @@ function SetupContent() {
             <Button
               size="lg"
               className="h-12 px-8 text-base"
-              onClick={() => router.push("/complete")}
+              onClick={() => {
+                const params = new URLSearchParams({ os, goal, project: projectName });
+                router.push(`/complete?${params.toString()}`);
+              }}
             >
               완료! 다음으로
             </Button>

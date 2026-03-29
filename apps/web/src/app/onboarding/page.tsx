@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { StepOS } from "@/components/onboarding/step-os";
-import { StepAITool } from "@/components/onboarding/step-ai-tool";
+import { StepAIIntro } from "@/components/onboarding/step-ai-intro";
 import { StepGoal } from "@/components/onboarding/step-goal";
 import { StepProjectName } from "@/components/onboarding/step-project-name";
 import {
@@ -28,7 +28,7 @@ export default function OnboardingPage() {
       case 0:
         return data.os !== null;
       case 1:
-        return data.aiTool !== null;
+        return true; // AI 소개 — 항상 진행 가능
       case 2:
         return data.goal !== null;
       case 3:
@@ -44,7 +44,6 @@ export default function OnboardingPage() {
     } else {
       const params = new URLSearchParams({
         os: data.os!,
-        tool: data.aiTool!,
         goal: data.goal!,
         project: data.projectName,
       });
@@ -81,12 +80,7 @@ export default function OnboardingPage() {
               onChange={(os) => setData({ ...data, os })}
             />
           )}
-          {step === 1 && (
-            <StepAITool
-              value={data.aiTool}
-              onChange={(aiTool) => setData({ ...data, aiTool })}
-            />
-          )}
+          {step === 1 && <StepAIIntro />}
           {step === 2 && (
             <StepGoal
               value={data.goal}

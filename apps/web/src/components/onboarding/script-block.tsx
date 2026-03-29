@@ -48,6 +48,9 @@ export function ScriptBlock({ script }: ScriptBlockProps) {
       >
         {copied ? "복사됨!" : "복사"}
       </Button>
+      <p className="mt-2 text-xs text-muted-foreground/50">
+        직접 타이핑하지 말고 반드시 복사 버튼을 눌러주세요
+      </p>
     </div>
   );
 }

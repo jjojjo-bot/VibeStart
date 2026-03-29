@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { OS, AITool, Goal } from "@/lib/onboarding";
+import type { OS, Goal } from "@/lib/onboarding";
 import { Suspense } from "react";
 
 interface PlanItem {
@@ -13,7 +13,7 @@ interface PlanItem {
   icon: string;
 }
 
-function getPlanItems(os: OS, tool: AITool, goal: Goal): PlanItem[] {
+function getPlanItems(os: OS, goal: Goal): PlanItem[] {
   const items: PlanItem[] = [];
 
   items.push({
@@ -22,57 +22,77 @@ function getPlanItems(os: OS, tool: AITool, goal: Goal): PlanItem[] {
     icon: "📦",
   });
 
+  // 프론트엔드가 있는 Goal은 Node.js 필요
+  if (goal === "web-nextjs" || goal === "web-python" || goal === "web-java" || goal === "not-sure") {
+    items.push({
+      name: "Node.js",
+      description: "자바스크립트 실행 환경 (프론트엔드용)",
+      icon: "🟢",
+    });
+  }
+
+  // 추가 런타임
+  if (goal === "web-python" || goal === "data-ai") {
+    items.push({
+      name: "Python",
+      description: goal === "data-ai" ? "프로그래밍 언어 실행 환경" : "백엔드 서버용 프로그래밍 언어",
+      icon: "🐍",
+    });
+  } else if (goal === "web-java") {
+    items.push({
+      name: "Java (JDK)",
+      description: "백엔드 서버용 프로그래밍 언어",
+      icon: "☕",
+    });
+  } else if (goal === "mobile") {
+    items.push({
+      name: "Flutter",
+      description: "안드로이드 + iOS 앱을 동시에 만드는 도구",
+      icon: "📱",
+    });
+  }
+
   items.push({
-    name: "Node.js",
-    description: "자바스크립트 실행 환경",
-    icon: "🟢",
+    name: "VS Code",
+    description: "코드 에디터",
+    icon: "💻",
   });
 
-  // AI 도구에 따라 에디터 결정
-  if (tool === "cursor") {
-    items.push({
-      name: "Cursor",
-      description: "AI가 내장된 코드 에디터",
-      icon: "✨",
-    });
-  } else if (tool === "windsurf") {
-    items.push({
-      name: "Windsurf",
-      description: "AI 기반 코드 에디터",
-      icon: "🏄",
-    });
-  } else {
-    // claude-code, copilot, undecided → VS Code
-    items.push({
-      name: "VS Code",
-      description: "코드 에디터",
-      icon: "💻",
-    });
-  }
-
-  // Claude Code 또는 undecided인 경우
-  if (tool === "claude-code" || tool === "undecided") {
-    items.push({
-      name: "Claude Code",
-      description: "AI 코딩 도우미 (터미널에서 실행)",
-      icon: "🤖",
-    });
-  }
-
-  // Copilot인 경우
-  if (tool === "copilot") {
-    items.push({
-      name: "GitHub Copilot 확장",
-      description: "VS Code AI 코딩 확장",
-      icon: "🤖",
-    });
-  }
+  items.push({
+    name: "Claude Code",
+    description: "AI 코딩 도우미 (CLI + VS Code 확장)",
+    icon: "🤖",
+  });
 
   // 프로젝트 생성
-  if (goal === "website" || goal === "not-sure") {
+  if (goal === "web-nextjs" || goal === "not-sure") {
     items.push({
       name: "Next.js 프로젝트 생성",
       description: "웹사이트 프로젝트를 자동으로 만들어요",
+      icon: "🚀",
+    });
+  } else if (goal === "web-python") {
+    items.push({
+      name: "Next.js + FastAPI 프로젝트 생성",
+      description: "프론트엔드(Next.js)와 백엔드(Python) 프로젝트를 각각 만들어요",
+      icon: "🚀",
+    });
+  } else if (goal === "web-java") {
+    items.push({
+      name: "Next.js + Spring Boot 프로젝트 생성",
+      description: "프론트엔드(Next.js)와 백엔드(Java) 프로젝트를 각각 만들어요",
+      icon: "🚀",
+    });
+  } else if (goal === "mobile") {
+    items.push({
+      name: "Flutter 프로젝트 생성",
+      description: "모바일 앱 프로젝트를 만들어요",
+      icon: "🚀",
+    });
+  } else if (goal === "data-ai") {
+    items.push({
+      name: "Jupyter Notebook 설정",
+      description: "데이터 분석 환경을 만들어요",
       icon: "🚀",
     });
   }
@@ -84,15 +104,13 @@ function PlanContent() {
   const searchParams = useSearchParams();
 
   const os = (searchParams.get("os") ?? "windows") as OS;
-  const tool = (searchParams.get("tool") ?? "claude-code") as AITool;
-  const goal = (searchParams.get("goal") ?? "website") as Goal;
+  const goal = (searchParams.get("goal") ?? "web-nextjs") as Goal;
   const projectName = searchParams.get("project") ?? "my-first-app";
 
-  const planItems = getPlanItems(os, tool, goal);
+  const planItems = getPlanItems(os, goal);
 
   const setupParams = new URLSearchParams({
     os,
-    tool,
     goal,
     project: projectName,
   });
