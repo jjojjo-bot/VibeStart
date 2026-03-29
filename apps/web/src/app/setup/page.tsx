@@ -6,11 +6,9 @@ import { Button } from "@/components/ui/button";
 import { ScriptBlock } from "@/components/onboarding/script-block";
 import { getSetupSteps } from "@/lib/setup-steps";
 import {
-  deriveExperienceLevel,
   type OS,
   type AITool,
   type Goal,
-  type Experience,
 } from "@/lib/onboarding";
 
 function SetupContent() {
@@ -20,11 +18,9 @@ function SetupContent() {
   const os = (searchParams.get("os") ?? "windows") as OS;
   const tool = (searchParams.get("tool") ?? "claude-code") as AITool;
   const goal = (searchParams.get("goal") ?? "website") as Goal;
-  const experiences = (searchParams.get("exp") ?? "none").split(",") as Experience[];
   const projectName = searchParams.get("project") ?? "my-first-app";
 
-  const level = deriveExperienceLevel(experiences);
-  const steps = getSetupSteps(os, tool, goal, level, projectName);
+  const steps = getSetupSteps(os, tool, goal, projectName);
 
   const [completed, setCompleted] = useState<Set<string>>(new Set());
 

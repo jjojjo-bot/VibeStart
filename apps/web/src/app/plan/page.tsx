@@ -94,7 +94,6 @@ function PlanContent() {
     os,
     tool,
     goal,
-    exp: searchParams.get("exp") ?? "none",
     project: projectName,
   });
 

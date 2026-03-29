@@ -1,4 +1,4 @@
-import type { OS, AITool, Goal, ExperienceLevel } from "./onboarding";
+import type { OS, AITool, Goal } from "./onboarding";
 
 export interface SetupStep {
   id: string;
@@ -15,9 +15,7 @@ function needsWSL(os: OS, tool: AITool): boolean {
 
 // ─── 공통 단계 ───
 
-function terminalGuide(os: OS, tool: AITool, level: ExperienceLevel): SetupStep | null {
-  if (level === "experienced") return null;
-
+function terminalGuide(os: OS, tool: AITool): SetupStep {
   let guide: string;
   if (needsWSL(os, tool)) {
     guide =
@@ -306,13 +304,11 @@ export function getSetupSteps(
   os: OS,
   tool: AITool,
   goal: Goal,
-  level: ExperienceLevel,
   projectName: string,
 ): SetupStep[] {
   const steps: SetupStep[] = [];
 
-  const terminal = terminalGuide(os, tool, level);
-  if (terminal) steps.push(terminal);
+  steps.push(terminalGuide(os, tool));
 
   if (needsWSL(os, tool)) {
     steps.push(wslInstallStep());

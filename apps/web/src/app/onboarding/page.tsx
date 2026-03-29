@@ -7,7 +7,6 @@ import { Progress } from "@/components/ui/progress";
 import { StepOS } from "@/components/onboarding/step-os";
 import { StepAITool } from "@/components/onboarding/step-ai-tool";
 import { StepGoal } from "@/components/onboarding/step-goal";
-import { StepExperience } from "@/components/onboarding/step-experience";
 import { StepProjectName } from "@/components/onboarding/step-project-name";
 import {
   OnboardingData,
@@ -33,8 +32,6 @@ export default function OnboardingPage() {
       case 2:
         return data.goal !== null;
       case 3:
-        return data.experiences.length > 0;
-      case 4:
         return data.projectName.length >= 2;
       default:
         return false;
@@ -49,7 +46,6 @@ export default function OnboardingPage() {
         os: data.os!,
         tool: data.aiTool!,
         goal: data.goal!,
-        exp: data.experiences.join(","),
         project: data.projectName,
       });
       router.push(`/plan?${params.toString()}`);
@@ -98,12 +94,6 @@ export default function OnboardingPage() {
             />
           )}
           {step === 3 && (
-            <StepExperience
-              value={data.experiences}
-              onChange={(experiences) => setData({ ...data, experiences })}
-            />
-          )}
-          {step === 4 && (
             <StepProjectName
               value={data.projectName}
               onChange={(projectName) => setData({ ...data, projectName })}
