@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 
 interface StepProjectNameProps {
@@ -7,21 +8,39 @@ interface StepProjectNameProps {
   onChange: (name: string) => void;
 }
 
+function sanitize(raw: string): string {
+  return raw
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-/, "");
+}
+
 export function StepProjectName({ value, onChange }: StepProjectNameProps) {
-  function handleChange(raw: string) {
-    const sanitized = raw
-      .toLowerCase()
-      .replace(/[^a-z0-9-]/g, "-")
-      .replace(/-+/g, "-")
-      .replace(/^-/, "");
+  const [raw, setRaw] = useState(value);
+  const [composing, setComposing] = useState(false);
+
+  function handleChange(input: string) {
+    setRaw(input);
+    if (!composing) {
+      onChange(sanitize(input));
+    }
+  }
+
+  function handleCompositionEnd(input: string) {
+    setComposing(false);
+    const sanitized = sanitize(input);
+    setRaw(sanitized);
     onChange(sanitized);
   }
 
   return (
     <div className="flex flex-col gap-4">
       <Input
-        value={value}
+        value={composing ? raw : value}
         onChange={(e) => handleChange(e.target.value)}
+        onCompositionStart={() => setComposing(true)}
+        onCompositionEnd={(e) => handleCompositionEnd(e.currentTarget.value)}
         placeholder="my-first-app"
         className="h-12 text-lg"
       />

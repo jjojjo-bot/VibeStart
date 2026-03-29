@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { incrementVisitors } from "@/lib/stats";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { StepOS } from "@/components/onboarding/step-os";
@@ -18,6 +19,14 @@ export default function OnboardingPage() {
   const router = useRouter();
   const [step, setStep] = useState(0);
   const [data, setData] = useState<OnboardingData>(INITIAL_ONBOARDING);
+  const counted = useRef(false);
+
+  useEffect(() => {
+    if (!counted.current) {
+      counted.current = true;
+      incrementVisitors();
+    }
+  }, []);
 
   const currentStep = ONBOARDING_STEPS[step];
   const totalSteps = ONBOARDING_STEPS.length;

@@ -1,9 +1,11 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import type { OS, Goal } from "@/lib/onboarding";
+import { incrementCompletions } from "@/lib/stats";
 import { Suspense } from "react";
 
 function getInstalledTools(goal: Goal): string[] {
@@ -126,10 +128,18 @@ function getGoalLabel(goal: Goal): string {
 
 function CompleteContent() {
   const searchParams = useSearchParams();
+  const counted = useRef(false);
 
   const os = (searchParams.get("os") ?? "windows") as OS;
   const goal = (searchParams.get("goal") ?? "web-nextjs") as Goal;
   const projectName = searchParams.get("project") ?? "my-first-app";
+
+  useEffect(() => {
+    if (!counted.current) {
+      counted.current = true;
+      incrementCompletions();
+    }
+  }, []);
 
   const tools = getInstalledTools(goal);
   const tree = getProjectTree(goal, projectName);
