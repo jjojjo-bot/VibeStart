@@ -9,7 +9,7 @@ import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
 const GA_ID = "G-PE36D37TDG";
-const siteUrl = "https://vibestart.dev";
+const siteUrl = "https://vibe-start-web.vercel.app";
 
 const LOCALE_MAP: Record<string, string> = {
   ko: "ko_KR",

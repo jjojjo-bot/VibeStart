@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 
-const siteUrl = "https://vibestart.dev";
+const siteUrl = "https://vibe-start-web.vercel.app";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   // 실제 콘텐츠 수정일 기준 (기능 업데이트 시 갱신)
