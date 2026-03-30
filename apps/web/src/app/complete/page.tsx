@@ -237,6 +237,21 @@ ___
 지금 어디서부터 시작하면 좋을까?`;
 }
 
+/** v0 ZIP을 풀어야 할 경로 (웹 프로젝트만 해당) */
+function getV0UnzipPath(goal: Goal, projectName: string): string | null {
+  switch (goal) {
+    case "web-nextjs":
+    case "not-sure":
+      return `~/${projectName}/`;
+    case "web-python":
+    case "web-java":
+      return `~/${projectName}/frontend/`;
+    case "mobile":
+    case "data-ai":
+      return null;
+  }
+}
+
 function getGoalLabel(goal: Goal): string {
   switch (goal) {
     case "web-nextjs":
@@ -310,6 +325,7 @@ function CompleteContent() {
   const goalLabel = getGoalLabel(goal);
   const firstPrompt = getFirstPromptExample(goal);
   const promptTemplate = getPromptTemplate(goal);
+  const v0Path = getV0UnzipPath(goal, projectName);
 
   return (
     <main className="min-h-screen px-6 py-16">
@@ -393,6 +409,35 @@ function CompleteContent() {
             잘못 말해도 괜찮아요. &ldquo;아까 거 취소하고 다시 해줘&rdquo;라고 하면 돼요.
           </p>
         </div>
+
+        {/* v0 디자인 팁 (웹 프로젝트만) */}
+        {v0Path && (
+          <div className="mb-6 rounded-xl border border-border/50 bg-card p-6">
+            <h2 className="mb-1 font-semibold">디자인이 막막하다면</h2>
+            <p className="mb-4 text-sm text-muted-foreground">
+              <a href="https://v0.dev" target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2">v0.dev</a>에서
+              AI로 화면을 먼저 만들고, 내 프로젝트에 가져올 수 있어요.
+            </p>
+            <ol className="flex flex-col gap-3 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">1</span>
+                <span>v0.dev에서 &ldquo;로그인 페이지 만들어줘&rdquo;처럼 원하는 화면을 설명하세요</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">2</span>
+                <span>마음에 들면 <strong>Download ZIP</strong>을 클릭해서 다운로드하세요</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">3</span>
+                <span>압축을 풀어서 <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">{v0Path}</code> 폴더에 넣으세요</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">4</span>
+                <span>Claude Code에 &ldquo;이 코드를 내 프로젝트에 적용해줘&rdquo;라고 말하세요</span>
+              </li>
+            </ol>
+          </div>
+        )}
 
         {/* Phase 2 예고 */}
         <div className="mb-10 rounded-xl bg-primary/5 border border-primary/20 p-6">
