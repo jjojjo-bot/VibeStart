@@ -201,6 +201,42 @@ function getFirstPromptExample(goal: Goal): string {
   }
 }
 
+function getPromptTemplate(goal: Goal): string {
+  if (goal === "data-ai") {
+    return `나는 ___를 분석하고 싶어.
+
+어떤 분석이냐면:
+___
+
+분석 결과를 쓸 상황:
+___
+
+처음에 꼭 분석해야 할 것 3가지:
+1. ___
+2. ___
+3. ___
+
+어디서부터 시작하면 좋을까?`;
+  }
+
+  const word = goal === "mobile" ? "앱" : "웹사이트";
+
+  return `나는 ___ ${word}를 만들고 싶어.
+
+어떤 서비스냐면:
+___
+
+주로 쓸 사람:
+___
+
+처음에 꼭 있어야 할 기능 3가지:
+1. ___
+2. ___
+3. ___
+
+지금 어디서부터 시작하면 좋을까?`;
+}
+
 function getGoalLabel(goal: Goal): string {
   switch (goal) {
     case "web-nextjs":
@@ -273,6 +309,7 @@ function CompleteContent() {
   const tree = getProjectTree(goal, projectName);
   const goalLabel = getGoalLabel(goal);
   const firstPrompt = getFirstPromptExample(goal);
+  const promptTemplate = getPromptTemplate(goal);
 
   return (
     <main className="min-h-screen px-6 py-16">
@@ -309,35 +346,52 @@ function CompleteContent() {
           </pre>
         </div>
 
-        {/* 첫 번째 프롬프트 예시 */}
+        {/* 첫 번째 프롬프트 */}
         <div className="mb-6 rounded-xl border border-border/50 bg-card p-6">
-          <h2 className="mb-1 font-semibold">첫 번째 프롬프트 예시</h2>
+          <h2 className="mb-1 font-semibold">Claude Code에 첫 마디 던지기</h2>
           <p className="mb-4 text-sm text-muted-foreground">
-            이렇게 시작해보세요. 전문 용어 없이 만들고 싶은 것을 설명하면 돼요.
+            한 번에 완벽하게 안 써도 괜찮아요. 대화를 이어가면서 고치면 돼요.
           </p>
-          <PromptCopyBlock text={firstPrompt} />
-          <p className="mt-3 text-xs text-muted-foreground/60">
-            위 내용을 그대로 복사해서 Claude Code에 붙여넣은 뒤, 내가 만들고 싶은 서비스에 맞게 수정해서 사용하세요.
-          </p>
+
+          {/* 빈칸 채우기 템플릿 */}
+          <div className="mb-4">
+            <p className="mb-2 text-xs font-medium text-muted-foreground">빈칸을 채워보세요</p>
+            <PromptCopyBlock text={promptTemplate} />
+          </div>
+
+          {/* 채워진 예시 */}
+          <div>
+            <p className="mb-2 text-xs font-medium text-muted-foreground">이런 식으로 쓰면 돼요</p>
+            <PromptCopyBlock text={firstPrompt} />
+          </div>
         </div>
 
-        {/* 지금 할 수 있는 것 */}
+        {/* 이어서 할 수 있는 대화 */}
         <div className="mb-6 rounded-xl border border-border/50 bg-card p-6">
-          <h2 className="mb-4 font-semibold">이제 이런 것들을 할 수 있어요</h2>
-          <ul className="flex flex-col gap-3 text-sm text-muted-foreground">
-            <li className="flex items-start gap-2">
-              <span className="text-success">✓</span>
-              VS Code를 열고 터미널에서 <code className="rounded bg-muted px-1.5 py-0.5 text-xs">claude</code>를 입력해서 AI 코딩 시작하기
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-success">✓</span>
-              위 프롬프트처럼 &quot;만들고 싶은 것 + 쓸 사람 + 핵심 기능&quot; 순서로 설명하기
-            </li>
-            <li className="flex items-start gap-2">
-              <span className="text-success">✓</span>
-              CLAUDE.md 파일 덕분에 AI가 아키텍처 규칙을 자동으로 따라요
-            </li>
-          </ul>
+          <h2 className="mb-1 font-semibold">그 다음엔 이렇게 이어가세요</h2>
+          <p className="mb-4 text-sm text-muted-foreground">
+            첫 프롬프트를 보내면 AI가 코드를 만들어줘요. 그 뒤로는 짧게 대화하듯 요청하면 돼요.
+          </p>
+          <div className="flex flex-col gap-2">
+            {[
+              "이거 실행해볼 수 있어?",
+              "글자 크기 좀 키워줘",
+              "배경색을 파란색으로 바꿔줘",
+              "로그인 기능 추가하고 싶어",
+              "에러가 나는데 도와줘 (에러 메시지 붙여넣기)",
+              "지금까지 만든 거 설명해줘",
+            ].map((example) => (
+              <div
+                key={example}
+                className="rounded-lg bg-muted/30 px-3 py-2 text-sm text-muted-foreground"
+              >
+                &ldquo;{example}&rdquo;
+              </div>
+            ))}
+          </div>
+          <p className="mt-3 text-xs text-muted-foreground/60">
+            잘못 말해도 괜찮아요. &ldquo;아까 거 취소하고 다시 해줘&rdquo;라고 하면 돼요.
+          </p>
         </div>
 
         {/* Phase 2 예고 */}
