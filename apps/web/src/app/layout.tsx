@@ -58,7 +58,7 @@ export default function RootLayout({
       lang="ko"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
-      <head>
+      <body className="min-h-full flex flex-col">
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
           strategy="afterInteractive"
@@ -71,8 +71,6 @@ export default function RootLayout({
             gtag('config', '${GA_ID}');
           `}
         </Script>
-      </head>
-      <body className="min-h-full flex flex-col">
         <Header />
         {children}
         <Footer />
