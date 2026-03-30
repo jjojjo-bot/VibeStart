@@ -36,7 +36,9 @@ export function StepProjectName({ value, onChange }: StepProjectNameProps) {
 
   return (
     <div className="flex flex-col gap-4">
+      <label htmlFor="project-name" className="sr-only">프로젝트 이름</label>
       <Input
+        id="project-name"
         value={composing ? raw : value}
         onChange={(e) => handleChange(e.target.value)}
         onCompositionStart={() => setComposing(true)}

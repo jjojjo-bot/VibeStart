@@ -116,7 +116,7 @@ function PlanContent() {
   });
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
+    <main id="main-content" className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
       <div className="mx-auto w-full max-w-lg">
         <h1 className="mb-2 text-center text-3xl font-bold">맞춤 설치 플랜</h1>
         <p className="mb-10 text-center text-muted-foreground">

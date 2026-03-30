@@ -40,7 +40,7 @@ export default function LandingPage() {
   const hasStats = stats && (stats.totalVisitors > 0 || stats.totalCompletions > 0);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-6 py-24">
+    <main id="main-content" className="flex min-h-screen flex-col items-center justify-center px-6 py-24">
       <div className="mx-auto max-w-2xl text-center">
         {/* 히어로 */}
         <div className="mb-4 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm text-primary">

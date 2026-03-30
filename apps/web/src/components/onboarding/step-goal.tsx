@@ -18,7 +18,7 @@ export function StepGoal({ value, onChange }: StepGoalProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-2 gap-4">
+      <div role="radiogroup" aria-label="목적 선택" className="grid grid-cols-2 gap-4">
         {GOAL_OPTIONS.map((option) => {
           const hasSubOptions = "subOptions" in option;
           const isSelected = hasSubOptions
@@ -28,6 +28,8 @@ export function StepGoal({ value, onChange }: StepGoalProps) {
           return (
             <button
               key={hasSubOptions ? "website" : option.value}
+              role="radio"
+              aria-checked={isSelected}
               onClick={() => {
                 if (hasSubOptions) {
                   setShowWebSub(true);

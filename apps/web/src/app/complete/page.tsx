@@ -328,7 +328,7 @@ function CompleteContent() {
   const v0Path = getV0UnzipPath(goal, projectName);
 
   return (
-    <main className="min-h-screen px-6 py-16">
+    <main id="main-content" className="min-h-screen px-6 py-16">
       <div className="mx-auto max-w-2xl">
         {/* 축하 */}
         <div className="mb-10 text-center">

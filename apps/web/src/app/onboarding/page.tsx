@@ -65,7 +65,7 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
+    <main id="main-content" className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
       <div className="mx-auto w-full max-w-lg">
         {/* 진행 바 */}
         <div className="mb-2 flex items-center justify-between text-sm text-muted-foreground">

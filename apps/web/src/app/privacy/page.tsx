@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main className="mx-auto max-w-2xl px-6 py-24">
+    <main id="main-content" className="mx-auto max-w-2xl px-6 py-24">
       <h1 className="text-3xl font-bold tracking-tight">개인정보처리방침</h1>
       <p className="mt-2 text-sm text-muted-foreground">
         시행일: 2026년 3월 30일

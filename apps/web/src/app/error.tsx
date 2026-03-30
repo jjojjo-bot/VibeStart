@@ -15,7 +15,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-6 py-24">
+    <main id="main-content" className="flex min-h-screen flex-col items-center justify-center px-6 py-24">
       <div className="mx-auto max-w-md text-center">
         <div className="text-6xl font-bold text-destructive/40">오류</div>
         <h1 className="mt-4 text-2xl font-bold tracking-tight">

@@ -88,7 +88,7 @@ function SetupContent() {
   const progressPercent = Math.round((completed.size / steps.length) * 100);
 
   return (
-    <main className="min-h-screen px-6 py-16">
+    <main id="main-content" className="min-h-screen px-6 py-16">
       <div className="mx-auto max-w-2xl">
         <h1 className="mb-2 text-center text-3xl font-bold">단계별 설치</h1>
         <p className="mb-6 text-center text-muted-foreground">
@@ -103,7 +103,7 @@ function SetupContent() {
               <span className="text-xs text-muted-foreground">진행률</span>
               <span className="text-xs font-medium text-foreground">{progressPercent}%</span>
             </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-muted/50">
+            <div className="h-2 w-full overflow-hidden rounded-full bg-muted/50" role="progressbar" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100} aria-label="설치 진행률">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-primary to-success transition-all duration-500 ease-out"
                 style={{ width: `${progressPercent}%` }}
@@ -201,6 +201,7 @@ function SetupContent() {
                 {active && step.whyNeeded && (
                   <div className="mb-3">
                     <button
+                      aria-expanded={openTroubleshooting.has(`why-${step.id}`)}
                       onClick={() => setOpenTroubleshooting((prev) => {
                         const key = `why-${step.id}`;
                         const next = new Set(prev);
@@ -260,6 +261,7 @@ function SetupContent() {
                 {active && step.troubleshooting && step.troubleshooting.length > 0 && (
                   <div className="mb-4">
                     <button
+                      aria-expanded={openTroubleshooting.has(step.id)}
                       onClick={() => setOpenTroubleshooting((prev) => {
                         const next = new Set(prev);
                         if (next.has(step.id)) next.delete(step.id);
