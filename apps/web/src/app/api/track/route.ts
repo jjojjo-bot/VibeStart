@@ -3,7 +3,19 @@ import { supabase } from "@/lib/supabase";
 
 const VALID_TYPES = new Set(["visitors", "completions"]);
 
+const BOT_PATTERN = /bot|crawler|spider|crawling|googlebot|bingbot|yandex|baidu|duckduck|slurp|ia_archiver|facebookexternalhit|twitterbot|linkedinbot|semrush|ahref|mj12bot|dotbot|petalbot|bytespider/i;
+
+function isBot(ua: string | null): boolean {
+  if (!ua) return true;
+  return BOT_PATTERN.test(ua);
+}
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
+  const ua = request.headers.get("user-agent");
+  if (isBot(ua)) {
+    return NextResponse.json({ ok: true });
+  }
+
   const body = (await request.json()) as { type?: string };
   const statType = body.type;
 
