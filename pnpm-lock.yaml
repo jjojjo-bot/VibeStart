@@ -85,8 +85,20 @@ importers:
         specifier: ^5
         version: 5.9.3
 
+  packages/policy-engine:
+    dependencies:
+      '@vibestart/shared-types':
+        specifier: workspace:*
+        version: link:../shared-types
+      '@vibestart/task-catalog':
+        specifier: workspace:*
+        version: link:../task-catalog
+
   packages/script-generator:
     dependencies:
+      '@vibestart/policy-engine':
+        specifier: workspace:*
+        version: link:../policy-engine
       '@vibestart/shared-types':
         specifier: workspace:*
         version: link:../shared-types

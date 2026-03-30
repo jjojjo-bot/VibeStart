@@ -116,6 +116,18 @@ function SetupContent() {
                   </div>
                 )}
 
+                {/* 실행 결과 예시 */}
+                {active && step.resultPreview && (
+                  <div className="mb-4">
+                    <p className="mb-1.5 text-xs text-muted-foreground/70">실행 결과 예시</p>
+                    <div className="rounded-lg bg-zinc-950 border border-zinc-800 p-4">
+                      <pre className="overflow-x-auto text-xs text-zinc-400 whitespace-pre-wrap leading-relaxed">
+                        {step.resultPreview}
+                      </pre>
+                    </div>
+                  </div>
+                )}
+
                 {/* CLAUDE.md 파일 저장 안내 */}
                 {active && step.claudeMdContent && (
                   <div className="mb-4">

@@ -10,6 +10,8 @@ export interface SetupStep {
   environment?: "PowerShell" | "Ubuntu 터미널" | "Mac 터미널" | "VS Code 터미널" | "어디서든";
   /** CLAUDE.md 파일 내용 — 이 필드가 있으면 웹에서 내용을 보여주고 직접 저장하도록 안내 */
   claudeMdContent?: string;
+  /** 성공 시 예상 터미널 출력 — 사용자가 결과를 비교할 수 있도록 */
+  resultPreview?: string;
 }
 
 /** Goal별 필요한 추가 런타임 판별 */
@@ -53,6 +55,10 @@ function wslInstallStep(): SetupStep {
     detailedGuide:
       "설치 후 컴퓨터를 재시작해야 합니다. 재시작 후 Ubuntu 창이 자동으로 열리며 사용자 이름과 비밀번호를 설정하게 됩니다.",
     script: "wsl --install",
+    resultPreview: `설치 중: Ubuntu
+설치를 완료했습니다: Ubuntu
+요청한 작업이 완료되었습니다.
+컴퓨터를 다시 시작해 주세요.`,
   };
 }
 
@@ -65,6 +71,20 @@ function wslOpenStep(): SetupStep {
     detailedGuide:
       "아래 명령어를 입력하면 Ubuntu 터미널로 전환됩니다. 프롬프트가 바뀌면 성공!",
     script: "wsl",
+    resultPreview: `yourname@DESKTOP-XXXXX:/mnt/c/Users/yourname$`,
+  };
+}
+
+function wslCdHomeStep(): SetupStep {
+  return {
+    id: "wsl-cd-home",
+    title: "홈 디렉토리로 이동",
+    description: "프로젝트를 만들 리눅스 홈 폴더로 이동해요",
+    environment: "Ubuntu 터미널",
+    detailedGuide:
+      "wsl 명령어로 Ubuntu가 열리면 현재 위치가 Windows 폴더(/mnt/c/...)입니다. 아래 명령어로 리눅스 홈 디렉토리로 이동해주세요.",
+    script: "cd ~",
+    resultPreview: `yourname@DESKTOP-XXXXX:~$`,
   };
 }
 
@@ -75,6 +95,10 @@ function wslGitStep(): SetupStep {
     description: "코드를 관리하는 도구를 설치해요",
     environment: "Ubuntu 터미널",
     script: "sudo apt update && sudo apt install -y git && git --version",
+    resultPreview: `Get:1 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
+...
+Setting up git (1:2.43.0-0ubuntu1) ...
+git version 2.43.0`,
   };
 }
 
@@ -85,6 +109,10 @@ function wslNodeStep(): SetupStep {
     description: "자바스크립트를 실행할 수 있게 해주는 도구예요",
     environment: "Ubuntu 터미널",
     script: "curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt install -y nodejs && node --version",
+    resultPreview: `## Confirming "nodistro" is supported...
+...
+Setting up nodejs (20.17.0-1nodesource1) ...
+v20.17.0`,
   };
 }
 
@@ -97,6 +125,11 @@ function wslVscodeStep(): SetupStep {
     detailedGuide:
       "VS Code는 Windows에 설치하지만, WSL과 자동으로 연결됩니다. 새 PowerShell 창을 열어서 실행해주세요.",
     script: "winget install --id Microsoft.VisualStudioCode --accept-source-agreements --accept-package-agreements",
+    resultPreview: `Found Visual Studio Code [Microsoft.VisualStudioCode]
+This application is licensed to you by its owner.
+Downloading https://az764295.vo.msecnd.net/...
+  ██████████████████████  100%
+Successfully installed`,
   };
 }
 
@@ -108,6 +141,9 @@ function wslClaudeCodeStep(): SetupStep {
     environment: "Ubuntu 터미널",
     detailedGuide: "CLI와 VS Code 확장이 함께 설치됩니다.",
     script: "npm install -g @anthropic-ai/claude-code && code --install-extension anthropic.claude-code",
+    resultPreview: `added 1 package in 3s
+Installing extensions...
+Extension 'anthropic.claude-code' v1.x.x was successfully installed.`,
   };
 }
 
@@ -119,6 +155,8 @@ function wslClaudeLoginStep(): SetupStep {
     environment: "Ubuntu 터미널",
     detailedGuide: "명령어를 실행하면 브라우저가 열립니다. Claude 계정으로 로그인하면 터미널에 자동으로 연결돼요. 계정이 없으면 무료로 가입할 수 있습니다.",
     script: "claude login",
+    resultPreview: `Opening browser for authentication...
+✓ Logged in as yourname@email.com`,
   };
 }
 
@@ -131,6 +169,8 @@ function wslPythonStep(): SetupStep {
     description: "프로그래밍 언어 Python을 설치해요",
     environment: "Ubuntu 터미널",
     script: "sudo apt update && sudo apt install -y python3 python3-pip python3-venv && python3 --version",
+    resultPreview: `Setting up python3 (3.12.3-0ubuntu1) ...
+Python 3.12.3`,
   };
 }
 
@@ -141,6 +181,10 @@ function macPythonStep(): SetupStep {
     description: "프로그래밍 언어 Python을 설치해요",
     environment: "Mac 터미널",
     script: "brew install python && python3 --version",
+    resultPreview: `==> Installing python@3.12
+==> Pouring python@3.12--3.12.3.arm64_sonoma.bottle.tar.gz
+🍺  /opt/homebrew/Cellar/python@3.12/3.12.3: 3,263 files
+Python 3.12.3`,
   };
 }
 
@@ -164,6 +208,9 @@ function wslJavaStep(): SetupStep {
     description: "프로그래밍 언어 Java를 설치해요",
     environment: "Ubuntu 터미널",
     script: "sudo apt update && sudo apt install -y openjdk-21-jdk && java --version",
+    resultPreview: `Setting up openjdk-21-jdk (21.0.3+9-1ubuntu1~22.04) ...
+openjdk version "21.0.3" 2024-04-16
+OpenJDK Runtime Environment (build 21.0.3+9-Ubuntu-1ubuntu122.04.1)`,
   };
 }
 
@@ -174,6 +221,10 @@ function macJavaStep(): SetupStep {
     description: "프로그래밍 언어 Java를 설치해요",
     environment: "Mac 터미널",
     script: "brew install openjdk@21 && java --version",
+    resultPreview: `==> Installing openjdk@21
+🍺  /opt/homebrew/Cellar/openjdk@21/21.0.3: 620 files
+openjdk version "21.0.3" 2024-04-16
+OpenJDK Runtime Environment Homebrew (build 21.0.3+0)`,
   };
 }
 
@@ -198,6 +249,9 @@ function wslFlutterStep(): SetupStep {
     environment: "Ubuntu 터미널",
     detailedGuide: "설치 후 터미널을 닫고 다시 열어주세요.",
     script: "sudo snap install flutter --classic && flutter --version",
+    resultPreview: `flutter 3.22.2 from classic track of Flutter channel installed
+Flutter 3.22.2 • channel stable • https://github.com/flutter/flutter.git
+Dart version 3.4.3`,
   };
 }
 
@@ -208,6 +262,10 @@ function macFlutterStep(): SetupStep {
     description: "안드로이드 + iOS 앱을 동시에 만들 수 있는 도구예요",
     environment: "Mac 터미널",
     script: "brew install --cask flutter && flutter --version",
+    resultPreview: `==> Installing Cask flutter
+🍺  flutter was successfully installed!
+Flutter 3.22.2 • channel stable
+Dart version 3.4.3`,
   };
 }
 
@@ -267,6 +325,10 @@ function brewStep(): SetupStep {
     detailedGuide:
       "설치 중 비밀번호를 물어볼 수 있습니다. Mac 로그인 비밀번호를 입력하세요. 설치 완료 후 터미널을 닫고 다시 열어주세요.",
     script: '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
+    resultPreview: `==> Installation successful!
+==> Homebrew has enabled anonymous aggregate formulae and cask analytics.
+==> Next steps:
+- Run brew help to get started`,
   };
 }
 
@@ -277,6 +339,9 @@ function macGitStep(): SetupStep {
     description: "코드를 관리하는 도구를 설치해요",
     environment: "Mac 터미널",
     script: "brew install git && git --version",
+    resultPreview: `==> Installing git
+🍺  /opt/homebrew/Cellar/git/2.45.2: 1,679 files
+git version 2.45.2`,
   };
 }
 
@@ -287,6 +352,9 @@ function macNodeStep(): SetupStep {
     description: "자바스크립트를 실행할 수 있게 해주는 도구예요",
     environment: "Mac 터미널",
     script: "brew install node && node --version",
+    resultPreview: `==> Installing node
+🍺  /opt/homebrew/Cellar/node/20.17.0: 2,309 files
+v20.17.0`,
   };
 }
 
@@ -297,6 +365,9 @@ function macVscodeStep(): SetupStep {
     description: "코드를 편집하는 프로그램을 설치해요",
     environment: "Mac 터미널",
     script: "brew install --cask visual-studio-code",
+    resultPreview: `==> Installing Cask visual-studio-code
+==> Moving App 'Visual Studio Code.app' to '/Applications/Visual Studio Code.app'
+🍺  visual-studio-code was successfully installed!`,
   };
 }
 
@@ -308,6 +379,9 @@ function macClaudeCodeStep(): SetupStep {
     environment: "Mac 터미널",
     detailedGuide: "CLI와 VS Code 확장이 함께 설치됩니다.",
     script: "npm install -g @anthropic-ai/claude-code && code --install-extension anthropic.claude-code",
+    resultPreview: `added 1 package in 3s
+Installing extensions...
+Extension 'anthropic.claude-code' v1.x.x was successfully installed.`,
   };
 }
 
@@ -319,6 +393,8 @@ function macClaudeLoginStep(): SetupStep {
     environment: "Mac 터미널",
     detailedGuide: "명령어를 실행하면 브라우저가 열립니다. Claude 계정으로 로그인하면 터미널에 자동으로 연결돼요. 계정이 없으면 무료로 가입할 수 있습니다.",
     script: "claude login",
+    resultPreview: `Opening browser for authentication...
+✓ Logged in as yourname@email.com`,
   };
 }
 
@@ -518,7 +594,13 @@ function nextjsProjectStep(projectName: string, variant: "wsl" | "mac", isFronte
   const path = isFrontendOnly ? `${projectName}/frontend` : projectName;
   const env: SetupStep["environment"] = variant === "wsl" ? "Ubuntu 터미널" : "Mac 터미널";
 
-  return { id: "project-frontend", title: label, description: desc, environment: env, detailedGuide: `~/${path} 폴더에 프로젝트를 만듭니다.`, script: `npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm` };
+  return { id: "project-frontend", title: label, description: desc, environment: env, detailedGuide: `~/${path} 폴더에 프로젝트를 만듭니다.`, script: `npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm`, resultPreview: `✔ Would you like to use TypeScript? … Yes
+✔ Would you like to use ESLint? … Yes
+✔ Would you like to use Tailwind CSS? … Yes
+...
+Success! Created ${path}
+  npm run dev    (개발 서버 시작)
+  npm run build  (배포용 빌드)` };
 }
 
 function firstRunStep(projectName: string, goal: Goal, env: SetupStep["environment"]): SetupStep {
@@ -599,6 +681,7 @@ export function getSetupSteps(
     // Windows는 항상 WSL2 플로우 (Claude Code 필수)
     steps.push(wslInstallStep());
     steps.push(wslOpenStep());
+    steps.push(wslCdHomeStep());
     steps.push(wslGitStep());
 
     if (nodeRequired) steps.push(wslNodeStep());

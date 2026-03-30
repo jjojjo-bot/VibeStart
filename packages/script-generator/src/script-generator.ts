@@ -1,5 +1,6 @@
 import { TaskDefinition, Plan } from '@vibestart/shared-types';
 import { TaskRegistry } from '@vibestart/task-catalog';
+import { PolicyEngine } from '@vibestart/policy-engine';
 import { VariableResolver, VariableMap } from './services/variable-resolver';
 import { OnboardingInput, PlanBuilder } from './services/plan-builder';
 import { toPowerShell } from './templates/powershell';
@@ -21,15 +22,17 @@ export interface GeneratedPlan {
 
 /**
  * 온보딩 입력 + 변수를 받아 단계별 스크립트를 생성한다.
- * 순수 함수적 — 외부 IO 없음.
+ * PolicyEngine 검증을 통과한 Task만 스크립트로 변환한다.
  */
 export class ScriptGenerator {
   private registry: TaskRegistry;
   private planBuilder: PlanBuilder;
+  private policyEngine: PolicyEngine | null;
 
-  constructor(registry: TaskRegistry) {
+  constructor(registry: TaskRegistry, policyEngine?: PolicyEngine) {
     this.registry = registry;
     this.planBuilder = new PlanBuilder(registry);
+    this.policyEngine = policyEngine ?? null;
   }
 
   generate(input: OnboardingInput, variables: VariableMap): GeneratedPlan {
@@ -41,6 +44,14 @@ export class ScriptGenerator {
       const task = this.registry.get(step.taskKey);
       if (!task) {
         throw new Error(`Task "${step.taskKey}" not found in registry.`);
+      }
+
+      if (this.policyEngine) {
+        const result = this.policyEngine.validate(task, variables);
+        if (!result.valid) {
+          const messages = result.violations.map((v) => v.message).join('; ');
+          throw new Error(`Policy violation for "${task.taskKey}": ${messages}`);
+        }
       }
 
       return {

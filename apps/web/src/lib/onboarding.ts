@@ -31,7 +31,6 @@ export const GOAL_OPTIONS = [
         icon: "⚡",
         description:
           "화면과 서버를 한번에 만들 수 있어요.\n빠르게 완성하고 바로 배포하기 좋습니다.\nAirbnb, TikTok 웹, 트위치가 사용하고 있어요.",
-        recommended: true,
       },
       {
         value: "web-python" as Goal,
@@ -39,6 +38,7 @@ export const GOAL_OPTIONS = [
         icon: "🐍",
         description:
           "화면은 Next.js, 서버는 Python으로 나눠서 만들어요.\nAI 챗봇이나 데이터 분석 기능을 붙이기 좋습니다.\nInstagram, Pinterest, Netflix가 사용하고 있어요.",
+        recommended: true,
       },
       {
         value: "web-java" as Goal,
