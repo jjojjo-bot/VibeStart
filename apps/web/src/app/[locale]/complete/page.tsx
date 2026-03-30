@@ -1,6 +1,6 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import type { OS, Goal } from "@/lib/onboarding";
@@ -135,7 +135,6 @@ function PromptCopyBlock({ text }: { text: string }) {
 
 function CompleteContent() {
   const searchParams = useSearchParams();
-  const counted = useRef(false);
   const t = useTranslations("Complete");
   const tc = useTranslations("Common");
 
@@ -144,8 +143,8 @@ function CompleteContent() {
   const projectName = searchParams.get("project") ?? "my-first-app";
 
   useEffect(() => {
-    if (!counted.current) {
-      counted.current = true;
+    if (!sessionStorage.getItem("vibestart_completed")) {
+      sessionStorage.setItem("vibestart_completed", "1");
       incrementCompletions();
     }
   }, []);

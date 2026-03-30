@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { incrementVisitors } from "@/lib/stats";
@@ -24,11 +24,9 @@ export default function OnboardingPage() {
   const tc = useTranslations("Common");
   const [step, setStep] = useState(0);
   const [data, setData] = useState<OnboardingData>(INITIAL_ONBOARDING);
-  const counted = useRef(false);
-
   useEffect(() => {
-    if (!counted.current) {
-      counted.current = true;
+    if (!sessionStorage.getItem("vibestart_visited")) {
+      sessionStorage.setItem("vibestart_visited", "1");
       incrementVisitors();
     }
   }, []);
