@@ -27,17 +27,17 @@ export interface SetupStep {
 }
 
 /** Goal별 필요한 추가 런타임 판별 */
-type ExtraRuntime = "python" | "java" | "flutter" | null;
+type ExtraRuntime = "python" | "java" | "expo" | null;
 function extraRuntimeFor(goal: Goal): ExtraRuntime {
   if (goal === "web-python" || goal === "data-ai") return "python";
   if (goal === "web-java") return "java";
-  if (goal === "mobile") return "flutter";
+  if (goal === "mobile") return "expo";
   return null;
 }
 
 /** Node.js가 필요한 Goal인지 판별 */
 function needsNode(goal: Goal): boolean {
-  return goal === "web-nextjs" || goal === "web-python" || goal === "web-java" || goal === "not-sure";
+  return goal === "web-nextjs" || goal === "web-python" || goal === "web-java" || goal === "mobile" || goal === "not-sure";
 }
 
 // ─── 공통 단계 ───
@@ -111,7 +111,7 @@ function buildDevToolsWhy(goal: Goal): string {
   const extra = extraRuntimeFor(goal);
   if (extra === "python") parts.push("Python은 AI/데이터 분석에 많이 쓰이는 프로그래밍 언어예요.");
   else if (extra === "java") parts.push("Java는 대규모 서비스에서 많이 쓰이는 안정적인 프로그래밍 언어예요.");
-  else if (extra === "flutter") parts.push("Flutter는 하나의 코드로 안드로이드와 iOS 앱을 동시에 만드는 도구예요.");
+  else if (extra === "expo") parts.push("Expo는 하나의 코드로 안드로이드와 iOS 앱을 동시에 만드는 도구예요.");
   return parts.join(" ");
 }
 
@@ -146,10 +146,6 @@ function wslDevToolsStep(goal: Goal): SetupStep {
     parts.push("sudo apt install -y openjdk-21-jdk");
     names.push("Java");
     results.push('openjdk version "21.0.3" 2024-04-16');
-  } else if (extra === "flutter") {
-    parts.push("sudo snap install flutter --classic");
-    names.push("Flutter");
-    results.push("Flutter 3.22.2 • channel stable");
   }
 
   // 버전 확인
@@ -157,7 +153,6 @@ function wslDevToolsStep(goal: Goal): SetupStep {
   if (node) versionChecks.push("node --version");
   if (extra === "python") versionChecks.push("python3 --version");
   else if (extra === "java") versionChecks.push("java --version");
-  else if (extra === "flutter") versionChecks.push("flutter --version");
 
   const script = parts.join(" && ") + " && " + versionChecks.join(" && ");
 
@@ -256,16 +251,29 @@ function javaBackendProjectStep(projectName: string, env: SetupStep["environment
   };
 }
 
-// ─── Flutter 프로젝트 ───
+// ─── Expo 프로젝트 ───
 
-function flutterProjectStep(projectName: string, env: SetupStep["environment"]): SetupStep {
+function expoProjectStep(projectName: string, env: SetupStep["environment"]): SetupStep {
   return {
     id: "project",
-    title: "Flutter 프로젝트 생성",
+    title: "Expo 프로젝트 생성",
     description: "나만의 모바일 앱 프로젝트를 만들어요",
     group: "프로젝트 생성",
     environment: env,
-    script: `flutter create ${projectName}`,
+    whyNeeded: "Expo는 React Native를 쉽게 쓸 수 있게 만든 도구예요. 코드 하나로 안드로이드와 iOS 앱을 동시에 만들 수 있어요.",
+    detailedGuide: `~/${projectName} 폴더에 Expo 프로젝트를 만듭니다. TypeScript 기반이라 웹 개발과 같은 언어를 쓸 수 있어요.`,
+    script: `npx create-expo-app@latest ~/${projectName} --template blank-typescript`,
+    resultPreview: `✔ Downloaded template.
+📦 Installing dependencies...
+✅ Your project is ready!
+
+To run your project:
+  cd ${projectName}
+  npx expo start`,
+    troubleshooting: [
+      { symptom: "npx: command not found", solution: "Node.js가 설치되지 않았어요. '개발 도구 설치' 단계를 다시 확인해주세요." },
+      { symptom: "directory already exists 에러", solution: `이전 시도 흔적이 남아있어요. rm -rf ~/${projectName} 를 실행해서 삭제한 후 다시 시도해주세요.` },
+    ],
   };
 }
 
@@ -338,11 +346,6 @@ function macDevToolsStep(goal: Goal): SetupStep {
     names.push("Java");
     results.push('openjdk version "21.0.3" 2024-04-16');
     versionChecks.push("java --version");
-  } else if (extra === "flutter") {
-    parts.push("brew install --cask flutter");
-    names.push("Flutter");
-    results.push("Flutter 3.22.2 • channel stable");
-    versionChecks.push("flutter --version");
   }
 
   const script = parts.join(" && ") + " && " + versionChecks.join(" && ");
@@ -501,27 +504,27 @@ const CLAUDE_MD_WEB_JAVA = `# 프로젝트 아키텍처 규칙
 3. DTO는 adapter 레이어에, Entity는 domain 레이어에 위치한다
 4. application.yml로 설정을 관리한다`;
 
-const CLAUDE_MD_FLUTTER = `# 프로젝트 아키텍처 규칙
+const CLAUDE_MD_EXPO = `# 프로젝트 아키텍처 규칙
 
 ## 헥사고날 아키텍처
 
 이 프로젝트는 헥사고날(포트 & 어댑터) 아키텍처를 따릅니다.
 
 ### 폴더 구조
-- \`lib/domain/models/\` — 핵심 데이터 모델 (순수 Dart 클래스)
-- \`lib/domain/services/\` — 비즈니스 로직 (외부 의존성 없음)
-- \`lib/ports/\` — 인터페이스 정의 (abstract class)
-- \`lib/adapters/api/\` — HTTP API 호출 구현
-- \`lib/adapters/ui/screens/\` — 화면 단위 위젯
-- \`lib/adapters/ui/widgets/\` — 재사용 가능한 위젯 컴포넌트
-- \`lib/main.dart\` — 앱 진입점
+- \`src/domain/models/\` — 핵심 데이터 모델 (순수 TypeScript)
+- \`src/domain/services/\` — 비즈니스 로직 (외부 의존성 없음)
+- \`src/ports/\` — 인터페이스 정의 (TypeScript interface)
+- \`src/adapters/api/\` — HTTP API 호출 구현
+- \`src/adapters/ui/screens/\` — 화면 단위 컴포넌트
+- \`src/adapters/ui/components/\` — 재사용 가능한 UI 컴포넌트
+- \`App.tsx\` — 앱 진입점
 
 ### 규칙
-1. domain 폴더의 코드는 Flutter/외부 패키지에 의존하지 않는다
-2. ports에 abstract class를 먼저 정의하고, adapters에서 구현한다
+1. domain 폴더의 코드는 React Native/외부 패키지에 의존하지 않는다
+2. ports에 interface를 먼저 정의하고, adapters에서 구현한다
 3. 화면(Screen)은 얇게 유지하고, 로직은 domain/services에 작성한다
-4. 파일명은 snake_case, 클래스는 PascalCase
-5. StatelessWidget을 기본으로 사용하고, 상태가 필요할 때만 StatefulWidget 사용`;
+4. 파일명은 kebab-case.ts, 컴포넌트는 PascalCase
+5. 함수형 컴포넌트만 사용한다`;
 
 const CLAUDE_MD_DATA_AI = `# 프로젝트 구조 규칙
 
@@ -584,8 +587,8 @@ function architectureStep(goal: Goal, projectName: string, env: SetupStep["envir
         group: "프로젝트 생성",
         environment: env,
         detailedGuide: "아래 명령어로 폴더 구조를 생성한 뒤, CLAUDE.md 내용을 프로젝트 루트에 저장해주세요.",
-        script: `cd ${home} && mkdir -p lib/domain/models lib/domain/services lib/ports lib/adapters/api lib/adapters/ui/screens lib/adapters/ui/widgets`,
-        claudeMdContent: CLAUDE_MD_FLUTTER,
+        script: `cd ${home} && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui/screens src/adapters/ui/components`,
+        claudeMdContent: CLAUDE_MD_EXPO,
       };
     case "data-ai":
       return {
@@ -670,7 +673,7 @@ function appendProjectSteps(
       steps.push(javaBackendProjectStep(projectName, env));
       break;
     case "mobile":
-      steps.push(flutterProjectStep(projectName, env));
+      steps.push(expoProjectStep(projectName, env));
       break;
     case "data-ai":
       steps.push(dataAiProjectStep(projectName, env));

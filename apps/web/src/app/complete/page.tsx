@@ -20,7 +20,7 @@ function getInstalledTools(goal: Goal): string[] {
     case "web-java":
       return [...base, "Node.js", "Java (JDK)"];
     case "mobile":
-      return [...base, "Flutter"];
+      return [...base, "Node.js", "Expo"];
     case "data-ai":
       return [...base, "Python"];
   }
@@ -83,7 +83,7 @@ function getProjectTree(goal: Goal, projectName: string): string {
 
     case "mobile":
       return `📁 ~/${projectName}/
-├── 📂 lib/
+├── 📂 src/
 │   ├── 📂 domain/            ← 비즈니스 로직
 │   │   ├── models/
 │   │   └── services/
@@ -92,10 +92,10 @@ function getProjectTree(goal: Goal, projectName: string): string {
 │   │   ├── api/
 │   │   └── ui/
 │   │       ├── screens/      ← 화면
-│   │       └── widgets/      ← 컴포넌트
-│   └── 📄 main.dart          ← 앱 진입점
+│   │       └── components/   ← 컴포넌트
+├── 📄 App.tsx                 ← 앱 진입점
 ├── 📄 CLAUDE.md               ← AI 아키텍처 규칙
-└── 📄 pubspec.yaml            ← 패키지 설정`;
+└── 📄 package.json`;
 
     case "data-ai":
       return `📁 ~/${projectName}/
@@ -247,7 +247,7 @@ function getGoalLabel(goal: Goal): string {
     case "web-java":
       return "Next.js + Java 웹서비스";
     case "mobile":
-      return "Flutter 모바일 앱";
+      return "Expo 모바일 앱";
     case "data-ai":
       return "Python 데이터 분석";
   }

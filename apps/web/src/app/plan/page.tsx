@@ -46,7 +46,7 @@ function getPlanItems(os: OS, goal: Goal): PlanItem[] {
     });
   } else if (goal === "mobile") {
     items.push({
-      name: "Flutter",
+      name: "Expo (React Native)",
       description: "안드로이드 + iOS 앱을 동시에 만드는 도구",
       icon: "📱",
     });
@@ -85,7 +85,7 @@ function getPlanItems(os: OS, goal: Goal): PlanItem[] {
     });
   } else if (goal === "mobile") {
     items.push({
-      name: "Flutter 프로젝트 생성",
+      name: "Expo 프로젝트 생성",
       description: "모바일 앱 프로젝트를 만들어요",
       icon: "🚀",
     });
