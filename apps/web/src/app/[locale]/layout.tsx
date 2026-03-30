@@ -39,6 +39,9 @@ export async function generateMetadata({
   languages["x-default"] = siteUrl;
 
   return {
+    verification: {
+      google: "KRpn29rCSZ7cSBZ-Q_al_8GqvENUm2q3aqiXthtQN8U",
+    },
     title: {
       default: t("title.default"),
       template: t("title.template"),
