@@ -41,6 +41,9 @@ export async function generateMetadata({
   return {
     verification: {
       google: "KRpn29rCSZ7cSBZ-Q_al_8GqvENUm2q3aqiXthtQN8U",
+      other: {
+        "naver-site-verification": "466c1c6c89a57616f9fcf3839c4848d47b6e9fef",
+      },
     },
     title: {
       default: t("title.default"),
