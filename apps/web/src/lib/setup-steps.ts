@@ -1,17 +1,29 @@
 import type { OS, Goal } from "./onboarding";
 
+export type SetupGroup = "환경 준비" | "도구 설치" | "AI 설정" | "프로젝트 생성";
+
+export interface TroubleshootingItem {
+  symptom: string;
+  solution: string;
+}
+
 export interface SetupStep {
   id: string;
   title: string;
   description: string;
+  group: SetupGroup;
   detailedGuide?: string;
   script: string;
   /** 실행 환경 표시 — 초보자가 어디서 실행해야 하는지 알 수 있도록 */
-  environment?: "PowerShell" | "Ubuntu 터미널" | "Mac 터미널" | "VS Code 터미널" | "어디서든";
+  environment?: "Windows 명령창" | "리눅스 명령창" | "Mac 터미널" | "VS Code 터미널" | "어디서든";
   /** CLAUDE.md 파일 내용 — 이 필드가 있으면 웹에서 내용을 보여주고 직접 저장하도록 안내 */
   claudeMdContent?: string;
   /** 성공 시 예상 터미널 출력 — 사용자가 결과를 비교할 수 있도록 */
   resultPreview?: string;
+  /** 흔한 에러와 해결 방법 */
+  troubleshooting?: TroubleshootingItem[];
+  /** 이 도구가 왜 필요한지 비전공자용 한줄 설명 */
+  whyNeeded?: string;
 }
 
 /** Goal별 필요한 추가 런타임 판별 */
@@ -32,13 +44,14 @@ function needsNode(goal: Goal): boolean {
 
 function terminalGuide(os: OS): SetupStep {
   const guide = os === "windows"
-    ? "Windows 검색창(돋보기 아이콘)에 'PowerShell'을 입력하고, 'Windows PowerShell'을 클릭해서 열어주세요. WSL 설치 후에는 'Ubuntu'를 검색해서 열면 됩니다."
+    ? "Windows 검색창(돋보기 아이콘)에 'PowerShell'을 입력하고, 'Windows PowerShell'을 클릭해서 열어주세요. 리눅스 환경 설치 후에는 'Ubuntu'를 검색해서 열면 됩니다."
     : "Spotlight(Cmd + Space)를 열고 '터미널'을 입력한 후 Enter를 눌러주세요.";
 
   return {
     id: "terminal",
     title: "터미널 열기",
     description: "명령어를 실행할 창을 열어주세요",
+    group: "환경 준비",
     detailedGuide: guide,
     script: "",
   };
@@ -49,9 +62,11 @@ function terminalGuide(os: OS): SetupStep {
 function wslInstallStep(): SetupStep {
   return {
     id: "wsl",
-    title: "WSL2 설치",
-    description: "Windows에서 Claude Code를 사용하려면 Linux 환경이 필요해요",
-    environment: "PowerShell",
+    title: "리눅스 환경 설치 (WSL2)",
+    description: "Windows에서 AI 코딩 도구를 쓰려면 리눅스가 필요해요",
+    whyNeeded: "AI 코딩 도구(Claude Code)는 리눅스에서만 작동해요. WSL2는 Windows 안에서 돌아가는 미니 리눅스 컴퓨터예요. 설치하면 Windows를 쓰면서 리눅스 명령어를 사용할 수 있어요.",
+    group: "환경 준비",
+    environment: "Windows 명령창",
     detailedGuide:
       "설치 후 컴퓨터를 재시작해야 합니다. 재시작 후 Ubuntu 창이 자동으로 열리며 사용자 이름과 비밀번호를 설정하게 됩니다.",
     script: "wsl --install",
@@ -59,69 +74,120 @@ function wslInstallStep(): SetupStep {
 설치를 완료했습니다: Ubuntu
 요청한 작업이 완료되었습니다.
 컴퓨터를 다시 시작해 주세요.`,
+    troubleshooting: [
+      { symptom: "'wsl'은(는) 인식할 수 없는 명령입니다", solution: "Windows 10 버전 2004 이상이 필요합니다. 설정 → 시스템 → 정보에서 OS 빌드를 확인하고, Windows 업데이트를 실행해주세요." },
+      { symptom: "가상화 기능이 활성화되지 않았다는 에러", solution: "BIOS 설정에서 가상화(Virtualization Technology)를 켜야 합니다. 컴퓨터 재시작 시 F2 또는 Del 키를 눌러 BIOS에 진입하세요." },
+      { symptom: "이미 설치되어 있다는 메시지", solution: "정상입니다! wsl --update 를 실행해서 최신 버전으로 업데이트한 후 다음 단계로 넘어가세요." },
+      { symptom: "재시작 후에도 Ubuntu가 열리지 않음", solution: "Windows 검색에서 'Ubuntu'를 검색해보세요. 없으면 Microsoft Store에서 'Ubuntu'를 검색해서 설치해주세요." },
+    ],
   };
 }
 
 function wslOpenStep(): SetupStep {
   return {
     id: "wsl-open",
-    title: "Ubuntu 터미널 열기",
-    description: "이제부터는 Ubuntu 터미널에서 진행해요",
-    environment: "PowerShell",
+    title: "리눅스 명령창 열기 (Ubuntu)",
+    description: "이제부터는 리눅스 명령창에서 진행해요",
+    whyNeeded: "방금 설치한 리눅스 환경에 들어가는 거예요. 프롬프트(입력 표시)가 바뀌면 리눅스 세계에 들어온 거예요.",
+    group: "환경 준비",
+    environment: "Windows 명령창",
     detailedGuide:
-      "아래 명령어를 입력하면 Ubuntu 터미널로 전환됩니다. 프롬프트가 바뀌면 성공!",
+      "아래 명령어를 입력하면 리눅스 명령창으로 전환됩니다. 프롬프트가 바뀌면 성공! 전환 후 cd ~ 를 입력해서 홈 폴더로 이동해주세요.",
     script: "wsl",
-    resultPreview: `yourname@DESKTOP-XXXXX:/mnt/c/Users/yourname$`,
+    resultPreview: `yourname@DESKTOP-XXXXX:/mnt/c/Users/yourname$
+$ cd ~
+yourname@DESKTOP-XXXXX:~$`,
+    troubleshooting: [
+      { symptom: "사용자 이름과 비밀번호를 물어봐요", solution: "정상입니다! 원하는 사용자 이름과 비밀번호를 입력하세요. 비밀번호 입력 시 화면에 아무것도 안 보이는 게 정상이에요." },
+      { symptom: "'wsl' 입력 후 아무 반응이 없어요", solution: "WSL 설치 후 재시작을 안 했을 수 있어요. 컴퓨터를 재시작한 후 다시 시도해주세요." },
+      { symptom: "cd ~ 후에도 /mnt/c/... 경로에 있어요", solution: "프롬프트 끝부분이 :~$로 바뀌었는지 확인하세요. pwd 를 입력해서 /home/사용자이름 이 나오면 성공입니다." },
+    ],
   };
 }
 
-function wslCdHomeStep(): SetupStep {
-  return {
-    id: "wsl-cd-home",
-    title: "홈 디렉토리로 이동",
-    description: "프로젝트를 만들 리눅스 홈 폴더로 이동해요",
-    environment: "Ubuntu 터미널",
-    detailedGuide:
-      "wsl 명령어로 Ubuntu가 열리면 현재 위치가 Windows 폴더(/mnt/c/...)입니다. 아래 명령어로 리눅스 홈 디렉토리로 이동해주세요.",
-    script: "cd ~",
-    resultPreview: `yourname@DESKTOP-XXXXX:~$`,
-  };
+function buildDevToolsWhy(goal: Goal): string {
+  const parts = ["Git은 코드의 변경 이력을 저장하는 '타임머신'이에요."];
+  if (needsNode(goal)) parts.push("Node.js는 웹사이트를 만들 때 필요한 자바스크립트 실행기예요.");
+  const extra = extraRuntimeFor(goal);
+  if (extra === "python") parts.push("Python은 AI/데이터 분석에 많이 쓰이는 프로그래밍 언어예요.");
+  else if (extra === "java") parts.push("Java는 대규모 서비스에서 많이 쓰이는 안정적인 프로그래밍 언어예요.");
+  else if (extra === "flutter") parts.push("Flutter는 하나의 코드로 안드로이드와 iOS 앱을 동시에 만드는 도구예요.");
+  return parts.join(" ");
 }
 
-function wslGitStep(): SetupStep {
-  return {
-    id: "git",
-    title: "Git 설치",
-    description: "코드를 관리하는 도구를 설치해요",
-    environment: "Ubuntu 터미널",
-    script: "sudo apt update && sudo apt install -y git && git --version",
-    resultPreview: `Get:1 http://archive.ubuntu.com/ubuntu jammy InRelease [270 kB]
-...
-Setting up git (1:2.43.0-0ubuntu1) ...
-git version 2.43.0`,
-  };
-}
+// ─── 개발 도구 통합 설치 (WSL) ───
 
-function wslNodeStep(): SetupStep {
+function wslDevToolsStep(goal: Goal): SetupStep {
+  const node = needsNode(goal);
+  const extra = extraRuntimeFor(goal);
+
+  const parts: string[] = [];
+  const names: string[] = [];
+  const results: string[] = [];
+
+  // Git (항상 포함)
+  parts.push("sudo apt update && sudo apt install -y git");
+  names.push("Git");
+  results.push("git version 2.43.0");
+
+  // Node.js
+  if (node) {
+    parts.push("curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt install -y nodejs");
+    names.push("Node.js");
+    results.push("v20.17.0");
+  }
+
+  // 추가 런타임
+  if (extra === "python") {
+    parts.push("sudo apt install -y python3 python3-pip python3-venv");
+    names.push("Python");
+    results.push("Python 3.12.3");
+  } else if (extra === "java") {
+    parts.push("sudo apt install -y openjdk-21-jdk");
+    names.push("Java");
+    results.push('openjdk version "21.0.3" 2024-04-16');
+  } else if (extra === "flutter") {
+    parts.push("sudo snap install flutter --classic");
+    names.push("Flutter");
+    results.push("Flutter 3.22.2 • channel stable");
+  }
+
+  // 버전 확인
+  const versionChecks: string[] = ["git --version"];
+  if (node) versionChecks.push("node --version");
+  if (extra === "python") versionChecks.push("python3 --version");
+  else if (extra === "java") versionChecks.push("java --version");
+  else if (extra === "flutter") versionChecks.push("flutter --version");
+
+  const script = parts.join(" && ") + " && " + versionChecks.join(" && ");
+
   return {
-    id: "node",
-    title: "Node.js 설치",
-    description: "자바스크립트를 실행할 수 있게 해주는 도구예요",
-    environment: "Ubuntu 터미널",
-    script: "curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt install -y nodejs && node --version",
-    resultPreview: `## Confirming "nodistro" is supported...
-...
-Setting up nodejs (20.17.0-1nodesource1) ...
-v20.17.0`,
+    id: "dev-tools",
+    title: "개발 도구 설치",
+    description: `${names.join(", ")}을 설치해요`,
+    whyNeeded: buildDevToolsWhy(goal),
+    group: "도구 설치",
+    environment: "리눅스 명령창",
+    detailedGuide: "여러 도구를 한번에 설치합니다. 시간이 조금 걸릴 수 있어요.",
+    script,
+    resultPreview: results.join("\n"),
+    troubleshooting: [
+      { symptom: "sudo 비밀번호를 물어보는데 입력이 안 돼요", solution: "비밀번호를 입력하면 화면에 아무것도 안 보이는 게 정상이에요. 그냥 비밀번호를 타이핑하고 Enter를 누르세요." },
+      { symptom: "Unable to locate package 에러", solution: "sudo apt update 를 먼저 실행한 후 다시 시도해주세요." },
+      { symptom: "dpkg lock 또는 다른 프로세스가 사용 중이라는 에러", solution: "다른 설치 작업이 진행 중이에요. 잠시 기다린 후(1~2분) 다시 시도해주세요." },
+      { symptom: "curl: command not found", solution: "sudo apt update && sudo apt install -y curl 을 먼저 실행한 후 다시 시도해주세요." },
+    ],
   };
 }
 
 function wslVscodeStep(): SetupStep {
   return {
     id: "editor",
-    title: "VS Code 설치",
+    title: "코드 편집기 설치 (VS Code)",
     description: "코드를 편집하는 프로그램을 설치해요",
-    environment: "PowerShell",
+    whyNeeded: "VS Code는 코드를 작성하는 전용 편집기예요. 메모장과 비슷하지만, 코드 자동 완성, 오류 표시, AI 도우미 연결 등 개발에 특화된 기능이 있어요.",
+    group: "도구 설치",
+    environment: "Windows 명령창",
     detailedGuide:
       "VS Code는 Windows에 설치하지만, WSL과 자동으로 연결됩니다. 새 PowerShell 창을 열어서 실행해주세요.",
     script: "winget install --id Microsoft.VisualStudioCode --accept-source-agreements --accept-package-agreements",
@@ -130,187 +196,90 @@ This application is licensed to you by its owner.
 Downloading https://az764295.vo.msecnd.net/...
   ██████████████████████  100%
 Successfully installed`,
+    troubleshooting: [
+      { symptom: "'winget'이 인식되지 않습니다", solution: "Microsoft Store에서 '앱 설치 관리자'를 검색해서 업데이트해주세요. 그래도 안 되면 code.visualstudio.com 에서 직접 다운로드하세요." },
+      { symptom: "이미 설치되어 있다는 메시지", solution: "정상입니다! 이미 VS Code가 설치되어 있으니 다음 단계로 넘어가세요." },
+    ],
   };
 }
 
-function wslClaudeCodeStep(): SetupStep {
+// ─── Claude Code 통합 (WSL) ───
+
+function wslClaudeStep(): SetupStep {
   return {
-    id: "ai-tool",
-    title: "Claude Code 설치",
-    description: "AI 코딩 도우미를 설치해요",
-    environment: "Ubuntu 터미널",
-    detailedGuide: "CLI와 VS Code 확장이 함께 설치됩니다.",
-    script: "npm install -g @anthropic-ai/claude-code && code --install-extension anthropic.claude-code",
+    id: "ai-setup",
+    title: "AI 코딩 도우미 설치 (Claude Code)",
+    description: "AI 코딩 도우미를 설치하고 계정에 연결해요",
+    whyNeeded: "Claude Code는 대화하듯이 코딩을 도와주는 AI예요. '로그인 페이지 만들어줘'처럼 말하면 코드를 대신 작성해줍니다.",
+    group: "AI 설정",
+    environment: "리눅스 명령창",
+    detailedGuide: "설치 후 자동으로 로그인이 진행됩니다. 브라우저가 열리면 Claude 계정으로 로그인해주세요. 계정이 없으면 무료로 가입할 수 있습니다.",
+    script: "npm install -g @anthropic-ai/claude-code && code --install-extension anthropic.claude-code && claude login",
     resultPreview: `added 1 package in 3s
-Installing extensions...
-Extension 'anthropic.claude-code' v1.x.x was successfully installed.`,
-  };
-}
-
-function wslClaudeLoginStep(): SetupStep {
-  return {
-    id: "ai-login",
-    title: "Claude Code 로그인",
-    description: "Claude 계정에 로그인해요",
-    environment: "Ubuntu 터미널",
-    detailedGuide: "명령어를 실행하면 브라우저가 열립니다. Claude 계정으로 로그인하면 터미널에 자동으로 연결돼요. 계정이 없으면 무료로 가입할 수 있습니다.",
-    script: "claude login",
-    resultPreview: `Opening browser for authentication...
+Extension 'anthropic.claude-code' was successfully installed.
+Opening browser for authentication...
 ✓ Logged in as yourname@email.com`,
+    troubleshooting: [
+      { symptom: "npm: command not found", solution: "Node.js가 설치되지 않았어요. '개발 도구 설치' 단계를 다시 확인해주세요." },
+      { symptom: "EACCES permission denied 에러", solution: "sudo npm install -g @anthropic-ai/claude-code 로 다시 시도해주세요." },
+      { symptom: "브라우저가 자동으로 열리지 않아요", solution: "터미널에 표시된 URL을 복사해서 브라우저 주소창에 직접 붙여넣으세요." },
+      { symptom: "로그인 후 터미널에 반응이 없어요", solution: "브라우저에서 로그인을 완료하면 터미널이 자동으로 인식합니다. 잠시 기다려주세요." },
+    ],
   };
 }
 
-// ─── Python 단계 ───
-
-function wslPythonStep(): SetupStep {
-  return {
-    id: "python",
-    title: "Python 설치",
-    description: "프로그래밍 언어 Python을 설치해요",
-    environment: "Ubuntu 터미널",
-    script: "sudo apt update && sudo apt install -y python3 python3-pip python3-venv && python3 --version",
-    resultPreview: `Setting up python3 (3.12.3-0ubuntu1) ...
-Python 3.12.3`,
-  };
-}
-
-function macPythonStep(): SetupStep {
-  return {
-    id: "python",
-    title: "Python 설치",
-    description: "프로그래밍 언어 Python을 설치해요",
-    environment: "Mac 터미널",
-    script: "brew install python && python3 --version",
-    resultPreview: `==> Installing python@3.12
-==> Pouring python@3.12--3.12.3.arm64_sonoma.bottle.tar.gz
-🍺  /opt/homebrew/Cellar/python@3.12/3.12.3: 3,263 files
-Python 3.12.3`,
-  };
-}
+// ─── Python 백엔드 프로젝트 ───
 
 function pythonBackendProjectStep(projectName: string, env: SetupStep["environment"]): SetupStep {
   return {
     id: "project-backend",
     title: "백엔드 프로젝트 생성 (Python)",
     description: "Python FastAPI 서버 프로젝트를 만들어요",
+    group: "프로젝트 생성",
     environment: env,
     detailedGuide: `~/${projectName}/backend 폴더에 프로젝트를 만듭니다.`,
     script: `mkdir -p ~/${projectName}/backend && cd ~/${projectName}/backend && python3 -m venv venv && . venv/bin/activate && pip install fastapi uvicorn && echo 'from fastapi import FastAPI\\napp = FastAPI()\\n\\n@app.get("/")\\ndef read_root():\\n    return {"message": "Hello, World!"}' > main.py`,
   };
 }
 
-// ─── Java 단계 ───
-
-function wslJavaStep(): SetupStep {
-  return {
-    id: "java",
-    title: "Java (JDK) 설치",
-    description: "프로그래밍 언어 Java를 설치해요",
-    environment: "Ubuntu 터미널",
-    script: "sudo apt update && sudo apt install -y openjdk-21-jdk && java --version",
-    resultPreview: `Setting up openjdk-21-jdk (21.0.3+9-1ubuntu1~22.04) ...
-openjdk version "21.0.3" 2024-04-16
-OpenJDK Runtime Environment (build 21.0.3+9-Ubuntu-1ubuntu122.04.1)`,
-  };
-}
-
-function macJavaStep(): SetupStep {
-  return {
-    id: "java",
-    title: "Java (JDK) 설치",
-    description: "프로그래밍 언어 Java를 설치해요",
-    environment: "Mac 터미널",
-    script: "brew install openjdk@21 && java --version",
-    resultPreview: `==> Installing openjdk@21
-🍺  /opt/homebrew/Cellar/openjdk@21/21.0.3: 620 files
-openjdk version "21.0.3" 2024-04-16
-OpenJDK Runtime Environment Homebrew (build 21.0.3+0)`,
-  };
-}
+// ─── Java 백엔드 프로젝트 ───
 
 function javaBackendProjectStep(projectName: string, env: SetupStep["environment"]): SetupStep {
   return {
     id: "project-backend",
     title: "백엔드 프로젝트 생성 (Java)",
     description: "Java Spring Boot 서버 프로젝트를 다운로드해요",
+    group: "프로젝트 생성",
     environment: env,
     detailedGuide: `~/${projectName}/backend 폴더에 프로젝트를 만듭니다. Spring Initializr에서 실무에 필요한 기본 라이브러리가 포함된 프로젝트를 자동으로 다운로드합니다.`,
     script: `mkdir -p ~/${projectName} && cd ~/${projectName} && curl -s "https://start.spring.io/starter.zip?type=gradle-project&language=java&bootVersion=3.4.4&javaVersion=17&packaging=jar&baseDir=backend&groupId=com.example&artifactId=backend&name=backend&packageName=com.example.app&dependencies=web,lombok,devtools,validation,data-jpa,sqlserver" -o backend.zip && unzip backend.zip && rm backend.zip && mv backend/src/main/resources/application.properties backend/src/main/resources/application.yml`,
   };
 }
 
-// ─── Flutter 단계 ───
-
-function wslFlutterStep(): SetupStep {
-  return {
-    id: "flutter",
-    title: "Flutter 설치",
-    description: "안드로이드 + iOS 앱을 동시에 만들 수 있는 도구예요",
-    environment: "Ubuntu 터미널",
-    detailedGuide: "설치 후 터미널을 닫고 다시 열어주세요.",
-    script: "sudo snap install flutter --classic && flutter --version",
-    resultPreview: `flutter 3.22.2 from classic track of Flutter channel installed
-Flutter 3.22.2 • channel stable • https://github.com/flutter/flutter.git
-Dart version 3.4.3`,
-  };
-}
-
-function macFlutterStep(): SetupStep {
-  return {
-    id: "flutter",
-    title: "Flutter 설치",
-    description: "안드로이드 + iOS 앱을 동시에 만들 수 있는 도구예요",
-    environment: "Mac 터미널",
-    script: "brew install --cask flutter && flutter --version",
-    resultPreview: `==> Installing Cask flutter
-🍺  flutter was successfully installed!
-Flutter 3.22.2 • channel stable
-Dart version 3.4.3`,
-  };
-}
+// ─── Flutter 프로젝트 ───
 
 function flutterProjectStep(projectName: string, env: SetupStep["environment"]): SetupStep {
   return {
     id: "project",
     title: "Flutter 프로젝트 생성",
     description: "나만의 모바일 앱 프로젝트를 만들어요",
+    group: "프로젝트 생성",
     environment: env,
     script: `flutter create ${projectName}`,
   };
 }
 
-function flutterFirstRunStep(projectName: string, env: SetupStep["environment"]): SetupStep {
-  return {
-    id: "first-run",
-    title: "첫 실행!",
-    description: "VS Code에서 프로젝트를 열고 AI 코딩을 시작해요",
-    environment: env,
-    detailedGuide: "아래 명령어로 VS Code가 열립니다. VS Code 안에서 터미널(Ctrl+` 또는 Cmd+`)을 열고 claude를 입력하면 AI 코딩이 시작됩니다.",
-    script: `code ~/${projectName}`,
-  };
-}
-
-// ─── 데이터 분석 단계 ───
+// ─── 데이터 분석 프로젝트 ───
 
 function dataAiProjectStep(projectName: string, env: SetupStep["environment"]): SetupStep {
   return {
     id: "project",
     title: "데이터 분석 환경 설정",
     description: "Jupyter Notebook을 설치해요",
+    group: "프로젝트 생성",
     environment: env,
     detailedGuide: `~/${projectName} 폴더에 가상환경을 만들고 데이터 분석 라이브러리를 설치합니다.`,
     script: `mkdir ~/${projectName} && cd ~/${projectName} && python3 -m venv venv && . venv/bin/activate && pip install jupyter numpy pandas matplotlib`,
-  };
-}
-
-function dataAiFirstRunStep(projectName: string, env: SetupStep["environment"]): SetupStep {
-  return {
-    id: "first-run",
-    title: "첫 실행!",
-    description: "VS Code에서 프로젝트를 열고 AI 코딩을 시작해요",
-    environment: env,
-    detailedGuide: "아래 명령어로 VS Code가 열립니다. VS Code 안에서 터미널(Ctrl+` 또는 Cmd+`)을 열고 claude를 입력하면 AI 코딩이 시작됩니다.",
-    script: `code ~/${projectName}`,
   };
 }
 
@@ -319,8 +288,10 @@ function dataAiFirstRunStep(projectName: string, env: SetupStep["environment"]):
 function brewStep(): SetupStep {
   return {
     id: "brew",
-    title: "Homebrew 설치",
+    title: "패키지 관리자 설치 (Homebrew)",
     description: "Mac에서 프로그램을 쉽게 설치할 수 있게 해주는 도구예요",
+    whyNeeded: "Homebrew는 Mac의 '앱 스토어 터미널 버전'이에요. 명령어 한 줄로 개발 도구를 설치하고 관리할 수 있어요.",
+    group: "환경 준비",
     environment: "Mac 터미널",
     detailedGuide:
       "설치 중 비밀번호를 물어볼 수 있습니다. Mac 로그인 비밀번호를 입력하세요. 설치 완료 후 터미널을 닫고 다시 열어주세요.",
@@ -329,72 +300,111 @@ function brewStep(): SetupStep {
 ==> Homebrew has enabled anonymous aggregate formulae and cask analytics.
 ==> Next steps:
 - Run brew help to get started`,
+    troubleshooting: [
+      { symptom: "Command Line Tools 설치 팝업이 떠요", solution: "정상입니다! '설치' 버튼을 눌러서 설치를 진행하세요. 설치 후 Homebrew 설치가 계속됩니다." },
+      { symptom: "비밀번호를 물어봐요", solution: "Mac 로그인 비밀번호를 입력하세요. 입력 시 화면에 아무것도 안 보이는 게 정상이에요." },
+      { symptom: "설치 후 brew 명령어가 안 돼요", solution: "터미널을 닫고 새로 열어주세요. 그래도 안 되면 eval \"$(/opt/homebrew/bin/brew shellenv)\" 를 실행해주세요." },
+    ],
   };
 }
 
-function macGitStep(): SetupStep {
-  return {
-    id: "git",
-    title: "Git 설치",
-    description: "코드를 관리하는 도구를 설치해요",
-    environment: "Mac 터미널",
-    script: "brew install git && git --version",
-    resultPreview: `==> Installing git
-🍺  /opt/homebrew/Cellar/git/2.45.2: 1,679 files
-git version 2.45.2`,
-  };
-}
+// ─── 개발 도구 통합 설치 (macOS) ───
 
-function macNodeStep(): SetupStep {
+function macDevToolsStep(goal: Goal): SetupStep {
+  const node = needsNode(goal);
+  const extra = extraRuntimeFor(goal);
+
+  const brewPkgs: string[] = ["git"];
+  const names: string[] = ["Git"];
+  const results: string[] = ["git version 2.45.2"];
+  const versionChecks: string[] = ["git --version"];
+
+  if (node) {
+    brewPkgs.push("node");
+    names.push("Node.js");
+    results.push("v20.17.0");
+    versionChecks.push("node --version");
+  }
+
+  const parts: string[] = [`brew install ${brewPkgs.join(" ")}`];
+
+  if (extra === "python") {
+    parts.push("brew install python");
+    names.push("Python");
+    results.push("Python 3.12.3");
+    versionChecks.push("python3 --version");
+  } else if (extra === "java") {
+    parts.push("brew install openjdk@21");
+    names.push("Java");
+    results.push('openjdk version "21.0.3" 2024-04-16');
+    versionChecks.push("java --version");
+  } else if (extra === "flutter") {
+    parts.push("brew install --cask flutter");
+    names.push("Flutter");
+    results.push("Flutter 3.22.2 • channel stable");
+    versionChecks.push("flutter --version");
+  }
+
+  const script = parts.join(" && ") + " && " + versionChecks.join(" && ");
+
   return {
-    id: "node",
-    title: "Node.js 설치",
-    description: "자바스크립트를 실행할 수 있게 해주는 도구예요",
+    id: "dev-tools",
+    title: "개발 도구 설치",
+    description: `${names.join(", ")}을 설치해요`,
+    whyNeeded: buildDevToolsWhy(goal),
+    group: "도구 설치",
     environment: "Mac 터미널",
-    script: "brew install node && node --version",
-    resultPreview: `==> Installing node
-🍺  /opt/homebrew/Cellar/node/20.17.0: 2,309 files
-v20.17.0`,
+    detailedGuide: "여러 도구를 한번에 설치합니다. 시간이 조금 걸릴 수 있어요.",
+    script,
+    resultPreview: results.join("\n"),
+    troubleshooting: [
+      { symptom: "brew: command not found", solution: "Homebrew가 설치되지 않았어요. 이전 단계(Homebrew 설치)를 먼저 완료해주세요." },
+      { symptom: "already installed 메시지", solution: "이미 설치되어 있으니 정상입니다! 다음 단계로 넘어가세요." },
+      { symptom: "Error: No available formula 에러", solution: "brew update 를 실행한 후 다시 시도해주세요." },
+    ],
   };
 }
 
 function macVscodeStep(): SetupStep {
   return {
     id: "editor",
-    title: "VS Code 설치",
+    title: "코드 편집기 설치 (VS Code)",
     description: "코드를 편집하는 프로그램을 설치해요",
+    whyNeeded: "VS Code는 코드를 작성하는 전용 편집기예요. 메모장과 비슷하지만, 코드 자동 완성, 오류 표시, AI 도우미 연결 등 개발에 특화된 기능이 있어요.",
+    group: "도구 설치",
     environment: "Mac 터미널",
     script: "brew install --cask visual-studio-code",
     resultPreview: `==> Installing Cask visual-studio-code
 ==> Moving App 'Visual Studio Code.app' to '/Applications/Visual Studio Code.app'
 🍺  visual-studio-code was successfully installed!`,
+    troubleshooting: [
+      { symptom: "이미 설치되어 있다는 메시지", solution: "정상입니다! 다음 단계로 넘어가세요." },
+      { symptom: "brew: command not found", solution: "터미널을 닫고 새로 열어주세요. 그래도 안 되면 Homebrew 설치 단계를 다시 확인해주세요." },
+    ],
   };
 }
 
-function macClaudeCodeStep(): SetupStep {
+// ─── Claude Code 통합 (macOS) ───
+
+function macClaudeStep(): SetupStep {
   return {
-    id: "ai-tool",
-    title: "Claude Code 설치",
-    description: "AI 코딩 도우미를 설치해요",
+    id: "ai-setup",
+    title: "AI 코딩 도우미 설치 (Claude Code)",
+    description: "AI 코딩 도우미를 설치하고 계정에 연결해요",
+    whyNeeded: "Claude Code는 대화하듯이 코딩을 도와주는 AI예요. '로그인 페이지 만들어줘'처럼 말하면 코드를 대신 작성해줍니다.",
+    group: "AI 설정",
     environment: "Mac 터미널",
-    detailedGuide: "CLI와 VS Code 확장이 함께 설치됩니다.",
-    script: "npm install -g @anthropic-ai/claude-code && code --install-extension anthropic.claude-code",
+    detailedGuide: "설치 후 자동으로 로그인이 진행됩니다. 브라우저가 열리면 Claude 계정으로 로그인해주세요. 계정이 없으면 무료로 가입할 수 있습니다.",
+    script: "npm install -g @anthropic-ai/claude-code && code --install-extension anthropic.claude-code && claude login",
     resultPreview: `added 1 package in 3s
-Installing extensions...
-Extension 'anthropic.claude-code' v1.x.x was successfully installed.`,
-  };
-}
-
-function macClaudeLoginStep(): SetupStep {
-  return {
-    id: "ai-login",
-    title: "Claude Code 로그인",
-    description: "Claude 계정에 로그인해요",
-    environment: "Mac 터미널",
-    detailedGuide: "명령어를 실행하면 브라우저가 열립니다. Claude 계정으로 로그인하면 터미널에 자동으로 연결돼요. 계정이 없으면 무료로 가입할 수 있습니다.",
-    script: "claude login",
-    resultPreview: `Opening browser for authentication...
+Extension 'anthropic.claude-code' was successfully installed.
+Opening browser for authentication...
 ✓ Logged in as yourname@email.com`,
+    troubleshooting: [
+      { symptom: "npm: command not found", solution: "Node.js가 설치되지 않았어요. '개발 도구 설치' 단계를 다시 확인해주세요." },
+      { symptom: "EACCES permission denied 에러", solution: "sudo npm install -g @anthropic-ai/claude-code 로 다시 시도해주세요." },
+      { symptom: "브라우저가 자동으로 열리지 않아요", solution: "터미널에 표시된 URL을 복사해서 브라우저 주소창에 직접 붙여넣으세요." },
+    ],
   };
 }
 
@@ -538,6 +548,7 @@ function architectureStep(goal: Goal, projectName: string, env: SetupStep["envir
         id: "architecture",
         title: "프로젝트 구조 설정",
         description: "AI 도구가 따를 아키텍처 규칙을 세팅해요",
+        group: "프로젝트 생성",
         environment: env,
         detailedGuide: "아래 명령어로 폴더 구조를 생성한 뒤, CLAUDE.md 내용을 프로젝트 루트에 저장해주세요.",
         script: `cd ${home} && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui`,
@@ -548,6 +559,7 @@ function architectureStep(goal: Goal, projectName: string, env: SetupStep["envir
         id: "architecture",
         title: "프로젝트 구조 설정",
         description: "AI 도구가 따를 아키텍처 규칙을 세팅해요",
+        group: "프로젝트 생성",
         environment: env,
         detailedGuide: "아래 명령어로 폴더 구조를 생성한 뒤, CLAUDE.md 내용을 프로젝트 루트에 저장해주세요.",
         script: `cd ${home}/frontend && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui && cd ${home}/backend && mkdir -p domain/models domain/services ports/inbound ports/outbound adapters/inbound/api adapters/outbound/persistence`,
@@ -558,6 +570,7 @@ function architectureStep(goal: Goal, projectName: string, env: SetupStep["envir
         id: "architecture",
         title: "프로젝트 구조 설정",
         description: "AI 도구가 따를 아키텍처 규칙을 세팅해요",
+        group: "프로젝트 생성",
         environment: env,
         detailedGuide: "아래 명령어로 폴더 구조를 생성한 뒤, CLAUDE.md 내용을 프로젝트 루트에 저장해주세요.",
         script: `cd ${home}/frontend && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui && cd ${home}/backend && mkdir -p src/main/java/com/example/app/domain/model src/main/java/com/example/app/domain/service src/main/java/com/example/app/port/in src/main/java/com/example/app/port/out src/main/java/com/example/app/adapter/in/web src/main/java/com/example/app/adapter/out/persistence`,
@@ -568,6 +581,7 @@ function architectureStep(goal: Goal, projectName: string, env: SetupStep["envir
         id: "architecture",
         title: "프로젝트 구조 설정",
         description: "AI 도구가 따를 아키텍처 규칙을 세팅해요",
+        group: "프로젝트 생성",
         environment: env,
         detailedGuide: "아래 명령어로 폴더 구조를 생성한 뒤, CLAUDE.md 내용을 프로젝트 루트에 저장해주세요.",
         script: `cd ${home} && mkdir -p lib/domain/models lib/domain/services lib/ports lib/adapters/api lib/adapters/ui/screens lib/adapters/ui/widgets`,
@@ -578,6 +592,7 @@ function architectureStep(goal: Goal, projectName: string, env: SetupStep["envir
         id: "architecture",
         title: "프로젝트 구조 설정",
         description: "AI 도구가 따를 분석 프로젝트 규칙을 세팅해요",
+        group: "프로젝트 생성",
         environment: env,
         detailedGuide: "아래 명령어로 폴더 구조를 생성한 뒤, CLAUDE.md 내용을 프로젝트 루트에 저장해주세요.",
         script: `cd ${home} && mkdir -p data notebooks src/loaders src/analyzers src/visualizers`,
@@ -592,15 +607,29 @@ function nextjsProjectStep(projectName: string, variant: "wsl" | "mac", isFronte
   const label = isFrontendOnly ? "프론트엔드 프로젝트 생성 (Next.js)" : "프로젝트 생성";
   const desc = isFrontendOnly ? "화면을 담당하는 Next.js 프로젝트를 만들어요" : "나만의 웹사이트 프로젝트를 만들어요";
   const path = isFrontendOnly ? `${projectName}/frontend` : projectName;
-  const env: SetupStep["environment"] = variant === "wsl" ? "Ubuntu 터미널" : "Mac 터미널";
+  const env: SetupStep["environment"] = variant === "wsl" ? "리눅스 명령창" : "Mac 터미널";
 
-  return { id: "project-frontend", title: label, description: desc, environment: env, detailedGuide: `~/${path} 폴더에 프로젝트를 만듭니다.`, script: `npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm`, resultPreview: `✔ Would you like to use TypeScript? … Yes
+  return {
+    id: "project-frontend",
+    title: label,
+    description: desc,
+    group: "프로젝트 생성",
+    environment: env,
+    detailedGuide: `~/${path} 폴더에 프로젝트를 만듭니다.`,
+    script: `npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm`,
+    resultPreview: `✔ Would you like to use TypeScript? … Yes
 ✔ Would you like to use ESLint? … Yes
 ✔ Would you like to use Tailwind CSS? … Yes
 ...
 Success! Created ${path}
   npm run dev    (개발 서버 시작)
-  npm run build  (배포용 빌드)` };
+  npm run build  (배포용 빌드)`,
+    troubleshooting: [
+      { symptom: "The application path is not writable 에러", solution: "다시 한번 시도해주세요. 처음 실행 시 다운로드 과정에서 일시적으로 실패할 수 있어요." },
+      { symptom: "npx: command not found", solution: "Node.js가 설치되지 않았어요. '개발 도구 설치' 단계를 다시 확인해주세요." },
+      { symptom: "directory already exists 에러", solution: "이전 시도 흔적이 남아있어요. rm -rf ~/${path} 를 실행해서 삭제한 후 다시 시도해주세요." },
+    ],
+  };
 }
 
 function firstRunStep(projectName: string, goal: Goal, env: SetupStep["environment"]): SetupStep {
@@ -610,6 +639,7 @@ function firstRunStep(projectName: string, goal: Goal, env: SetupStep["environme
     id: "first-run",
     title: "첫 실행!",
     description: "VS Code에서 프로젝트를 열고 AI 코딩을 시작해요",
+    group: "프로젝트 생성",
     environment: env,
     detailedGuide: hasFeBe
       ? "아래 명령어로 VS Code가 열립니다. VS Code 안에서 터미널(Ctrl+` 또는 Cmd+`)을 열고 claude를 입력하면 AI 코딩이 시작됩니다. frontend/와 backend/ 폴더가 함께 보여요."
@@ -624,7 +654,7 @@ function appendProjectSteps(
   projectName: string,
   variant: "wsl" | "mac",
 ): void {
-  const env: SetupStep["environment"] = variant === "wsl" ? "Ubuntu 터미널" : "Mac 터미널";
+  const env: SetupStep["environment"] = variant === "wsl" ? "리눅스 명령창" : "Mac 터미널";
 
   switch (goal) {
     case "web-nextjs":
@@ -651,17 +681,7 @@ function appendProjectSteps(
   steps.push(architectureStep(goal, projectName, env));
 
   // 첫 실행
-  switch (goal) {
-    case "mobile":
-      steps.push(flutterFirstRunStep(projectName, env));
-      break;
-    case "data-ai":
-      steps.push(dataAiFirstRunStep(projectName, env));
-      break;
-    default:
-      steps.push(firstRunStep(projectName, goal, env));
-      break;
-  }
+  steps.push(firstRunStep(projectName, goal, env));
 }
 
 // ─── 메인 ───
@@ -672,42 +692,35 @@ export function getSetupSteps(
   projectName: string,
 ): SetupStep[] {
   const steps: SetupStep[] = [];
-  const extra = extraRuntimeFor(goal);
-  const nodeRequired = needsNode(goal);
 
   steps.push(terminalGuide(os));
 
   if (os === "windows") {
-    // Windows는 항상 WSL2 플로우 (Claude Code 필수)
+    // 환경 준비
     steps.push(wslInstallStep());
     steps.push(wslOpenStep());
-    steps.push(wslCdHomeStep());
-    steps.push(wslGitStep());
 
-    if (nodeRequired) steps.push(wslNodeStep());
-    if (extra === "python") steps.push(wslPythonStep());
-    else if (extra === "java") steps.push(wslJavaStep());
-    else if (extra === "flutter") steps.push(wslFlutterStep());
-
+    // 도구 설치
+    steps.push(wslDevToolsStep(goal));
     steps.push(wslVscodeStep());
-    steps.push(wslClaudeCodeStep());
-    steps.push(wslClaudeLoginStep());
 
+    // AI 설정
+    steps.push(wslClaudeStep());
+
+    // 프로젝트 생성
     appendProjectSteps(steps, goal, projectName, "wsl");
   } else {
-    // macOS
+    // 환경 준비
     steps.push(brewStep());
-    steps.push(macGitStep());
 
-    if (nodeRequired) steps.push(macNodeStep());
-    if (extra === "python") steps.push(macPythonStep());
-    else if (extra === "java") steps.push(macJavaStep());
-    else if (extra === "flutter") steps.push(macFlutterStep());
-
+    // 도구 설치
+    steps.push(macDevToolsStep(goal));
     steps.push(macVscodeStep());
-    steps.push(macClaudeCodeStep());
-    steps.push(macClaudeLoginStep());
 
+    // AI 설정
+    steps.push(macClaudeStep());
+
+    // 프로젝트 생성
     appendProjectSteps(steps, goal, projectName, "mac");
   }
 
