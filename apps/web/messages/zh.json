@@ -1,21 +1,37 @@
 {
   "Metadata": {
     "title": {
-      "default": "VibeStart — 氛围编程，从这里开始",
+      "default": "VibeStart — 编程入门指南 | Git、Node.js、VS Code安装教程",
       "template": "%s — VibeStart"
     },
-    "description": "想用AI写代码，但环境搭建太难了？VibeStart一步步教你。",
+    "description": "氛围编程第一步。从Git、Node.js、VS Code安装到Next.js项目创建，零基础也能通过复制粘贴完成开发环境搭建。",
     "og": {
-      "title": "VibeStart — 氛围编程，从这里开始",
-      "description": "开发工具安装太难放弃了？VibeStart手把手教你。"
+      "title": "VibeStart — 编程入门指南 | 开发环境搭建教程",
+      "description": "想用AI写代码但环境搭建太难？通过复制粘贴就能安装Git、Node.js、VS Code。"
     },
     "twitter": {
-      "title": "VibeStart — 氛围编程，从这里开始",
-      "description": "开发工具安装太难放弃了？VibeStart手把手教你。"
+      "title": "VibeStart — 编程入门指南 | 开发环境搭建教程",
+      "description": "想用AI写代码但环境搭建太难？通过复制粘贴就能安装Git、Node.js、VS Code。"
     },
     "privacy": {
-      "title": "隐私政策 — VibeStart",
+      "title": "隐私政策",
       "description": "VibeStart 隐私政策"
+    },
+    "onboarding": {
+      "title": "开始搭建开发环境 | 选择操作系统和目标",
+      "description": "选择您的操作系统并告诉我们您想创建什么项目。我们将为您制定专属开发环境搭建指南。"
+    },
+    "plan": {
+      "title": "专属安装方案 | Git、Node.js、VS Code安装顺序",
+      "description": "查看为您定制的安装方案。一目了然地了解安装哪些工具以及安装顺序。"
+    },
+    "setup": {
+      "title": "分步安装开发工具 | 复制粘贴即可完成",
+      "description": "复制命令粘贴到终端即可。分步安装Git、Node.js和VS Code。"
+    },
+    "complete": {
+      "title": "开发环境搭建完成 | 准备开始编程",
+      "description": "恭喜！开发环境搭建完成。现在开始用AI编程吧。"
     }
   },
   "Common": {

@@ -1,21 +1,37 @@
 {
   "Metadata": {
     "title": {
-      "default": "VibeStart — バイブコーディング、ここから始めよう",
+      "default": "VibeStart — プログラミングの始め方 | Git・Node.js・VS Codeセットアップガイド",
       "template": "%s — VibeStart"
     },
-    "description": "AIでコーディングしたいけど環境構築が難しい？VibeStartがステップごとにご案内します。",
+    "description": "バイブコーディングの第一歩。Git、Node.js、VS CodeのインストールからNext.jsプロジェクト作成まで、コピペだけで開発環境を構築できます。",
     "og": {
-      "title": "VibeStart — バイブコーディング、ここから始めよう",
-      "description": "開発ツールのインストールが難しくて諦めていませんか？VibeStartが一つずつご案内します。"
+      "title": "VibeStart — プログラミングの始め方 | 開発環境セットアップガイド",
+      "description": "AIでコーディングしたいけど環境構築が難しい？Git、Node.js、VS Codeをコピペだけでインストール。"
     },
     "twitter": {
-      "title": "VibeStart — バイブコーディング、ここから始めよう",
-      "description": "開発ツールのインストールが難しくて諦めていませんか？VibeStartが一つずつご案内します。"
+      "title": "VibeStart — プログラミングの始め方 | 開発環境セットアップガイド",
+      "description": "AIでコーディングしたいけど環境構築が難しい？Git、Node.js、VS Codeをコピペだけでインストール。"
     },
     "privacy": {
-      "title": "プライバシーポリシー — VibeStart",
+      "title": "プライバシーポリシー",
       "description": "VibeStart プライバシーポリシー"
+    },
+    "onboarding": {
+      "title": "開発環境セットアップ開始 | OSと目標を選択",
+      "description": "お使いのOSと作りたいプロジェクトを教えてください。カスタム開発環境セットアップガイドを作成します。"
+    },
+    "plan": {
+      "title": "カスタムセットアッププラン | Git・Node.js・VS Codeインストール順序",
+      "description": "あなたに合わせたインストールプランを確認。どのツールをどの順番でインストールするか一目でわかります。"
+    },
+    "setup": {
+      "title": "ステップ別開発ツールインストール | コピペで完了",
+      "description": "コマンドをコピーしてターミナルに貼り付けるだけ。Git、Node.js、VS Codeをステップ別にインストール。"
+    },
+    "complete": {
+      "title": "開発環境セットアップ完了 | コーディング準備完了",
+      "description": "おめでとうございます！開発環境のセットアップが完了しました。AIと一緒にコーディングを始めましょう。"
     }
   },
   "Common": {

@@ -1,21 +1,37 @@
 {
   "Metadata": {
     "title": {
-      "default": "VibeStart — Your First Step into Vibe Coding",
+      "default": "VibeStart — How to Start Coding | Git, Node.js, VS Code Setup Guide",
       "template": "%s — VibeStart"
     },
-    "description": "Want to code with AI but struggling with the setup? VibeStart guides you through it step by step.",
+    "description": "Your first step into vibe coding. Set up Git, Node.js, VS Code, and create a Next.js project — no experience needed, just copy and paste.",
     "og": {
-      "title": "VibeStart — Your First Step into Vibe Coding",
-      "description": "Gave up because setting up dev tools was too hard? VibeStart walks you through it one step at a time."
+      "title": "VibeStart — How to Start Coding | Dev Environment Setup Guide",
+      "description": "Want to code with AI but struggling with the setup? Install Git, Node.js, and VS Code with simple copy-paste commands."
     },
     "twitter": {
-      "title": "VibeStart — Your First Step into Vibe Coding",
-      "description": "Gave up because setting up dev tools was too hard? VibeStart walks you through it one step at a time."
+      "title": "VibeStart — How to Start Coding | Dev Environment Setup Guide",
+      "description": "Want to code with AI but struggling with the setup? Install Git, Node.js, and VS Code with simple copy-paste commands."
     },
     "privacy": {
-      "title": "Privacy Policy — VibeStart",
+      "title": "Privacy Policy",
       "description": "VibeStart Privacy Policy"
+    },
+    "onboarding": {
+      "title": "Start Dev Environment Setup | Choose Your OS and Goal",
+      "description": "Select your operating system and tell us what you want to build. We'll create a custom dev setup guide just for you."
+    },
+    "plan": {
+      "title": "Your Custom Setup Plan | Git, Node.js, VS Code Install Order",
+      "description": "Review your personalized installation plan. See which tools to install and in what order at a glance."
+    },
+    "setup": {
+      "title": "Step-by-Step Dev Tool Installation | Just Copy and Paste",
+      "description": "Copy commands and paste them into your terminal. Install Git, Node.js, and VS Code step by step."
+    },
+    "complete": {
+      "title": "Dev Environment Setup Complete | Ready to Vibe Code",
+      "description": "Congratulations! Your dev environment is ready. Start coding with AI now."
     }
   },
   "Common": {

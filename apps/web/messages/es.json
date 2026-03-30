@@ -1,21 +1,37 @@
 {
   "Metadata": {
     "title": {
-      "default": "VibeStart — Vibe coding, empieza aquí",
+      "default": "VibeStart — Cómo empezar a programar | Guía de instalación de Git, Node.js y VS Code",
       "template": "%s — VibeStart"
     },
-    "description": "¿Quieres programar con IA pero no sabes cómo configurar el entorno? VibeStart te guía paso a paso.",
+    "description": "Tu primer paso en el vibe coding. Instala Git, Node.js, VS Code y crea un proyecto Next.js — sin experiencia previa, solo copia y pega.",
     "og": {
-      "title": "VibeStart — Vibe coding, empieza aquí",
-      "description": "¿Renunciaste porque instalar herramientas de desarrollo era muy difícil? VibeStart te guía uno a uno."
+      "title": "VibeStart — Cómo empezar a programar | Guía de configuración del entorno",
+      "description": "¿Quieres programar con IA pero la configuración es difícil? Instala Git, Node.js y VS Code con simples comandos de copiar y pegar."
     },
     "twitter": {
-      "title": "VibeStart — Vibe coding, empieza aquí",
-      "description": "¿Renunciaste porque instalar herramientas de desarrollo era muy difícil? VibeStart te guía uno a uno."
+      "title": "VibeStart — Cómo empezar a programar | Guía de configuración del entorno",
+      "description": "¿Quieres programar con IA pero la configuración es difícil? Instala Git, Node.js y VS Code con simples comandos de copiar y pegar."
     },
     "privacy": {
-      "title": "Política de privacidad — VibeStart",
+      "title": "Política de privacidad",
       "description": "Política de privacidad de VibeStart"
+    },
+    "onboarding": {
+      "title": "Iniciar configuración del entorno | Elige tu SO y objetivo",
+      "description": "Selecciona tu sistema operativo y dinos qué quieres crear. Te prepararemos una guía de configuración personalizada."
+    },
+    "plan": {
+      "title": "Tu plan de instalación personalizado | Orden de Git, Node.js y VS Code",
+      "description": "Revisa tu plan de instalación personalizado. Ve qué herramientas instalar y en qué orden de un vistazo."
+    },
+    "setup": {
+      "title": "Instalación paso a paso | Solo copia y pega",
+      "description": "Copia los comandos y pégalos en tu terminal. Instala Git, Node.js y VS Code paso a paso."
+    },
+    "complete": {
+      "title": "Configuración completada | Listo para programar",
+      "description": "¡Felicidades! Tu entorno de desarrollo está listo. Empieza a programar con IA ahora."
     }
   },
   "Common": {
