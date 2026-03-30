@@ -32,6 +32,12 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
+  const languages: Record<string, string> = {};
+  for (const loc of routing.locales) {
+    languages[loc] = loc === routing.defaultLocale ? siteUrl : `${siteUrl}/${loc}`;
+  }
+  languages["x-default"] = siteUrl;
+
   return {
     title: {
       default: t("title.default"),
@@ -39,6 +45,10 @@ export async function generateMetadata({
     },
     description: t("description"),
     metadataBase: new URL(siteUrl),
+    alternates: {
+      canonical: locale === routing.defaultLocale ? siteUrl : `${siteUrl}/${locale}`,
+      languages,
+    },
     openGraph: {
       title: t("og.title"),
       description: t("og.description"),
@@ -70,13 +80,39 @@ export default async function LocaleLayout({
   setRequestLocale(locale);
   const messages = await getMessages();
 
+  const t = await getTranslations({ locale, namespace: "Metadata" });
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        name: "VibeStart",
+        url: siteUrl,
+        description: t("description"),
+        inLanguage: routing.locales.map((loc) => LOCALE_MAP[loc] ?? loc),
+      },
+      {
+        "@type": "WebApplication",
+        name: "VibeStart",
+        url: siteUrl,
+        applicationCategory: "DeveloperApplication",
+        operatingSystem: "Windows, macOS",
+        offers: {
+          "@type": "Offer",
+          price: "0",
+          priceCurrency: "USD",
+        },
+      },
+    ],
+  };
+
   return (
     <>
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
-        strategy="afterInteractive"
+        strategy="beforeInteractive"
       />
-      <Script id="gtag-init" strategy="afterInteractive">
+      <Script id="gtag-init" strategy="beforeInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
@@ -84,6 +120,10 @@ export default async function LocaleLayout({
           gtag('config', '${GA_ID}');
         `}
       </Script>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <NextIntlClientProvider locale={locale} messages={messages}>
         <Header />
         {children}

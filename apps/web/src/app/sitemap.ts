@@ -1,8 +1,11 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
 
+const siteUrl = "https://vibestart.dev";
+
 export default function sitemap(): MetadataRoute.Sitemap {
-  const siteUrl = "https://vibestart.dev";
+  // 실제 콘텐츠 수정일 기준 (기능 업데이트 시 갱신)
+  const lastModified = new Date("2026-03-30");
 
   const paths = [
     { path: "", changeFrequency: "weekly" as const, priority: 1 },
@@ -16,13 +19,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
 
   for (const { path, changeFrequency, priority } of paths) {
+    // 각 URL에 대한 다국어 alternate 링크 생성
+    const alternates: Record<string, string> = {};
+    for (const loc of routing.locales) {
+      const prefix = loc === routing.defaultLocale ? "" : `/${loc}`;
+      alternates[loc] = `${siteUrl}${prefix}${path}`;
+    }
+    alternates["x-default"] = `${siteUrl}${path}`;
+
     for (const locale of routing.locales) {
       const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
       entries.push({
         url: `${siteUrl}${prefix}${path}`,
-        lastModified: new Date(),
+        lastModified,
         changeFrequency,
         priority,
+        alternates: { languages: alternates },
       });
     }
   }
