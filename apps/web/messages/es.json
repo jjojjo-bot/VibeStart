@@ -650,5 +650,14 @@
       "description": "La dirección puede ser incorrecta o la página fue eliminada.",
       "homeButton": "Volver al inicio"
     }
+  },
+  "Blog": {
+    "title": "Blog",
+    "description": "Guías sobre vibe coding, configuración del entorno y consejos de programación",
+    "metaTitle": "Blog | Guía de Vibe Coding, Instalación de Git y VS Code",
+    "metaDescription": "Todo lo que necesitas para empezar con vibe coding: instalación de Git, configuración de VS Code, instalación de Node.js y guías de configuración.",
+    "noPosts": "Aún no hay publicaciones.",
+    "backToList": "Volver a la lista",
+    "nav": "Blog"
   }
 }

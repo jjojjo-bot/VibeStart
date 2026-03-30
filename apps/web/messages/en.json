@@ -650,5 +650,14 @@
       "description": "The address may be incorrect or the page may have been removed.",
       "homeButton": "Go to Home"
     }
+  },
+  "Blog": {
+    "title": "Blog",
+    "description": "Guides on vibe coding, dev environment setup, and coding tips",
+    "metaTitle": "Blog | Vibe Coding Guide, Git & VS Code Setup",
+    "metaDescription": "Everything you need to start vibe coding: Git installation, VS Code setup, Node.js installation, and dev environment configuration guides.",
+    "noPosts": "No posts yet.",
+    "backToList": "Back to list",
+    "nav": "Blog"
   }
 }

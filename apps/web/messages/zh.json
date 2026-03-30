@@ -650,5 +650,14 @@
       "description": "地址可能有误，或者该页面已被删除。",
       "homeButton": "返回首页"
     }
+  },
+  "Blog": {
+    "title": "博客",
+    "description": "氛围编程、开发环境搭建和编程技巧指南",
+    "metaTitle": "博客 | 氛围编程指南、Git和VS Code安装方法",
+    "metaDescription": "氛围编程入门、Git安装、VS Code设置、Node.js安装等开发环境搭建所需的所有指南。",
+    "noPosts": "暂无文章。",
+    "backToList": "返回列表",
+    "nav": "博客"
   }
 }

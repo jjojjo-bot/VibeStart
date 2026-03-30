@@ -1,7 +1,10 @@
 import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "./language-switcher";
 
 export function Header() {
+  const t = useTranslations("Blog");
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4">
       <a
@@ -10,9 +13,14 @@ export function Header() {
       >
         Skip to content
       </a>
-      <Link href="/" className="text-lg font-bold tracking-tight text-foreground hover:text-primary transition-colors">
-        VibeStart
-      </Link>
+      <div className="flex items-center gap-6">
+        <Link href="/" className="text-lg font-bold tracking-tight text-foreground hover:text-primary transition-colors">
+          VibeStart
+        </Link>
+        <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          {t("nav")}
+        </Link>
+      </div>
       <LanguageSwitcher />
     </header>
   );

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
+import { getAllBlogSlugs } from "@/lib/blog";
 
 const siteUrl = "https://vibe-start-web.vercel.app";
 
@@ -13,8 +14,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/plan", changeFrequency: "weekly" as const, priority: 0.8 },
     { path: "/setup", changeFrequency: "weekly" as const, priority: 0.8 },
     { path: "/complete", changeFrequency: "monthly" as const, priority: 0.6 },
+    { path: "/blog", changeFrequency: "weekly" as const, priority: 0.7 },
     { path: "/privacy", changeFrequency: "yearly" as const, priority: 0.3 },
   ];
+
+  // 블로그 글도 사이트맵에 추가
+  const blogSlugs = getAllBlogSlugs("ko");
+  for (const slug of blogSlugs) {
+    paths.push({ path: `/blog/${slug}`, changeFrequency: "monthly" as const, priority: 0.6 });
+  }
 
   const entries: MetadataRoute.Sitemap = [];
 

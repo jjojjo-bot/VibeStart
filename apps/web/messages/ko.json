@@ -650,5 +650,14 @@
       "description": "주소가 잘못되었거나, 삭제된 페이지일 수 있어요.",
       "homeButton": "홈으로 돌아가기"
     }
+  },
+  "Blog": {
+    "title": "블로그",
+    "description": "바이브코딩, 개발 환경 설정, 코딩 팁에 대한 가이드",
+    "metaTitle": "블로그 | 바이브코딩 가이드, Git·VS Code 설치 방법",
+    "metaDescription": "바이브코딩 시작 방법, Git 설치, VS Code 설정, Node.js 설치 등 개발 환경 설정에 필요한 모든 가이드를 제공합니다.",
+    "noPosts": "아직 작성된 글이 없습니다.",
+    "backToList": "목록으로 돌아가기",
+    "nav": "블로그"
   }
 }

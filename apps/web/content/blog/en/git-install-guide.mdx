@@ -1,0 +1,45 @@
+---
+title: "How to Install Git — Complete Guide for Windows & macOS (2026)"
+description: "Step-by-step guide to installing Git for the first time. Learn how to install and configure Git on Windows and macOS."
+date: "2026-03-30"
+tags: ["Git", "Install Guide", "Windows", "macOS"]
+---
+
+## What Is Git?
+
+**Git** is a tool that tracks changes in your code. Like pressing a "save" button, it records each version of your code so you can go back to any previous state.
+
+Whether you're vibe coding or doing traditional development, Git is an essential tool used in almost every project.
+
+## Installing Git on Windows
+
+Open PowerShell and run:
+
+```powershell
+winget install --id Git.Git -e --source winget
+```
+
+After installation, close and reopen your terminal, then verify with `git --version`.
+
+## Installing Git on macOS
+
+Open Terminal and run:
+
+```bash
+xcode-select --install
+```
+
+This installs Xcode Command Line Tools, which includes Git.
+
+## Initial Git Setup
+
+After installation, set your name and email:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+```
+
+## The Easy Way
+
+If typing commands feels daunting, try [VibeStart](/onboarding). Just select your OS and we'll provide copy-paste commands to install Git and everything else you need.
