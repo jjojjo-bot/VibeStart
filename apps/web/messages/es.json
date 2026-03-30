@@ -60,10 +60,34 @@
       "legendCompleted": "Usuarios que completaron"
     },
     "reassurance": "No importa si no tienes experiencia en programación. Solo sigue los pasos poco a poco.",
+    "chartMonth": "Mes {month}",
+    "chartPeriod": {
+      "daily": "Diario",
+      "weekly": "Semanal",
+      "monthly": "Mensual"
+    },
     "chartTooltip": {
       "visitors": "Iniciados",
       "completions": "Completados",
       "unit": ""
+    },
+    "countryStats": {
+      "title": "🌍 Estadísticas por País",
+      "legendStarted": "Iniciados",
+      "legendCompleted": "Completados",
+      "completionRate": "Tasa de finalización",
+      "countries": {
+        "KR": "Corea",
+        "US": "EE.UU.",
+        "JP": "Japón",
+        "CN": "China",
+        "ES": "España",
+        "IN": "India",
+        "GB": "Reino Unido",
+        "DE": "Alemania",
+        "FR": "Francia",
+        "BR": "Brasil"
+      }
     }
   },
   "Onboarding": {

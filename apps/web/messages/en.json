@@ -60,10 +60,34 @@
       "legendCompleted": "Users Completed"
     },
     "reassurance": "No coding experience? No problem. Just follow along at your own pace.",
+    "chartMonth": "Mon {month}",
+    "chartPeriod": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly"
+    },
     "chartTooltip": {
       "visitors": "Started",
       "completions": "Completed",
       "unit": ""
+    },
+    "countryStats": {
+      "title": "🌍 Stats by Country",
+      "legendStarted": "Started",
+      "legendCompleted": "Completed",
+      "completionRate": "Completion Rate",
+      "countries": {
+        "KR": "Korea",
+        "US": "USA",
+        "JP": "Japan",
+        "CN": "China",
+        "ES": "Spain",
+        "IN": "India",
+        "GB": "UK",
+        "DE": "Germany",
+        "FR": "France",
+        "BR": "Brazil"
+      }
     }
   },
   "Onboarding": {

@@ -60,10 +60,34 @@
       "legendCompleted": "完了したユーザー"
     },
     "reassurance": "コーディング経験がまったくなくても大丈夫です。ゆっくりついてきてください。",
+    "chartMonth": "{month}月",
+    "chartPeriod": {
+      "daily": "日別",
+      "weekly": "週別",
+      "monthly": "月別"
+    },
     "chartTooltip": {
       "visitors": "開始",
       "completions": "完了",
       "unit": "人"
+    },
+    "countryStats": {
+      "title": "🌍 国別の状況",
+      "legendStarted": "開始",
+      "legendCompleted": "完了",
+      "completionRate": "完了率",
+      "countries": {
+        "KR": "韓国",
+        "US": "アメリカ",
+        "JP": "日本",
+        "CN": "中国",
+        "ES": "スペイン",
+        "IN": "インド",
+        "GB": "イギリス",
+        "DE": "ドイツ",
+        "FR": "フランス",
+        "BR": "ブラジル"
+      }
     }
   },
   "Onboarding": {

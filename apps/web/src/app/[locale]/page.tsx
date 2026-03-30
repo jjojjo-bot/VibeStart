@@ -1,12 +1,14 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
+import type { Period } from "@/components/stats-chart";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import dynamic from "next/dynamic";
 
 const StatsChart = dynamic(() => import("@/components/stats-chart").then((m) => m.StatsChart), { ssr: false });
+const CountryStats = dynamic(() => import("@/components/country-stats").then((m) => m.CountryStats), { ssr: false });
 import { getSiteStats, type SiteStats } from "@/lib/stats";
 
 const STEP_NUMBERS = ["1", "2", "3"] as const;
@@ -19,10 +21,13 @@ export default function LandingPage() {
   const t = useTranslations("Landing");
   const tc = useTranslations("Common");
   const [stats, setStats] = useState<SiteStats | null>(null);
+  const [period, setPeriod] = useState<Period>("daily");
 
   useEffect(() => {
     getSiteStats().then(setStats);
   }, []);
+
+  const onPeriodChange = useCallback((p: Period) => setPeriod(p), []);
 
   const hasStats = stats && (stats.totalVisitors > 0 || stats.totalCompletions > 0);
 
@@ -115,8 +120,11 @@ export default function LandingPage() {
                   {t("stats.legendCompleted")}
                 </span>
               </div>
-              <StatsChart data={stats.daily} />
+              <StatsChart data={stats.daily} period={period} onPeriodChange={onPeriodChange} />
             </div>
+
+            {/* 국가별 통계 */}
+            <CountryStats dailyCountries={stats.dailyCountries} daily={stats.daily} period={period} />
           </div>
         )}
 

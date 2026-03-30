@@ -60,10 +60,34 @@
       "legendCompleted": "완료한 사용자"
     },
     "reassurance": "코딩 경험이 전혀 없어도 괜찮아요. 천천히 따라오시면 됩니다.",
+    "chartMonth": "{month}월",
+    "chartPeriod": {
+      "daily": "일별",
+      "weekly": "주별",
+      "monthly": "월별"
+    },
     "chartTooltip": {
       "visitors": "시작",
       "completions": "완료",
       "unit": "명"
+    },
+    "countryStats": {
+      "title": "🌍 국가별 현황",
+      "legendStarted": "시작",
+      "legendCompleted": "완료",
+      "completionRate": "완료율",
+      "countries": {
+        "KR": "한국",
+        "US": "미국",
+        "JP": "일본",
+        "CN": "중국",
+        "ES": "스페인",
+        "IN": "인도",
+        "GB": "영국",
+        "DE": "독일",
+        "FR": "프랑스",
+        "BR": "브라질"
+      }
     }
   },
   "Onboarding": {

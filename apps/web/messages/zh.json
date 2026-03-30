@@ -60,10 +60,34 @@
       "legendCompleted": "已完成的用户"
     },
     "reassurance": "完全没有编程经验也没关系。慢慢跟着做就行。",
+    "chartMonth": "{month}月",
+    "chartPeriod": {
+      "daily": "按日",
+      "weekly": "按周",
+      "monthly": "按月"
+    },
     "chartTooltip": {
       "visitors": "开始",
       "completions": "完成",
       "unit": "人"
+    },
+    "countryStats": {
+      "title": "🌍 各国统计",
+      "legendStarted": "开始",
+      "legendCompleted": "完成",
+      "completionRate": "完成率",
+      "countries": {
+        "KR": "韩国",
+        "US": "美国",
+        "JP": "日本",
+        "CN": "中国",
+        "ES": "西班牙",
+        "IN": "印度",
+        "GB": "英国",
+        "DE": "德国",
+        "FR": "法国",
+        "BR": "巴西"
+      }
     }
   },
   "Onboarding": {

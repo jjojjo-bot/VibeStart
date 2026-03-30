@@ -60,10 +60,34 @@
       "legendCompleted": "पूरा करने वाले यूज़र"
     },
     "reassurance": "कोडिंग का बिल्कुल अनुभव नहीं है? कोई बात नहीं। धीरे-धीरे फॉलो कीजिए।",
+    "chartMonth": "माह {month}",
+    "chartPeriod": {
+      "daily": "दैनिक",
+      "weekly": "साप्ताहिक",
+      "monthly": "मासिक"
+    },
     "chartTooltip": {
       "visitors": "शुरू",
       "completions": "पूरा",
       "unit": "लोग"
+    },
+    "countryStats": {
+      "title": "🌍 देश के अनुसार आँकड़े",
+      "legendStarted": "शुरू किया",
+      "legendCompleted": "पूरा किया",
+      "completionRate": "पूर्णता दर",
+      "countries": {
+        "KR": "कोरिया",
+        "US": "अमेरिका",
+        "JP": "जापान",
+        "CN": "चीन",
+        "ES": "स्पेन",
+        "IN": "भारत",
+        "GB": "ब्रिटेन",
+        "DE": "जर्मनी",
+        "FR": "फ़्रांस",
+        "BR": "ब्राज़ील"
+      }
     }
   },
   "Onboarding": {
