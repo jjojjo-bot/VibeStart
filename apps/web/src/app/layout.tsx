@@ -5,7 +5,7 @@ import "./globals.css";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
-const GA_ID = "G-T3GQ0P5N6P";
+const GA_ID = "G-PE36D37TDG";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
