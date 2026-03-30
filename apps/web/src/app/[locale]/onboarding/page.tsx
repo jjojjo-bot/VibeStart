@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { incrementVisitors } from "@/lib/stats";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -15,8 +16,12 @@ import {
   ONBOARDING_STEPS,
 } from "@/lib/onboarding";
 
+const STEP_KEYS = ["os", "aiIntro", "goal", "projectName"] as const;
+
 export default function OnboardingPage() {
   const router = useRouter();
+  const t = useTranslations("Onboarding");
+  const tc = useTranslations("Common");
   const [step, setStep] = useState(0);
   const [data, setData] = useState<OnboardingData>(INITIAL_ONBOARDING);
   const counted = useRef(false);
@@ -28,9 +33,9 @@ export default function OnboardingPage() {
     }
   }, []);
 
-  const currentStep = ONBOARDING_STEPS[step];
   const totalSteps = ONBOARDING_STEPS.length;
   const progress = ((step + 1) / totalSteps) * 100;
+  const stepKey = STEP_KEYS[step];
 
   function canProceed(): boolean {
     switch (step) {
@@ -70,15 +75,15 @@ export default function OnboardingPage() {
         {/* 진행 바 */}
         <div className="mb-2 flex items-center justify-between text-sm text-muted-foreground">
           <span>
-            {step + 1} / {totalSteps}
+            {t("progressLabel", { current: step + 1, total: totalSteps })}
           </span>
-          <span>{currentStep?.title}</span>
+          <span>{t(`steps.${stepKey}.title`)}</span>
         </div>
         <Progress value={progress} className="mb-10 h-2" />
 
         {/* 질문 */}
         <h2 className="mb-8 text-center text-2xl font-bold">
-          {currentStep?.description}
+          {t(`steps.${stepKey}.description`)}
         </h2>
 
         {/* 단계별 컴포넌트 */}
@@ -108,7 +113,7 @@ export default function OnboardingPage() {
         <div className="flex gap-3">
           {step > 0 && (
             <Button variant="outline" onClick={handleBack} className="flex-1">
-              이전
+              {tc("previous")}
             </Button>
           )}
           <Button
@@ -116,7 +121,7 @@ export default function OnboardingPage() {
             disabled={!canProceed()}
             className="flex-1"
           >
-            {step === totalSteps - 1 ? "플랜 확인하기" : "다음"}
+            {step === totalSteps - 1 ? t("lastStepButton") : tc("next")}
           </Button>
         </div>
       </div>

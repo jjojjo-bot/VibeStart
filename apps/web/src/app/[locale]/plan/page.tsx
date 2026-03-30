@@ -1,11 +1,11 @@
 "use client";
-
 import { useSearchParams } from "next/navigation";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { OS, Goal } from "@/lib/onboarding";
 import { Suspense } from "react";
+import { useTranslations } from "next-intl";
 
 interface PlanItem {
   name: string;
@@ -13,20 +13,20 @@ interface PlanItem {
   icon: string;
 }
 
-function getPlanItems(os: OS, goal: Goal): PlanItem[] {
+function getPlanItems(os: OS, goal: Goal, t: ReturnType<typeof useTranslations<"Plan">>): PlanItem[] {
   const items: PlanItem[] = [];
 
   items.push({
-    name: "Git",
-    description: "코드 버전 관리 도구",
+    name: t("tools.git.name"),
+    description: t("tools.git.description"),
     icon: "📦",
   });
 
   // 프론트엔드가 있는 Goal은 Node.js 필요
   if (goal === "web-nextjs" || goal === "web-python" || goal === "web-java" || goal === "not-sure") {
     items.push({
-      name: "Node.js",
-      description: "자바스크립트 실행 환경 (프론트엔드용)",
+      name: t("tools.nodejs.name"),
+      description: t("tools.nodejs.description"),
       icon: "🟢",
     });
   }
@@ -35,64 +35,64 @@ function getPlanItems(os: OS, goal: Goal): PlanItem[] {
   if (goal === "web-python" || goal === "data-ai") {
     items.push({
       name: "Python",
-      description: goal === "data-ai" ? "프로그래밍 언어 실행 환경" : "백엔드 서버용 프로그래밍 언어",
+      description: goal === "data-ai" ? t("tools.python.description.dataAi") : t("tools.python.description.backend"),
       icon: "🐍",
     });
   } else if (goal === "web-java") {
     items.push({
-      name: "Java (JDK)",
-      description: "백엔드 서버용 프로그래밍 언어",
+      name: t("tools.java.name"),
+      description: t("tools.java.description"),
       icon: "☕",
     });
   } else if (goal === "mobile") {
     items.push({
-      name: "Expo (React Native)",
-      description: "안드로이드 + iOS 앱을 동시에 만드는 도구",
+      name: t("tools.expo.name"),
+      description: t("tools.expo.description"),
       icon: "📱",
     });
   }
 
   items.push({
-    name: "VS Code",
-    description: "코드 에디터",
+    name: t("tools.vscode.name"),
+    description: t("tools.vscode.description"),
     icon: "💻",
   });
 
   items.push({
-    name: "Claude Code",
-    description: "AI 코딩 도우미 (CLI + VS Code 확장)",
+    name: t("tools.claudeCode.name"),
+    description: t("tools.claudeCode.description"),
     icon: "🤖",
   });
 
   // 프로젝트 생성
   if (goal === "web-nextjs" || goal === "not-sure") {
     items.push({
-      name: "Next.js 프로젝트 생성",
-      description: "웹사이트 프로젝트를 자동으로 만들어요",
+      name: t("tools.nextjsProject.name"),
+      description: t("tools.nextjsProject.description"),
       icon: "🚀",
     });
   } else if (goal === "web-python") {
     items.push({
-      name: "Next.js + FastAPI 프로젝트 생성",
-      description: "프론트엔드(Next.js)와 백엔드(Python) 프로젝트를 각각 만들어요",
+      name: t("tools.nextjsFastapiProject.name"),
+      description: t("tools.nextjsFastapiProject.description"),
       icon: "🚀",
     });
   } else if (goal === "web-java") {
     items.push({
-      name: "Next.js + Spring Boot 프로젝트 생성",
-      description: "프론트엔드(Next.js)와 백엔드(Java) 프로젝트를 각각 만들어요",
+      name: t("tools.nextjsSpringProject.name"),
+      description: t("tools.nextjsSpringProject.description"),
       icon: "🚀",
     });
   } else if (goal === "mobile") {
     items.push({
-      name: "Expo 프로젝트 생성",
-      description: "모바일 앱 프로젝트를 만들어요",
+      name: t("tools.expoProject.name"),
+      description: t("tools.expoProject.description"),
       icon: "🚀",
     });
   } else if (goal === "data-ai") {
     items.push({
-      name: "Jupyter Notebook 설정",
-      description: "데이터 분석 환경을 만들어요",
+      name: t("tools.jupyterProject.name"),
+      description: t("tools.jupyterProject.description"),
       icon: "🚀",
     });
   }
@@ -102,12 +102,14 @@ function getPlanItems(os: OS, goal: Goal): PlanItem[] {
 
 function PlanContent() {
   const searchParams = useSearchParams();
+  const t = useTranslations("Plan");
+  const tc = useTranslations("Common");
 
   const os = (searchParams.get("os") ?? "windows") as OS;
   const goal = (searchParams.get("goal") ?? "web-nextjs") as Goal;
   const projectName = searchParams.get("project") ?? "my-first-app";
 
-  const planItems = getPlanItems(os, goal);
+  const planItems = getPlanItems(os, goal, t);
 
   const setupParams = new URLSearchParams({
     os,
@@ -118,9 +120,9 @@ function PlanContent() {
   return (
     <main id="main-content" className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
       <div className="mx-auto w-full max-w-lg">
-        <h1 className="mb-2 text-center text-3xl font-bold">맞춤 설치 플랜</h1>
+        <h1 className="mb-2 text-center text-3xl font-bold">{t("title")}</h1>
         <p className="mb-10 text-center text-muted-foreground">
-          아래 도구들을 단계별로 설치할 거예요
+          {t("subtitle")}
         </p>
 
         {/* 플랜 아이템 리스트 */}
@@ -149,28 +151,28 @@ function PlanContent() {
         {/* 요약 */}
         <div className="mb-8 rounded-xl bg-muted/30 p-4 text-sm text-muted-foreground">
           <div className="flex justify-between">
-            <span>운영체제</span>
+            <span>{t("summary.os")}</span>
             <span className="text-foreground">
               {os === "windows" ? "Windows" : "Mac"}
             </span>
           </div>
           <div className="mt-2 flex justify-between">
-            <span>프로젝트 이름</span>
+            <span>{t("summary.projectName")}</span>
             <code className="text-foreground">{projectName}</code>
           </div>
           <div className="mt-2 flex justify-between">
-            <span>예상 소요 시간</span>
-            <span className="text-foreground">약 10~15분</span>
+            <span>{t("summary.estimatedTime")}</span>
+            <span className="text-foreground">{t("summary.estimatedTimeValue")}</span>
           </div>
         </div>
 
         {/* CTA */}
         <Link href={`/setup?${setupParams.toString()}`}>
-          <Button className="h-12 w-full text-base">설치 시작하기</Button>
+          <Button className="h-12 w-full text-base">{t("ctaButton")}</Button>
         </Link>
 
         <p className="mt-4 text-center text-sm text-muted-foreground/70">
-          이미 설치된 도구는 자동으로 건너뛰어요
+          {t("skipNote")}
         </p>
       </div>
     </main>

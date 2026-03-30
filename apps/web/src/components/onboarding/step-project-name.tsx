@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 
 interface StepProjectNameProps {
@@ -17,6 +18,7 @@ function sanitize(raw: string): string {
 }
 
 export function StepProjectName({ value, onChange }: StepProjectNameProps) {
+  const t = useTranslations("Onboarding");
   const [raw, setRaw] = useState(value);
   const [composing, setComposing] = useState(false);
 
@@ -36,24 +38,22 @@ export function StepProjectName({ value, onChange }: StepProjectNameProps) {
 
   return (
     <div className="flex flex-col gap-4">
-      <label htmlFor="project-name" className="sr-only">프로젝트 이름</label>
+      <label htmlFor="project-name" className="sr-only">{t("projectName.label")}</label>
       <Input
         id="project-name"
         value={composing ? raw : value}
         onChange={(e) => handleChange(e.target.value)}
         onCompositionStart={() => setComposing(true)}
         onCompositionEnd={(e) => handleCompositionEnd(e.currentTarget.value)}
-        placeholder="my-first-app"
+        placeholder={t("projectName.placeholder")}
         className="h-12 text-lg"
       />
-      <p className="text-sm text-muted-foreground">
-        영문 소문자, 숫자, 하이픈(-)만 사용할 수 있어요.
-        <br />
-        이 이름이 프로젝트 폴더 이름이 됩니다.
+      <p className="text-sm text-muted-foreground whitespace-pre-line">
+        {t("projectName.hint")}
       </p>
       {value && (
         <div className="rounded-lg bg-muted/50 p-3 text-sm text-muted-foreground">
-          생성될 폴더: <code className="text-foreground">~/{value}</code>
+          {t("projectName.folderPreview", { name: value })}
         </div>
       )}
     </div>

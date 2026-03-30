@@ -1,0 +1,614 @@
+{
+  "Metadata": {
+    "title": {
+      "default": "VibeStart — Your First Step into Vibe Coding",
+      "template": "%s — VibeStart"
+    },
+    "description": "Want to code with AI but struggling with the setup? VibeStart guides you through it step by step.",
+    "og": {
+      "title": "VibeStart — Your First Step into Vibe Coding",
+      "description": "Gave up because setting up dev tools was too hard? VibeStart walks you through it one step at a time."
+    },
+    "twitter": {
+      "title": "VibeStart — Your First Step into Vibe Coding",
+      "description": "Gave up because setting up dev tools was too hard? VibeStart walks you through it one step at a time."
+    },
+    "privacy": {
+      "title": "Privacy Policy — VibeStart",
+      "description": "VibeStart Privacy Policy"
+    }
+  },
+  "Common": {
+    "siteName": "VibeStart",
+    "skipToContent": "Skip to content",
+    "privacyPolicy": "Privacy Policy",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "startButton": "Get Started",
+    "backToHome": "Back to Home",
+    "copyWarning": "Don't type it manually — always use the copy button"
+  },
+  "Landing": {
+    "badge": "Your first step into vibe coding",
+    "heroTitle": "Want to code with AI but",
+    "heroHighlight": "don't know where to start?",
+    "heroDescription": "Gave up because setting up dev tools was too hard?\nVibeStart walks you through it one step at a time.",
+    "ctaButton": "Get Started",
+    "steps": {
+      "1": {
+        "title": "A Few Quick Questions",
+        "description": "Just tell us your OS and what you want to build"
+      },
+      "2": {
+        "title": "Custom Guide",
+        "description": "We'll walk you through the tools you need, step by step"
+      },
+      "3": {
+        "title": "Copy & Paste",
+        "description": "Copy the commands, run them, and you're done!"
+      }
+    },
+    "stats": {
+      "todayStart": "Started Today",
+      "todayComplete": "Completed Today",
+      "totalStart": "Total Started",
+      "totalComplete": "Total Completed",
+      "legendStarted": "Users Started",
+      "legendCompleted": "Users Completed"
+    },
+    "reassurance": "No coding experience? No problem. Just follow along at your own pace.",
+    "chartTooltip": {
+      "visitors": "Started",
+      "completions": "Completed",
+      "unit": ""
+    }
+  },
+  "Onboarding": {
+    "progressLabel": "{current} / {total}",
+    "lastStepButton": "View My Plan",
+    "steps": {
+      "os": {
+        "title": "Operating System",
+        "description": "What computer are you using?"
+      },
+      "aiIntro": {
+        "title": "AI Tool",
+        "description": "Meet your AI coding companion"
+      },
+      "goal": {
+        "title": "Goal",
+        "description": "What do you want to build?"
+      },
+      "projectName": {
+        "title": "Project Name",
+        "description": "Give your project a name"
+      }
+    },
+    "osOptions": {
+      "windows": "Windows",
+      "macos": "Mac"
+    },
+    "osAriaLabel": "Select operating system",
+    "goalOptions": {
+      "website": "Website / Web App",
+      "mobile": "Mobile App",
+      "dataAi": "Data Analysis / AI",
+      "notSure": "I'm not sure yet"
+    },
+    "goalAriaLabel": "Select your goal",
+    "goalSubQuestion": "Which tech stack would you like?",
+    "goalSubOptions": {
+      "webNextjs": {
+        "label": "Next.js All-in-One",
+        "description": "Build your frontend and backend in one framework.\nGreat for shipping fast and deploying right away.\nUsed by Airbnb, TikTok Web, and Twitch."
+      },
+      "webPython": {
+        "label": "Next.js + Python Backend",
+        "description": "Next.js handles the frontend, Python handles the server.\nPerfect for adding AI chatbots or data analysis features.\nUsed by Instagram, Pinterest, and Netflix."
+      },
+      "webJava": {
+        "label": "Next.js + Java Backend",
+        "description": "Next.js handles the frontend, Java handles the server.\nBuilt for handling heavy traffic reliably at scale.\nUsed by LinkedIn, Uber, and Amazon."
+      }
+    },
+    "recommended": "Recommended",
+    "aiIntro": {
+      "heading": "Claude Code",
+      "subtitle": "An AI tool that writes code for you",
+      "features": {
+        "conversation": {
+          "title": "Just ask in plain English",
+          "description": "Say something like \"Build me a login page\" and the AI writes the code"
+        },
+        "terminal": {
+          "title": "Runs in the terminal",
+          "description": "Open your project folder and type claude to get started"
+        },
+        "free": {
+          "title": "Free to start",
+          "description": "Ready to use right after installation. No coding experience needed"
+        }
+      }
+    },
+    "projectName": {
+      "label": "Project Name",
+      "placeholder": "my-first-app",
+      "hint": "Only lowercase letters, numbers, and hyphens (-) are allowed.\nThis name will be your project folder name.",
+      "folderPreview": "Folder to be created: ~/{name}"
+    }
+  },
+  "Plan": {
+    "title": "Your Custom Setup Plan",
+    "subtitle": "We'll install these tools step by step",
+    "tools": {
+      "git": {
+        "name": "Git",
+        "description": "Version control for your code"
+      },
+      "nodejs": {
+        "name": "Node.js",
+        "description": "JavaScript runtime (for frontend)"
+      },
+      "python": {
+        "description": {
+          "backend": "Programming language for the backend server",
+          "dataAi": "Programming language runtime"
+        }
+      },
+      "java": {
+        "name": "Java (JDK)",
+        "description": "Programming language for the backend server"
+      },
+      "expo": {
+        "name": "Expo (React Native)",
+        "description": "Build Android + iOS apps from one codebase"
+      },
+      "vscode": {
+        "name": "VS Code",
+        "description": "Code editor"
+      },
+      "claudeCode": {
+        "name": "Claude Code",
+        "description": "AI coding assistant (CLI + VS Code extension)"
+      },
+      "nextjsProject": {
+        "name": "Create Next.js Project",
+        "description": "Automatically sets up your website project"
+      },
+      "nextjsFastapiProject": {
+        "name": "Create Next.js + FastAPI Project",
+        "description": "Sets up separate frontend (Next.js) and backend (Python) projects"
+      },
+      "nextjsSpringProject": {
+        "name": "Create Next.js + Spring Boot Project",
+        "description": "Sets up separate frontend (Next.js) and backend (Java) projects"
+      },
+      "expoProject": {
+        "name": "Create Expo Project",
+        "description": "Sets up your mobile app project"
+      },
+      "jupyterProject": {
+        "name": "Jupyter Notebook Setup",
+        "description": "Sets up your data analysis environment"
+      }
+    },
+    "summary": {
+      "os": "Operating System",
+      "projectName": "Project Name",
+      "estimatedTime": "Estimated Time",
+      "estimatedTimeValue": "About 10–15 minutes"
+    },
+    "ctaButton": "Start Setup",
+    "skipNote": "Already-installed tools will be automatically skipped"
+  },
+  "Setup": {
+    "title": "Step-by-Step Setup",
+    "subtitle": "Copy each step's commands using the <strong>copy button</strong> and paste them into your terminal",
+    "progressLabel": "Progress",
+    "progressAriaLabel": "Setup progress",
+    "resultPreviewLabel": "Expected output",
+    "claudeMdGuide": "Copy the content below and save it as a <code>CLAUDE.md</code> file in your project root.",
+    "whyNeededToggle": {
+      "open": "▾ Close",
+      "closed": "▸ What is this?"
+    },
+    "troubleshootingToggle": {
+      "open": "▾ Close",
+      "closed": "▸ Having trouble?"
+    },
+    "completeButton": "Done!",
+    "undoCompleteButton": "Undo",
+    "allDoneButton": "All done! Next",
+    "groups": {
+      "envPrep": "Environment Setup",
+      "toolInstall": "Tool Installation",
+      "aiSetup": "AI Setup",
+      "projectCreate": "Project Creation"
+    }
+  },
+  "SetupSteps": {
+    "terminal": {
+      "title": "Open Terminal",
+      "description": "Open a window to run commands",
+      "detailedGuide": {
+        "windows": "In the Windows search bar (magnifying glass icon), type 'PowerShell' and click 'Windows PowerShell' to open it. After installing the Linux environment, you can search for 'Ubuntu' and open that instead.",
+        "macos": "Open Spotlight (Cmd + Space), type 'Terminal', and press Enter."
+      }
+    },
+    "wsl": {
+      "title": "Install Linux Environment (WSL2)",
+      "description": "AI coding tools on Windows require a Linux environment",
+      "whyNeeded": "AI coding tools (Claude Code) only run on Linux. WSL2 is a mini Linux computer that runs inside Windows. Once installed, you can use Linux commands while staying on Windows.",
+      "detailedGuide": "You'll need to restart your computer after installation. After restarting, an Ubuntu window will open automatically, prompting you to set up a username and password.",
+      "troubleshooting": [
+        {
+          "symptom": "'wsl' is not recognized as a command",
+          "solution": "You need Windows 10 version 2004 or later. Check your OS build in Settings → System → About, then run Windows Update."
+        },
+        {
+          "symptom": "Virtualization is not enabled error",
+          "solution": "You need to enable Virtualization Technology in your BIOS settings. Press F2 or Del during restart to enter BIOS."
+        },
+        {
+          "symptom": "Message saying it's already installed",
+          "solution": "That's fine! Run wsl --update to update to the latest version and move on to the next step."
+        },
+        {
+          "symptom": "Ubuntu doesn't open after restarting",
+          "solution": "Search for 'Ubuntu' in Windows search. If it's not there, search for 'Ubuntu' in the Microsoft Store and install it."
+        }
+      ]
+    },
+    "wslOpen": {
+      "title": "Open Linux Terminal (Ubuntu)",
+      "description": "From here on, we'll work in the Linux terminal",
+      "whyNeeded": "You're entering the Linux environment you just installed. When the prompt (input indicator) changes, you're in the Linux world.",
+      "detailedGuide": "Enter the command below to switch to the Linux terminal. If the prompt changes, you're in! After switching, type cd ~ to navigate to your home folder.",
+      "troubleshooting": [
+        {
+          "symptom": "It's asking for a username and password",
+          "solution": "That's normal! Enter a username and password of your choice. It's normal for nothing to appear on screen while typing your password."
+        },
+        {
+          "symptom": "Nothing happens after typing 'wsl'",
+          "solution": "You may not have restarted after installing WSL. Restart your computer and try again."
+        },
+        {
+          "symptom": "Still at /mnt/c/... path after cd ~",
+          "solution": "Check if the end of the prompt changed to :~$. Type pwd — if it shows /home/yourusername, you're all set."
+        }
+      ]
+    },
+    "devTools": {
+      "title": "Install Development Tools",
+      "descriptionTemplate": "Installing {names}",
+      "detailedGuide": "This installs multiple tools at once. It may take a few minutes.",
+      "whyNeeded": {
+        "git": "Git is a 'time machine' for your code — it saves every change you make.",
+        "nodejs": "Node.js is the JavaScript engine needed to build websites.",
+        "python": "Python is a widely-used programming language for AI and data analysis.",
+        "java": "Java is a reliable programming language used by large-scale services.",
+        "expo": "Expo lets you build Android and iOS apps simultaneously from one codebase."
+      },
+      "troubleshooting": {
+        "wsl": [
+          {
+            "symptom": "sudo asks for a password but nothing appears when I type",
+            "solution": "It's normal for nothing to appear on screen while typing your password. Just type your password and press Enter."
+          },
+          {
+            "symptom": "Unable to locate package error",
+            "solution": "Run sudo apt update first, then try again."
+          },
+          {
+            "symptom": "dpkg lock or another process is using it error",
+            "solution": "Another installation is in progress. Wait a minute or two and try again."
+          },
+          {
+            "symptom": "curl: command not found",
+            "solution": "Run sudo apt update && sudo apt install -y curl first, then try again."
+          }
+        ],
+        "macos": [
+          {
+            "symptom": "brew: command not found",
+            "solution": "Homebrew isn't installed. Complete the Homebrew installation step first."
+          },
+          {
+            "symptom": "already installed message",
+            "solution": "It's already installed — that's fine! Move on to the next step."
+          },
+          {
+            "symptom": "Error: No available formula error",
+            "solution": "Run brew update and try again."
+          }
+        ]
+      }
+    },
+    "editor": {
+      "title": "Install Code Editor (VS Code)",
+      "description": "Install a program for editing code",
+      "whyNeeded": "VS Code is a dedicated code editor. It's like Notepad, but with superpowers — code autocomplete, error highlighting, AI assistant integration, and more.",
+      "detailedGuide": {
+        "windows": "VS Code is installed on Windows but automatically connects to WSL. Open a new PowerShell window to run the command."
+      },
+      "troubleshooting": {
+        "windows": [
+          {
+            "symptom": "'winget' is not recognized",
+            "solution": "Search for 'App Installer' in the Microsoft Store and update it. If that doesn't work, download VS Code directly from code.visualstudio.com."
+          },
+          {
+            "symptom": "Message saying it's already installed",
+            "solution": "That's fine! VS Code is already installed — move on to the next step."
+          }
+        ],
+        "macos": [
+          {
+            "symptom": "Message saying it's already installed",
+            "solution": "That's fine! Move on to the next step."
+          },
+          {
+            "symptom": "brew: command not found",
+            "solution": "Close and reopen your terminal. If it still doesn't work, revisit the Homebrew installation step."
+          }
+        ]
+      }
+    },
+    "brew": {
+      "title": "Install Package Manager (Homebrew)",
+      "description": "A tool that makes it easy to install programs on your Mac",
+      "whyNeeded": "Homebrew is like a terminal-based App Store for your Mac. You can install and manage dev tools with a single command.",
+      "detailedGuide": "You may be asked for your password during installation. Enter your Mac login password. After installation, close and reopen your terminal.",
+      "troubleshooting": [
+        {
+          "symptom": "A Command Line Tools installation popup appears",
+          "solution": "That's normal! Click the 'Install' button to proceed. Homebrew installation will continue after it's done."
+        },
+        {
+          "symptom": "It's asking for my password",
+          "solution": "Enter your Mac login password. It's normal for nothing to appear on screen while typing."
+        },
+        {
+          "symptom": "brew command doesn't work after installation",
+          "solution": "Close and reopen your terminal. If it still doesn't work, run eval \"$(/opt/homebrew/bin/brew shellenv)\"."
+        }
+      ]
+    },
+    "aiSetup": {
+      "title": "Install AI Coding Assistant (Claude Code)",
+      "description": "Install the AI coding assistant and connect your account",
+      "whyNeeded": "Claude Code is an AI that helps you code through conversation. Say something like \"Build me a login page\" and it writes the code for you.",
+      "detailedGuide": "After installation, the login process starts automatically. When a browser window opens, sign in with your Claude account. You can sign up for free if you don't have one.",
+      "troubleshooting": [
+        {
+          "symptom": "npm: command not found",
+          "solution": "Node.js isn't installed. Go back and complete the 'Install Development Tools' step."
+        },
+        {
+          "symptom": "EACCES permission denied error",
+          "solution": "Try again with sudo npm install -g @anthropic-ai/claude-code."
+        },
+        {
+          "symptom": "Browser doesn't open automatically",
+          "solution": "Copy the URL shown in your terminal and paste it directly into your browser's address bar."
+        },
+        {
+          "symptom": "No response in terminal after logging in",
+          "solution": "The terminal will automatically detect when you've completed the login in the browser. Just wait a moment."
+        }
+      ]
+    },
+    "projectFrontend": {
+      "title": {
+        "standalone": "Create Project",
+        "withBackend": "Create Frontend Project (Next.js)"
+      },
+      "description": {
+        "standalone": "Set up your very own website project",
+        "withBackend": "Create the Next.js project that handles the frontend"
+      },
+      "detailedGuideTemplate": "This creates a project in the ~/{path} folder.",
+      "troubleshooting": [
+        {
+          "symptom": "The application path is not writable error",
+          "solution": "Try running it again. The initial download may temporarily fail on the first attempt."
+        },
+        {
+          "symptom": "npx: command not found",
+          "solution": "Node.js isn't installed. Go back and complete the 'Install Development Tools' step."
+        },
+        {
+          "symptom": "directory already exists error",
+          "solution": "There are leftover files from a previous attempt. Run rm -rf ~/{path} to delete them, then try again."
+        }
+      ]
+    },
+    "projectBackendPython": {
+      "title": "Create Backend Project (Python)",
+      "description": "Set up a Python FastAPI server project",
+      "detailedGuideTemplate": "This creates a project in the ~/{projectName}/backend folder."
+    },
+    "projectBackendJava": {
+      "title": "Create Backend Project (Java)",
+      "description": "Download a Java Spring Boot server project",
+      "detailedGuideTemplate": "This creates a project in the ~/{projectName}/backend folder. It automatically downloads a project from Spring Initializr with essential libraries for production use."
+    },
+    "projectExpo": {
+      "title": "Create Expo Project",
+      "description": "Set up your very own mobile app project",
+      "whyNeeded": "Expo is a tool that makes React Native easy to use. You can build Android and iOS apps simultaneously from one codebase.",
+      "detailedGuideTemplate": "This creates an Expo project in the ~/{projectName} folder. It's TypeScript-based, so you'll be using the same language as web development.",
+      "troubleshooting": [
+        {
+          "symptom": "npx: command not found",
+          "solution": "Node.js isn't installed. Go back and complete the 'Install Development Tools' step."
+        },
+        {
+          "symptom": "directory already exists error",
+          "solution": "There are leftover files from a previous attempt. Run rm -rf ~/{projectName} to delete them, then try again."
+        }
+      ]
+    },
+    "projectDataAi": {
+      "title": "Set Up Data Analysis Environment",
+      "description": "Install Jupyter Notebook",
+      "detailedGuideTemplate": "This creates a virtual environment in the ~/{projectName} folder and installs data analysis libraries."
+    },
+    "architecture": {
+      "title": "Set Up Project Structure",
+      "description": {
+        "default": "Configure architecture rules for the AI tool to follow",
+        "dataAi": "Configure analysis project rules for the AI tool to follow"
+      },
+      "detailedGuide": "Run the command below to create the folder structure, then save the CLAUDE.md content to your project root."
+    },
+    "firstRun": {
+      "title": "First Run!",
+      "description": "Open the project in VS Code and start coding with AI",
+      "detailedGuide": {
+        "simple": "The command below opens VS Code. Inside VS Code, open the terminal (Ctrl+` or Cmd+`) and type claude to start AI coding.",
+        "withBackend": "The command below opens VS Code. Inside VS Code, open the terminal (Ctrl+` or Cmd+`) and type claude to start AI coding. You'll see both the frontend/ and backend/ folders."
+      }
+    },
+    "environments": {
+      "windowsCmd": "Windows Command Prompt",
+      "linuxCmd": "Linux Terminal",
+      "macTerminal": "Mac Terminal",
+      "vscodeTerminal": "VS Code Terminal",
+      "anywhere": "Anywhere"
+    }
+  },
+  "Complete": {
+    "congratulations": "Congratulations!",
+    "envCompleteTemplate": "Your <strong>{goalLabel}</strong> development environment is ready",
+    "installedTools": "Installed Tools",
+    "projectStructure": "Project structure created on your computer",
+    "goalLabels": {
+      "webNextjs": "Next.js Website",
+      "webPython": "Next.js + Python Web App",
+      "webJava": "Next.js + Java Web App",
+      "mobile": "Expo Mobile App",
+      "dataAi": "Python Data Analysis"
+    },
+    "projectTrees": {
+      "webNextjs": "📁 ~/{projectName}/\n├── 📂 src/\n│   ├── 📂 domain/          ← Business logic\n│   │   ├── models/\n│   │   └── services/\n│   ├── 📂 ports/            ← Interface definitions\n│   ├── 📂 adapters/         ← External integrations\n│   │   ├── api/\n│   │   └── ui/\n│   └── 📂 app/              ← Pages (Next.js)\n├── 📄 CLAUDE.md              ← AI architecture rules\n└── 📄 package.json",
+      "webPython": "📁 ~/{projectName}/\n├── 📂 frontend/              ← Next.js (UI)\n│   ├── 📂 src/\n│   │   ├── domain/ ports/ adapters/\n│   │   └── 📂 app/           ← Pages\n│   └── 📄 package.json\n├── 📂 backend/               ← FastAPI (Server)\n│   ├── 📂 domain/\n│   │   ├── models/\n│   │   └── services/\n│   ├── 📂 ports/\n│   │   ├── inbound/\n│   │   └── outbound/\n│   ├── 📂 adapters/\n│   │   ├── inbound/api/\n│   │   └── outbound/persistence/\n│   ├── 📄 main.py            ← Server entry point\n│   └── 📂 venv/              ← Python virtual environment\n└── 📄 CLAUDE.md               ← AI architecture rules",
+      "webJava": "📁 ~/{projectName}/\n├── 📂 frontend/              ← Next.js (UI)\n│   ├── 📂 src/\n│   │   ├── domain/ ports/ adapters/\n│   │   └── 📂 app/           ← Pages\n│   └── 📄 package.json\n├── 📂 backend/               ← Spring Boot (Server)\n│   ├── 📂 src/main/java/.../\n│   │   ├── domain/model/     ← Entities\n│   │   ├── domain/service/   ← Business logic\n│   │   ├── port/in/ out/     ← Interfaces\n│   │   └── adapter/in/web/   ← Controllers\n│   ├── 📄 application.yml    ← Server config\n│   └── 📄 build.gradle       ← Build config\n└── 📄 CLAUDE.md               ← AI architecture rules",
+      "mobile": "📁 ~/{projectName}/\n├── 📂 src/\n│   ├── 📂 domain/            ← Business logic\n│   │   ├── models/\n│   │   └── services/\n│   ├── 📂 ports/             ← Interface definitions\n│   ├── 📂 adapters/          ← External integrations\n│   │   ├── api/\n│   │   └── ui/\n│   │       ├── screens/      ← Screens\n│   │       └── components/   ← Components\n├── 📄 App.tsx                 ← App entry point\n├── 📄 CLAUDE.md               ← AI architecture rules\n└── 📄 package.json",
+      "dataAi": "📁 ~/{projectName}/\n├── 📂 data/                   ← Data files\n├── 📂 notebooks/              ← Jupyter Notebook\n├── 📂 src/\n│   ├── loaders/               ← Data loading\n│   ├── analyzers/             ← Analysis logic\n│   └── visualizers/           ← Visualization\n├── 📂 venv/                   ← Python virtual environment\n└── 📄 CLAUDE.md               ← AI project rules"
+    },
+    "firstPrompt": {
+      "heading": "Your First Message to Claude Code",
+      "subtitle": "It doesn't have to be perfect. You can keep the conversation going and refine as you go.",
+      "templateLabel": "Fill in the blanks",
+      "exampleLabel": "Here's what it could look like"
+    },
+    "promptTemplates": {
+      "web": "I want to build a ___ website.\n\nWhat it does:\n___\n\nWho it's for:\n___\n\n3 must-have features to start with:\n1. ___\n2. ___\n3. ___\n\nWhere should I start?",
+      "mobile": "I want to build a ___ app.\n\nWhat it does:\n___\n\nWho it's for:\n___\n\n3 must-have features to start with:\n1. ___\n2. ___\n3. ___\n\nWhere should I start?",
+      "dataAi": "I want to analyze ___.\n\nWhat kind of analysis:\n___\n\nHow the results will be used:\n___\n\n3 things to analyze first:\n1. ___\n2. ___\n3. ___\n\nWhere should I start?"
+    },
+    "promptExamples": {
+      "webNextjs": "I want to build a group event scheduling website.\n\nWhat it does:\nIt's a pain when someone asks \"when are you free?\" in a group chat.\nI want a site where you share a link and everyone votes on which dates work for them.\n\nWho it's for:\nYoung professionals in their 20s–30s. No sign-up required — just open the link and vote.\n\n3 must-have features to start with:\n1. Create an event with multiple date options and let participants check the ones that work\n2. No sign-up — just enter a name and vote right away\n3. A clear view of voting results at a glance\n\nWhere should I start?",
+      "webPython": "I want to build a neighborhood tool-sharing platform.\n\nWhat it does:\nPeople in the same apartment complex can lend and borrow things they rarely use,\nlike drills, ladders, and camping gear.\n\nWho it's for:\nResidents in the same building. They don't want to buy stuff they'll only use once.\n\n3 must-have features to start with:\n1. List an item to lend (photo + description + availability dates)\n2. Search for items and request to borrow them\n3. Push notification when someone sends a borrow request\n\nWhere should I start?",
+      "webJava": "I want to build a staff scheduling website for a small cafe.\n\nWhat it does:\nFor cafes with fewer than 10 employees — the owner posts shifts and\nstaff can claim them. No more coordinating everything through group chats.\n\nWho it's for:\nCafe owners who are tired of scheduling through messaging apps.\n\n3 must-have features to start with:\n1. Owner posts available shifts and employees sign up\n2. Monthly calendar view to see the full schedule at a glance\n3. Notifications when a shift is confirmed\n\nWhere should I start?",
+      "mobile": "I want to build a water intake tracker app.\n\nWhat it does:\nTrack how much water you drink each day with a single tap,\nand get a little encouragement when you hit your daily goal.\n\nWho it's for:\nPeople in their 20s–40s starting to build healthier habits.\nThey want something simple — just log and go.\n\n3 must-have features to start with:\n1. One-tap logging (e.g., +250ml per tap)\n2. Today's total shown as a number and visual progress bar\n3. A congratulatory message when the daily goal is reached\n\nWhere should I start?",
+      "dataAi": "I want to analyze e-commerce sales data.\n\nWhat kind of analysis:\nI have order data piling up in spreadsheets and I want to figure out\nwhich products sell best and what times of day get the most orders.\n\nHow the results will be used:\nFor a monthly report to present to management.\n\n3 things to analyze first:\n1. Monthly sales rankings by product\n2. Order patterns by day of week and time of day\n3. Identify days with sudden spikes or drops in sales\n\nWhere should I start?"
+    },
+    "followUp": {
+      "heading": "What to Say Next",
+      "subtitle": "After your first prompt, the AI will generate code. From there, just chat naturally with short requests.",
+      "examples": [
+        "Can you run this for me?",
+        "Make the text bigger",
+        "Change the background to blue",
+        "I want to add a login feature",
+        "I'm getting an error, can you help? (paste the error message)",
+        "Explain what we've built so far"
+      ],
+      "reassurance": "Don't worry about saying the wrong thing. You can always say \"Undo that and try again.\""
+    },
+    "v0Design": {
+      "heading": "Stuck on the Design?",
+      "subtitle": "Use v0.dev to create a UI with AI first, then bring it into your project.",
+      "steps": [
+        "Go to v0.dev and describe the screen you want, like \"Create a login page\"",
+        "If you like it, click Download ZIP to download it",
+        "Extract the ZIP and place the files in the {v0Path} folder",
+        "Tell Claude Code: \"Apply this code to my project\""
+      ]
+    },
+    "phase2": {
+      "badge": "Coming Soon",
+      "heading": "Phase 2: Launch Your Service to the World",
+      "description": "We'll guide you through database setup, file storage, deploying to a real URL, and configuring AI team agents."
+    },
+    "backToHome": "Back to Home"
+  },
+  "Privacy": {
+    "title": "Privacy Policy",
+    "effectiveDate": "Effective Date: March 30, 2026",
+    "sections": {
+      "1": {
+        "title": "1. Information We Collect",
+        "intro": "VibeStart automatically collects the following information to provide its services.",
+        "items": [
+          "Access logs (IP address, access time, browser type)",
+          "Service usage records (selected OS, goal, progress steps)"
+        ],
+        "note": "VibeStart does not require account registration and does not directly collect personally identifiable information such as names or email addresses."
+      },
+      "2": {
+        "title": "2. Purpose of Collection and Use",
+        "items": [
+          "Service usage analytics and quality improvement",
+          "Error detection and service stability"
+        ]
+      },
+      "3": {
+        "title": "3. Retention Period",
+        "content": "Collected information is retained for <strong>one (1) year</strong> from the date of collection and is promptly destroyed thereafter."
+      },
+      "4": {
+        "title": "4. Disclosure to Third Parties",
+        "intro": "VibeStart does not share collected information with third parties, except in the following cases:",
+        "items": [
+          "When required by applicable law or regulation",
+          "When the user has given prior consent"
+        ]
+      },
+      "5": {
+        "title": "5. Cookies and Analytics Tools",
+        "content": "VibeStart may use web analytics tools such as Google Analytics for service improvement, which may involve the use of cookies. You may refuse cookie storage through your browser settings; however, some features of the service may be limited as a result."
+      },
+      "6": {
+        "title": "6. Your Rights",
+        "content": "You may request access to, correction of, or deletion of your collected information at any time. Please contact us using the information below."
+      },
+      "7": {
+        "title": "7. Data Protection Officer",
+        "emailLabel": "Email"
+      },
+      "8": {
+        "title": "8. Changes to This Policy",
+        "content": "This privacy policy may be updated to reflect changes in applicable laws, policies, or services. Any changes will be posted on this page."
+      }
+    }
+  },
+  "Error": {
+    "label": "Error",
+    "title": "Something went wrong",
+    "description": "This might be a temporary issue. Please try again.",
+    "retryButton": "Try Again",
+    "notFound": {
+      "code": "404",
+      "title": "Page not found",
+      "description": "The address may be incorrect or the page may have been removed.",
+      "homeButton": "Go to Home"
+    }
+  }
+}

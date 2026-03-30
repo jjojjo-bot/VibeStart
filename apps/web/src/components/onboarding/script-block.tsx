@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 
 interface ScriptBlockProps {
@@ -26,6 +27,7 @@ async function copyToClipboard(text: string): Promise<boolean> {
 }
 
 export function ScriptBlock({ script }: ScriptBlockProps) {
+  const t = useTranslations("Common");
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
@@ -46,10 +48,10 @@ export function ScriptBlock({ script }: ScriptBlockProps) {
         onClick={handleCopy}
         className="absolute right-3 top-3"
       >
-        {copied ? "복사됨!" : "복사"}
+        {copied ? t("copied") : t("copy")}
       </Button>
       <p className="mt-2 text-xs text-muted-foreground/50">
-        직접 타이핑하지 말고 반드시 복사 버튼을 눌러주세요
+        {t("copyWarning")}
       </p>
     </div>
   );

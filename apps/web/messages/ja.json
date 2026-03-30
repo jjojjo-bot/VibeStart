@@ -1,0 +1,614 @@
+{
+  "Metadata": {
+    "title": {
+      "default": "VibeStart — バイブコーディング、ここから始めよう",
+      "template": "%s — VibeStart"
+    },
+    "description": "AIでコーディングしたいけど環境構築が難しい？VibeStartがステップごとにご案内します。",
+    "og": {
+      "title": "VibeStart — バイブコーディング、ここから始めよう",
+      "description": "開発ツールのインストールが難しくて諦めていませんか？VibeStartが一つずつご案内します。"
+    },
+    "twitter": {
+      "title": "VibeStart — バイブコーディング、ここから始めよう",
+      "description": "開発ツールのインストールが難しくて諦めていませんか？VibeStartが一つずつご案内します。"
+    },
+    "privacy": {
+      "title": "プライバシーポリシー — VibeStart",
+      "description": "VibeStart プライバシーポリシー"
+    }
+  },
+  "Common": {
+    "siteName": "VibeStart",
+    "skipToContent": "本文へスキップ",
+    "privacyPolicy": "プライバシーポリシー",
+    "copy": "コピー",
+    "copied": "コピーしました！",
+    "next": "次へ",
+    "previous": "戻る",
+    "close": "閉じる",
+    "startButton": "始める",
+    "backToHome": "トップに戻る",
+    "copyWarning": "手入力せず、必ずコピーボタンを押してください"
+  },
+  "Landing": {
+    "badge": "バイブコーディングの第一歩",
+    "heroTitle": "AIでコーディングしたいけど",
+    "heroHighlight": "どこから始めればいい？",
+    "heroDescription": "開発ツールのインストールが難しくて諦めていませんか？\nVibeStartが一つずつご案内します。",
+    "ctaButton": "始める",
+    "steps": {
+      "1": {
+        "title": "簡単な質問",
+        "description": "OSと作りたいものを教えてください"
+      },
+      "2": {
+        "title": "カスタムガイド",
+        "description": "必要なツールをステップごとにご案内します"
+      },
+      "3": {
+        "title": "コピー＆ペースト",
+        "description": "コマンドをコピーして実行するだけ！"
+      }
+    },
+    "stats": {
+      "todayStart": "今日の開始",
+      "todayComplete": "今日の完了",
+      "totalStart": "累計開始",
+      "totalComplete": "累計完了",
+      "legendStarted": "開始したユーザー",
+      "legendCompleted": "完了したユーザー"
+    },
+    "reassurance": "コーディング経験がまったくなくても大丈夫です。ゆっくりついてきてください。",
+    "chartTooltip": {
+      "visitors": "開始",
+      "completions": "完了",
+      "unit": "人"
+    }
+  },
+  "Onboarding": {
+    "progressLabel": "{current} / {total}",
+    "lastStepButton": "プランを確認する",
+    "steps": {
+      "os": {
+        "title": "OS",
+        "description": "どのパソコンをお使いですか？"
+      },
+      "aiIntro": {
+        "title": "AIツール",
+        "description": "こんなツールと一緒に始めましょう"
+      },
+      "goal": {
+        "title": "目標",
+        "description": "何を作りたいですか？"
+      },
+      "projectName": {
+        "title": "プロジェクト名",
+        "description": "プロジェクトに名前をつけましょう"
+      }
+    },
+    "osOptions": {
+      "windows": "Windows",
+      "macos": "Mac"
+    },
+    "osAriaLabel": "OSを選択",
+    "goalOptions": {
+      "website": "ウェブサイト / ウェブサービス",
+      "mobile": "モバイルアプリ",
+      "dataAi": "データ分析 / AI",
+      "notSure": "まだよくわかりません"
+    },
+    "goalAriaLabel": "目的を選択",
+    "goalSubQuestion": "どの技術で作りますか？",
+    "goalSubOptions": {
+      "webNextjs": {
+        "label": "Next.js だけで完成",
+        "description": "画面とサーバーを一度に作れます。\n素早く完成させてすぐにデプロイするのに最適です。\nAirbnb、TikTok Web、Twitchが採用しています。"
+      },
+      "webPython": {
+        "label": "Next.js + Python バックエンド",
+        "description": "画面はNext.js、サーバーはPythonで分けて作ります。\nAIチャットボットやデータ分析機能を組み込むのに最適です。\nInstagram、Pinterest、Netflixが採用しています。"
+      },
+      "webJava": {
+        "label": "Next.js + Java バックエンド",
+        "description": "画面はNext.js、サーバーはJavaで分けて作ります。\n大規模トラフィックを安定して処理するのに強いです。\nLINE、PayPay、楽天が採用しています。"
+      }
+    },
+    "recommended": "おすすめ",
+    "aiIntro": {
+      "heading": "Claude Code",
+      "subtitle": "AIがコードを代わりに書いてくれるツールです",
+      "features": {
+        "conversation": {
+          "title": "会話するようにお願いするだけ",
+          "description": "「ログインページを作って」のように言えば、AIがコードを書いてくれます"
+        },
+        "terminal": {
+          "title": "ターミナルで実行します",
+          "description": "プロジェクトフォルダで claude コマンドを入力すると開始します"
+        },
+        "free": {
+          "title": "無料で始められます",
+          "description": "インストール後すぐに使えます。コーディング経験がなくても大丈夫です"
+        }
+      }
+    },
+    "projectName": {
+      "label": "プロジェクト名",
+      "placeholder": "my-first-app",
+      "hint": "英小文字、数字、ハイフン(-)のみ使用できます。\nこの名前がプロジェクトフォルダの名前になります。",
+      "folderPreview": "作成されるフォルダ: ~/{name}"
+    }
+  },
+  "Plan": {
+    "title": "カスタムインストールプラン",
+    "subtitle": "以下のツールをステップごとにインストールします",
+    "tools": {
+      "git": {
+        "name": "Git",
+        "description": "コードのバージョン管理ツール"
+      },
+      "nodejs": {
+        "name": "Node.js",
+        "description": "JavaScript実行環境（フロントエンド用）"
+      },
+      "python": {
+        "description": {
+          "backend": "バックエンドサーバー用プログラミング言語",
+          "dataAi": "プログラミング言語の実行環境"
+        }
+      },
+      "java": {
+        "name": "Java (JDK)",
+        "description": "バックエンドサーバー用プログラミング言語"
+      },
+      "expo": {
+        "name": "Expo (React Native)",
+        "description": "Android + iOSアプリを同時に作れるツール"
+      },
+      "vscode": {
+        "name": "VS Code",
+        "description": "コードエディタ"
+      },
+      "claudeCode": {
+        "name": "Claude Code",
+        "description": "AIコーディングアシスタント（CLI + VS Code拡張機能）"
+      },
+      "nextjsProject": {
+        "name": "Next.js プロジェクト作成",
+        "description": "ウェブサイトプロジェクトを自動で作成します"
+      },
+      "nextjsFastapiProject": {
+        "name": "Next.js + FastAPI プロジェクト作成",
+        "description": "フロントエンド（Next.js）とバックエンド（Python）プロジェクトをそれぞれ作成します"
+      },
+      "nextjsSpringProject": {
+        "name": "Next.js + Spring Boot プロジェクト作成",
+        "description": "フロントエンド（Next.js）とバックエンド（Java）プロジェクトをそれぞれ作成します"
+      },
+      "expoProject": {
+        "name": "Expo プロジェクト作成",
+        "description": "モバイルアプリプロジェクトを作成します"
+      },
+      "jupyterProject": {
+        "name": "Jupyter Notebook セットアップ",
+        "description": "データ分析環境を作成します"
+      }
+    },
+    "summary": {
+      "os": "OS",
+      "projectName": "プロジェクト名",
+      "estimatedTime": "所要時間の目安",
+      "estimatedTimeValue": "約10〜15分"
+    },
+    "ctaButton": "インストールを開始する",
+    "skipNote": "すでにインストール済みのツールは自動でスキップされます"
+  },
+  "Setup": {
+    "title": "ステップ別インストール",
+    "subtitle": "各ステップのコマンドを<strong>コピーボタン</strong>でコピーして、ターミナルに貼り付けてください",
+    "progressLabel": "進捗",
+    "progressAriaLabel": "インストール進捗",
+    "resultPreviewLabel": "実行結果の例",
+    "claudeMdGuide": "以下の内容をコピーして、プロジェクトルートに<code>CLAUDE.md</code>ファイルとして保存してください。",
+    "whyNeededToggle": {
+      "open": "▾ 閉じる",
+      "closed": "▸ これは何ですか？"
+    },
+    "troubleshootingToggle": {
+      "open": "▾ 閉じる",
+      "closed": "▸ 問題が発生しましたか？"
+    },
+    "completeButton": "完了しました！",
+    "undoCompleteButton": "完了を取り消す",
+    "allDoneButton": "完了！次へ進む",
+    "groups": {
+      "envPrep": "環境準備",
+      "toolInstall": "ツールインストール",
+      "aiSetup": "AI設定",
+      "projectCreate": "プロジェクト作成"
+    }
+  },
+  "SetupSteps": {
+    "terminal": {
+      "title": "ターミナルを開く",
+      "description": "コマンドを実行するウィンドウを開いてください",
+      "detailedGuide": {
+        "windows": "Windowsの検索バー（虫眼鏡アイコン）に「PowerShell」と入力し、「Windows PowerShell」をクリックして開いてください。Linux環境インストール後は「Ubuntu」を検索して開きます。",
+        "macos": "Spotlight（Cmd + Space）を開いて「ターミナル」と入力し、Enterを押してください。"
+      }
+    },
+    "wsl": {
+      "title": "Linux環境のインストール（WSL2）",
+      "description": "WindowsでAIコーディングツールを使うにはLinuxが必要です",
+      "whyNeeded": "AIコーディングツール（Claude Code）はLinuxでのみ動作します。WSL2はWindows内で動くミニLinuxコンピュータです。インストールすると、Windowsを使いながらLinuxコマンドが使えるようになります。",
+      "detailedGuide": "インストール後、パソコンを再起動する必要があります。再起動後、Ubuntuウィンドウが自動で開き、ユーザー名とパスワードを設定します。",
+      "troubleshooting": [
+        {
+          "symptom": "「wsl」は認識されないコマンドです",
+          "solution": "Windows 10 バージョン2004以降が必要です。設定 → システム → バージョン情報でOSビルドを確認し、Windows Updateを実行してください。"
+        },
+        {
+          "symptom": "仮想化機能が有効になっていないというエラー",
+          "solution": "BIOS設定で仮想化（Virtualization Technology）を有効にする必要があります。パソコン再起動時にF2またはDelキーを押してBIOSに入ってください。"
+        },
+        {
+          "symptom": "すでにインストールされているというメッセージ",
+          "solution": "正常です！ wsl --update を実行して最新バージョンに更新してから、次のステップに進んでください。"
+        },
+        {
+          "symptom": "再起動後もUbuntuが開かない",
+          "solution": "Windowsの検索で「Ubuntu」を検索してみてください。見つからない場合は、Microsoft Storeで「Ubuntu」を検索してインストールしてください。"
+        }
+      ]
+    },
+    "wslOpen": {
+      "title": "Linuxコマンドラインを開く（Ubuntu）",
+      "description": "ここからはLinuxコマンドラインで進めます",
+      "whyNeeded": "先ほどインストールしたLinux環境に入ります。プロンプト（入力表示）が変われば、Linuxの世界に入った証拠です。",
+      "detailedGuide": "以下のコマンドを入力するとLinuxコマンドラインに切り替わります。プロンプトが変わったら成功です！切り替え後、cd ~ を入力してホームフォルダに移動してください。",
+      "troubleshooting": [
+        {
+          "symptom": "ユーザー名とパスワードを聞かれます",
+          "solution": "正常です！好きなユーザー名とパスワードを入力してください。パスワード入力時に画面に何も表示されないのは正常です。"
+        },
+        {
+          "symptom": "「wsl」入力後、何も反応がありません",
+          "solution": "WSLインストール後に再起動していない可能性があります。パソコンを再起動してからもう一度試してください。"
+        },
+        {
+          "symptom": "cd ~ の後も /mnt/c/... のパスにいます",
+          "solution": "プロンプトの末尾が :~$ に変わっているか確認してください。pwd を入力して /home/ユーザー名 と表示されれば成功です。"
+        }
+      ]
+    },
+    "devTools": {
+      "title": "開発ツールのインストール",
+      "descriptionTemplate": "{names}をインストールします",
+      "detailedGuide": "複数のツールを一括でインストールします。少し時間がかかる場合があります。",
+      "whyNeeded": {
+        "git": "Gitはコードの変更履歴を保存する「タイムマシン」です。",
+        "nodejs": "Node.jsはウェブサイトを作るときに必要なJavaScript実行環境です。",
+        "python": "PythonはAI/データ分析でよく使われるプログラミング言語です。",
+        "java": "Javaは大規模サービスでよく使われる安定したプログラミング言語です。",
+        "expo": "Expoは一つのコードでAndroidとiOSアプリを同時に作れるツールです。"
+      },
+      "troubleshooting": {
+        "wsl": [
+          {
+            "symptom": "sudoのパスワードを聞かれますが、入力できません",
+            "solution": "パスワードを入力しても画面に何も表示されないのは正常です。そのままパスワードを入力してEnterを押してください。"
+          },
+          {
+            "symptom": "Unable to locate package エラー",
+            "solution": "sudo apt update を先に実行してからもう一度試してください。"
+          },
+          {
+            "symptom": "dpkg lockまたは他のプロセスが使用中というエラー",
+            "solution": "別のインストール作業が進行中です。しばらく待ってから（1〜2分）もう一度試してください。"
+          },
+          {
+            "symptom": "curl: command not found",
+            "solution": "sudo apt update && sudo apt install -y curl を先に実行してからもう一度試してください。"
+          }
+        ],
+        "macos": [
+          {
+            "symptom": "brew: command not found",
+            "solution": "Homebrewがインストールされていません。前のステップ（Homebrewインストール）を先に完了してください。"
+          },
+          {
+            "symptom": "already installed メッセージ",
+            "solution": "すでにインストール済みなので正常です！次のステップに進んでください。"
+          },
+          {
+            "symptom": "Error: No available formula エラー",
+            "solution": "brew update を実行してからもう一度試してください。"
+          }
+        ]
+      }
+    },
+    "editor": {
+      "title": "コードエディタのインストール（VS Code）",
+      "description": "コードを編集するプログラムをインストールします",
+      "whyNeeded": "VS Codeはコードを書くための専用エディタです。メモ帳に似ていますが、コード自動補完、エラー表示、AIアシスタント連携など、開発に特化した機能があります。",
+      "detailedGuide": {
+        "windows": "VS CodeはWindowsにインストールしますが、WSLと自動的に連携します。新しいPowerShellウィンドウを開いて実行してください。"
+      },
+      "troubleshooting": {
+        "windows": [
+          {
+            "symptom": "「winget」が認識されません",
+            "solution": "Microsoft Storeで「アプリ インストーラー」を検索してアップデートしてください。それでもダメな場合は code.visualstudio.com から直接ダウンロードしてください。"
+          },
+          {
+            "symptom": "すでにインストールされているというメッセージ",
+            "solution": "正常です！すでにVS Codeがインストールされているので、次のステップに進んでください。"
+          }
+        ],
+        "macos": [
+          {
+            "symptom": "すでにインストールされているというメッセージ",
+            "solution": "正常です！次のステップに進んでください。"
+          },
+          {
+            "symptom": "brew: command not found",
+            "solution": "ターミナルを閉じて新しく開いてください。それでもダメな場合はHomebrewインストールのステップを再確認してください。"
+          }
+        ]
+      }
+    },
+    "brew": {
+      "title": "パッケージマネージャのインストール（Homebrew）",
+      "description": "Macでプログラムを簡単にインストールできるようにするツールです",
+      "whyNeeded": "HomebrewはMacの「App Storeのターミナル版」です。コマンド一つで開発ツールをインストール・管理できます。",
+      "detailedGuide": "インストール中にパスワードを聞かれることがあります。Macのログインパスワードを入力してください。インストール完了後、ターミナルを閉じてもう一度開いてください。",
+      "troubleshooting": [
+        {
+          "symptom": "Command Line Toolsのインストールポップアップが出ます",
+          "solution": "正常です！「インストール」ボタンを押してインストールを進めてください。インストール後、Homebrewのインストールが続きます。"
+        },
+        {
+          "symptom": "パスワードを聞かれます",
+          "solution": "Macのログインパスワードを入力してください。入力時に画面に何も表示されないのは正常です。"
+        },
+        {
+          "symptom": "インストール後、brewコマンドが動きません",
+          "solution": "ターミナルを閉じて新しく開いてください。それでもダメな場合は eval \"$(/opt/homebrew/bin/brew shellenv)\" を実行してください。"
+        }
+      ]
+    },
+    "aiSetup": {
+      "title": "AIコーディングアシスタントのインストール（Claude Code）",
+      "description": "AIコーディングアシスタントをインストールしてアカウントに接続します",
+      "whyNeeded": "Claude Codeは会話するようにコーディングを手伝ってくれるAIです。「ログインページを作って」のように言えば、コードを代わりに書いてくれます。",
+      "detailedGuide": "インストール後、自動的にログインが始まります。ブラウザが開いたらClaudeアカウントでログインしてください。アカウントがなければ無料で登録できます。",
+      "troubleshooting": [
+        {
+          "symptom": "npm: command not found",
+          "solution": "Node.jsがインストールされていません。「開発ツールのインストール」ステップを再確認してください。"
+        },
+        {
+          "symptom": "EACCES permission denied エラー",
+          "solution": "sudo npm install -g @anthropic-ai/claude-code でもう一度試してください。"
+        },
+        {
+          "symptom": "ブラウザが自動で開きません",
+          "solution": "ターミナルに表示されたURLをコピーして、ブラウザのアドレスバーに直接貼り付けてください。"
+        },
+        {
+          "symptom": "ログイン後、ターミナルに反応がありません",
+          "solution": "ブラウザでログインを完了すると、ターミナルが自動的に認識します。しばらくお待ちください。"
+        }
+      ]
+    },
+    "projectFrontend": {
+      "title": {
+        "standalone": "プロジェクト作成",
+        "withBackend": "フロントエンドプロジェクト作成（Next.js）"
+      },
+      "description": {
+        "standalone": "自分だけのウェブサイトプロジェクトを作ります",
+        "withBackend": "画面を担当するNext.jsプロジェクトを作ります"
+      },
+      "detailedGuideTemplate": "~/{path} フォルダにプロジェクトを作成します。",
+      "troubleshooting": [
+        {
+          "symptom": "The application path is not writable エラー",
+          "solution": "もう一度試してください。初回実行時、ダウンロード過程で一時的に失敗することがあります。"
+        },
+        {
+          "symptom": "npx: command not found",
+          "solution": "Node.jsがインストールされていません。「開発ツールのインストール」ステップを再確認してください。"
+        },
+        {
+          "symptom": "directory already exists エラー",
+          "solution": "以前の試行の痕跡が残っています。rm -rf ~/{path} を実行して削除してからもう一度試してください。"
+        }
+      ]
+    },
+    "projectBackendPython": {
+      "title": "バックエンドプロジェクト作成（Python）",
+      "description": "Python FastAPIサーバープロジェクトを作ります",
+      "detailedGuideTemplate": "~/{projectName}/backend フォルダにプロジェクトを作成します。"
+    },
+    "projectBackendJava": {
+      "title": "バックエンドプロジェクト作成（Java）",
+      "description": "Java Spring Bootサーバープロジェクトをダウンロードします",
+      "detailedGuideTemplate": "~/{projectName}/backend フォルダにプロジェクトを作成します。Spring Initializrから実務に必要な基本ライブラリが含まれたプロジェクトを自動でダウンロードします。"
+    },
+    "projectExpo": {
+      "title": "Expo プロジェクト作成",
+      "description": "自分だけのモバイルアプリプロジェクトを作ります",
+      "whyNeeded": "ExpoはReact Nativeを簡単に使えるようにしたツールです。一つのコードでAndroidとiOSアプリを同時に作れます。",
+      "detailedGuideTemplate": "~/{projectName} フォルダにExpoプロジェクトを作成します。TypeScriptベースなので、Web開発と同じ言語が使えます。",
+      "troubleshooting": [
+        {
+          "symptom": "npx: command not found",
+          "solution": "Node.jsがインストールされていません。「開発ツールのインストール」ステップを再確認してください。"
+        },
+        {
+          "symptom": "directory already exists エラー",
+          "solution": "以前の試行の痕跡が残っています。rm -rf ~/{projectName} を実行して削除してからもう一度試してください。"
+        }
+      ]
+    },
+    "projectDataAi": {
+      "title": "データ分析環境のセットアップ",
+      "description": "Jupyter Notebookをインストールします",
+      "detailedGuideTemplate": "~/{projectName} フォルダに仮想環境を作成し、データ分析ライブラリをインストールします。"
+    },
+    "architecture": {
+      "title": "プロジェクト構成の設定",
+      "description": {
+        "default": "AIツールが従うアーキテクチャルールを設定します",
+        "dataAi": "AIツールが従う分析プロジェクトルールを設定します"
+      },
+      "detailedGuide": "以下のコマンドでフォルダ構成を作成した後、CLAUDE.mdの内容をプロジェクトルートに保存してください。"
+    },
+    "firstRun": {
+      "title": "初回起動！",
+      "description": "VS Codeでプロジェクトを開いてAIコーディングを始めます",
+      "detailedGuide": {
+        "simple": "以下のコマンドでVS Codeが開きます。VS Code内でターミナル（Ctrl+`またはCmd+`）を開き、claudeと入力するとAIコーディングが始まります。",
+        "withBackend": "以下のコマンドでVS Codeが開きます。VS Code内でターミナル（Ctrl+`またはCmd+`）を開き、claudeと入力するとAIコーディングが始まります。frontend/とbackend/フォルダが一緒に表示されます。"
+      }
+    },
+    "environments": {
+      "windowsCmd": "Windowsコマンドライン",
+      "linuxCmd": "Linuxコマンドライン",
+      "macTerminal": "Macターミナル",
+      "vscodeTerminal": "VS Codeターミナル",
+      "anywhere": "どこでも"
+    }
+  },
+  "Complete": {
+    "congratulations": "おめでとうございます！",
+    "envCompleteTemplate": "<strong>{goalLabel}</strong>の開発環境が完成しました",
+    "installedTools": "インストール済みツール",
+    "projectStructure": "PCに作成されたプロジェクト構成",
+    "goalLabels": {
+      "webNextjs": "Next.js ウェブサイト",
+      "webPython": "Next.js + Python ウェブサービス",
+      "webJava": "Next.js + Java ウェブサービス",
+      "mobile": "Expo モバイルアプリ",
+      "dataAi": "Python データ分析"
+    },
+    "projectTrees": {
+      "webNextjs": "📁 ~/{projectName}/\n├── 📂 src/\n│   ├── 📂 domain/          ← ビジネスロジック\n│   │   ├── models/\n│   │   └── services/\n│   ├── 📂 ports/            ← インターフェース定義\n│   ├── 📂 adapters/         ← 外部連携\n│   │   ├── api/\n│   │   └── ui/\n│   └── 📂 app/              ← ページ（Next.js）\n├── 📄 CLAUDE.md              ← AIアーキテクチャルール\n└── 📄 package.json",
+      "webPython": "📁 ~/{projectName}/\n├── 📂 frontend/              ← Next.js（画面）\n│   ├── 📂 src/\n│   │   ├── domain/ ports/ adapters/\n│   │   └── 📂 app/           ← ページ\n│   └── 📄 package.json\n├── 📂 backend/               ← FastAPI（サーバー）\n│   ├── 📂 domain/\n│   │   ├── models/\n│   │   └── services/\n│   ├── 📂 ports/\n│   │   ├── inbound/\n│   │   └── outbound/\n│   ├── 📂 adapters/\n│   │   ├── inbound/api/\n│   │   └── outbound/persistence/\n│   ├── 📄 main.py            ← サーバーエントリーポイント\n│   └── 📂 venv/              ← Python仮想環境\n└── 📄 CLAUDE.md               ← AIアーキテクチャルール",
+      "webJava": "📁 ~/{projectName}/\n├── 📂 frontend/              ← Next.js（画面）\n│   ├── 📂 src/\n│   │   ├── domain/ ports/ adapters/\n│   │   └── 📂 app/           ← ページ\n│   └── 📄 package.json\n├── 📂 backend/               ← Spring Boot（サーバー）\n│   ├── 📂 src/main/java/.../\n│   │   ├── domain/model/     ← エンティティ\n│   │   ├── domain/service/   ← ビジネスロジック\n│   │   ├── port/in/ out/     ← インターフェース\n│   │   └── adapter/in/web/   ← コントローラー\n│   ├── 📄 application.yml    ← サーバー設定\n│   └── 📄 build.gradle       ← ビルド設定\n└── 📄 CLAUDE.md               ← AIアーキテクチャルール",
+      "mobile": "📁 ~/{projectName}/\n├── 📂 src/\n│   ├── 📂 domain/            ← ビジネスロジック\n│   │   ├── models/\n│   │   └── services/\n│   ├── 📂 ports/             ← インターフェース定義\n│   ├── 📂 adapters/          ← 外部連携\n│   │   ├── api/\n│   │   └── ui/\n│   │       ├── screens/      ← 画面\n│   │       └── components/   ← コンポーネント\n├── 📄 App.tsx                 ← アプリエントリーポイント\n├── 📄 CLAUDE.md               ← AIアーキテクチャルール\n└── 📄 package.json",
+      "dataAi": "📁 ~/{projectName}/\n├── 📂 data/                   ← データファイル\n├── 📂 notebooks/              ← Jupyter Notebook\n├── 📂 src/\n│   ├── loaders/               ← データ読み込み\n│   ├── analyzers/             ← 分析ロジック\n│   └── visualizers/           ← 可視化\n├── 📂 venv/                   ← Python仮想環境\n└── 📄 CLAUDE.md               ← AIプロジェクトルール"
+    },
+    "firstPrompt": {
+      "heading": "Claude Codeに最初の一言を投げかけよう",
+      "subtitle": "一度で完璧に書けなくても大丈夫です。会話を続けながら修正していけます。",
+      "templateLabel": "空欄を埋めてみましょう",
+      "exampleLabel": "こんな感じで書けばOKです"
+    },
+    "promptTemplates": {
+      "web": "___というウェブサイトを作りたいです。\n\nどんなサービスかというと：\n___\n\n主に使う人：\n___\n\n最初に必ず必要な機能3つ：\n1. ___\n2. ___\n3. ___\n\nまずどこから始めればいいですか？",
+      "mobile": "___というアプリを作りたいです。\n\nどんなサービスかというと：\n___\n\n主に使う人：\n___\n\n最初に必ず必要な機能3つ：\n1. ___\n2. ___\n3. ___\n\nまずどこから始めればいいですか？",
+      "dataAi": "___を分析したいです。\n\nどんな分析かというと：\n___\n\n分析結果を使う場面：\n___\n\n最初に必ず分析すべきこと3つ：\n1. ___\n2. ___\n3. ___\n\nどこから始めればいいですか？"
+    },
+    "promptExamples": {
+      "webNextjs": "日程調整ウェブサイトを作りたいです。\n\nどんなサービスかというと：\n友達のグループLINEで「いつ空いてる？」って聞くのが面倒なので、\nリンクを一つ共有すれば、みんなが空いてる日に投票できるサイトです。\n\n主に使う人：\n20〜30代の社会人。会員登録なしでリンクだけですぐに使えること。\n\n最初に必ず必要な機能3つ：\n1. 候補日を複数登録して、参加者が空いてる日にチェック\n2. 会員登録なしで名前だけ入力してすぐ参加\n3. 投票結果を一目で確認できる画面\n\nまずどこから始めればいいですか？",
+      "webPython": "ご近所レンタルウェブサービスを作りたいです。\n\nどんなサービスかというと：\n同じマンションの住民同士で、電動ドリルや脚立など\nたまにしか使わないものを貸し借りできるサイトです。\n\n主に使う人：\n同じマンションの住民。毎回買うのはもったいないけど、必要な時だけ使いたい人たち。\n\n最初に必ず必要な機能3つ：\n1. 貸し出せるものの登録（写真＋説明＋貸出可能期間）\n2. 欲しいものの検索＋レンタル申請\n3. 申請が来たらLINEで通知\n\nまずどこから始めればいいですか？",
+      "webJava": "小規模カフェのスタッフシフト管理ウェブサイトを作りたいです。\n\nどんなサービスかというと：\nスタッフ10人未満のカフェで、オーナーがシフト表を出したら\nスタッフが申請して確定する形でスケジュールを管理するサイトです。\n\n主に使う人：\nカフェのオーナー。今はLINEで一人ずつ調整しているけど、とても手間がかかっている。\n\n最初に必ず必要な機能3つ：\n1. オーナーが勤務日時を登録したらスタッフが申請\n2. 月別スケジュールをカレンダーで一目で確認\n3. スケジュール確定したらスタッフに通知\n\nまずどこから始めればいいですか？",
+      "mobile": "水分摂取記録アプリを作りたいです。\n\nどんなアプリかというと：\n1日にどれくらい水を飲んだかボタン一つで記録して、\n目標量を達成したら褒めてくれる健康習慣アプリです。\n\n主に使う人：\n健康管理を始めたい20〜40代。複雑な機能は要らなくて、\nシンプルに記録だけしたい人たち。\n\n最初に必ず必要な機能3つ：\n1. 水を飲んだ時にボタン一つで記録（+250mlのように）\n2. 今日の総摂取量を数字とグラフで表示\n3. 1日の目標達成で褒めメッセージ\n\nまずどこから始めればいいですか？",
+      "dataAi": "ECサイトの売上データ分析をしたいです。\n\nどんな分析かというと：\nExcelに溜まった注文データを見て、\nどの商品がよく売れていて、どの時間帯に注文が多いか把握したいです。\n\n分析結果を使う場面：\n上司への今月のレポート報告に使う資料。\n\n最初に必ず分析すべきこと3つ：\n1. 商品別の月間売上ランキング\n2. 曜日・時間帯別の注文パターン\n3. 売上が急に上がったり下がったりした日の特定\n\nどこから始めればいいですか？"
+    },
+    "followUp": {
+      "heading": "その次はこんな感じで続けましょう",
+      "subtitle": "最初のプロンプトを送ると、AIがコードを作ってくれます。その後は短く会話するように頼めばOKです。",
+      "examples": [
+        "これ実行してみて",
+        "文字サイズをもう少し大きくして",
+        "背景色を青に変えて",
+        "ログイン機能を追加したい",
+        "エラーが出るんだけど助けて（エラーメッセージを貼り付け）",
+        "今まで作ったものを説明して"
+      ],
+      "reassurance": "うまく言えなくても大丈夫です。「さっきのやつ取り消してやり直して」と言えばOKです。"
+    },
+    "v0Design": {
+      "heading": "デザインに困ったら",
+      "subtitle": "v0.devでAIを使って画面を先に作り、自分のプロジェクトに取り込めます。",
+      "steps": [
+        "v0.devで「ログインページを作って」のように作りたい画面を説明してください",
+        "気に入ったらDownload ZIPをクリックしてダウンロードしてください",
+        "解凍して{v0Path}フォルダに入れてください",
+        "Claude Codeに「このコードを自分のプロジェクトに適用して」と言ってください"
+      ]
+    },
+    "phase2": {
+      "badge": "Coming Soon",
+      "heading": "Phase 2: サービスを世界に公開しよう",
+      "description": "データベース連携、ファイルストレージ、実際のURLでのデプロイ、そしてAIチームエージェントの設定までご案内する予定です。"
+    },
+    "backToHome": "トップに戻る"
+  },
+  "Privacy": {
+    "title": "プライバシーポリシー",
+    "effectiveDate": "施行日：2026年3月30日",
+    "sections": {
+      "1": {
+        "title": "1. 収集する情報および収集方法",
+        "intro": "VibeStartはサービス提供のために、以下の情報を自動的に収集します。",
+        "items": [
+          "アクセスログ（IPアドレス、アクセス日時、ブラウザの種類）",
+          "サービス利用記録（選択されたOS、目的、進行ステップ）"
+        ],
+        "note": "VibeStartは会員登録を求めておらず、氏名・メールアドレスなどの個人識別情報を直接収集しません。"
+      },
+      "2": {
+        "title": "2. 情報の収集および利用目的",
+        "items": [
+          "サービス利用統計の分析および品質改善",
+          "サービスの障害検知および安定性確保"
+        ]
+      },
+      "3": {
+        "title": "3. 情報の保有および利用期間",
+        "content": "収集された情報は収集日から<strong>1年間</strong>保有し、保有期間経過後、速やかに削除します。"
+      },
+      "4": {
+        "title": "4. 第三者への情報提供",
+        "intro": "VibeStartは収集した情報を第三者に提供しません。ただし、以下の場合は例外とします。",
+        "items": [
+          "法令により求められる場合",
+          "利用者の事前同意がある場合"
+        ]
+      },
+      "5": {
+        "title": "5. Cookieおよび分析ツール",
+        "content": "VibeStartはサービス改善のためにGoogle Analyticsなどのウェブ分析ツールを使用する場合があり、その過程でCookieが使用されることがあります。ブラウザの設定でCookieの保存を拒否できますが、一部のサービス利用に制限がある場合があります。"
+      },
+      "6": {
+        "title": "6. 利用者の権利",
+        "content": "利用者はいつでも収集された情報の閲覧、訂正、削除を請求することができます。以下の連絡先までお問い合わせください。"
+      },
+      "7": {
+        "title": "7. 個人情報保護責任者",
+        "emailLabel": "メール"
+      },
+      "8": {
+        "title": "8. ポリシーの変更について",
+        "content": "本プライバシーポリシーは、法令・方針またはサービスの変更に伴い修正される場合があり、変更時は本ページにて告知します。"
+      }
+    }
+  },
+  "Error": {
+    "label": "エラー",
+    "title": "問題が発生しました",
+    "description": "一時的なエラーの可能性があります。もう一度お試しください。",
+    "retryButton": "もう一度試す",
+    "notFound": {
+      "code": "404",
+      "title": "ページが見つかりません",
+      "description": "アドレスが間違っているか、削除されたページの可能性があります。",
+      "homeButton": "ホームに戻る"
+    }
+  }
+}

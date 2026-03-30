@@ -78,6 +78,17 @@ packages/
 
 ---
 
+## 다국어 (i18n) 규칙
+
+- **next-intl** 사용. 메시지 파일: `apps/web/messages/{locale}.json`
+- 지원 언어: `ko`(기본), `en`, `ja`, `zh`, `es`, `hi`
+- **한국어(`ko.json`)가 원본**. 한국어 텍스트를 수정하면 반드시 나머지 6개 언어 파일에도 동일하게 반영할 것
+- UI 텍스트는 반드시 메시지 파일에 정의하고, 컴포넌트에서 `useTranslations()`로 사용. 하드코딩 금지
+- 셸 스크립트, CLAUDE.md 아키텍처 규칙은 번역하지 않음 (코드/기술 콘텐츠)
+- 라우팅: `localePrefix: "as-needed"` — 한국어는 `/`, 나머지는 `/en/`, `/ja/` 등 프리픽스
+
+---
+
 ## 보안 원칙
 
 - **스크립트는 Task Catalog에 정의된 명령만 포함** (allowlist 방식). 임의 명령 생성 금지

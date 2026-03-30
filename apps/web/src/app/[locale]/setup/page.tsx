@@ -1,7 +1,7 @@
 "use client";
-
 import { useState, useRef, useCallback, useEffect, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScriptBlock } from "@/components/onboarding/script-block";
@@ -10,25 +10,34 @@ import {
   type OS,
   type Goal,
 } from "@/lib/onboarding";
+import { useTranslations } from "next-intl";
 
-const GROUP_ORDER: SetupGroup[] = ["환경 준비", "도구 설치", "AI 설정", "프로젝트 생성"];
-
-
+const GROUP_ORDER: SetupGroup[] = ["envPrep", "toolInstall", "aiSetup", "projectCreate"];
 function SetupContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const t = useTranslations("Setup");
+  const ts = useTranslations("SetupSteps");
 
   const os = (searchParams.get("os") ?? "windows") as OS;
   const goal = (searchParams.get("goal") ?? "web-nextjs") as Goal;
   const projectName = searchParams.get("project") ?? "my-first-app";
 
-  const steps = getSetupSteps(os, goal, projectName);
+  const steps = getSetupSteps(os, goal, projectName, ts);
   const storageKey = `vibestart-progress-${os}-${goal}-${projectName}`;
 
   const [openTroubleshooting, setOpenTroubleshooting] = useState<Set<string>>(new Set());
 
   const [completed, setCompleted] = useState<Set<string>>(new Set());
   const [hydrated, setHydrated] = useState(false);
+
+  // Group name mapping for translations
+  const groupNameMap: Record<string, string> = {
+    envPrep: t("groups.envPrep"),
+    toolInstall: t("groups.toolInstall"),
+    aiSetup: t("groups.aiSetup"),
+    projectCreate: t("groups.projectCreate"),
+  };
 
   // 마운트 시 localStorage에서 복원
   useEffect(() => {
@@ -46,8 +55,6 @@ function SetupContent() {
       localStorage.setItem(storageKey, JSON.stringify([...completed]));
     } catch { /* localStorage 접근 불가 시 무시 */ }
   }, [completed, storageKey, hydrated]);
-
-
 
   const stepRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
@@ -90,9 +97,9 @@ function SetupContent() {
   return (
     <main id="main-content" className="min-h-screen px-6 py-16">
       <div className="mx-auto max-w-2xl">
-        <h1 className="mb-2 text-center text-3xl font-bold">단계별 설치</h1>
+        <h1 className="mb-2 text-center text-3xl font-bold">{t("title")}</h1>
         <p className="mb-6 text-center text-muted-foreground">
-          각 단계의 명령어를 <strong className="text-foreground">복사 버튼</strong>으로 복사해서 터미널에 붙여넣으세요
+          {t.rich("subtitle", { strong: (chunks) => <strong className="text-foreground">{chunks}</strong> })}
         </p>
 
         {/* 프로그레스 바 + 그룹 뱃지 (스크롤 시 상단 고정) */}
@@ -100,10 +107,10 @@ function SetupContent() {
           {/* 프로그레스 바 */}
           <div className="mb-3">
             <div className="flex items-center justify-between mb-1.5">
-              <span className="text-xs text-muted-foreground">진행률</span>
+              <span className="text-xs text-muted-foreground">{t("progressLabel")}</span>
               <span className="text-xs font-medium text-foreground">{progressPercent}%</span>
             </div>
-            <div className="h-2 w-full overflow-hidden rounded-full bg-muted/50" role="progressbar" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100} aria-label="설치 진행률">
+            <div className="h-2 w-full overflow-hidden rounded-full bg-muted/50" role="progressbar" aria-valuenow={progressPercent} aria-valuemin={0} aria-valuemax={100} aria-label={t("progressAriaLabel")}>
               <div
                 className="h-full rounded-full bg-gradient-to-r from-primary to-success transition-all duration-500 ease-out"
                 style={{ width: `${progressPercent}%` }}
@@ -131,7 +138,7 @@ function SetupContent() {
                       : "bg-muted/50 text-muted-foreground/60"
                 }`}
               >
-                {groupDone ? "✓ " : ""}{group}
+                {groupDone ? "✓ " : ""}{groupNameMap[group] ?? group}
               </div>
             );
           })}
@@ -151,7 +158,7 @@ function SetupContent() {
                   <div className="mb-4 flex items-center gap-3">
                     <div className="h-px flex-1 bg-border/50" />
                     <span className="text-sm font-medium text-muted-foreground">
-                      {step.group}
+                      {groupNameMap[step.group] ?? step.group}
                     </span>
                     <div className="h-px flex-1 bg-border/50" />
                   </div>
@@ -211,7 +218,7 @@ function SetupContent() {
                       })}
                       className="text-xs text-sky-400/70 hover:text-sky-400 transition-colors"
                     >
-                      {openTroubleshooting.has(`why-${step.id}`) ? "▾ 닫기" : "▸ 이게 뭔가요?"}
+                      {openTroubleshooting.has(`why-${step.id}`) ? t("whyNeededToggle.open") : t("whyNeededToggle.closed")}
                     </button>
                     {openTroubleshooting.has(`why-${step.id}`) && (
                       <div className="mt-2 rounded-lg border border-sky-500/30 bg-sky-500/10 p-3 text-sm text-sky-300/90">
@@ -238,7 +245,7 @@ function SetupContent() {
                 {/* 실행 결과 예시 */}
                 {active && step.resultPreview && (
                   <div className="mb-4">
-                    <p className="mb-1.5 text-xs text-muted-foreground/70">실행 결과 예시</p>
+                    <p className="mb-1.5 text-xs text-muted-foreground/70">{t("resultPreviewLabel")}</p>
                     <div className="rounded-lg bg-zinc-950 border border-zinc-800 p-4">
                       <pre className="overflow-x-auto text-xs text-zinc-400 whitespace-pre-wrap leading-relaxed">
                         {step.resultPreview}
@@ -251,7 +258,7 @@ function SetupContent() {
                 {active && step.claudeMdContent && (
                   <div className="mb-4">
                     <div className="mb-2 rounded-lg bg-primary/5 p-3 text-sm text-muted-foreground">
-                      아래 내용을 복사해서 프로젝트 루트에 <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">CLAUDE.md</code> 파일로 저장해주세요.
+                      {t.rich("claudeMdGuide", { code: (chunks) => <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">{chunks}</code> })}
                     </div>
                     <ScriptBlock script={step.claudeMdContent} />
                   </div>
@@ -270,7 +277,7 @@ function SetupContent() {
                       })}
                       className="text-sm text-amber-400 hover:text-amber-300 transition-colors"
                     >
-                      {openTroubleshooting.has(step.id) ? "▾ 닫기" : "▸ 문제가 생겼어요?"}
+                      {openTroubleshooting.has(step.id) ? t("troubleshootingToggle.open") : t("troubleshootingToggle.closed")}
                     </button>
                     {openTroubleshooting.has(step.id) && (
                       <div className="mt-3 flex flex-col gap-3">
@@ -292,7 +299,7 @@ function SetupContent() {
                     size="sm"
                     onClick={() => toggleComplete(step.id)}
                   >
-                    {done ? "완료 취소" : "완료했어요!"}
+                    {done ? t("undoCompleteButton") : t("completeButton")}
                   </Button>
                 )}
               </div>
@@ -312,7 +319,7 @@ function SetupContent() {
                 router.push(`/complete?${params.toString()}`);
               }}
             >
-              완료! 다음으로
+              {t("allDoneButton")}
             </Button>
           </div>
         )}

@@ -1,0 +1,614 @@
+{
+  "Metadata": {
+    "title": {
+      "default": "VibeStart — Vibe coding, empieza aquí",
+      "template": "%s — VibeStart"
+    },
+    "description": "¿Quieres programar con IA pero no sabes cómo configurar el entorno? VibeStart te guía paso a paso.",
+    "og": {
+      "title": "VibeStart — Vibe coding, empieza aquí",
+      "description": "¿Renunciaste porque instalar herramientas de desarrollo era muy difícil? VibeStart te guía uno a uno."
+    },
+    "twitter": {
+      "title": "VibeStart — Vibe coding, empieza aquí",
+      "description": "¿Renunciaste porque instalar herramientas de desarrollo era muy difícil? VibeStart te guía uno a uno."
+    },
+    "privacy": {
+      "title": "Política de privacidad — VibeStart",
+      "description": "Política de privacidad de VibeStart"
+    }
+  },
+  "Common": {
+    "siteName": "VibeStart",
+    "skipToContent": "Ir al contenido",
+    "privacyPolicy": "Política de privacidad",
+    "copy": "Copiar",
+    "copied": "¡Copiado!",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "close": "Cerrar",
+    "startButton": "Empezar",
+    "backToHome": "Volver al inicio",
+    "copyWarning": "No lo escribas a mano, asegúrate de usar el botón de copiar"
+  },
+  "Landing": {
+    "badge": "El primer paso del vibe coding",
+    "heroTitle": "Quieres programar con IA pero",
+    "heroHighlight": "¿por dónde empiezo?",
+    "heroDescription": "¿Renunciaste porque instalar herramientas de desarrollo era muy difícil?\nVibeStart te guía uno a uno.",
+    "ctaButton": "Empezar",
+    "steps": {
+      "1": {
+        "title": "Preguntas sencillas",
+        "description": "Solo dinos tu SO y qué quieres crear"
+      },
+      "2": {
+        "title": "Guía personalizada",
+        "description": "Te indicamos las herramientas necesarias paso a paso"
+      },
+      "3": {
+        "title": "Copiar y pegar",
+        "description": "¡Copia los comandos, ejecútalos y listo!"
+      }
+    },
+    "stats": {
+      "todayStart": "Iniciados hoy",
+      "todayComplete": "Completados hoy",
+      "totalStart": "Total iniciados",
+      "totalComplete": "Total completados",
+      "legendStarted": "Usuarios que iniciaron",
+      "legendCompleted": "Usuarios que completaron"
+    },
+    "reassurance": "No importa si no tienes experiencia en programación. Solo sigue los pasos poco a poco.",
+    "chartTooltip": {
+      "visitors": "Iniciados",
+      "completions": "Completados",
+      "unit": ""
+    }
+  },
+  "Onboarding": {
+    "progressLabel": "{current} / {total}",
+    "lastStepButton": "Ver mi plan",
+    "steps": {
+      "os": {
+        "title": "Sistema operativo",
+        "description": "¿Qué computadora usas?"
+      },
+      "aiIntro": {
+        "title": "Herramienta de IA",
+        "description": "Trabajarás con esta herramienta"
+      },
+      "goal": {
+        "title": "Objetivo",
+        "description": "¿Qué quieres crear?"
+      },
+      "projectName": {
+        "title": "Nombre del proyecto",
+        "description": "Ponle un nombre a tu proyecto"
+      }
+    },
+    "osOptions": {
+      "windows": "Windows",
+      "macos": "Mac"
+    },
+    "osAriaLabel": "Seleccionar sistema operativo",
+    "goalOptions": {
+      "website": "Sitio web / Servicio web",
+      "mobile": "App móvil",
+      "dataAi": "Análisis de datos / IA",
+      "notSure": "Todavía no estoy seguro"
+    },
+    "goalAriaLabel": "Seleccionar objetivo",
+    "goalSubQuestion": "¿Con qué tecnología quieres crearlo?",
+    "goalSubOptions": {
+      "webNextjs": {
+        "label": "Todo con Next.js",
+        "description": "Puedes crear la interfaz y el servidor de una sola vez.\nIdeal para terminar rápido y publicar de inmediato.\nLo usan Airbnb, TikTok web y Twitch."
+      },
+      "webPython": {
+        "label": "Next.js + Backend en Python",
+        "description": "La interfaz con Next.js y el servidor con Python, por separado.\nIdeal para agregar chatbots de IA o análisis de datos.\nLo usan Instagram, Pinterest y Netflix."
+      },
+      "webJava": {
+        "label": "Next.js + Backend en Java",
+        "description": "La interfaz con Next.js y el servidor con Java, por separado.\nMuy fuerte para manejar tráfico a gran escala de forma estable.\nLo usan Mercado Libre, Rappi y Nubank."
+      }
+    },
+    "recommended": "Recomendado",
+    "aiIntro": {
+      "heading": "Claude Code",
+      "subtitle": "Una herramienta de IA que escribe código por ti",
+      "features": {
+        "conversation": {
+          "title": "Solo pide como si estuvieras conversando",
+          "description": "Di algo como \"Hazme una página de login\" y la IA escribirá el código"
+        },
+        "terminal": {
+          "title": "Se ejecuta en la terminal",
+          "description": "Escribe el comando claude en la carpeta del proyecto y listo"
+        },
+        "free": {
+          "title": "Puedes empezar gratis",
+          "description": "Disponible inmediatamente después de instalar. No necesitas experiencia en programación"
+        }
+      }
+    },
+    "projectName": {
+      "label": "Nombre del proyecto",
+      "placeholder": "my-first-app",
+      "hint": "Solo puedes usar letras minúsculas, números y guiones (-).\nEste nombre será el nombre de la carpeta del proyecto.",
+      "folderPreview": "Carpeta a crear: ~/{name}"
+    }
+  },
+  "Plan": {
+    "title": "Plan de instalación personalizado",
+    "subtitle": "Vamos a instalar estas herramientas paso a paso",
+    "tools": {
+      "git": {
+        "name": "Git",
+        "description": "Herramienta de control de versiones de código"
+      },
+      "nodejs": {
+        "name": "Node.js",
+        "description": "Entorno de ejecución de JavaScript (para frontend)"
+      },
+      "python": {
+        "description": {
+          "backend": "Lenguaje de programación para el servidor backend",
+          "dataAi": "Entorno de ejecución del lenguaje de programación"
+        }
+      },
+      "java": {
+        "name": "Java (JDK)",
+        "description": "Lenguaje de programación para el servidor backend"
+      },
+      "expo": {
+        "name": "Expo (React Native)",
+        "description": "Herramienta para crear apps de Android e iOS al mismo tiempo"
+      },
+      "vscode": {
+        "name": "VS Code",
+        "description": "Editor de código"
+      },
+      "claudeCode": {
+        "name": "Claude Code",
+        "description": "Asistente de programación con IA (CLI + extensión de VS Code)"
+      },
+      "nextjsProject": {
+        "name": "Crear proyecto Next.js",
+        "description": "Crea automáticamente un proyecto de sitio web"
+      },
+      "nextjsFastapiProject": {
+        "name": "Crear proyecto Next.js + FastAPI",
+        "description": "Crea los proyectos de frontend (Next.js) y backend (Python) por separado"
+      },
+      "nextjsSpringProject": {
+        "name": "Crear proyecto Next.js + Spring Boot",
+        "description": "Crea los proyectos de frontend (Next.js) y backend (Java) por separado"
+      },
+      "expoProject": {
+        "name": "Crear proyecto Expo",
+        "description": "Crea un proyecto de app móvil"
+      },
+      "jupyterProject": {
+        "name": "Configurar Jupyter Notebook",
+        "description": "Crea un entorno de análisis de datos"
+      }
+    },
+    "summary": {
+      "os": "Sistema operativo",
+      "projectName": "Nombre del proyecto",
+      "estimatedTime": "Tiempo estimado",
+      "estimatedTimeValue": "Aprox. 10–15 minutos"
+    },
+    "ctaButton": "Iniciar instalación",
+    "skipNote": "Las herramientas que ya tengas instaladas se omiten automáticamente"
+  },
+  "Setup": {
+    "title": "Instalación paso a paso",
+    "subtitle": "Copia los comandos de cada paso con el <strong>botón de copiar</strong> y pégalos en la terminal",
+    "progressLabel": "Progreso",
+    "progressAriaLabel": "Progreso de instalación",
+    "resultPreviewLabel": "Ejemplo del resultado",
+    "claudeMdGuide": "Copia el siguiente contenido y guárdalo como archivo <code>CLAUDE.md</code> en la raíz del proyecto.",
+    "whyNeededToggle": {
+      "open": "▾ Cerrar",
+      "closed": "▸ ¿Qué es esto?"
+    },
+    "troubleshootingToggle": {
+      "open": "▾ Cerrar",
+      "closed": "▸ ¿Tienes problemas?"
+    },
+    "completeButton": "¡Listo!",
+    "undoCompleteButton": "Deshacer completado",
+    "allDoneButton": "¡Listo! Siguiente",
+    "groups": {
+      "envPrep": "Preparación del entorno",
+      "toolInstall": "Instalación de herramientas",
+      "aiSetup": "Configuración de IA",
+      "projectCreate": "Creación del proyecto"
+    }
+  },
+  "SetupSteps": {
+    "terminal": {
+      "title": "Abrir la terminal",
+      "description": "Abre la ventana donde ejecutarás los comandos",
+      "detailedGuide": {
+        "windows": "Escribe 'PowerShell' en la barra de búsqueda de Windows (ícono de lupa) y haz clic en 'Windows PowerShell' para abrirlo. Después de instalar el entorno Linux, busca 'Ubuntu' y ábrelo.",
+        "macos": "Abre Spotlight (Cmd + Space), escribe 'Terminal' y presiona Enter."
+      }
+    },
+    "wsl": {
+      "title": "Instalar entorno Linux (WSL2)",
+      "description": "Para usar herramientas de IA en Windows necesitas Linux",
+      "whyNeeded": "Las herramientas de IA para programación (Claude Code) solo funcionan en Linux. WSL2 es como una mini computadora Linux dentro de Windows. Al instalarlo, puedes usar comandos de Linux sin dejar Windows.",
+      "detailedGuide": "Después de la instalación debes reiniciar la computadora. Al reiniciar, se abrirá automáticamente una ventana de Ubuntu donde configurarás tu nombre de usuario y contraseña.",
+      "troubleshooting": [
+        {
+          "symptom": "'wsl' no se reconoce como un comando",
+          "solution": "Necesitas Windows 10 versión 2004 o superior. Ve a Configuración → Sistema → Acerca de para verificar la versión del SO, y ejecuta Windows Update."
+        },
+        {
+          "symptom": "Error de que la virtualización no está habilitada",
+          "solution": "Debes activar la virtualización (Virtualization Technology) en la BIOS. Reinicia la computadora y presiona F2 o Del para entrar a la BIOS."
+        },
+        {
+          "symptom": "Mensaje de que ya está instalado",
+          "solution": "¡Es normal! Ejecuta wsl --update para actualizar a la última versión y continúa con el siguiente paso."
+        },
+        {
+          "symptom": "Ubuntu no se abre después de reiniciar",
+          "solution": "Busca 'Ubuntu' en la búsqueda de Windows. Si no aparece, búscalo en Microsoft Store e instálalo."
+        }
+      ]
+    },
+    "wslOpen": {
+      "title": "Abrir terminal de Linux (Ubuntu)",
+      "description": "A partir de ahora trabajaremos en la terminal de Linux",
+      "whyNeeded": "Estás entrando al entorno Linux que acabas de instalar. Cuando el prompt (indicador de entrada) cambie, significa que ya estás en el mundo Linux.",
+      "detailedGuide": "Al escribir el comando de abajo cambiarás a la terminal de Linux. Si el prompt cambia, ¡fue exitoso! Después del cambio, escribe cd ~ para ir a la carpeta de inicio.",
+      "troubleshooting": [
+        {
+          "symptom": "Me pide nombre de usuario y contraseña",
+          "solution": "¡Es normal! Ingresa el nombre de usuario y contraseña que quieras. Es normal que no aparezca nada en pantalla mientras escribes la contraseña."
+        },
+        {
+          "symptom": "No pasa nada después de escribir 'wsl'",
+          "solution": "Puede que no hayas reiniciado después de instalar WSL. Reinicia la computadora e intenta de nuevo."
+        },
+        {
+          "symptom": "Después de cd ~ sigo en la ruta /mnt/c/...",
+          "solution": "Verifica que el final del prompt haya cambiado a :~$. Escribe pwd y si aparece /home/tunombredeusuario es que fue exitoso."
+        }
+      ]
+    },
+    "devTools": {
+      "title": "Instalar herramientas de desarrollo",
+      "descriptionTemplate": "Instalamos {names}",
+      "detailedGuide": "Se instalan varias herramientas a la vez. Puede tomar un poco de tiempo.",
+      "whyNeeded": {
+        "git": "Git es una 'máquina del tiempo' que guarda el historial de cambios en tu código.",
+        "nodejs": "Node.js es el motor de JavaScript que necesitas para crear sitios web.",
+        "python": "Python es un lenguaje de programación muy usado en IA y análisis de datos.",
+        "java": "Java es un lenguaje de programación estable muy usado en servicios a gran escala.",
+        "expo": "Expo es una herramienta que te permite crear apps de Android e iOS con un solo código."
+      },
+      "troubleshooting": {
+        "wsl": [
+          {
+            "symptom": "Me pide contraseña de sudo pero no puedo escribir",
+            "solution": "Es normal que no aparezca nada en pantalla al escribir la contraseña. Solo escríbela y presiona Enter."
+          },
+          {
+            "symptom": "Error: Unable to locate package",
+            "solution": "Ejecuta sudo apt update primero y luego intenta de nuevo."
+          },
+          {
+            "symptom": "Error de dpkg lock o que otro proceso está en uso",
+            "solution": "Hay otra instalación en proceso. Espera un momento (1-2 minutos) e intenta de nuevo."
+          },
+          {
+            "symptom": "curl: command not found",
+            "solution": "Ejecuta sudo apt update && sudo apt install -y curl primero y luego intenta de nuevo."
+          }
+        ],
+        "macos": [
+          {
+            "symptom": "brew: command not found",
+            "solution": "Homebrew no está instalado. Completa primero el paso de instalación de Homebrew."
+          },
+          {
+            "symptom": "Mensaje: already installed",
+            "solution": "¡Ya está instalado, todo está bien! Continúa con el siguiente paso."
+          },
+          {
+            "symptom": "Error: No available formula",
+            "solution": "Ejecuta brew update y luego intenta de nuevo."
+          }
+        ]
+      }
+    },
+    "editor": {
+      "title": "Instalar editor de código (VS Code)",
+      "description": "Instalamos el programa para editar código",
+      "whyNeeded": "VS Code es un editor especializado para escribir código. Es similar al bloc de notas, pero tiene funciones especializadas para desarrollo como autocompletado, indicador de errores y conexión con asistentes de IA.",
+      "detailedGuide": {
+        "windows": "VS Code se instala en Windows, pero se conecta automáticamente con WSL. Abre una nueva ventana de PowerShell para ejecutarlo."
+      },
+      "troubleshooting": {
+        "windows": [
+          {
+            "symptom": "'winget' no se reconoce",
+            "solution": "Busca 'Instalador de aplicaciones' en Microsoft Store y actualízalo. Si sigue sin funcionar, descárgalo directamente desde code.visualstudio.com."
+          },
+          {
+            "symptom": "Mensaje de que ya está instalado",
+            "solution": "¡Es normal! VS Code ya está instalado, continúa con el siguiente paso."
+          }
+        ],
+        "macos": [
+          {
+            "symptom": "Mensaje de que ya está instalado",
+            "solution": "¡Es normal! Continúa con el siguiente paso."
+          },
+          {
+            "symptom": "brew: command not found",
+            "solution": "Cierra la terminal y ábrela de nuevo. Si sigue sin funcionar, verifica el paso de instalación de Homebrew."
+          }
+        ]
+      }
+    },
+    "brew": {
+      "title": "Instalar gestor de paquetes (Homebrew)",
+      "description": "Una herramienta que facilita instalar programas en Mac",
+      "whyNeeded": "Homebrew es como la 'App Store de la terminal' en Mac. Con un solo comando puedes instalar y administrar herramientas de desarrollo.",
+      "detailedGuide": "Durante la instalación puede pedirte tu contraseña. Ingresa la contraseña de tu Mac. Después de completar la instalación, cierra la terminal y ábrela de nuevo.",
+      "troubleshooting": [
+        {
+          "symptom": "Aparece un popup para instalar Command Line Tools",
+          "solution": "¡Es normal! Haz clic en 'Instalar' para continuar. Después de eso, la instalación de Homebrew continuará."
+        },
+        {
+          "symptom": "Me pide la contraseña",
+          "solution": "Ingresa la contraseña de inicio de sesión de tu Mac. Es normal que no aparezca nada en pantalla mientras la escribes."
+        },
+        {
+          "symptom": "Después de instalar, el comando brew no funciona",
+          "solution": "Cierra la terminal y ábrela de nuevo. Si sigue sin funcionar, ejecuta eval \"$(/opt/homebrew/bin/brew shellenv)\"."
+        }
+      ]
+    },
+    "aiSetup": {
+      "title": "Instalar asistente de IA (Claude Code)",
+      "description": "Instalamos el asistente de programación con IA y lo conectamos a tu cuenta",
+      "whyNeeded": "Claude Code es una IA que te ayuda a programar como si estuvieras conversando. Di algo como 'Hazme una página de login' y escribirá el código por ti.",
+      "detailedGuide": "Después de instalar, el inicio de sesión se ejecutará automáticamente. Cuando se abra el navegador, inicia sesión con tu cuenta de Claude. Si no tienes una cuenta, puedes registrarte gratis.",
+      "troubleshooting": [
+        {
+          "symptom": "npm: command not found",
+          "solution": "Node.js no está instalado. Verifica de nuevo el paso de 'Instalar herramientas de desarrollo'."
+        },
+        {
+          "symptom": "Error: EACCES permission denied",
+          "solution": "Intenta de nuevo con sudo npm install -g @anthropic-ai/claude-code."
+        },
+        {
+          "symptom": "El navegador no se abre automáticamente",
+          "solution": "Copia la URL que aparece en la terminal y pégala directamente en la barra de direcciones del navegador."
+        },
+        {
+          "symptom": "No hay respuesta en la terminal después de iniciar sesión",
+          "solution": "La terminal lo detectará automáticamente cuando completes el inicio de sesión en el navegador. Espera un momento."
+        }
+      ]
+    },
+    "projectFrontend": {
+      "title": {
+        "standalone": "Crear proyecto",
+        "withBackend": "Crear proyecto frontend (Next.js)"
+      },
+      "description": {
+        "standalone": "Creamos tu propio proyecto de sitio web",
+        "withBackend": "Creamos el proyecto Next.js que se encargará de la interfaz"
+      },
+      "detailedGuideTemplate": "Se creará el proyecto en la carpeta ~/{path}.",
+      "troubleshooting": [
+        {
+          "symptom": "Error: The application path is not writable",
+          "solution": "Intenta de nuevo. Puede fallar temporalmente durante la descarga en la primera ejecución."
+        },
+        {
+          "symptom": "npx: command not found",
+          "solution": "Node.js no está instalado. Verifica de nuevo el paso de 'Instalar herramientas de desarrollo'."
+        },
+        {
+          "symptom": "Error: directory already exists",
+          "solution": "Quedaron restos de un intento anterior. Ejecuta rm -rf ~/{path} para eliminarlo y luego intenta de nuevo."
+        }
+      ]
+    },
+    "projectBackendPython": {
+      "title": "Crear proyecto backend (Python)",
+      "description": "Creamos el proyecto del servidor Python FastAPI",
+      "detailedGuideTemplate": "Se creará el proyecto en la carpeta ~/{projectName}/backend."
+    },
+    "projectBackendJava": {
+      "title": "Crear proyecto backend (Java)",
+      "description": "Descargamos el proyecto del servidor Java Spring Boot",
+      "detailedGuideTemplate": "Se creará el proyecto en la carpeta ~/{projectName}/backend. Se descargará automáticamente un proyecto con las librerías básicas necesarias desde Spring Initializr."
+    },
+    "projectExpo": {
+      "title": "Crear proyecto Expo",
+      "description": "Creamos tu propio proyecto de app móvil",
+      "whyNeeded": "Expo es una herramienta que facilita el uso de React Native. Con un solo código puedes crear apps de Android e iOS al mismo tiempo.",
+      "detailedGuideTemplate": "Se creará un proyecto Expo en la carpeta ~/{projectName}. Está basado en TypeScript, así que usas el mismo lenguaje que en desarrollo web.",
+      "troubleshooting": [
+        {
+          "symptom": "npx: command not found",
+          "solution": "Node.js no está instalado. Verifica de nuevo el paso de 'Instalar herramientas de desarrollo'."
+        },
+        {
+          "symptom": "Error: directory already exists",
+          "solution": "Quedaron restos de un intento anterior. Ejecuta rm -rf ~/{projectName} para eliminarlo y luego intenta de nuevo."
+        }
+      ]
+    },
+    "projectDataAi": {
+      "title": "Configurar entorno de análisis de datos",
+      "description": "Instalamos Jupyter Notebook",
+      "detailedGuideTemplate": "Se creará un entorno virtual en la carpeta ~/{projectName} y se instalarán las librerías de análisis de datos."
+    },
+    "architecture": {
+      "title": "Configurar estructura del proyecto",
+      "description": {
+        "default": "Configuramos las reglas de arquitectura que seguirá la herramienta de IA",
+        "dataAi": "Configuramos las reglas del proyecto de análisis que seguirá la herramienta de IA"
+      },
+      "detailedGuide": "Crea la estructura de carpetas con el comando de abajo y luego guarda el contenido de CLAUDE.md en la raíz del proyecto."
+    },
+    "firstRun": {
+      "title": "¡Primera ejecución!",
+      "description": "Abre el proyecto en VS Code y empieza a programar con IA",
+      "detailedGuide": {
+        "simple": "El comando de abajo abrirá VS Code. Dentro de VS Code, abre la terminal (Ctrl+` o Cmd+`) y escribe claude para comenzar a programar con IA.",
+        "withBackend": "El comando de abajo abrirá VS Code. Dentro de VS Code, abre la terminal (Ctrl+` o Cmd+`) y escribe claude para comenzar a programar con IA. Verás las carpetas frontend/ y backend/ juntas."
+      }
+    },
+    "environments": {
+      "windowsCmd": "Terminal de Windows",
+      "linuxCmd": "Terminal de Linux",
+      "macTerminal": "Terminal de Mac",
+      "vscodeTerminal": "Terminal de VS Code",
+      "anywhere": "En cualquier lugar"
+    }
+  },
+  "Complete": {
+    "congratulations": "¡Felicidades!",
+    "envCompleteTemplate": "Tu entorno de desarrollo para <strong>{goalLabel}</strong> está listo",
+    "installedTools": "Herramientas instaladas",
+    "projectStructure": "Estructura del proyecto creada en tu PC",
+    "goalLabels": {
+      "webNextjs": "Sitio web con Next.js",
+      "webPython": "Servicio web con Next.js + Python",
+      "webJava": "Servicio web con Next.js + Java",
+      "mobile": "App móvil con Expo",
+      "dataAi": "Análisis de datos con Python"
+    },
+    "projectTrees": {
+      "webNextjs": "📁 ~/{projectName}/\n├── 📂 src/\n│   ├── 📂 domain/          ← Lógica de negocio\n│   │   ├── models/\n│   │   └── services/\n│   ├── 📂 ports/            ← Definición de interfaces\n│   ├── 📂 adapters/         ← Conexiones externas\n│   │   ├── api/\n│   │   └── ui/\n│   └── 📂 app/              ← Páginas (Next.js)\n├── 📄 CLAUDE.md              ← Reglas de arquitectura para IA\n└── 📄 package.json",
+      "webPython": "📁 ~/{projectName}/\n├── 📂 frontend/              ← Next.js (interfaz)\n│   ├── 📂 src/\n│   │   ├── domain/ ports/ adapters/\n│   │   └── 📂 app/           ← Páginas\n│   └── 📄 package.json\n├── 📂 backend/               ← FastAPI (servidor)\n│   ├── 📂 domain/\n│   │   ├── models/\n│   │   └── services/\n│   ├── 📂 ports/\n│   │   ├── inbound/\n│   │   └── outbound/\n│   ├── 📂 adapters/\n│   │   ├── inbound/api/\n│   │   └── outbound/persistence/\n│   ├── 📄 main.py            ← Punto de entrada del servidor\n│   └── 📂 venv/              ← Entorno virtual de Python\n└── 📄 CLAUDE.md               ← Reglas de arquitectura para IA",
+      "webJava": "📁 ~/{projectName}/\n├── 📂 frontend/              ← Next.js (interfaz)\n│   ├── 📂 src/\n│   │   ├── domain/ ports/ adapters/\n│   │   └── 📂 app/           ← Páginas\n│   └── 📄 package.json\n├── 📂 backend/               ← Spring Boot (servidor)\n│   ├── 📂 src/main/java/.../\n│   │   ├── domain/model/     ← Entidades\n│   │   ├── domain/service/   ← Lógica de negocio\n│   │   ├── port/in/ out/     ← Interfaces\n│   │   └── adapter/in/web/   ← Controladores\n│   ├── 📄 application.yml    ← Configuración del servidor\n│   └── 📄 build.gradle       ← Configuración de build\n└── 📄 CLAUDE.md               ← Reglas de arquitectura para IA",
+      "mobile": "📁 ~/{projectName}/\n├── 📂 src/\n│   ├── 📂 domain/            ← Lógica de negocio\n│   │   ├── models/\n│   │   └── services/\n│   ├── 📂 ports/             ← Definición de interfaces\n│   ├── 📂 adapters/          ← Conexiones externas\n│   │   ├── api/\n│   │   └── ui/\n│   │       ├── screens/      ← Pantallas\n│   │       └── components/   ← Componentes\n├── 📄 App.tsx                 ← Punto de entrada de la app\n├── 📄 CLAUDE.md               ← Reglas de arquitectura para IA\n└── 📄 package.json",
+      "dataAi": "📁 ~/{projectName}/\n├── 📂 data/                   ← Archivos de datos\n├── 📂 notebooks/              ← Jupyter Notebook\n├── 📂 src/\n│   ├── loaders/               ← Carga de datos\n│   ├── analyzers/             ← Lógica de análisis\n│   └── visualizers/           ← Visualización\n├── 📂 venv/                   ← Entorno virtual de Python\n└── 📄 CLAUDE.md               ← Reglas del proyecto para IA"
+    },
+    "firstPrompt": {
+      "heading": "Tu primera frase para Claude Code",
+      "subtitle": "No tienes que escribirlo perfecto a la primera. Puedes ir mejorándolo mientras conversas.",
+      "templateLabel": "Llena los espacios en blanco",
+      "exampleLabel": "Así puedes escribirlo"
+    },
+    "promptTemplates": {
+      "web": "Quiero crear un sitio web de ___.\n\nDe qué se trata el servicio:\n___\n\nQuién lo va a usar:\n___\n\n3 funciones esenciales para empezar:\n1. ___\n2. ___\n3. ___\n\n¿Por dónde debería empezar?",
+      "mobile": "Quiero crear una app de ___.\n\nDe qué se trata la app:\n___\n\nQuién la va a usar:\n___\n\n3 funciones esenciales para empezar:\n1. ___\n2. ___\n3. ___\n\n¿Por dónde debería empezar?",
+      "dataAi": "Quiero analizar ___.\n\nDe qué se trata el análisis:\n___\n\nPara qué voy a usar los resultados:\n___\n\n3 cosas que necesito analizar primero:\n1. ___\n2. ___\n3. ___\n\n¿Por dónde debería empezar?"
+    },
+    "promptExamples": {
+      "webNextjs": "Quiero crear un sitio web para agendar reuniones con amigos.\n\nDe qué se trata el servicio:\nEs muy molesto preguntar \"¿cuándo pueden?\" en el grupo de WhatsApp,\nasí que quiero un sitio donde compartas un link y cada uno vote por las fechas que le sirven.\n\nQuién lo va a usar:\nJóvenes de 20 a 30 años. Deben poder usarlo sin registrarse, solo con un link.\n\n3 funciones esenciales para empezar:\n1. Poner varias fechas posibles y que los participantes marquen cuándo pueden\n2. Participar sin crear cuenta, solo ingresando su nombre\n3. Una pantalla donde se vean los resultados de la votación de un vistazo\n\n¿Por dónde debería empezar?",
+      "webPython": "Quiero crear un servicio web para préstamo de cosas entre vecinos.\n\nDe qué se trata el servicio:\nQue los vecinos del mismo edificio o colonia puedan prestarse cosas como taladros o escaleras\nque solo se usan de vez en cuando.\n\nQuién lo va a usar:\nVecinos del mismo lugar. Gente que no quiere comprar algo que solo necesita por un rato.\n\n3 funciones esenciales para empezar:\n1. Registrar un objeto para prestar (foto + descripción + disponibilidad)\n2. Buscar objetos y solicitar el préstamo\n3. Notificación por WhatsApp cuando alguien solicita algo\n\n¿Por dónde debería empezar?",
+      "webJava": "Quiero crear un sitio web para gestionar turnos de empleados de un café pequeño.\n\nDe qué se trata el servicio:\nEn un café con menos de 10 empleados, el dueño publica los horarios\ny los empleados se inscriben y confirman sus turnos.\n\nQuién lo va a usar:\nEl dueño del café. Ahora coordina todo por WhatsApp y es muy complicado.\n\n3 funciones esenciales para empezar:\n1. El dueño publica fechas/horarios y los empleados se inscriben\n2. Calendario mensual para ver los turnos de un vistazo\n3. Notificación a los empleados cuando se confirma el horario\n\n¿Por dónde debería empezar?",
+      "mobile": "Quiero crear una app para registrar cuánta agua tomo.\n\nDe qué se trata la app:\nUna app de hábitos saludables donde registras con un botón cuánta agua tomaste\ny te felicita cuando llegas a tu meta del día.\n\nQuién la va a usar:\nPersonas de 20 a 40 años que quieren empezar a cuidar su salud. No necesitan funciones\ncomplicadas, solo quieren registrar de forma simple.\n\n3 funciones esenciales para empezar:\n1. Registrar agua con un solo botón (+250ml por ejemplo)\n2. Mostrar el total del día con número y gráfica\n3. Mensaje de felicitación al cumplir la meta diaria\n\n¿Por dónde debería empezar?",
+      "dataAi": "Quiero analizar los datos de ventas de una tienda en línea.\n\nDe qué se trata el análisis:\nTengo datos de pedidos en Excel y quiero saber\nqué productos se venden más y en qué horarios hay más pedidos.\n\nPara qué voy a usar los resultados:\nPara hacer un reporte mensual para el jefe.\n\n3 cosas que necesito analizar primero:\n1. Ranking de ventas mensuales por producto\n2. Patrones de pedidos por día de la semana y horario\n3. Identificar días donde las ventas subieron o bajaron de golpe\n\n¿Por dónde debería empezar?"
+    },
+    "followUp": {
+      "heading": "Después sigue así",
+      "subtitle": "Cuando envíes tu primer mensaje, la IA creará código. Después solo pide cosas como si fuera una conversación.",
+      "examples": [
+        "¿Puedo probarlo?",
+        "Hazme el texto más grande",
+        "Cambia el fondo a azul",
+        "Quiero agregar inicio de sesión",
+        "Me sale un error, ¿puedes ayudarme? (pega el mensaje de error)",
+        "Explícame lo que hemos hecho hasta ahora"
+      ],
+      "reassurance": "No te preocupes si no lo dices perfecto. Puedes decir \"Cancela lo anterior y hazlo de nuevo\" y listo."
+    },
+    "v0Design": {
+      "heading": "Si no sabes cómo diseñar",
+      "subtitle": "En v0.dev puedes crear pantallas con IA y luego traerlas a tu proyecto.",
+      "steps": [
+        "En v0.dev describe la pantalla que quieres, por ejemplo \"Hazme una página de login\"",
+        "Si te gusta, haz clic en Download ZIP para descargarlo",
+        "Descomprime y coloca los archivos en la carpeta {v0Path}",
+        "Dile a Claude Code \"Aplica este código a mi proyecto\""
+      ]
+    },
+    "phase2": {
+      "badge": "Coming Soon",
+      "heading": "Fase 2: Publicar tu servicio al mundo",
+      "description": "Te guiaremos con la conexión a base de datos, almacenamiento de archivos, publicación con URL real y configuración de agentes de IA."
+    },
+    "backToHome": "Volver al inicio"
+  },
+  "Privacy": {
+    "title": "Política de privacidad",
+    "effectiveDate": "Fecha de vigencia: 30 de marzo de 2026",
+    "sections": {
+      "1": {
+        "title": "1. Información recopilada y métodos de recopilación",
+        "intro": "VibeStart recopila automáticamente la siguiente información para ofrecer el servicio.",
+        "items": [
+          "Registros de acceso (dirección IP, hora de conexión, tipo de navegador)",
+          "Registros de uso del servicio (SO seleccionado, objetivo, etapa de progreso)"
+        ],
+        "note": "VibeStart no requiere registro de cuenta y no recopila directamente información de identificación personal como nombre o correo electrónico."
+      },
+      "2": {
+        "title": "2. Propósito de la recopilación y uso de información",
+        "items": [
+          "Análisis estadístico del uso del servicio y mejora de la calidad",
+          "Detección de errores del servicio y garantía de estabilidad"
+        ]
+      },
+      "3": {
+        "title": "3. Período de retención y uso de la información",
+        "content": "La información recopilada se conserva por <strong>1 año</strong> desde la fecha de recopilación y se elimina sin demora una vez transcurrido el período."
+      },
+      "4": {
+        "title": "4. Compartir información con terceros",
+        "intro": "VibeStart no comparte la información recopilada con terceros. Sin embargo, se exceptúan los siguientes casos.",
+        "items": [
+          "Cuando sea requerido por la ley",
+          "Cuando exista consentimiento previo del usuario"
+        ]
+      },
+      "5": {
+        "title": "5. Cookies y herramientas de análisis",
+        "content": "VibeStart puede utilizar herramientas de análisis web como Google Analytics para mejorar el servicio, y en este proceso se pueden usar cookies. Puedes rechazar el almacenamiento de cookies a través de la configuración del navegador, aunque algunas funciones del servicio podrían verse limitadas."
+      },
+      "6": {
+        "title": "6. Derechos del usuario",
+        "content": "El usuario puede solicitar en cualquier momento la consulta, corrección o eliminación de la información recopilada. Comunícate con nosotros a través del contacto indicado abajo."
+      },
+      "7": {
+        "title": "7. Responsable de protección de datos",
+        "emailLabel": "Correo electrónico"
+      },
+      "8": {
+        "title": "8. Cambios a esta política",
+        "content": "Esta política de privacidad puede modificarse debido a cambios en la ley, políticas o el servicio. Los cambios se notificarán a través de esta página."
+      }
+    }
+  },
+  "Error": {
+    "label": "Error",
+    "title": "Algo salió mal",
+    "description": "Puede ser un error temporal. Inténtalo de nuevo.",
+    "retryButton": "Intentar de nuevo",
+    "notFound": {
+      "code": "404",
+      "title": "Página no encontrada",
+      "description": "La dirección puede ser incorrecta o la página fue eliminada.",
+      "homeButton": "Volver al inicio"
+    }
+  }
+}

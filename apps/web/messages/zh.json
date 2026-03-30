@@ -1,0 +1,614 @@
+{
+  "Metadata": {
+    "title": {
+      "default": "VibeStart — 氛围编程，从这里开始",
+      "template": "%s — VibeStart"
+    },
+    "description": "想用AI写代码，但环境搭建太难了？VibeStart一步步教你。",
+    "og": {
+      "title": "VibeStart — 氛围编程，从这里开始",
+      "description": "开发工具安装太难放弃了？VibeStart手把手教你。"
+    },
+    "twitter": {
+      "title": "VibeStart — 氛围编程，从这里开始",
+      "description": "开发工具安装太难放弃了？VibeStart手把手教你。"
+    },
+    "privacy": {
+      "title": "隐私政策 — VibeStart",
+      "description": "VibeStart 隐私政策"
+    }
+  },
+  "Common": {
+    "siteName": "VibeStart",
+    "skipToContent": "跳转到正文",
+    "privacyPolicy": "隐私政策",
+    "copy": "复制",
+    "copied": "已复制！",
+    "next": "下一步",
+    "previous": "上一步",
+    "close": "关闭",
+    "startButton": "开始",
+    "backToHome": "返回首页",
+    "copyWarning": "请不要手动输入，务必点击复制按钮"
+  },
+  "Landing": {
+    "badge": "氛围编程第一步",
+    "heroTitle": "想用AI写代码",
+    "heroHighlight": "不知道从哪开始？",
+    "heroDescription": "开发工具安装太难放弃了？\nVibeStart手把手教你。",
+    "ctaButton": "开始",
+    "steps": {
+      "1": {
+        "title": "简单提问",
+        "description": "告诉我们你的操作系统和想做的东西"
+      },
+      "2": {
+        "title": "定制指引",
+        "description": "按步骤告诉你需要哪些工具"
+      },
+      "3": {
+        "title": "复制粘贴",
+        "description": "复制命令执行就搞定了！"
+      }
+    },
+    "stats": {
+      "todayStart": "今日开始",
+      "todayComplete": "今日完成",
+      "totalStart": "累计开始",
+      "totalComplete": "累计完成",
+      "legendStarted": "已开始的用户",
+      "legendCompleted": "已完成的用户"
+    },
+    "reassurance": "完全没有编程经验也没关系。慢慢跟着做就行。",
+    "chartTooltip": {
+      "visitors": "开始",
+      "completions": "完成",
+      "unit": "人"
+    }
+  },
+  "Onboarding": {
+    "progressLabel": "{current} / {total}",
+    "lastStepButton": "查看方案",
+    "steps": {
+      "os": {
+        "title": "操作系统",
+        "description": "你用的是什么电脑？"
+      },
+      "aiIntro": {
+        "title": "AI 工具",
+        "description": "将和这些工具一起使用"
+      },
+      "goal": {
+        "title": "目标",
+        "description": "你想做什么？"
+      },
+      "projectName": {
+        "title": "项目名称",
+        "description": "给你的项目起个名字吧"
+      }
+    },
+    "osOptions": {
+      "windows": "Windows",
+      "macos": "Mac"
+    },
+    "osAriaLabel": "选择操作系统",
+    "goalOptions": {
+      "website": "网站 / 网络服务",
+      "mobile": "移动应用",
+      "dataAi": "数据分析 / AI",
+      "notSure": "还不太确定"
+    },
+    "goalAriaLabel": "选择目的",
+    "goalSubQuestion": "用什么技术来做？",
+    "goalSubOptions": {
+      "webNextjs": {
+        "label": "Next.js 一站式搞定",
+        "description": "前端和后端可以一起做。\n适合快速完成并立即部署。\nAirbnb、TikTok网页版、Twitch都在用。"
+      },
+      "webPython": {
+        "label": "Next.js + Python 后端",
+        "description": "前端用Next.js，后端用Python分开做。\n适合做AI聊天机器人或数据分析功能。\nInstagram、Pinterest、Netflix都在用。"
+      },
+      "webJava": {
+        "label": "Next.js + Java 后端",
+        "description": "前端用Next.js，后端用Java分开做。\n擅长稳定处理大规模流量。\n微信、淘宝、美团都在用。"
+      }
+    },
+    "recommended": "推荐",
+    "aiIntro": {
+      "heading": "Claude Code",
+      "subtitle": "AI帮你写代码的工具",
+      "features": {
+        "conversation": {
+          "title": "像对话一样提需求",
+          "description": "说「帮我做个登录页面」AI就会写代码"
+        },
+        "terminal": {
+          "title": "在终端里运行",
+          "description": "在项目文件夹里输入 claude 命令就能开始"
+        },
+        "free": {
+          "title": "可以免费开始使用",
+          "description": "安装后马上就能用。没有编程经验也没关系"
+        }
+      }
+    },
+    "projectName": {
+      "label": "项目名称",
+      "placeholder": "my-first-app",
+      "hint": "只能使用英文小写字母、数字和连字符(-)。\n这个名字将作为项目文件夹名。",
+      "folderPreview": "将创建的文件夹: ~/{name}"
+    }
+  },
+  "Plan": {
+    "title": "定制安装方案",
+    "subtitle": "将按步骤安装以下工具",
+    "tools": {
+      "git": {
+        "name": "Git",
+        "description": "代码版本管理工具"
+      },
+      "nodejs": {
+        "name": "Node.js",
+        "description": "JavaScript 运行环境（前端用）"
+      },
+      "python": {
+        "description": {
+          "backend": "后端服务器编程语言",
+          "dataAi": "编程语言运行环境"
+        }
+      },
+      "java": {
+        "name": "Java (JDK)",
+        "description": "后端服务器编程语言"
+      },
+      "expo": {
+        "name": "Expo (React Native)",
+        "description": "同时开发安卓和iOS应用的工具"
+      },
+      "vscode": {
+        "name": "VS Code",
+        "description": "代码编辑器"
+      },
+      "claudeCode": {
+        "name": "Claude Code",
+        "description": "AI 编程助手（CLI + VS Code 扩展）"
+      },
+      "nextjsProject": {
+        "name": "创建 Next.js 项目",
+        "description": "自动创建网站项目"
+      },
+      "nextjsFastapiProject": {
+        "name": "创建 Next.js + FastAPI 项目",
+        "description": "分别创建前端(Next.js)和后端(Python)项目"
+      },
+      "nextjsSpringProject": {
+        "name": "创建 Next.js + Spring Boot 项目",
+        "description": "分别创建前端(Next.js)和后端(Java)项目"
+      },
+      "expoProject": {
+        "name": "创建 Expo 项目",
+        "description": "创建移动应用项目"
+      },
+      "jupyterProject": {
+        "name": "Jupyter Notebook 设置",
+        "description": "创建数据分析环境"
+      }
+    },
+    "summary": {
+      "os": "操作系统",
+      "projectName": "项目名称",
+      "estimatedTime": "预计用时",
+      "estimatedTimeValue": "约10~15分钟"
+    },
+    "ctaButton": "开始安装",
+    "skipNote": "已安装的工具会自动跳过"
+  },
+  "Setup": {
+    "title": "分步安装",
+    "subtitle": "用<strong>复制按钮</strong>复制每个步骤的命令，粘贴到终端中",
+    "progressLabel": "进度",
+    "progressAriaLabel": "安装进度",
+    "resultPreviewLabel": "运行结果示例",
+    "claudeMdGuide": "请复制以下内容，保存为项目根目录下的 <code>CLAUDE.md</code> 文件。",
+    "whyNeededToggle": {
+      "open": "▾ 收起",
+      "closed": "▸ 这是什么？"
+    },
+    "troubleshootingToggle": {
+      "open": "▾ 收起",
+      "closed": "▸ 遇到问题了？"
+    },
+    "completeButton": "完成了！",
+    "undoCompleteButton": "取消完成",
+    "allDoneButton": "完成！下一步",
+    "groups": {
+      "envPrep": "环境准备",
+      "toolInstall": "工具安装",
+      "aiSetup": "AI 设置",
+      "projectCreate": "项目创建"
+    }
+  },
+  "SetupSteps": {
+    "terminal": {
+      "title": "打开终端",
+      "description": "打开执行命令的窗口",
+      "detailedGuide": {
+        "windows": "在Windows搜索栏（放大镜图标）输入「PowerShell」，点击「Windows PowerShell」打开。安装Linux环境后，搜索「Ubuntu」打开即可。",
+        "macos": "打开Spotlight（Cmd + Space），输入「终端」后按Enter。"
+      }
+    },
+    "wsl": {
+      "title": "安装Linux环境（WSL2）",
+      "description": "在Windows上使用AI编程工具需要Linux",
+      "whyNeeded": "AI编程工具（Claude Code）只能在Linux上运行。WSL2是运行在Windows里的迷你Linux电脑。安装后就可以在Windows上使用Linux命令了。",
+      "detailedGuide": "安装后需要重启电脑。重启后Ubuntu窗口会自动打开，需要设置用户名和密码。",
+      "troubleshooting": [
+        {
+          "symptom": "「wsl」不是可识别的命令",
+          "solution": "需要Windows 10 2004版本以上。在设置 → 系统 → 关于中检查OS版本号，然后运行Windows更新。"
+        },
+        {
+          "symptom": "虚拟化功能未启用的错误",
+          "solution": "需要在BIOS设置中开启虚拟化（Virtualization Technology）。重启电脑时按F2或Del键进入BIOS。"
+        },
+        {
+          "symptom": "提示已经安装了",
+          "solution": "这是正常的！运行 wsl --update 更新到最新版本，然后继续下一步。"
+        },
+        {
+          "symptom": "重启后Ubuntu没有打开",
+          "solution": "在Windows搜索中搜索「Ubuntu」。如果没有，在Microsoft Store中搜索「Ubuntu」进行安装。"
+        }
+      ]
+    },
+    "wslOpen": {
+      "title": "打开Linux命令窗口（Ubuntu）",
+      "description": "从现在开始在Linux命令窗口中操作",
+      "whyNeeded": "这是进入刚才安装的Linux环境。当提示符（输入标记）变化时，就表示已经进入Linux世界了。",
+      "detailedGuide": "输入以下命令即可切换到Linux命令窗口。提示符变化就表示成功！切换后输入 cd ~ 移动到主文件夹。",
+      "troubleshooting": [
+        {
+          "symptom": "要求输入用户名和密码",
+          "solution": "这是正常的！输入你想要的用户名和密码。输入密码时屏幕上什么都不显示是正常的。"
+        },
+        {
+          "symptom": "输入「wsl」后没有反应",
+          "solution": "可能是WSL安装后没有重启。请重启电脑后再试。"
+        },
+        {
+          "symptom": "cd ~ 后仍然在 /mnt/c/... 路径",
+          "solution": "检查提示符末尾是否变成了 :~$。输入 pwd 看到 /home/用户名 就表示成功了。"
+        }
+      ]
+    },
+    "devTools": {
+      "title": "安装开发工具",
+      "descriptionTemplate": "安装 {names}",
+      "detailedGuide": "一次性安装多个工具。可能需要一些时间。",
+      "whyNeeded": {
+        "git": "Git是保存代码变更历史的「时光机」。",
+        "nodejs": "Node.js是制作网站时需要的JavaScript运行器。",
+        "python": "Python是AI/数据分析中常用的编程语言。",
+        "java": "Java是大型服务中常用的稳定编程语言。",
+        "expo": "Expo是用一套代码同时开发安卓和iOS应用的工具。"
+      },
+      "troubleshooting": {
+        "wsl": [
+          {
+            "symptom": "sudo要求输入密码但看不到输入",
+            "solution": "输入密码时屏幕上什么都不显示是正常的。直接输入密码然后按Enter就行。"
+          },
+          {
+            "symptom": "Unable to locate package 错误",
+            "solution": "请先运行 sudo apt update 然后重试。"
+          },
+          {
+            "symptom": "dpkg lock 或其他进程正在使用的错误",
+            "solution": "有其他安装任务正在进行。请等待1~2分钟后再试。"
+          },
+          {
+            "symptom": "curl: command not found",
+            "solution": "请先运行 sudo apt update && sudo apt install -y curl 然后重试。"
+          }
+        ],
+        "macos": [
+          {
+            "symptom": "brew: command not found",
+            "solution": "Homebrew还没安装。请先完成前一步（安装Homebrew）。"
+          },
+          {
+            "symptom": "already installed 消息",
+            "solution": "已经安装了，没问题！请继续下一步。"
+          },
+          {
+            "symptom": "Error: No available formula 错误",
+            "solution": "请运行 brew update 后重试。"
+          }
+        ]
+      }
+    },
+    "editor": {
+      "title": "安装代码编辑器（VS Code）",
+      "description": "安装用于编写代码的程序",
+      "whyNeeded": "VS Code是专门写代码的编辑器。和记事本类似，但有代码自动补全、错误提示、AI助手连接等开发专用功能。",
+      "detailedGuide": {
+        "windows": "VS Code安装在Windows上，但会自动连接WSL。请打开新的PowerShell窗口运行。"
+      },
+      "troubleshooting": {
+        "windows": [
+          {
+            "symptom": "「winget」不被识别",
+            "solution": "在Microsoft Store中搜索「应用安装程序」并更新。如果还不行，请在 code.visualstudio.com 直接下载。"
+          },
+          {
+            "symptom": "提示已经安装了",
+            "solution": "没问题！VS Code已经安装好了，请继续下一步。"
+          }
+        ],
+        "macos": [
+          {
+            "symptom": "提示已经安装了",
+            "solution": "没问题！请继续下一步。"
+          },
+          {
+            "symptom": "brew: command not found",
+            "solution": "请关闭终端重新打开。如果还不行，请重新检查Homebrew安装步骤。"
+          }
+        ]
+      }
+    },
+    "brew": {
+      "title": "安装包管理器（Homebrew）",
+      "description": "让你在Mac上轻松安装程序的工具",
+      "whyNeeded": "Homebrew是Mac的「终端版应用商店」。一行命令就能安装和管理开发工具。",
+      "detailedGuide": "安装过程中可能会要求输入密码。请输入Mac登录密码。安装完成后请关闭终端重新打开。",
+      "troubleshooting": [
+        {
+          "symptom": "弹出Command Line Tools安装窗口",
+          "solution": "这是正常的！点击「安装」按钮继续。安装后Homebrew安装会继续进行。"
+        },
+        {
+          "symptom": "要求输入密码",
+          "solution": "请输入Mac登录密码。输入时屏幕上什么都不显示是正常的。"
+        },
+        {
+          "symptom": "安装后brew命令不起作用",
+          "solution": "请关闭终端重新打开。如果还不行，请运行 eval \"$(/opt/homebrew/bin/brew shellenv)\" 。"
+        }
+      ]
+    },
+    "aiSetup": {
+      "title": "安装AI编程助手（Claude Code）",
+      "description": "安装AI编程助手并连接账户",
+      "whyNeeded": "Claude Code是像对话一样帮你写代码的AI。说「帮我做个登录页面」它就会帮你写代码。",
+      "detailedGuide": "安装后会自动进行登录。浏览器打开后请用Claude账户登录。没有账户可以免费注册。",
+      "troubleshooting": [
+        {
+          "symptom": "npm: command not found",
+          "solution": "Node.js还没安装。请重新检查「安装开发工具」步骤。"
+        },
+        {
+          "symptom": "EACCES permission denied 错误",
+          "solution": "请用 sudo npm install -g @anthropic-ai/claude-code 重试。"
+        },
+        {
+          "symptom": "浏览器没有自动打开",
+          "solution": "请复制终端中显示的URL，直接粘贴到浏览器地址栏。"
+        },
+        {
+          "symptom": "登录后终端没有反应",
+          "solution": "在浏览器中完成登录后终端会自动识别。请稍等一下。"
+        }
+      ]
+    },
+    "projectFrontend": {
+      "title": {
+        "standalone": "创建项目",
+        "withBackend": "创建前端项目（Next.js）"
+      },
+      "description": {
+        "standalone": "创建你自己的网站项目",
+        "withBackend": "创建负责页面显示的Next.js项目"
+      },
+      "detailedGuideTemplate": "在 ~/{path} 文件夹中创建项目。",
+      "troubleshooting": [
+        {
+          "symptom": "The application path is not writable 错误",
+          "solution": "请再试一次。首次运行时下载过程中可能会临时失败。"
+        },
+        {
+          "symptom": "npx: command not found",
+          "solution": "Node.js还没安装。请重新检查「安装开发工具」步骤。"
+        },
+        {
+          "symptom": "directory already exists 错误",
+          "solution": "之前的尝试留下了痕迹。请运行 rm -rf ~/{path} 删除后重试。"
+        }
+      ]
+    },
+    "projectBackendPython": {
+      "title": "创建后端项目（Python）",
+      "description": "创建Python FastAPI服务器项目",
+      "detailedGuideTemplate": "在 ~/{projectName}/backend 文件夹中创建项目。"
+    },
+    "projectBackendJava": {
+      "title": "创建后端项目（Java）",
+      "description": "下载Java Spring Boot服务器项目",
+      "detailedGuideTemplate": "在 ~/{projectName}/backend 文件夹中创建项目。从Spring Initializr自动下载包含实际开发所需基础库的项目。"
+    },
+    "projectExpo": {
+      "title": "创建Expo项目",
+      "description": "创建你自己的移动应用项目",
+      "whyNeeded": "Expo是让React Native更易用的工具。一套代码就能同时开发安卓和iOS应用。",
+      "detailedGuideTemplate": "在 ~/{projectName} 文件夹中创建Expo项目。基于TypeScript，可以和Web开发用同一种语言。",
+      "troubleshooting": [
+        {
+          "symptom": "npx: command not found",
+          "solution": "Node.js还没安装。请重新检查「安装开发工具」步骤。"
+        },
+        {
+          "symptom": "directory already exists 错误",
+          "solution": "之前的尝试留下了痕迹。请运行 rm -rf ~/{projectName} 删除后重试。"
+        }
+      ]
+    },
+    "projectDataAi": {
+      "title": "数据分析环境设置",
+      "description": "安装Jupyter Notebook",
+      "detailedGuideTemplate": "在 ~/{projectName} 文件夹中创建虚拟环境并安装数据分析库。"
+    },
+    "architecture": {
+      "title": "项目结构设置",
+      "description": {
+        "default": "设置AI工具遵循的架构规则",
+        "dataAi": "设置AI工具遵循的分析项目规则"
+      },
+      "detailedGuide": "用以下命令创建文件夹结构，然后将CLAUDE.md内容保存到项目根目录。"
+    },
+    "firstRun": {
+      "title": "首次运行！",
+      "description": "在VS Code中打开项目，开始AI编程",
+      "detailedGuide": {
+        "simple": "以下命令会打开VS Code。在VS Code中打开终端（Ctrl+` 或 Cmd+`），输入 claude 即可开始AI编程。",
+        "withBackend": "以下命令会打开VS Code。在VS Code中打开终端（Ctrl+` 或 Cmd+`），输入 claude 即可开始AI编程。可以同时看到 frontend/ 和 backend/ 文件夹。"
+      }
+    },
+    "environments": {
+      "windowsCmd": "Windows 命令窗口",
+      "linuxCmd": "Linux 命令窗口",
+      "macTerminal": "Mac 终端",
+      "vscodeTerminal": "VS Code 终端",
+      "anywhere": "任意位置"
+    }
+  },
+  "Complete": {
+    "congratulations": "恭喜你！",
+    "envCompleteTemplate": "<strong>{goalLabel}</strong> 开发环境搭建完成了",
+    "installedTools": "已安装的工具",
+    "projectStructure": "在你电脑上创建的项目结构",
+    "goalLabels": {
+      "webNextjs": "Next.js 网站",
+      "webPython": "Next.js + Python 网络服务",
+      "webJava": "Next.js + Java 网络服务",
+      "mobile": "Expo 移动应用",
+      "dataAi": "Python 数据分析"
+    },
+    "projectTrees": {
+      "webNextjs": "📁 ~/{projectName}/\n├── 📂 src/\n│   ├── 📂 domain/          ← 业务逻辑\n│   │   ├── models/\n│   │   └── services/\n│   ├── 📂 ports/            ← 接口定义\n│   ├── 📂 adapters/         ← 外部集成\n│   │   ├── api/\n│   │   └── ui/\n│   └── 📂 app/              ← 页面（Next.js）\n├── 📄 CLAUDE.md              ← AI 架构规则\n└── 📄 package.json",
+      "webPython": "📁 ~/{projectName}/\n├── 📂 frontend/              ← Next.js（页面）\n│   ├── 📂 src/\n│   │   ├── domain/ ports/ adapters/\n│   │   └── 📂 app/           ← 页面\n│   └── 📄 package.json\n├── 📂 backend/               ← FastAPI（服务器）\n│   ├── 📂 domain/\n│   │   ├── models/\n│   │   └── services/\n│   ├── 📂 ports/\n│   │   ├── inbound/\n│   │   └── outbound/\n│   ├── 📂 adapters/\n│   │   ├── inbound/api/\n│   │   └── outbound/persistence/\n│   ├── 📄 main.py            ← 服务器入口\n│   └── 📂 venv/              ← Python 虚拟环境\n└── 📄 CLAUDE.md               ← AI 架构规则",
+      "webJava": "📁 ~/{projectName}/\n├── 📂 frontend/              ← Next.js（页面）\n│   ├── 📂 src/\n│   │   ├── domain/ ports/ adapters/\n│   │   └── 📂 app/           ← 页面\n│   └── 📄 package.json\n├── 📂 backend/               ← Spring Boot（服务器）\n│   ├── 📂 src/main/java/.../\n│   │   ├── domain/model/     ← 实体\n│   │   ├── domain/service/   ← 业务逻辑\n│   │   ├── port/in/ out/     ← 接口\n│   │   └── adapter/in/web/   ← 控制器\n│   ├── 📄 application.yml    ← 服务器配置\n│   └── 📄 build.gradle       ← 构建配置\n└── 📄 CLAUDE.md               ← AI 架构规则",
+      "mobile": "📁 ~/{projectName}/\n├── 📂 src/\n│   ├── 📂 domain/            ← 业务逻辑\n│   │   ├── models/\n│   │   └── services/\n│   ├── 📂 ports/             ← 接口定义\n│   ├── 📂 adapters/          ← 外部集成\n│   │   ├── api/\n│   │   └── ui/\n│   │       ├── screens/      ← 页面\n│   │       └── components/   ← 组件\n├── 📄 App.tsx                 ← 应用入口\n├── 📄 CLAUDE.md               ← AI 架构规则\n└── 📄 package.json",
+      "dataAi": "📁 ~/{projectName}/\n├── 📂 data/                   ← 数据文件\n├── 📂 notebooks/              ← Jupyter Notebook\n├── 📂 src/\n│   ├── loaders/               ← 数据加载\n│   ├── analyzers/             ← 分析逻辑\n│   └── visualizers/           ← 可视化\n├── 📂 venv/                   ← Python 虚拟环境\n└── 📄 CLAUDE.md               ← AI 项目规则"
+    },
+    "firstPrompt": {
+      "heading": "向Claude Code说第一句话",
+      "subtitle": "不用一次写得完美。边对话边修改就行。",
+      "templateLabel": "填写空白处",
+      "exampleLabel": "可以这样写"
+    },
+    "promptTemplates": {
+      "web": "我想做一个 ___ 网站。\n\n这个服务是：\n___\n\n主要用户：\n___\n\n一开始必须有的3个功能：\n1. ___\n2. ___\n3. ___\n\n现在从哪里开始比较好？",
+      "mobile": "我想做一个 ___ 应用。\n\n这个服务是：\n___\n\n主要用户：\n___\n\n一开始必须有的3个功能：\n1. ___\n2. ___\n3. ___\n\n现在从哪里开始比较好？",
+      "dataAi": "我想分析 ___。\n\n分析内容是：\n___\n\n分析结果的用途：\n___\n\n一开始必须分析的3个方面：\n1. ___\n2. ___\n3. ___\n\n从哪里开始比较好？"
+    },
+    "promptExamples": {
+      "webNextjs": "我想做一个约时间的网站。\n\n这个服务是：\n朋友们在群里问「什么时候有空？」太麻烦了，\n分享一个链接，大家就能投票选有空的日期。\n\n主要用户：\n20~30岁上班族。不用注册，收到链接就能直接用。\n\n一开始必须有的3个功能：\n1. 发起多个候选日期，参与者勾选有空的日期\n2. 不用注册，输入名字就能直接参与\n3. 投票结果一目了然的页面\n\n现在从哪里开始比较好？",
+      "webPython": "我想做一个小区物品借用网站。\n\n这个服务是：\n同一个小区的居民可以互相借用电钻、梯子这些偶尔用的东西。\n\n主要用户：\n小区居民。买了觉得浪费，需要的时候临时用一下就行。\n\n一开始必须有的3个功能：\n1. 登记可借物品（照片 + 描述 + 可借时间）\n2. 搜索想要的物品 + 申请借用\n3. 收到申请时微信通知\n\n现在从哪里开始比较好？",
+      "webJava": "我想做一个小咖啡店员工排班管理网站。\n\n这个服务是：\n10人以下的咖啡店，老板发排班表，\n员工申请，然后确认排班。\n\n主要用户：\n咖啡店老板。现在用微信一个个协调太复杂了。\n\n一开始必须有的3个功能：\n1. 老板发布工作日期/时间，员工申请\n2. 月度排班日历一目了然\n3. 排班确认后通知员工\n\n现在从哪里开始比较好？",
+      "mobile": "我想做一个喝水记录应用。\n\n这个应用是：\n一键记录每天喝了多少水，\n达到目标量就给鼓励的健康习惯应用。\n\n主要用户：\n想开始健康管理的20~40岁人群。不需要复杂功能，\n只想简单记录一下。\n\n一开始必须有的3个功能：\n1. 喝水时一键记录（+250ml这样）\n2. 今天总摄入量用数字和图表显示\n3. 达到每日目标时显示鼓励消息\n\n现在从哪里开始比较好？",
+      "dataAi": "我想做电商销售数据分析。\n\n分析内容是：\n看Excel里积累的订单数据，\n了解哪些商品卖得好，哪个时间段订单多。\n\n分析结果的用途：\n给老板做本月报告用的资料。\n\n一开始必须分析的3个方面：\n1. 各商品月度销售排名\n2. 按星期/时间段的订单模式\n3. 找出销售额突然上升或下降的日子\n\n从哪里开始比较好？"
+    },
+    "followUp": {
+      "heading": "接下来可以这样继续",
+      "subtitle": "发送第一个提示后AI会生成代码。之后像聊天一样简短地提需求就行。",
+      "examples": [
+        "这个能运行看看吗？",
+        "把字体调大一点",
+        "背景色换成蓝色",
+        "我想加个登录功能",
+        "报错了，帮我看看（粘贴错误信息）",
+        "给我解释一下现在做的东西"
+      ],
+      "reassurance": "说错了也没关系。说「把刚才的撤销重来」就行。"
+    },
+    "v0Design": {
+      "heading": "不知道怎么设计？",
+      "subtitle": "可以在 v0.dev 用AI先做好页面，再导入到你的项目中。",
+      "steps": [
+        "在v0.dev上描述你想要的页面，比如「帮我做个登录页面」",
+        "满意的话点击 Download ZIP 下载",
+        "解压后放到 {v0Path} 文件夹",
+        "告诉Claude Code「把这个代码应用到我的项目里」"
+      ]
+    },
+    "phase2": {
+      "badge": "Coming Soon",
+      "heading": "Phase 2：把你的服务发布到全世界",
+      "description": "数据库对接、文件存储、用真实URL部署，以及AI团队代理设置，我们都会一步步指导你。"
+    },
+    "backToHome": "返回首页"
+  },
+  "Privacy": {
+    "title": "隐私政策",
+    "effectiveDate": "生效日期：2026年3月30日",
+    "sections": {
+      "1": {
+        "title": "1. 收集的个人信息项目及方式",
+        "intro": "VibeStart为提供服务自动收集以下信息。",
+        "items": [
+          "访问日志（IP地址、访问时间、浏览器类型）",
+          "服务使用记录（选择的OS、目的、进行步骤）"
+        ],
+        "note": "VibeStart不要求注册账户，不直接收集姓名、邮箱等个人身份信息。"
+      },
+      "2": {
+        "title": "2. 收集和使用个人信息的目的",
+        "items": [
+          "服务使用统计分析及质量改进",
+          "服务错误检测及稳定性保障"
+        ]
+      },
+      "3": {
+        "title": "3. 个人信息的保存和使用期限",
+        "content": "收集的信息自收集之日起保存<strong>1年</strong>，保存期满后立即销毁。"
+      },
+      "4": {
+        "title": "4. 向第三方提供个人信息",
+        "intro": "VibeStart不会将收集的信息提供给第三方。但以下情况除外。",
+        "items": [
+          "法律法规要求的情况",
+          "用户事先同意的情况"
+        ]
+      },
+      "5": {
+        "title": "5. Cookie及分析工具",
+        "content": "VibeStart可能使用Google Analytics等网络分析工具来改进服务，此过程中可能使用Cookie。您可以通过浏览器设置拒绝Cookie存储，但部分服务可能受到限制。"
+      },
+      "6": {
+        "title": "6. 用户权利",
+        "content": "用户可以随时要求查阅、更正、删除已收集的信息。请通过以下联系方式咨询。"
+      },
+      "7": {
+        "title": "7. 个人信息保护负责人",
+        "emailLabel": "邮箱"
+      },
+      "8": {
+        "title": "8. 关于政策变更",
+        "content": "本隐私政策可能因法律法规、政策或服务变更而修改，变更时将通过本页面公告。"
+      }
+    }
+  },
+  "Error": {
+    "label": "错误",
+    "title": "出现了问题",
+    "description": "可能是临时错误。请重试。",
+    "retryButton": "重试",
+    "notFound": {
+      "code": "404",
+      "title": "找不到页面",
+      "description": "地址可能有误，或者该页面已被删除。",
+      "homeButton": "返回首页"
+    }
+  }
+}

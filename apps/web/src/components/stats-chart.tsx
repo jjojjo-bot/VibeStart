@@ -8,6 +8,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useTranslations } from "next-intl";
 import type { DailyStat } from "@/lib/stats";
 
 interface StatsChartProps {
@@ -28,6 +29,7 @@ function CustomTooltip({
   payload?: Array<{ value: number; dataKey: string }>;
   label?: string;
 }) {
+  const t = useTranslations("Landing");
   if (!active || !payload || !label) return null;
 
   return (
@@ -35,7 +37,7 @@ function CustomTooltip({
       <div className="mb-1 font-medium">{formatDate(label)}</div>
       {payload.map((entry) => (
         <div key={entry.dataKey} className="text-muted-foreground">
-          {entry.dataKey === "visitors" ? "시작" : "완료"}: {entry.value}명
+          {entry.dataKey === "visitors" ? t("chartTooltip.visitors") : t("chartTooltip.completions")}: {entry.value}{t("chartTooltip.unit")}
         </div>
       ))}
     </div>
