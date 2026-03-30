@@ -100,4 +100,10 @@
   html {
     @apply font-sans;
   }
+  button,
+  a,
+  [role="button"],
+  summary {
+    @apply cursor-pointer;
+  }
 }
