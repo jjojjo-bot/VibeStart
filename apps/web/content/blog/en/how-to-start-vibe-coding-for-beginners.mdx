@@ -1,0 +1,172 @@
+---
+title: "Vibe Coding Beginner's Guide: Build Your First Website with AI"
+description: "Even without any coding experience, you can build a website through vibe coding. A step-by-step guide from setting up your dev environment to choosing AI tools and completing your first project."
+date: "2026-03-31"
+tags: ["vibe coding", "beginner coding", "AI coding", "dev environment setup", "web development"]
+---
+
+## 🎯 What You Need to Start Vibe Coding
+
+Vibe Coding is a new way of programming where you give AI instructions in plain language to generate code. Instead of memorizing syntax, you say things like "create a sign-up page" and the AI writes the actual working code. This makes it especially accessible for people without a programming background.
+
+That said, you can't start with zero preparation just because AI writes the code for you. You need a development environment to run the code, and you need to know how to communicate effectively with AI to get the results you want. This guide walks you through everything from tool installation to completing your first website.
+
+## 🛠️ Why Dev Environment Setup Comes First
+
+When you ask AI to "make a website," it generates code — but to run that code on your computer, you need the right tools installed. A development environment is simply a set of tools that let you edit, run, and manage code.
+
+You only need three tools to start vibe coding:
+
+| Tool | Role | Analogy |
+|------|------|---------|
+| **Git** | Version control — saves and restores code history | Like "Track Changes" in documents |
+| **Node.js** | Runs JavaScript code | Like needing Excel to open .xlsx files |
+| **VS Code** | Code editor | A specialized notepad for coding |
+
+Once these three are installed, you can immediately run and preview the code AI generates. Type `node -v` and `git --version` in your terminal — if version numbers appear, you're all set.
+
+### 💡 If Manual Installation Feels Overwhelming
+
+Installing each tool by searching online can take 30 minutes to half a day, especially when you run into Windows PATH issues or macOS permission problems. [VibeStart](/onboarding) provides OS-specific installation commands that you simply copy and paste, and most users finish everything within 10 minutes.
+
+## 🤖 Choosing Your AI Tool
+
+With your dev environment ready, it's time to pick an AI tool for vibe coding. Here are the three most popular options.
+
+### 🔵 Claude (claude.ai)
+
+Made by Anthropic, Claude excels at maintaining long conversation context and produces high-quality code. You can use it directly in your browser, and Claude Code lets you code directly from the terminal. It's particularly strong when explaining complex logic.
+
+### 🟢 Cursor (cursor.com)
+
+A code editor built on VS Code with integrated AI features. You can edit code while chatting with AI, making it convenient for modifying or extending existing projects. It requires a separate installation but works almost identically to VS Code.
+
+### 🟡 ChatGPT (chat.openai.com)
+
+The most widely known AI tool. It's useful for asking about concepts during development since it answers all kinds of questions beyond just coding. However, long code outputs may get cut off mid-way.
+
+**If you're unsure which to pick**, start with Claude or ChatGPT since they work right in your browser, then switch to Cursor as your projects grow.
+
+## 📝 Building Your First Project (5 Steps)
+
+With your tools ready, let's actually build a website. Follow these steps in order.
+
+### Step 1: Create a Project Folder
+
+You need a folder to store your website code. Open your terminal and run:
+
+```bash
+npx create-next-app@latest my-first-site
+```
+
+When prompted for options, just press Enter for all defaults. A `my-first-site` folder will be created with all the basic files automatically generated.
+
+### Step 2: Start the Dev Server
+
+Navigate to the folder and start the development server:
+
+```bash
+cd my-first-site
+npm run dev
+```
+
+If you see the default Next.js page when you open `http://localhost:3000` in your browser, you're good. Any code changes you make will be reflected in the browser immediately.
+
+### Step 3: Make Your First AI Request
+
+Open your AI tool and try a request like this:
+
+> "Modify the app/page.tsx file in my Next.js project to create a simple personal intro page. Show my name, a one-line bio, and 3 hobbies in a card layout."
+
+When AI generates the code, replace the contents of `app/page.tsx` with it. Save the file and check the result in your browser right away.
+
+### Step 4: Request Modifications
+
+If the first result isn't quite right, ask for specific changes:
+
+> "Change the background to light blue, add shadow effects to the cards, and make it responsive so it looks good on mobile too."
+
+This back-and-forth conversation to refine the result is the essence of vibe coding.
+
+### Step 5: Verify the Result
+
+Check that the page looks as intended in your browser. To test both desktop and mobile sizes, press F12 to open developer tools and toggle device mode.
+
+## ⚠️ 5 Common Beginner Mistakes
+
+### 1. Asking Too Vaguely
+
+AI produces better results with specific instructions. Instead of "make a website," try "create a single-page website showing a cafe menu with item names, prices, and photos arranged in cards."
+
+### 2. Ignoring Error Messages
+
+When red text appears in the terminal, many beginners panic and skip past it. Simply copy the error message and ask AI "I got this error, how do I fix it?" — most problems can be solved this way.
+
+### 3. Requesting Too Many Features at Once
+
+"Build login, sign-up, a board, and payment all at once" will confuse even the AI. Request one feature at a time, verify it works, then move on to the next.
+
+### 4. Not Reading Any Code at All
+
+Vibe coding means you don't need to know syntax, not that you should never look at code. Understanding which files serve which purposes helps you ask AI more precise questions when issues arise.
+
+### 5. Working Without Git Saves
+
+If you don't save (commit) with Git when things are working, you can't roll back when later changes break something. Build the habit of running `git add .` and `git commit -m "description"` after each completed feature.
+
+## ✅ Pre-Start Checklist
+
+If you can check off all items below, you're ready to start vibe coding.
+
+- [ ] Does `git --version` show a version number in terminal?
+- [ ] Does `node -v` show a version number in terminal?
+- [ ] Is VS Code or Cursor installed?
+- [ ] Do you have an account for an AI tool (Claude, ChatGPT, or Cursor)?
+- [ ] Can you create a project with `npx create-next-app@latest`?
+- [ ] Does `npm run dev` show a page at `localhost:3000`?
+
+If any item doesn't work, [VibeStart](/onboarding) can help you resolve it step by step.
+
+## 🔄 Vibe Coding Tool Comparison
+
+| Feature | Claude | Cursor | ChatGPT |
+|---------|--------|--------|---------|
+| Access | Web/Terminal | Desktop app | Web/App |
+| Code quality | High | High | Moderate |
+| Long code handling | Strong | Strong | May get cut off |
+| Direct file editing | Via Claude Code | Built-in | Not available |
+| Free tier | Limited | Limited | Limited |
+| Best for | New projects | Editing existing code | Learning concepts |
+
+No single tool is perfect, so combining them by situation is most effective. For example, generate code with Claude, make fine adjustments in Cursor, and ask ChatGPT about unfamiliar concepts.
+
+## 💡 Tips for Better Vibe Coding
+
+### 🗂️ Understand Your Project Structure
+
+Having a rough understanding of the folder structure AI created makes modification requests much smoother. In a Next.js project, the key folders are `app/` (pages), `public/` (images), and `components/` (reusable parts).
+
+### 📸 Use Screenshots
+
+If you have a screenshot or reference image of the design you want, show it to the AI and say "make it look like this." It produces much more accurate results than describing in text alone.
+
+### 🔄 Save Often, Check Often
+
+Check the result in your browser after every code change, and save with Git when it works. Making too many changes at once makes it hard to identify where things went wrong.
+
+### 📚 Don't Fear Errors
+
+Errors are a natural part of programming. Show the error message to AI as-is and it will explain the cause and solution. Getting an error doesn't mean you're doing something wrong.
+
+## 🔗 Related Posts
+
+- [What is Vibe Coding? A New Way to Code with AI](/blog/what-is-vibe-coding)
+- [Why Set Up Your Dev Environment with VibeStart?](/blog/why-use-vibestart)
+- [Git Installation Guide for Windows & macOS](/blog/git-install-guide)
+- [VS Code Installation & Setup Guide](/blog/vscode-setup-guide)
+
+## 📑 References
+
+- [Next.js Official Getting Started Guide](https://nextjs.org/docs/getting-started)
+- [Git Official Documentation - Getting Started](https://git-scm.com/book/en/v2/Getting-Started-Git-Basics)
+- [VS Code Official Documentation](https://code.visualstudio.com/docs)
