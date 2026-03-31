@@ -5,12 +5,19 @@ import { useTranslations } from "next-intl";
 import type { DailyCountryStat, DailyStat, CountryStat } from "@/lib/stats";
 import type { Period } from "@/components/stats-chart";
 
-/** ISO 3166-1 alpha-2 국가코드를 국기 이모지로 변환 */
-function countryFlag(code: string): string {
-  const upper = code.toUpperCase();
-  if (upper.length !== 2) return "🌐";
-  const offset = 0x1f1e6 - 65; // 'A' = 65
-  return String.fromCodePoint(upper.charCodeAt(0) + offset, upper.charCodeAt(1) + offset);
+function FlagImage({ code }: { code: string }) {
+  const lower = code.toLowerCase();
+  if (lower.length !== 2) return <span className="text-base">🌐</span>;
+  return (
+    <img
+      src={`https://flagcdn.com/20x15/${lower}.png`}
+      srcSet={`https://flagcdn.com/40x30/${lower}.png 2x`}
+      width={20}
+      height={15}
+      alt={code}
+      className="rounded-sm"
+    />
+  );
 }
 
 /** 기간에 해당하는 날짜 범위의 시작일 계산 */
@@ -89,7 +96,6 @@ export function CountryStats({ dailyCountries, period }: CountryStatsProps) {
       </h3>
       <div className="space-y-3">
         {countries.map((country, index) => {
-          const flag = countryFlag(country.countryCode);
           const barWidth = Math.round((country.visitors / maxVisitors) * 100);
           const completionRate =
             country.visitors > 0
@@ -105,7 +111,7 @@ export function CountryStats({ dailyCountries, period }: CountryStatsProps) {
 
               {/* 국기 + 국가명 */}
               <span className="flex w-20 items-center gap-1.5 text-sm">
-                <span className="text-base">{flag}</span>
+                <FlagImage code={country.countryCode} />
                 <span className="truncate">
                   {t.has(`countryStats.countries.${country.countryCode}`)
                     ? t(`countryStats.countries.${country.countryCode}`)
