@@ -34,14 +34,16 @@ function getPeriodStartDate(period: Period): string {
       return now.toISOString().slice(0, 10);
     }
     case "weekly": {
+      // 이번 주 월요일
       const d = new Date(now);
-      d.setDate(d.getDate() - 12 * 7);
+      const day = d.getDay();
+      const diff = day === 0 ? -6 : 1 - day;
+      d.setDate(d.getDate() + diff);
       return d.toISOString().slice(0, 10);
     }
     case "monthly": {
-      const d = new Date(now);
-      d.setMonth(d.getMonth() - 12);
-      return d.toISOString().slice(0, 10);
+      // 이번 달 1일
+      return now.toISOString().slice(0, 7) + "-01";
     }
   }
 }

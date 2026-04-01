@@ -46,7 +46,7 @@ export default async function BlogPostPage({ params }: PageProps) {
           </h1>
           <p className="mt-3 text-lg text-muted-foreground">{post.description}</p>
           {post.tags.length > 0 && (
-            <div className="mt-4 flex gap-2">
+            <div className="mt-4 flex flex-wrap gap-2">
               {post.tags.map((tag) => (
                 <Badge key={tag} variant="secondary">{tag}</Badge>
               ))}
