@@ -31,9 +31,7 @@ function getPeriodStartDate(period: Period): string {
   const now = getKSTNow();
   switch (period) {
     case "daily": {
-      const d = new Date(now);
-      d.setDate(d.getDate() - 14);
-      return d.toISOString().slice(0, 10);
+      return now.toISOString().slice(0, 10);
     }
     case "weekly": {
       const d = new Date(now);
@@ -98,7 +96,7 @@ export function CountryStats({ dailyCountries, period }: CountryStatsProps) {
   return (
     <div className="mt-6 border-t border-border/50 pt-6">
       <h3 className="mb-4 text-sm font-medium text-muted-foreground">
-        {t("countryStats.title")} · {t(`chartPeriod.${period}`)}
+        {t("countryStats.title")}
       </h3>
       <div className="space-y-3">
         {countries.map((country, index) => {
