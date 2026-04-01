@@ -31,7 +31,7 @@ export default function BlogListPage() {
                     {post.description}
                   </p>
                   {post.tags.length > 0 && (
-                    <div className="mt-3 flex gap-2">
+                    <div className="mt-3 flex flex-wrap gap-2">
                       {post.tags.map((tag) => (
                         <Badge key={tag} variant="secondary" className="text-xs">
                           {tag}
