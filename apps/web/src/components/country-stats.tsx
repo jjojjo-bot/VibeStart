@@ -20,9 +20,15 @@ function FlagImage({ code }: { code: string }) {
   );
 }
 
-/** 기간에 해당하는 날짜 범위의 시작일 계산 */
-function getPeriodStartDate(period: Period): string {
+/** KST(UTC+9) 기준 현재 시각 */
+function getKSTNow(): Date {
   const now = new Date();
+  return new Date(now.getTime() + 9 * 60 * 60 * 1000);
+}
+
+/** 기간에 해당하는 날짜 범위의 시작일 계산 (KST 기준) */
+function getPeriodStartDate(period: Period): string {
+  const now = getKSTNow();
   switch (period) {
     case "daily": {
       const d = new Date(now);

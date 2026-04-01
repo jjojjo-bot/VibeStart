@@ -1,0 +1,195 @@
+---
+title: "The Complete Dev Environment Setup Guide Before Starting Vibe Coding (2026)"
+description: "You need a proper dev environment before starting vibe coding. A step-by-step guide covering Git, Node.js, and VS Code installation and verification that anyone can follow."
+date: "2026-04-01"
+tags: ["vibe coding", "dev environment setup", "Git install", "Node.js install", "VS Code install", "beginner coding", "development setup", "vibe coding setup", "Windows dev environment", "coding for beginners"]
+---
+
+## 🎯 Why Dev Environment Setup Comes Before Vibe Coding
+
+Vibe Coding is a way of programming where you give AI natural language instructions like "create a login page" and it generates actual working code. Since you don't need to memorize coding syntax, it's rapidly gaining popularity among non-developers.
+
+However, the code AI generates doesn't run on its own. To execute, modify, and preview code, your computer needs a development environment — a set of tools for editing, running, and managing code. Without this setup, even when AI hands you perfect code, you'll get stuck at "where do I paste this and how do I run it?"
+
+This guide walks you through setting up the complete dev environment for vibe coding from scratch. It covers both Windows and macOS, with verification steps at each stage to confirm everything is working.
+
+## 🧩 The 3 Tools You Need for Vibe Coding
+
+You only need to install three tools to start vibe coding. Understanding each tool's role first makes the installation process much smoother.
+
+| Tool | Role | Simple Analogy |
+|------|------|---------------|
+| **Git** | Version control — saves code history and lets you undo changes | Like "Track Changes" in documents |
+| **Node.js** | Runtime that executes JavaScript code | Like needing Excel to open .xlsx files |
+| **VS Code** | Code editor for writing and editing code | A coding-specialized notepad (+ AI extensible) |
+
+Without these three, you can't run any code AI generates, no matter how good it is. But once all three are installed, you can start vibe coding immediately.
+
+### 💡 Why This Combination
+
+Git is your safety net for when code changes go wrong. In vibe coding, you'll ask AI for multiple revisions — without Git, you'd have to start over if a change doesn't work out. Node.js is essential for running web projects locally, and VS Code is the most versatile editor that supports AI coding extensions like Copilot and Cursor.
+
+## 🪟 Windows Dev Environment Setup (Step by Step)
+
+The most common roadblock on Windows is the PATH environment variable. Following this order minimizes PATH-related issues.
+
+### 📥 Step 1: Install Git
+
+Download the Windows installer from the official Git website (git-scm.com). The installer asks several configuration questions — select the defaults (Next) for all of them. Once installation finishes, open Command Prompt (cmd) or PowerShell and type:
+
+```bash
+git --version
+```
+
+If you see `git version 2.x.x`, the installation was successful. If you get "command not found," close the terminal and reopen it. Environment variables may not have been applied yet right after installation.
+
+### 📥 Step 2: Install Node.js
+
+Download the LTS (Long Term Support) version from the official Node.js website (nodejs.org). LTS is the stable, well-tested version — choosing it over the latest version causes fewer issues. Use the default installation options.
+
+```bash
+node -v
+npm -v
+```
+
+If both commands show version numbers, you're set. Installing Node.js automatically includes npm (the package manager), so there's no need to install it separately.
+
+### 📥 Step 3: Install VS Code
+
+Download the installer from the official VS Code website (code.visualstudio.com). During installation, make sure to check the "Add to PATH" option if it appears. This lets you open any folder in VS Code from the terminal with the `code .` command.
+
+```bash
+code --version
+```
+
+If a version number appears, you're good. If it's not recognized, open VS Code, press `Ctrl+Shift+P`, and run "Shell Command: Install 'code' command in PATH."
+
+## 🍎 macOS Dev Environment Setup (Step by Step)
+
+On macOS, installing Homebrew first lets you install the remaining tools with single-line commands, making the process much simpler.
+
+### 📥 Step 1: Install Homebrew
+
+Open Terminal (search "Terminal" in Spotlight) and paste:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+After installation, you must run the PATH configuration commands shown in the terminal output. On Apple Silicon (M1/M2/M3) Macs, you'll be prompted to add `/opt/homebrew/bin` to your PATH. Skipping this step means the `brew` command won't be recognized.
+
+```bash
+brew --version
+```
+
+A version number confirms successful installation.
+
+### 📥 Step 2: Install Git + Node.js
+
+With Homebrew ready, install Git and Node.js in one go:
+
+```bash
+brew install git node
+```
+
+Verify the same way as Windows:
+
+```bash
+git --version
+node -v
+npm -v
+```
+
+Version numbers for all three commands means you're done.
+
+### 📥 Step 3: Install VS Code
+
+You can also install VS Code through Homebrew on macOS:
+
+```bash
+brew install --cask visual-studio-code
+```
+
+Verify with `code --version`. If you prefer not to use Homebrew, download the .dmg file from the official website and drag it to the Applications folder.
+
+## ✅ Post-Installation Checklist
+
+After installing all three tools, run each command below in your terminal to confirm everything works.
+
+| Command | Expected Result | If It Fails |
+|---------|----------------|-------------|
+| `git --version` | `git version 2.x.x` | Git not installed or not in PATH |
+| `node -v` | `v20.x.x` etc. | Node.js not installed or not in PATH |
+| `npm -v` | `10.x.x` etc. | Node.js installation incomplete |
+| `code --version` | Version number | VS Code not in PATH |
+
+If all four show version numbers, you're ready to start vibe coding. If any fail, check the troubleshooting section below.
+
+## 🔧 Common Problems and Solutions
+
+### 🚫 "Command Not Found" (Windows)
+
+This is the most common issue. The tool is installed but its path isn't registered in the system environment variables (PATH). Two solutions:
+
+1. **Close and reopen the terminal**: Environment variables may not be applied immediately after installation. Opening a new terminal often resolves this.
+2. **Manually add to PATH**: Search "environment variables" in the Start menu → "Edit system environment variables" → Environment Variables → Path → Edit → Add the installation path of the program.
+
+### 🚫 "Permission Denied" (macOS)
+
+If you get permission errors when running install commands on macOS, add `sudo` before the command. You'll need to enter your password, and it's normal that nothing appears on screen as you type.
+
+```bash
+sudo brew install git
+```
+
+However, don't use `sudo` when installing Homebrew itself. The official Homebrew install script handles permissions on its own.
+
+### 🚫 Node.js Version Conflicts
+
+If Node.js is already installed but the version is outdated, you can either uninstall the old version and install fresh, or use nvm (Node Version Manager) to manage multiple versions. For vibe coding beginners, removing the old version and installing the LTS fresh is the simplest approach.
+
+### 🚫 VS Code Not Recognized in Terminal
+
+VS Code is installed but the `code` command doesn't work. Open VS Code, press `Ctrl+Shift+P` (macOS: `Cmd+Shift+P`), and run "Shell Command: Install 'code' command in PATH."
+
+## ⚡ The 10-Minute Way: Using VibeStart
+
+If following the manual steps feels tedious, try [VibeStart](/onboarding). VibeStart provides step-by-step installation commands tailored to your operating system for Git, Node.js, and VS Code. Just copy each command and paste it into your terminal — no fiddling with environment variables or installation options.
+
+This is especially helpful on Windows, where users often spend 30+ minutes struggling with PATH issues. VibeStart provides scripts that handle these automatically. Most users complete the entire setup in under 10 minutes.
+
+## 🔄 What to Do After Setting Up
+
+Once your dev environment is ready, you can jump straight into vibe coding. Here's the recommended next steps:
+
+1. **Choose an AI tool**: Pick one of Claude, Cursor, or ChatGPT and create an account. For beginners, Claude or ChatGPT work right in your browser with no extra installation.
+2. **Create your first project**: Run `npx create-next-app@latest my-first-site` in the terminal to scaffold a basic web project.
+3. **Request changes from AI**: Ask AI something specific like "change this project's main page to a personal introduction page."
+4. **Save with Git**: When you're happy with the result, run `git add .` → `git commit -m "first modification"` to save your progress.
+
+Setting up the dev environment is the first hurdle of vibe coding. Once you clear it, you can start building real, working websites through conversations with AI.
+
+## 💡 Useful Tips for Setup
+
+### 📌 Choose the LTS Version
+
+Node.js has a Current (latest) version and an LTS version. The latest version has new features but may be incompatible with some packages. Since stability matters more for vibe coding, always choose LTS.
+
+### 📌 Stick to One Terminal
+
+Windows has multiple terminals: Command Prompt (cmd), PowerShell, Git Bash, and more. Pick one and stick with it until you're comfortable. The integrated terminal in VS Code (`Ctrl+``) is recommended since it lets you edit code and run commands in the same place without opening separate programs.
+
+### 📌 Follow the Installation Order
+
+Install in this order: Git → Node.js → VS Code. Installing Git first enables automatic Git integration when VS Code launches, and Node.js must be present before you can run project creation commands (`npx`).
+
+## 🔗 Related Posts
+
+- [Vibe Coding Beginner's Guide: Build Your First Website with AI](/blog/how-to-start-vibe-coding-for-beginners)
+
+## 📑 References
+
+- [Git Official Downloads](https://git-scm.com/downloads)
+- [Node.js Official Downloads](https://nodejs.org/en/download)
+- [VS Code Official Downloads](https://code.visualstudio.com/Download)
+- [Homebrew Official Installation Guide](https://brew.sh)

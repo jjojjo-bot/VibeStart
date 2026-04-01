@@ -27,6 +27,13 @@ export interface SiteStats {
   dailyCountries: DailyCountryStat[];
 }
 
+/** KST(UTC+9) 기준 오늘 날짜를 YYYY-MM-DD 형식으로 반환 */
+function getKSTToday(): string {
+  const now = new Date();
+  const kst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
+  return kst.toISOString().slice(0, 10);
+}
+
 export async function getSiteStats(): Promise<SiteStats> {
   const [dailyResult, countryResult] = await Promise.all([
     supabase
@@ -44,7 +51,8 @@ export async function getSiteStats(): Promise<SiteStats> {
   const data = dailyResult.data;
   const countryData = countryResult.data;
 
-  const emptyToday = { date: new Date().toISOString().slice(0, 10), visitors: 0, completions: 0 };
+  const today = getKSTToday();
+  const emptyToday = { date: today, visitors: 0, completions: 0 };
 
   if (!data || data.length === 0) {
     return {
@@ -55,8 +63,6 @@ export async function getSiteStats(): Promise<SiteStats> {
       dailyCountries: [],
     };
   }
-
-  const today = new Date().toISOString().slice(0, 10);
   const todayRow = data.find((row) => row.date === today) ?? emptyToday;
 
   const totalVisitors = data.reduce((sum, row) => sum + row.visitors, 0);
