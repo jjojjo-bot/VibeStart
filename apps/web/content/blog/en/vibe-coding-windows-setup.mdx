@@ -1,0 +1,293 @@
+---
+title: "Setting Up a Vibe Coding Environment on Windows A to Z (2026)"
+description: "A complete guide to setting up your vibe coding environment on Windows from scratch. Covers PowerShell basics, Git, Node.js, and VS Code installation, plus running your first project."
+date: "2026-04-04"
+tags: ["vibe coding", "Windows setup", "Windows dev environment", "PowerShell", "Git install", "Node.js install", "VS Code install", "beginner coding", "vibe coding setup", "coding for beginners"]
+---
+
+## 🪟 Why Windows Needs Its Own Setup Guide
+
+Most vibe coding guides online are written for macOS. Terminal commands, installation methods, and path structures differ between macOS and Windows, so following a macOS guide on Windows leads to errors.
+
+The three biggest pain points when setting up a vibe coding environment on Windows are: choosing a terminal (cmd vs PowerShell), PATH environment variable issues, and permission settings. This guide is written specifically for Windows users, helping you avoid these three traps while setting up everything from start to finish.
+
+This guide is based on Windows 10 and Windows 11. Some commands (like winget) may not work on Windows 8 or earlier.
+
+## 📌 Pre-Setup Checklist
+
+Check these two things before starting the environment setup.
+
+### 💻 Check Your Windows Version
+
+Press `Win+R` and type `winver` to see your current Windows version. If you're on Windows 10 version 1809 or later, or Windows 11, you can follow everything in this guide.
+
+### 🔑 Check Administrator Access
+
+Some installation steps require administrator privileges. To check if your account is an admin, open Settings → Accounts. If "Administrator" appears under your account name, you're set. Non-admin users will need the administrator password when "Do you want to allow this app to make changes?" popups appear.
+
+## 🖥️ Step 1: Opening PowerShell and Basic Usage
+
+Windows has multiple terminals — Command Prompt (cmd), PowerShell, Windows Terminal, and more. For vibe coding, use **PowerShell**. It's newer than cmd and natively supports package management commands like winget.
+
+### 📥 How to Open PowerShell
+
+Search "PowerShell" in the Start menu and click it. Alternatively, press `Win+X` and select "Windows PowerShell." On Windows 11, "Windows Terminal" is the default, which automatically opens a PowerShell tab.
+
+### 📌 Useful Basic Operations
+
+| Action | How |
+|--------|-----|
+| Paste a command | Right-click or `Ctrl+V` |
+| Stop a running command | `Ctrl+C` |
+| Recall previous command | Up arrow (↑) |
+| Clear screen | Type `cls` and press Enter |
+
+Use `Ctrl+V` to paste commands into PowerShell. In older versions, only right-click worked, but `Ctrl+V` has been supported since Windows 10.
+
+## 📦 Step 2: Verify winget
+
+winget is Windows' built-in package manager. Like installing apps from an app store, it lets you install programs with a single terminal command. It's included by default in Windows 10 (1809+) and Windows 11.
+
+Run this in PowerShell:
+
+```powershell
+winget --version
+```
+
+If a version number appears (e.g., `v1.7.xxx`), winget is working. If you get "command not found," open the Microsoft Store and search for "App Installer" to update it.
+
+If winget doesn't work in your environment, you can download installers directly from each tool's official website. This guide covers both methods.
+
+## 🔧 Step 3: Install Git
+
+Git is a version control tool that tracks code changes. In vibe coding, it's your safety net — when you ask AI for multiple revisions, Git lets you return to a previous state you liked.
+
+### 📥 Install with winget (Recommended)
+
+```powershell
+winget install --id Git.Git -e --source winget
+```
+
+After installation, you **must close PowerShell and open a new one**. The existing terminal doesn't have Git's PATH registered yet.
+
+### 📥 Install from Official Website
+
+If winget doesn't work, download the installer from the [Git official downloads page](https://git-scm.com/downloads) by clicking "Windows." In the setup wizard, proceed with all defaults (Next), but verify on the "Adjusting your PATH environment" screen that "Git from the command line and also from 3rd-party software" is selected.
+
+### ✅ Verify Installation
+
+Open a new PowerShell and run:
+
+```powershell
+git --version
+```
+
+`git version 2.x.x` means success.
+
+### 📌 Initial Git Configuration
+
+After installation, register your name and email. This records who made each change when you commit (save).
+
+```powershell
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+```
+
+## 📗 Step 4: Install Node.js
+
+Node.js is the runtime that executes JavaScript code. You need it to run AI-generated web projects on your computer. The project creation command (`npx create-next-app`) also requires Node.js.
+
+### 📥 Install with winget (Recommended)
+
+```powershell
+winget install --id OpenJS.NodeJS.LTS -e --source winget
+```
+
+This automatically installs the LTS (stable) version. Close and reopen PowerShell after installation.
+
+### 📥 Install from Official Website
+
+Download the LTS version from the [Node.js official website](https://nodejs.org). Proceed with default options in the setup wizard. You can leave the "Automatically install the necessary tools" checkbox unchecked — it installs C++ build tools that aren't needed for vibe coding and significantly increases installation time.
+
+### ✅ Verify Installation
+
+In a new PowerShell, check all three:
+
+```powershell
+node -v
+npm -v
+npx -v
+```
+
+Version numbers for all three means everything is working. npm and npx are automatically installed with Node.js.
+
+## 💙 Step 5: Install VS Code
+
+VS Code (Visual Studio Code) is a code editor. It's the most versatile editor for installing AI coding extensions like Copilot and Cursor integration.
+
+### 📥 Install with winget (Recommended)
+
+```powershell
+winget install --id Microsoft.VisualStudioCode -e --source winget
+```
+
+### 📥 Install from Official Website
+
+Download the Windows installer from the [VS Code official website](https://code.visualstudio.com). During installation, **make sure to check the "Add to PATH" option**. This enables opening the current folder in VS Code with `code .` from the terminal.
+
+### ✅ Verify Installation
+
+Close and reopen PowerShell, then run:
+
+```powershell
+code --version
+```
+
+A version number means success. If not recognized, open VS Code, press `Ctrl+Shift+P`, and run "Shell Command: Install 'code' command in PATH."
+
+## ✅ Step 6: Full Verification
+
+Here's how to verify all three tools at once. Open a new PowerShell and run these commands:
+
+```powershell
+git --version
+node -v
+npm -v
+code --version
+```
+
+| Command | Expected | If It Fails |
+|---------|----------|-------------|
+| `git --version` | `git version 2.x.x` | Git not installed or not in PATH |
+| `node -v` | `v20.x.x` etc. | Node.js not installed or not in PATH |
+| `npm -v` | `10.x.x` etc. | Node.js installation incomplete |
+| `code --version` | Version number | VS Code not in PATH |
+
+All four showing version numbers means your dev environment setup is complete.
+
+## 🚀 Step 7: Final Verification with Your First Project
+
+Tool installation alone doesn't guarantee everything actually works. Creating a real project and viewing it in the browser is the most reliable verification.
+
+### 📁 Create a Project
+
+Open PowerShell in your Desktop or any folder and run:
+
+```powershell
+npx create-next-app@latest my-first-site
+```
+
+It asks several configuration questions — proceed with defaults (Enter) for all of them.
+
+### ▶️ Start the Dev Server
+
+```powershell
+cd my-first-site
+npm run dev
+```
+
+The terminal shows `http://localhost:3000`. Paste this URL in your browser — if the default Next.js page appears, your entire environment is working correctly. Press `Ctrl+C` to stop the dev server.
+
+### 🎯 Open the Project in VS Code
+
+Run this command in the project folder:
+
+```powershell
+code .
+```
+
+Once VS Code opens, press `Ctrl+`\` (backtick) to open the built-in terminal. From now on, you can edit code and run commands all in one place without opening a separate PowerShell.
+
+## ⚠️ Common Windows Issues and Solutions
+
+### 🚫 "Running scripts is disabled on this system"
+
+This is caused by PowerShell's Execution Policy. Open PowerShell **as Administrator** (right-click PowerShell in Start menu → "Run as administrator") and run:
+
+```powershell
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+Type "Y" to confirm. This allows locally-created scripts and signed remote scripts to run. It's a safe security setting.
+
+### 🚫 "Command not found" (PATH Issue)
+
+The most common problem. The tool is installed but its path isn't registered in the system environment variables (PATH).
+
+**Resolution steps:**
+
+1. Close PowerShell and open a new one. This fixes it most of the time.
+2. If that doesn't work, restart your computer. Some installers apply PATH only after a restart.
+3. If it still doesn't work after restart, manually add the PATH.
+
+**Manual PATH addition:**
+
+Start menu → search "environment variables" → "Edit system environment variables" → Environment Variables button → select "Path" in User variables → Edit → New → add the path.
+
+| Tool | Default Install Path |
+|------|---------------------|
+| Git | `C:\Program Files\Git\cmd` |
+| Node.js | `C:\Program Files\nodejs\` |
+| VS Code | `C:\Users\{username}\AppData\Local\Programs\Microsoft VS Code\bin` |
+
+### 🚫 winget Not Working
+
+If winget isn't recognized on Windows 10, open the Microsoft Store and search for "App Installer" to update it. If the Microsoft Store is blocked on a managed corporate/school PC, you can't use winget — download installers directly from each tool's official website instead.
+
+### 🚫 npm Not Working After Node.js Installation
+
+Rarely, Node.js installs but npm isn't recognized. The fastest fix is completely uninstalling Node.js (from "Add/Remove Programs") and reinstalling. Before reinstalling, also delete the `C:\Users\{username}\AppData\Roaming\npm` folder for a clean slate.
+
+### 🚫 Firewall/Antivirus Blocking Installation
+
+Corporate or school PCs may have security software that blocks installations. If you see "blocked" or "access denied" messages, contact your IT department or use a personal PC instead. Disabling security software is not recommended.
+
+## 🔄 cmd vs PowerShell vs Windows Terminal
+
+Windows has multiple terminals, which can be confusing at first. Here's a comparison:
+
+| Terminal | Characteristics | Recommended |
+|----------|----------------|-------------|
+| **Command Prompt (cmd)** | Legacy default terminal, limited features | Not recommended |
+| **PowerShell** | Modern default terminal, winget support | Recommended |
+| **Windows Terminal** | Tab support, integrates PowerShell/cmd | Recommended (Win 11 default) |
+| **VS Code Built-in Terminal** | Code editing and commands in one place | Most recommended |
+
+Once you start vibe coding, you'll primarily use VS Code's built-in terminal. Being able to edit code and run commands without switching windows keeps your workflow uninterrupted.
+
+## 💡 Helpful Tips for Windows Setup
+
+### 📌 Install in This Order: Git → Node.js → VS Code
+
+This order ensures VS Code automatically detects Git, and Node.js commands (`npx`) are immediately available. Installing in a different order still works, but VS Code's Git integration may not activate automatically, requiring additional configuration.
+
+### 📌 Watch Out for Korean Characters or Spaces in Folder Paths
+
+Some tools may error if the project folder path contains non-English characters or spaces. Instead of `C:\Users\User\Desktop\My Project`, use `C:\projects\my-first-site` with English-only paths for safety.
+
+### 📌 Build the Habit of Closing and Reopening Terminal
+
+After installing a program on Windows, if you get "command not found," closing and reopening the terminal usually fixes it. Environment variables are read only once when the terminal starts. This should be the first thing you try when something goes wrong.
+
+### 📌 Windows Defender Real-time Protection and Dev Speed
+
+Windows Defender's real-time protection can slow down project creation and execution by scanning the thousands of files in `node_modules`. Adding your project folder to Windows Defender's exclusion list improves speed. Go to "Windows Security" → "Virus & threat protection" → "Manage settings" → "Add an exclusion" and add your project folder.
+
+## ⚡ All at Once: Using VibeStart
+
+If following these steps one by one feels daunting, try [VibeStart](/onboarding). Select Windows to get step-by-step installation commands for Git, Node.js, and VS Code. Just copy and paste each command into PowerShell — environment variable issues and execution policy settings are handled automatically.
+
+## 🔗 Related Posts
+
+- [The Complete Dev Environment Setup Guide Before Starting Vibe Coding](/blog/vibe-coding-dev-environment-setup-guide)
+- [Why You Need Git for Vibe Coding + 5-Minute Install Guide](/blog/vibe-coding-git-install)
+- [From Node.js Installation to Your First Vibe Coding Project in 3 Steps](/blog/nodejs-install-vibe-coding)
+- [VS Code Installation and Setup Guide](/blog/vscode-setup-guide)
+- [Vibe Coding Beginner's Guide: Build Your First Website with AI](/blog/how-to-start-vibe-coding-for-beginners)
+
+## 📑 References
+
+- [Git Official Downloads](https://git-scm.com/downloads)
+- [Node.js Official Downloads](https://nodejs.org/en/download)
+- [VS Code Official Downloads](https://code.visualstudio.com/Download)
+- [Microsoft winget Documentation](https://learn.microsoft.com/en-us/windows/package-manager/winget/)

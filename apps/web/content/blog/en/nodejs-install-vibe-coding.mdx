@@ -1,0 +1,191 @@
+---
+title: "From Node.js Installation to Your First Vibe Coding Project in 3 Steps (2026)"
+description: "Not sure what Node.js is? Start here. A beginner-friendly guide to installing Node.js, verifying the setup, and running your first project for vibe coding."
+date: "2026-04-03"
+tags: ["vibe coding", "Node.js install", "Node.js beginner", "npm install", "beginner coding", "dev environment setup", "Node.js LTS", "vibe coding setup", "web development", "coding for beginners"]
+---
+
+## 🤔 Why You Can't Vibe Code Without Node.js
+
+Vibe Coding is when you tell AI something like "build a signup page" and get actual working code back. But the code AI generates is almost always JavaScript-based, since JavaScript is the de facto standard for web projects.
+
+Node.js is the runtime that lets you execute JavaScript code on your own computer. Just like you need Excel to open .xlsx files, you need Node.js to run AI-generated web projects locally. Even the project creation command (`npx create-next-app`) requires Node.js to be installed.
+
+In short, Node.js is the starting point of vibe coding. This guide covers the entire process in 3 steps: installing Node.js, verifying the installation, and running your first project.
+
+## 📌 Key Concepts Before You Start
+
+Here are three terms you'll encounter constantly. Without understanding these, you'll be unable to make sense of error messages even after installation.
+
+| Term | Meaning | Analogy |
+|------|---------|---------|
+| **Node.js** | Runtime that executes JavaScript outside the browser | Like a document viewer that opens files |
+| **npm** | Package manager installed with Node.js | Like an app store for installing developer tools |
+| **LTS** | Long Term Support — the stable, well-tested version | The proven stable release (vs. experimental latest) |
+
+npm comes automatically with Node.js — no separate installation needed. LTS is typically the version displayed on the left side of the Node.js official download page. Since stability matters more than cutting-edge features for vibe coding, always choose LTS.
+
+### 💡 What Is npx
+
+`npx` is a command included with npm that lets you run packages without permanently installing them. In vibe coding, we use `npx create-next-app` because the Next.js project creation tool only needs to run once — there's no need to install it permanently. Once Node.js is installed, npx is automatically available.
+
+## 🔽 Step 1: Install Node.js
+
+The installation method varies by operating system. Follow the section that matches your OS.
+
+### 🪟 Installing on Windows
+
+Visit the official Node.js website (nodejs.org) where you'll see two versions side by side. Click the **LTS** version on the left to download the installer (.msi). When the setup wizard launches, proceed with all default options (Next).
+
+During installation, you may see a checkbox for "Automatically install the necessary tools." This installs C++ build tools, which aren't needed for getting started with vibe coding. Checking it significantly increases installation time.
+
+After installation finishes, you must close all open terminals (PowerShell, cmd) and open new ones. The existing terminals won't have Node.js registered in the PATH environment variable yet.
+
+### 🍎 Installing on macOS
+
+On macOS, there are two methods. If Homebrew is already installed, it's a single line in the terminal:
+
+```bash
+brew install node
+```
+
+Without Homebrew, download the macOS LTS installer (.pkg) from the Node.js official website (nodejs.org) and run it. Use the default installation options.
+
+For Apple Silicon (M1/M2/M3/M4) Mac users, installing via Homebrew is recommended. The official website installer occasionally defaults to the Intel version, while Homebrew automatically installs the correct version for your chip architecture.
+
+## ✅ Step 2: Verify the Installation
+
+Don't skip ahead after installation. Verifying that everything works correctly is crucial. If you skip this step, you'll run into unexplainable errors when creating your first project.
+
+Open a new terminal and enter these three commands in order:
+
+```bash
+node -v
+npm -v
+npx -v
+```
+
+### 🟢 Expected Results
+
+| Command | Expected Output | Meaning |
+|---------|----------------|---------|
+| `node -v` | `v20.18.0` etc. | Node.js installed |
+| `npm -v` | `10.8.2` etc. | Package manager working |
+| `npx -v` | `10.8.2` etc. | Project creation tool available |
+
+If all three show version numbers, Node.js is properly installed.
+
+### 🔴 If It Fails
+
+If you see "command not found" or "'node' is not recognized as an internal or external command," check two things:
+
+1. **Did you open a new terminal?** Environment variables aren't applied to terminals that were open during installation. Close the old terminal and open a new one.
+2. **Is Node.js in PATH?** On Windows, search "environment variables" in the Start menu and check if `C:\Program Files\nodejs\` is in the Path list. Add it manually if missing.
+
+On macOS, if `brew install node` doesn't register, try:
+
+```bash
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
+This command is needed on Apple Silicon Macs when Homebrew's PATH isn't automatically registered. If `node -v` works after running it, add the same line to your `~/.zshrc` file so it applies automatically every time you open the terminal.
+
+## 🚀 Step 3: Run Your First Project
+
+With Node.js successfully installed, you can create your first web project right away. Seeing actual results in a browser provides the final confirmation that your dev environment works.
+
+### 📁 Create a Project
+
+Navigate to the folder where you want to create your project, then run:
+
+```bash
+npx create-next-app@latest my-first-site
+```
+
+It will ask several configuration questions. If it's your first time, just go with the defaults (press Enter) for all of them. It asks about TypeScript, ESLint, etc. — the defaults are well-suited for vibe coding.
+
+Once the project is created, navigate into the folder:
+
+```bash
+cd my-first-site
+```
+
+### ▶️ Start the Dev Server
+
+Run this command inside the project folder:
+
+```bash
+npm run dev
+```
+
+The terminal will display `http://localhost:3000`. Paste this URL into your web browser and you'll see the default Next.js page. If this screen appears, every step from Node.js installation to project execution has been completed successfully.
+
+To stop the dev server, press `Ctrl+C` in the terminal.
+
+### 🎯 If You've Made It This Far
+
+Congratulations. Now you can ask AI things like "turn this project's main page into a portfolio site," apply the generated code to this project, and immediately see the results. The core vibe coding loop is complete.
+
+## ⚠️ Common Problems and Solutions
+
+### 🚫 "npm ERR! code EACCES" (macOS)
+
+This permission error occurs on macOS when installing global packages. You can work around it with `sudo`, but the proper fix is changing npm's default directory permissions. However, at the vibe coding beginner stage, you'll mostly just use `npx` to create projects, so this error is rare. If it happens, reinstalling Node.js via Homebrew is the cleanest solution.
+
+### 🚫 Node.js Version Too Low Warning
+
+If you see a message like "Node.js 18 or higher is required" when running `create-next-app`, your installed Node.js version is outdated. Uninstall the existing version and install the LTS from the official website. On Windows, remove Node.js from "Add/Remove Programs." On macOS with Homebrew, run `brew upgrade node`.
+
+### 🚫 "npx: command not found"
+
+This is extremely rare when Node.js is properly installed. It can happen if npm is below version 5.2.0. Check with `npm -v`, and if it's too old, update with `npm install -g npm`. If that doesn't work, completely uninstall Node.js and reinstall the LTS — that's the fastest fix.
+
+### 🚫 "create-next-app" Hangs During Execution
+
+The project creation command sometimes stalls at "Installing dependencies..." for a while. Depending on network conditions, it can take up to 5 minutes — give it time. If it's stuck for over 10 minutes, press `Ctrl+C` to cancel, delete the created folder, and try again. Corporate or school networks with proxies may block npm.
+
+## 🔄 LTS vs Current: Which Should You Choose
+
+The Node.js official website shows two versions side by side. The left is LTS, the right is Current. Which one should you pick for vibe coding?
+
+| | LTS | Current |
+|--|-----|---------|
+| Stability | High (battle-tested) | Moderate (includes new features) |
+| Support period | 30 months | 6 months |
+| Package compatibility | Most packages compatible | Some may not work |
+| Recommended for | Vibe coding, production | Developers needing latest features |
+
+The answer is clear. **Always choose LTS for vibe coding.** The code and packages AI generates are tested against LTS, so the Current version may introduce unexpected compatibility issues.
+
+## 💡 Useful Tips After Installing Node.js
+
+### 📌 Use nvm When Version Management Becomes Necessary
+
+If you eventually need different Node.js versions for different projects, you can use nvm (Node Version Manager). But for starting out with vibe coding, a single LTS installation is plenty. You can adopt nvm later when version conflicts actually start appearing.
+
+### 📌 Use VS Code's Built-in Terminal
+
+If VS Code is installed, you don't need to open a separate terminal. Press `Ctrl+`\` (backtick) in VS Code to open a terminal at the bottom. Being able to edit code and run commands in the same window makes it ideal for the vibe coding workflow.
+
+### 📌 Don't Touch the node_modules Folder
+
+When you create a project, a `node_modules` folder appears containing thousands of package files your project needs. Directly modifying or deleting this folder will break your project. If you accidentally delete it, run `npm install` in the project folder to regenerate it.
+
+## ⚡ The Faster Way: Set Up Everything with VibeStart
+
+If following these steps one by one feels overwhelming, try [VibeStart](/onboarding). Select your operating system and get step-by-step installation commands for Git, Node.js, and VS Code. Just copy and paste each command into your terminal — no worrying about environment variables or version selection.
+
+This is especially helpful on Windows, where PATH issues are a common stumbling block. VibeStart provides scripts that handle these automatically.
+
+## 🔗 Related Posts
+
+- [The Complete Dev Environment Setup Guide Before Starting Vibe Coding](/blog/vibe-coding-dev-environment-setup-guide)
+- [Git Installation Guide — Complete Guide for Windows and macOS](/blog/git-install-guide)
+- [VS Code Installation and Setup Guide](/blog/vscode-setup-guide)
+- [Vibe Coding Beginner's Guide: Build Your First Website with AI](/blog/how-to-start-vibe-coding-for-beginners)
+
+## 📑 References
+
+- [Node.js Official Downloads](https://nodejs.org/en/download)
+- [npm Documentation](https://docs.npmjs.com/)
+- [Next.js Getting Started Guide](https://nextjs.org/docs/getting-started/installation)
