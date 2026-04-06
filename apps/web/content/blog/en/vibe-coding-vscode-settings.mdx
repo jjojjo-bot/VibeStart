@@ -1,0 +1,235 @@
+---
+title: "VS Code Settings Guide for Vibe Coding: Extensions, Config, and Shortcuts (2026)"
+description: "Optimize VS Code for vibe coding with essential extensions, settings.json configuration, themes, and keyboard shortcuts. A complete setup guide for beginners."
+date: "2026-04-06"
+tags: ["vibe coding", "VS Code settings", "VS Code extensions", "Prettier setup", "ESLint setup", "VS Code config", "code editor setup", "beginner coding", "VS Code theme", "vibe coding tools"]
+---
+
+## 🎯 Why You Should Configure VS Code for Vibe Coding
+
+VS Code works right after installation. But using it with default settings creates friction during vibe coding — formatting breaks every time you save, you have to hunt for errors in AI-generated code manually, and you need a separate terminal window open.
+
+Adding a few extensions and a few lines of settings fixes all of this. Code gets automatically formatted on save, errors appear right next to the problematic line, and you can open a terminal directly inside your project. This guide walks you through optimizing VS Code for vibe coding, step by step from a fresh install.
+
+If VS Code isn't installed yet, check the [VS Code Installation Guide](/blog/vscode-setup-guide) first.
+
+## 🧩 Essential Extensions
+
+Extensions are VS Code's biggest strength. Click the blocks icon in the left sidebar or press `Ctrl+Shift+X` (macOS: `Cmd+Shift+X`) to open the Extensions Marketplace.
+
+### 🎨 Prettier — Code Formatter
+
+Automatically fixes indentation, quotes, and line breaks when you save. Especially useful when AI-generated code has inconsistent formatting. Search for "Prettier - Code formatter" in the marketplace and install it.
+
+Installing alone won't enable auto-formatting — you also need the `settings.json` configuration covered later in this guide.
+
+### 🔍 ESLint
+
+Flags potential errors and code quality issues in JavaScript/TypeScript in real-time. If AI-generated code has unused variables or incorrect syntax, ESLint underlines them. Search for "ESLint" and install it.
+
+### 🔴 Error Lens
+
+By default, VS Code only shows a red underline at error locations. Error Lens displays the actual error message inline next to the problematic line, so you can spot issues without hovering. Extremely useful for quickly reviewing AI-generated code.
+
+### 🏷️ Auto Rename Tag
+
+When you rename an opening HTML/JSX tag, the closing tag updates automatically. Change `<div>` to `<section>` and `</div>` becomes `</section>` automatically. Prevents tag mismatch errors in web projects.
+
+### 📁 Path Intellisense
+
+Provides autocomplete when typing file paths. Suggests folder and file names when writing `import` statements or image paths, reducing typo-related errors.
+
+### 📌 Extension Summary
+
+| Extension | Purpose | Priority |
+|-----------|---------|----------|
+| Prettier | Auto code formatting | Essential |
+| ESLint | Code error detection | Essential |
+| Error Lens | Inline error messages | Highly recommended |
+| Auto Rename Tag | Auto-fix HTML/JSX tags | Recommended |
+| Path Intellisense | File path autocomplete | Recommended |
+
+## ⚙️ settings.json Configuration
+
+To fine-tune VS Code's behavior, edit the `settings.json` file. Press `Ctrl+Shift+P` (macOS: `Cmd+Shift+P`) to open the Command Palette, then select "Preferences: Open User Settings (JSON)."
+
+Add these settings for a vibe coding-optimized environment:
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on",
+  "editor.minimap.enabled": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.fontSize": 14,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false
+}
+```
+
+### 📌 What Each Setting Does
+
+| Setting | Description |
+|---------|-------------|
+| `formatOnSave` | Automatically format code when saving |
+| `defaultFormatter` | Set Prettier as the default formatter |
+| `tabSize` | Set indentation to 2 spaces |
+| `wordWrap` | Wrap long lines to fit the screen |
+| `minimap.enabled` | Disable the minimap on the right (saves screen space) |
+| `bracketPairColorization` | Color-code matching bracket pairs |
+| `autoSave` | Auto-save files after a delay |
+| `autoSaveDelay` | Auto-save wait time (1000ms = 1 second) |
+
+`formatOnSave` and `defaultFormatter` only work when the Prettier extension is installed. Without Prettier, these settings are ignored.
+
+## 🎨 Theme and Font Settings
+
+### 🌙 Recommended Themes
+
+VS Code comes with several built-in themes. Press `Ctrl+K Ctrl+T` (macOS: `Cmd+K Cmd+T`) to open the theme picker.
+
+| Theme | Description |
+|-------|-------------|
+| **Dark+ (default)** | VS Code's built-in dark theme, solid choice |
+| **One Dark Pro** | Popular Atom editor theme, soft colors |
+| **GitHub Theme** | GitHub-style, offers both light and dark |
+| **Dracula** | Purple-based dark theme, high contrast |
+
+Themes don't significantly affect coding productivity, so pick whatever's easiest on your eyes. For long sessions, dark themes reduce eye strain.
+
+### 🔤 Recommended Fonts
+
+Coding fonts need to clearly distinguish between `0` (zero) and `O` (letter), and between `l` (lowercase L) and `1` (one). These fonts are popular for coding:
+
+| Font | Description |
+|------|-------------|
+| **Fira Code** | Supports ligatures, operators display as symbols |
+| **JetBrains Mono** | Free coding font by JetBrains |
+| **Cascadia Code** | Microsoft's Windows Terminal default font |
+| **Source Code Pro** | Adobe's open-source coding font |
+
+After installing a font, add this to your `settings.json`:
+
+```json
+{
+  "editor.fontFamily": "'Fira Code', Consolas, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 14,
+  "editor.lineHeight": 1.6
+}
+```
+
+## ⌨️ Essential Keyboard Shortcuts
+
+Here are the VS Code shortcuts you'll use most during vibe coding. macOS uses `Cmd` instead of `Ctrl`.
+
+| Action | Windows/Linux | macOS |
+|--------|--------------|-------|
+| Command Palette | `Ctrl+Shift+P` | `Cmd+Shift+P` |
+| Quick Open File | `Ctrl+P` | `Cmd+P` |
+| Toggle Terminal | `` Ctrl+` `` | `` Ctrl+` `` |
+| Toggle Sidebar | `Ctrl+B` | `Cmd+B` |
+| Search All Files | `Ctrl+Shift+F` | `Cmd+Shift+F` |
+| Duplicate Line | `Shift+Alt+↓` | `Shift+Option+↓` |
+| Move Line | `Alt+↑/↓` | `Option+↑/↓` |
+| Multi-cursor | `Ctrl+Alt+↑/↓` | `Cmd+Option+↑/↓` |
+| Save | `Ctrl+S` | `Cmd+S` |
+| Save All | `Ctrl+K S` | `Cmd+Option+S` |
+
+You don't need to memorize all shortcuts right away. Start with just three: Command Palette (`Ctrl+Shift+P`), Quick Open (`Ctrl+P`), and Toggle Terminal (`` Ctrl+` ``). These three alone will significantly speed up your workflow.
+
+## 🖥️ Integrated Terminal Setup
+
+VS Code's integrated terminal lets you edit code and run commands in one place without opening a separate terminal app.
+
+### 📌 Opening the Terminal
+
+Press `` Ctrl+` `` (backtick) to open the terminal at the bottom. Or go to Terminal → New Terminal from the menu.
+
+### 📌 Change Default Terminal
+
+On Windows, use PowerShell. On macOS, use zsh. Set this in `settings.json`:
+
+```json
+{
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.defaultProfile.osx": "zsh"
+}
+```
+
+### 📌 Split Terminal
+
+When you need multiple terminals (e.g., dev server + running commands), click the split button or press `Ctrl+Shift+5`. Keep the dev server running on the left and execute commands on the right.
+
+## 📂 Workspace vs User Settings
+
+VS Code has two setting scopes:
+
+| Scope | Applies To | File Location |
+|-------|-----------|---------------|
+| **User Settings** | All projects | `~/.config/Code/User/settings.json` |
+| **Workspace Settings** | Current project only | `.vscode/settings.json` |
+
+For vibe coding beginners, User Settings are all you need. When different projects require different settings, use Workspace Settings then. Workspace settings take priority over User settings.
+
+## ⚠️ Common Issues and Solutions
+
+### 🚫 Code Doesn't Format on Save
+
+Either Prettier isn't installed, or `defaultFormatter` isn't set in `settings.json`. Check both. Also note that if the project has a `.prettierrc` file, Prettier follows those rules; otherwise, it uses its defaults.
+
+### 🚫 Extension Not Working
+
+Restart VS Code. Extensions often require a restart after installation. If it still doesn't work, uninstall and reinstall the extension.
+
+### 🚫 Commands Not Recognized in Terminal
+
+If `git` or `node` commands don't work in VS Code's integrated terminal, check if they work in an external terminal (PowerShell or Terminal.app). If they don't work externally either, the tool isn't installed. If they work externally but not in VS Code, fully quit VS Code and reopen it.
+
+### 🚫 Messed Up Settings File
+
+If you enter invalid JSON in `settings.json`, VS Code shows an error. Missing commas and unclosed quotes are common causes. If you can't figure out what's wrong, delete everything in the file, leave only `{}`, and paste the recommended settings again.
+
+## 💡 VS Code Tips for Productive Vibe Coding
+
+### 📌 Use `Ctrl+P` for Quick File Navigation
+
+As your project grows, searching for files with `Ctrl+P` (macOS: `Cmd+P`) is much faster than browsing the sidebar. You only need to type part of the file name.
+
+### 📌 Focus with Zen Mode
+
+Press `Ctrl+K Z` to enter Zen Mode. The sidebar, status bar, and tabs all disappear, letting you focus entirely on code. Press `Esc` twice to return to the normal view.
+
+### 📌 Split Editor for Comparing Files
+
+Press `Ctrl+\` (macOS: `Cmd+\`) to split the editor side by side. Useful for comparing AI-generated code with the original.
+
+### 📌 Keep Extensions Minimal
+
+Too many extensions slow down VS Code startup and can cause conflicts. The five or six extensions in this guide are enough for vibe coding beginners. Add new ones only when you actually need them.
+
+## ⚡ Quick Setup with VibeStart
+
+Want to handle VS Code installation and extension setup all at once? Try [VibeStart](/onboarding). It provides step-by-step installation commands and recommended settings for your operating system.
+
+## 🔗 Related Posts
+
+- [Complete Guide to Setting Up Your Vibe Coding Dev Environment](/blog/vibe-coding-dev-environment-setup-guide)
+- [VS Code Installation and Setup Guide](/blog/vscode-setup-guide)
+- [Why You Need Git for Vibe Coding + 5-Minute Install Guide](/blog/vibe-coding-git-install)
+- [From Node.js Installation to Vibe Coding in 3 Steps](/blog/nodejs-install-vibe-coding)
+- [Setting Up a Vibe Coding Environment on Windows A to Z](/blog/vibe-coding-windows-setup)
+- [macOS Vibe Coding Environment Setup Guide](/blog/vibe-coding-macos-setup)
+
+## 📑 References
+
+- [VS Code Official Docs — User and Workspace Settings](https://code.visualstudio.com/docs/getstarted/settings)
+- [Prettier Official Documentation](https://prettier.io/docs/en/)
+- [ESLint Official Documentation](https://eslint.org/docs/latest/)
+- [VS Code Keyboard Shortcuts Reference](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf)

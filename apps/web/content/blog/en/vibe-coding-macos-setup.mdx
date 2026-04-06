@@ -1,0 +1,321 @@
+---
+title: "macOS Vibe Coding Environment Setup Guide: From Homebrew to Your First Project (2026)"
+description: "Set up your macOS development environment for vibe coding. This guide covers Homebrew installation, Git, Node.js, VS Code setup, and running your first project."
+date: "2026-04-05"
+tags: ["vibe coding", "macOS setup", "macOS dev environment", "Homebrew install", "Git install mac", "Node.js install mac", "VS Code mac", "beginner coding", "mac development setup", "vibe coding setup"]
+---
+
+## 🍎 Why macOS Needs Its Own Setup Guide
+
+Many vibe coding setup guides are written for Windows. Terminal commands, package managers, and installation paths differ between macOS and Windows, so following a Windows guide on macOS will lead to errors.
+
+The first thing you need to do when setting up a development environment on macOS is install **Homebrew**, a package manager. It serves the same role as winget on Windows, but unlike winget, Homebrew isn't pre-installed on macOS. Once you have Homebrew, you can install tools like Git, Node.js, and VS Code with a single terminal command.
+
+This guide walks macOS users through the entire process from Homebrew installation to running your first project. It's written for macOS Ventura (13) and later, though most steps work identically on Monterey (12).
+
+## 📌 Pre-Setup Checklist
+
+Check these two things before starting the environment setup.
+
+### 💻 Check Your macOS Version
+
+Click the Apple menu (🍎) in the top-left corner → "About This Mac" to see your current macOS version. If you're on macOS Monterey (12) or later, you can follow everything in this guide.
+
+### 🔧 Check Xcode Command Line Tools
+
+You need Xcode Command Line Tools to install development tools on macOS. This doesn't install the full Xcode app — just compilers and essential development utilities. Open Terminal and run:
+
+```bash
+xcode-select --version
+```
+
+If a version number appears, it's already installed. If you see "command not found," install it with:
+
+```bash
+xcode-select --install
+```
+
+Click "Install" when the popup appears. Installation takes a few minutes. After it finishes, run `xcode-select --version` again to confirm.
+
+## 🍺 Step 1: Install Homebrew
+
+Homebrew is the package manager for macOS. Like installing apps from the App Store, it lets you install and manage development tools with a single terminal command.
+
+### 📥 Installation
+
+Open Terminal and paste the following command:
+
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+You'll be asked for your password during installation. Type your macOS login password. Nothing will appear on screen as you type — this is normal. Press Enter after typing it.
+
+### 📌 Additional Setup for Apple Silicon (M1/M2/M3/M4)
+
+If you're using an Apple Silicon Mac, check the instructions displayed in the terminal after installation. You'll see something like these commands:
+
+```bash
+echo >> ~/.zprofile
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+eval "$(/opt/homebrew/bin/brew shellenv)"
+```
+
+If you skip this step, you'll get a "brew: command not found" error every time you open a new terminal. Intel Macs don't need this step.
+
+### ✅ Verify Installation
+
+Close and reopen Terminal, then run:
+
+```bash
+brew --version
+```
+
+If you see `Homebrew 4.x.x`, you're good to go.
+
+## 🔧 Step 2: Install Git
+
+Git is a version control tool that tracks changes in your code. When vibe coding with AI and requesting multiple revisions, Git lets you go back to any previous version — it's your safety net.
+
+macOS may already include Git through Xcode Command Line Tools, but it's often outdated. Installing the latest version via Homebrew is recommended.
+
+### 📥 Install via Homebrew
+
+```bash
+brew install git
+```
+
+Close and reopen Terminal after installation.
+
+### ✅ Verify Installation
+
+```bash
+git --version
+```
+
+If you see `git version 2.x.x`, you're set. If the system Git appears instead of the Homebrew version, run `which git` to check the path. It should be `/opt/homebrew/bin/git` (Apple Silicon) or `/usr/local/bin/git` (Intel). If it shows `/usr/bin/git`, restart Terminal to switch to the Homebrew version.
+
+### 📌 Initial Git Configuration
+
+Register your name and email after installation. This records who made each change when you save (commit) code.
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+```
+
+## 📗 Step 3: Install Node.js
+
+Node.js is a JavaScript runtime environment. You need it to run web projects that AI creates on your local machine.
+
+### 📥 Install via Homebrew (Recommended)
+
+```bash
+brew install node@22
+```
+
+This installs Node.js 22 LTS (stable version). You may need to set up the PATH after installation. Check the instructions displayed in the terminal.
+
+```bash
+echo 'export PATH="/opt/homebrew/opt/node@22/bin:$PATH"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+### 📥 Install via nvm (For Managing Multiple Versions)
+
+If you need different Node.js versions for different projects, use nvm (Node Version Manager). For vibe coding beginners, Homebrew installation is sufficient, but nvm becomes useful when working on multiple projects later.
+
+```bash
+brew install nvm
+mkdir ~/.nvm
+```
+
+Add the following to your `~/.zshrc` file:
+
+```bash
+echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc
+echo '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+Then install and use the LTS version:
+
+```bash
+nvm install --lts
+nvm use --lts
+```
+
+### ✅ Verify Installation
+
+```bash
+node -v
+npm -v
+npx -v
+```
+
+If all three show version numbers, you're set. npm and npx are automatically installed with Node.js.
+
+## 💙 Step 4: Install VS Code
+
+VS Code (Visual Studio Code) is a code editor. It's the most versatile editor for installing AI coding extensions.
+
+### 📥 Install via Homebrew (Recommended)
+
+```bash
+brew install --cask visual-studio-code
+```
+
+The `--cask` flag is used for installing GUI applications. After installation, you can find VS Code in the Applications folder.
+
+### 📥 Install from Official Site
+
+Download the macOS installer (.dmg) from the [VS Code official site](https://code.visualstudio.com). Open the downloaded file and drag the VS Code icon to the Applications folder.
+
+### 📌 Enable the `code` Command in Terminal
+
+After installing VS Code, set it up so you can open folders directly from Terminal with `code .`. Open VS Code, press `Cmd+Shift+P` to open the Command Palette, and select "Shell Command: Install 'code' command in PATH."
+
+### ✅ Verify Installation
+
+Close and reopen Terminal, then run:
+
+```bash
+code --version
+```
+
+If a version number appears, you're set.
+
+## ✅ Full Verification Checklist
+
+Verify all four tools are installed. Open a new Terminal and run these commands:
+
+```bash
+brew --version
+git --version
+node -v
+npm -v
+code --version
+```
+
+| Command | Expected Result | If It Fails |
+|---------|----------------|-------------|
+| `brew --version` | `Homebrew 4.x.x` | Homebrew not installed or PATH not set |
+| `git --version` | `git version 2.x.x` | Git not installed |
+| `node -v` | `v22.x.x` etc. | Node.js not installed or PATH not set |
+| `npm -v` | `10.x.x` etc. | Incomplete Node.js installation |
+| `code --version` | Version number | VS Code PATH not registered |
+
+If all five show version numbers, your development environment setup is complete.
+
+## 🚀 Final Verification with Your First Project
+
+Even with all tools installed, creating an actual project is the most reliable way to verify everything works.
+
+### 📁 Create a Project
+
+Open Terminal in your preferred location and run:
+
+```bash
+npx create-next-app@latest my-first-site
+```
+
+You'll be asked several questions — press Enter for all defaults.
+
+### ▶️ Start the Development Server
+
+```bash
+cd my-first-site
+npm run dev
+```
+
+Terminal will show `http://localhost:3000`. Paste this URL in your browser — if the Next.js default page appears, everything is working. Press `Ctrl+C` to stop the server.
+
+### 🎯 Open the Project in VS Code
+
+Run this command in the project folder to open VS Code:
+
+```bash
+code .
+```
+
+Once VS Code opens, press `` Ctrl+` `` (backtick) to open the integrated terminal. From now on, you can edit code and run commands all in one place.
+
+## ⚠️ Common macOS Issues and Solutions
+
+### 🚫 "Unidentified Developer" Warning (Gatekeeper)
+
+macOS shows a security warning when you first open apps downloaded outside the App Store. If this warning appears when opening VS Code, click "Open." If it still won't open, go to System Settings → Privacy & Security → click "Open Anyway" at the bottom.
+
+### 🚫 brew Command Not Found
+
+If this happens after installing Homebrew on an Apple Silicon Mac, the PATH isn't set. Run:
+
+```bash
+eval "$(/opt/homebrew/bin/brew shellenv)"
+echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
+```
+
+On Intel Macs, Homebrew installs to `/usr/local/bin`, so PATH issues rarely occur.
+
+### 🚫 zsh: permission denied
+
+If you get a permission error when running a script, the file doesn't have execute permission. Grant it with:
+
+```bash
+chmod +x filename.sh
+```
+
+### 🚫 node Command Not Recognized
+
+If you installed `node@22` via Homebrew, it may not be automatically added to PATH. Follow the instructions shown in Terminal to manually add the PATH, or install with `brew install node` for automatic PATH setup.
+
+### 🚫 Xcode License Agreement Required
+
+If you see "Agreeing to the Xcode/iOS license requires admin privileges" when running commands like `git`, run:
+
+```bash
+sudo xcodebuild -license accept
+```
+
+## 💡 macOS Development Tips
+
+### 📌 zsh Is the Default Shell
+
+Since macOS Catalina (10.15), the default shell changed from bash to **zsh**. Configuration files use `~/.zshrc` instead of `~/.bashrc`. When following guides written for bash, add settings to `.zshrc` instead of `.bashrc`.
+
+### 📌 Update Tools Installed via Homebrew
+
+Update all Homebrew-installed tools at once with:
+
+```bash
+brew update && brew upgrade
+```
+
+Run this periodically to keep security patches and features up to date.
+
+### 📌 Avoid Korean Characters or Spaces in Folder Paths
+
+Korean characters or spaces in project folder paths can cause errors with some tools. Use English paths like `~/projects/my-first-site` instead of `~/Desktop/내 프로젝트`.
+
+### 📌 Use Spotlight to Quickly Open Apps
+
+Press `Cmd+Space` to open Spotlight Search. Type "Terminal" or "Visual Studio Code" to quickly find and launch apps.
+
+## ⚡ Quick Setup with VibeStart
+
+If following all these steps manually feels overwhelming, try [VibeStart](/onboarding). Select macOS and you'll get step-by-step commands for installing Homebrew, Git, Node.js, and VS Code. Just copy each command and paste it into Terminal.
+
+## 🔗 Related Posts
+
+- [Complete Guide to Setting Up Your Vibe Coding Dev Environment](/blog/vibe-coding-dev-environment-setup-guide)
+- [Why You Need Git for Vibe Coding + 5-Minute Install Guide](/blog/vibe-coding-git-install)
+- [From Node.js Installation to Vibe Coding in 3 Steps](/blog/nodejs-install-vibe-coding)
+- [VS Code Installation and Setup Guide](/blog/vscode-setup-guide)
+- [Setting Up a Vibe Coding Environment on Windows A to Z](/blog/vibe-coding-windows-setup)
+
+## 📑 References
+
+- [Homebrew Official Site](https://brew.sh)
+- [Git Official Downloads](https://git-scm.com/downloads)
+- [Node.js Official Downloads](https://nodejs.org/en/download)
+- [VS Code Official Downloads](https://code.visualstudio.com/Download)

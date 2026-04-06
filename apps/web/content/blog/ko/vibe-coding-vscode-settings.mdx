@@ -1,0 +1,242 @@
+---
+title: "바이브코딩용 VS Code 설정 가이드: 확장 프로그램부터 세팅까지 (2026)"
+description: "바이브코딩에 최적화된 VS Code 설정 방법을 안내합니다. 필수 확장 프로그램, settings.json 설정, 테마, 단축키까지 한 글에 정리했습니다."
+date: "2026-04-06"
+tags: ["바이브코딩", "VS Code 설정", "바이브코딩 VS Code", "VS Code 확장프로그램", "VS Code settings.json", "Prettier 설정", "ESLint 설정", "비전공자 코딩", "VS Code 테마", "바이브코딩 도구"]
+---
+
+## 🎯 VS Code를 바이브코딩에 맞게 설정해야 하는 이유
+
+VS Code는 설치만 하면 바로 코드를 작성할 수 있습니다. 하지만 기본 설정 그대로 사용하면 바이브코딩에서 몇 가지 불편한 점이 생깁니다. 코드를 저장할 때마다 포맷이 흐트러지고, AI가 생성한 코드의 오류를 눈으로 찾아야 하며, 터미널을 별도로 열어야 하는 번거로움이 있습니다.
+
+확장 프로그램 몇 개와 설정 몇 줄만 추가하면 이런 문제가 해결됩니다. 코드를 저장할 때 자동으로 포맷이 정리되고, 에러가 코드 옆에 바로 표시되며, 프로젝트 폴더에서 바로 터미널을 열 수 있게 됩니다. 이 글은 VS Code를 바이브코딩에 최적화하는 방법을 설치 직후부터 단계별로 안내합니다.
+
+VS Code가 아직 설치되지 않았다면 [VS Code 설치 가이드](/blog/vscode-setup-guide)를 먼저 참고하세요.
+
+## 🧩 필수 확장 프로그램 설치
+
+VS Code의 가장 큰 장점은 확장 프로그램(Extension)입니다. 왼쪽 사이드바에서 블록 모양 아이콘을 클릭하거나 `Ctrl+Shift+X`(macOS: `Cmd+Shift+X`)를 누르면 확장 프로그램 마켓플레이스가 열립니다.
+
+### 🌏 Korean Language Pack (한국어 사용자)
+
+VS Code의 메뉴, 설정, 에러 메시지를 한국어로 표시해줍니다. 마켓플레이스에서 "Korean Language Pack"을 검색해서 설치하세요. 설치 후 VS Code를 재시작하면 한국어로 전환됩니다.
+
+영어 인터페이스가 편한 분은 설치하지 않아도 됩니다. 다만 에러 메시지를 검색할 때는 영어가 검색 결과가 더 많으므로, 에러 메시지만 영어로 보고 싶다면 설치하지 않는 편이 나을 수 있습니다.
+
+### 🎨 Prettier — Code Formatter
+
+코드를 저장할 때 자동으로 들여쓰기, 따옴표, 줄바꿈 등을 정리해줍니다. AI가 생성한 코드의 포맷이 일관되지 않을 때 특히 유용합니다. 마켓플레이스에서 "Prettier - Code formatter"를 검색해서 설치하세요.
+
+설치만으로는 자동 포맷이 동작하지 않습니다. 뒤에서 설명할 `settings.json` 설정을 함께 해야 합니다.
+
+### 🔍 ESLint
+
+JavaScript/TypeScript 코드에서 잠재적 오류와 코드 품질 문제를 실시간으로 알려줍니다. AI가 생성한 코드에 사용하지 않는 변수가 있거나, 잘못된 문법이 포함돼 있으면 밑줄로 표시해줍니다. "ESLint"를 검색해서 설치하세요.
+
+### 🔴 Error Lens
+
+기본 VS Code에서는 에러 위치에 빨간 밑줄만 표시됩니다. Error Lens는 에러 메시지를 해당 줄 옆에 직접 표시해줘서 마우스를 올리지 않아도 문제를 바로 확인할 수 있습니다. 바이브코딩에서 AI가 생성한 코드를 빠르게 검토할 때 매우 유용합니다.
+
+### 🏷️ Auto Rename Tag
+
+HTML/JSX 태그의 여는 태그 이름을 수정하면 닫는 태그도 자동으로 변경됩니다. `<div>`를 `<section>`으로 바꾸면 `</div>`도 `</section>`으로 자동 변경됩니다. 웹 프로젝트에서 태그 불일치 에러를 예방합니다.
+
+### 📁 Path Intellisense
+
+파일 경로를 입력할 때 자동 완성을 제공합니다. `import` 문이나 이미지 경로를 작성할 때 폴더와 파일 이름을 자동으로 제안해줘서 오타로 인한 에러를 줄여줍니다.
+
+### 📌 확장 프로그램 설치 요약
+
+| 확장 프로그램 | 용도 | 우선순위 |
+|-------------|------|---------|
+| Prettier | 코드 자동 포맷 | 필수 |
+| ESLint | 코드 오류 검출 | 필수 |
+| Error Lens | 에러 메시지 인라인 표시 | 강력 추천 |
+| Auto Rename Tag | HTML/JSX 태그 자동 수정 | 추천 |
+| Path Intellisense | 파일 경로 자동 완성 | 추천 |
+| Korean Language Pack | 한국어 인터페이스 | 선택 |
+
+## ⚙️ settings.json 설정
+
+VS Code의 동작을 세밀하게 제어하려면 `settings.json` 파일을 편집합니다. `Ctrl+Shift+P`(macOS: `Cmd+Shift+P`)를 눌러 명령 팔레트를 열고, "Preferences: Open User Settings (JSON)"을 선택하세요.
+
+아래 설정을 추가하면 바이브코딩에 최적화된 환경이 됩니다.
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.tabSize": 2,
+  "editor.wordWrap": "on",
+  "editor.minimap.enabled": false,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.fontSize": 14,
+  "explorer.confirmDelete": false,
+  "explorer.confirmDragAndDrop": false
+}
+```
+
+### 📌 각 설정의 의미
+
+| 설정 | 설명 |
+|------|------|
+| `formatOnSave` | 파일 저장 시 자동으로 코드 포맷 정리 |
+| `defaultFormatter` | 기본 포매터를 Prettier로 지정 |
+| `tabSize` | 들여쓰기를 스페이스 2칸으로 설정 |
+| `wordWrap` | 긴 줄을 화면 너비에 맞춰 자동 줄바꿈 |
+| `minimap.enabled` | 오른쪽 미니맵 비활성화 (화면 공간 확보) |
+| `bracketPairColorization` | 괄호 쌍을 색상으로 구분 표시 |
+| `autoSave` | 일정 시간 후 자동 저장 |
+| `autoSaveDelay` | 자동 저장 대기 시간 (1000ms = 1초) |
+
+`formatOnSave`와 `defaultFormatter`는 Prettier 확장 프로그램이 설치돼 있어야 동작합니다. Prettier가 없으면 이 설정은 무시됩니다.
+
+## 🎨 테마와 폰트 설정
+
+### 🌙 추천 테마
+
+VS Code에는 기본으로 여러 테마가 포함돼 있습니다. `Ctrl+K Ctrl+T`(macOS: `Cmd+K Cmd+T`)를 누르면 테마 선택 창이 열립니다.
+
+| 테마 | 특징 |
+|------|------|
+| **Dark+ (기본)** | VS Code 기본 다크 테마, 무난한 선택 |
+| **One Dark Pro** | Atom 에디터의 인기 테마, 부드러운 색감 |
+| **GitHub Theme** | GitHub 스타일, 라이트/다크 모두 제공 |
+| **Dracula** | 보라색 기반 다크 테마, 높은 대비 |
+
+테마는 코딩 생산성에 큰 영향을 주지 않으므로 눈이 편한 것을 고르면 됩니다. 장시간 작업한다면 다크 테마가 눈의 피로를 줄여줍니다.
+
+### 🔤 추천 폰트
+
+코딩용 폰트는 숫자 `0`과 영문 `O`, 영문 `l`과 숫자 `1`을 명확하게 구분할 수 있어야 합니다. 아래 폰트들이 코딩에 많이 사용됩니다.
+
+| 폰트 | 특징 |
+|------|------|
+| **Fira Code** | 합자(ligature) 지원, 연산자가 기호로 표시 |
+| **JetBrains Mono** | JetBrains에서 만든 무료 코딩 폰트 |
+| **D2Coding** | 한글 지원이 좋은 코딩 폰트 |
+| **Cascadia Code** | Microsoft에서 만든 Windows 터미널 기본 폰트 |
+
+폰트를 설치한 뒤 `settings.json`에 아래와 같이 추가합니다.
+
+```json
+{
+  "editor.fontFamily": "'Fira Code', 'D2Coding', Consolas, monospace",
+  "editor.fontLigatures": true,
+  "editor.fontSize": 14,
+  "editor.lineHeight": 1.6
+}
+```
+
+## ⌨️ 자주 쓰는 단축키
+
+바이브코딩에서 자주 사용하는 VS Code 단축키를 정리합니다. macOS는 `Ctrl` 대신 `Cmd`를 사용합니다.
+
+| 동작 | Windows/Linux | macOS |
+|------|--------------|-------|
+| 명령 팔레트 열기 | `Ctrl+Shift+P` | `Cmd+Shift+P` |
+| 파일 빠르게 열기 | `Ctrl+P` | `Cmd+P` |
+| 내장 터미널 토글 | `` Ctrl+` `` | `` Ctrl+` `` |
+| 사이드바 토글 | `Ctrl+B` | `Cmd+B` |
+| 전체 파일에서 검색 | `Ctrl+Shift+F` | `Cmd+Shift+F` |
+| 현재 줄 복제 | `Shift+Alt+↓` | `Shift+Option+↓` |
+| 현재 줄 이동 | `Alt+↑/↓` | `Option+↑/↓` |
+| 여러 커서 추가 | `Ctrl+Alt+↑/↓` | `Cmd+Option+↑/↓` |
+| 저장 | `Ctrl+S` | `Cmd+S` |
+| 모두 저장 | `Ctrl+K S` | `Cmd+Option+S` |
+
+처음부터 모든 단축키를 외울 필요는 없습니다. 명령 팔레트(`Ctrl+Shift+P`)와 파일 빠르게 열기(`Ctrl+P`), 터미널 토글(`` Ctrl+` ``) 세 가지만 먼저 익히면 작업 속도가 크게 올라갑니다.
+
+## 🖥️ 내장 터미널 설정
+
+VS Code의 내장 터미널을 사용하면 별도 터미널 앱을 열지 않고도 코드 편집과 명령어 실행을 한 곳에서 할 수 있습니다.
+
+### 📌 터미널 열기
+
+`` Ctrl+` ``(백틱)을 누르면 하단에 터미널이 열립니다. 또는 메뉴에서 터미널 → 새 터미널을 선택해도 됩니다.
+
+### 📌 기본 터미널 변경
+
+Windows에서는 PowerShell을, macOS에서는 zsh를 기본으로 사용하는 것이 좋습니다. `settings.json`에서 설정할 수 있습니다.
+
+```json
+{
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.defaultProfile.osx": "zsh"
+}
+```
+
+### 📌 터미널 분할
+
+한 번에 여러 터미널이 필요할 때(예: 개발 서버 + 명령어 실행) 터미널 분할 버튼을 클릭하거나 `Ctrl+Shift+5`를 누르면 됩니다. 왼쪽에서 개발 서버를 띄워두고 오른쪽에서 명령어를 실행하는 식으로 활용할 수 있습니다.
+
+## 📂 작업 영역(Workspace) vs 사용자(User) 설정
+
+VS Code에는 두 가지 설정 범위가 있습니다.
+
+| 범위 | 적용 대상 | 파일 위치 |
+|------|----------|----------|
+| **사용자(User) 설정** | 모든 프로젝트에 적용 | `~/.config/Code/User/settings.json` |
+| **작업 영역(Workspace) 설정** | 현재 프로젝트에만 적용 | `.vscode/settings.json` |
+
+바이브코딩 입문 단계에서는 사용자 설정만 사용하면 됩니다. 프로젝트마다 다른 설정이 필요해지면 그때 작업 영역 설정을 활용하세요. 작업 영역 설정이 사용자 설정보다 우선합니다.
+
+## ⚠️ 자주 발생하는 문제와 해결
+
+### 🚫 저장해도 포맷이 정리되지 않음
+
+Prettier 확장 프로그램이 설치되지 않았거나, `settings.json`에서 `defaultFormatter`가 설정되지 않은 경우입니다. 두 가지를 모두 확인하세요. 또한 프로젝트에 `.prettierrc` 파일이 있으면 그 설정을 따르고, 없으면 Prettier 기본 설정을 사용합니다.
+
+### 🚫 확장 프로그램이 동작하지 않음
+
+VS Code를 재시작해보세요. 확장 프로그램은 설치 직후 재시작이 필요한 경우가 많습니다. 그래도 안 되면 확장 프로그램을 삭제 후 다시 설치하세요.
+
+### 🚫 터미널에서 명령어가 인식되지 않음
+
+VS Code 내장 터미널에서 `git`이나 `node` 명령어가 안 되면, 외부 터미널(PowerShell 또는 Terminal.app)에서도 안 되는지 확인하세요. 외부에서도 안 되면 도구 설치 자체가 안 된 것이고, 외부에서는 되는데 VS Code에서만 안 되면 VS Code를 완전히 종료한 뒤 다시 열어보세요.
+
+### 🚫 설정 파일을 잘못 수정함
+
+`settings.json`에 잘못된 JSON을 입력하면 VS Code가 에러를 표시합니다. 쉼표 빠짐, 따옴표 누락 등이 흔한 원인입니다. 어떤 부분이 잘못됐는지 모르겠다면 파일 내용을 전부 지우고 `{}`만 남긴 뒤, 위에서 안내한 설정을 다시 붙여넣으세요.
+
+## 💡 바이브코딩 생산성을 높이는 VS Code 팁
+
+### 📌 `Ctrl+P`로 파일 빠르게 이동
+
+프로젝트 파일이 많아지면 사이드바에서 파일을 찾는 것보다 `Ctrl+P`(macOS: `Cmd+P`)로 파일 이름을 검색하는 게 훨씬 빠릅니다. 파일 이름의 일부만 입력해도 됩니다.
+
+### 📌 Zen Mode로 집중
+
+`Ctrl+K Z`를 누르면 Zen Mode로 전환됩니다. 사이드바, 상태바, 탭이 모두 사라지고 코드에만 집중할 수 있습니다. `Esc`를 두 번 누르면 원래 화면으로 돌아옵니다.
+
+### 📌 에디터 분할로 파일 비교
+
+`Ctrl+\`(macOS: `Cmd+\`)를 누르면 에디터가 좌우로 분할됩니다. AI가 생성한 코드와 원본 코드를 나란히 놓고 비교할 때 유용합니다.
+
+### 📌 확장 프로그램은 필요한 것만
+
+확장 프로그램을 너무 많이 설치하면 VS Code 시작 속도가 느려지고, 확장 프로그램끼리 충돌할 수 있습니다. 이 글에서 소개한 6개 정도면 바이브코딩 입문에 충분합니다. 새 확장 프로그램은 실제로 필요할 때 하나씩 추가하세요.
+
+## ⚡ 한 번에 끝내기: VibeStart 활용
+
+VS Code 설치부터 확장 프로그램 설정까지 한 번에 하고 싶다면 [VibeStart](/onboarding)를 이용해보세요. 운영체제에 맞는 설치 명령어와 추천 설정을 단계별로 안내합니다.
+
+## 🔗 관련 글
+
+- [바이브코딩 시작 전 개발환경 세팅 완벽 가이드](/blog/vibe-coding-dev-environment-setup-guide)
+- [VS Code 설치 및 설정 가이드](/blog/vscode-setup-guide)
+- [바이브코딩에 Git이 필요한 이유 + 5분 설치 가이드](/blog/vibe-coding-git-install)
+- [Node.js 설치부터 바이브코딩 시작까지 3단계](/blog/nodejs-install-vibe-coding)
+- [Windows에서 바이브코딩 환경 만들기 A to Z](/blog/vibe-coding-windows-setup)
+- [macOS 바이브코딩 환경 세팅 완벽 가이드](/blog/vibe-coding-macos-setup)
+
+## 📑 참고 자료
+
+- [VS Code 공식 문서 — User and Workspace Settings](https://code.visualstudio.com/docs/getstarted/settings)
+- [Prettier 공식 문서](https://prettier.io/docs/en/)
+- [ESLint 공식 문서](https://eslint.org/docs/latest/)
+- [VS Code 공식 키보드 단축키 PDF](https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf)

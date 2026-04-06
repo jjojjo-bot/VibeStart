@@ -1,0 +1,296 @@
+---
+title: "Terminal Basics for Non-Developers: A Beginner's Guide to Vibe Coding (2026)"
+description: "Learn terminal basics for vibe coding as a complete beginner. Covers how to open terminals on each OS, essential commands, file paths, error handling, and practice exercises."
+date: "2026-04-07"
+tags: ["vibe coding", "terminal basics", "terminal for beginners", "command line", "PowerShell", "macOS terminal", "cd command", "beginner coding", "CLI basics", "terminal commands"]
+---
+
+## 🖥️ What Is a Terminal and Why Vibe Coders Need It
+
+A terminal is a program where you control your computer by typing text commands. Normally, you open folders with a mouse and launch programs with clicks. In a terminal, you type commands to do the same things.
+
+The reason you need a terminal for vibe coding is simple. When you ask AI to build a website, it generates code. But to run that code, you need to type commands like `npm run dev` into a terminal. Creating a project uses `npx create-next-app`, and saving code with Git uses `git commit`.
+
+The good news is that vibe coding uses roughly 10 terminal commands. You don't need to memorize everything — the basics covered in this guide are all you need.
+
+## 🔍 Opening a Terminal on Each OS
+
+Each operating system has a different default terminal. Here's what to open.
+
+### 🪟 Windows
+
+Windows has multiple terminals:
+
+| Terminal | Description | Recommended |
+|----------|-------------|-------------|
+| **Command Prompt (cmd)** | Old default terminal | Not recommended |
+| **PowerShell** | Modern default terminal | Recommended |
+| **Windows Terminal** | Tab support, includes PowerShell | Recommended (Win 11) |
+
+Search "PowerShell" in the Start menu to open it. On Windows 11, "Windows Terminal" is the default and automatically opens a PowerShell tab. Avoid cmd (Command Prompt) as it's outdated — use PowerShell instead.
+
+### 🍎 macOS
+
+| Terminal | Description | Recommended |
+|----------|-------------|-------------|
+| **Terminal.app** | macOS built-in terminal | Recommended |
+| **iTerm2** | Advanced features, split panes | Optional |
+
+Press `Cmd+Space` to open Spotlight and type "Terminal" to open the default terminal. The built-in Terminal is sufficient for most vibe coding tasks.
+
+### 💙 VS Code Integrated Terminal (Most Recommended)
+
+If you use VS Code, you don't need a separate terminal app. Press `` Ctrl+` `` (backtick) inside VS Code to open the integrated terminal. You can edit code and run commands in one place without breaking your workflow. This is the most convenient approach for vibe coding.
+
+## 📂 Understanding File Paths
+
+Before using terminal commands, you need to understand file paths. A file path is an address that shows where a file or folder is located on your computer.
+
+### 📌 Absolute vs Relative Paths
+
+| Type | Description | Example (Windows) | Example (macOS) |
+|------|-------------|-------------------|-----------------|
+| **Absolute** | Full path from root | `C:\Users\me\projects` | `/Users/me/projects` |
+| **Relative** | Based on current location | `.\projects` or `projects` | `./projects` or `projects` |
+
+`.` means the current folder, and `..` means the parent folder. For example, `cd ..` moves you one level up.
+
+### 📌 Path Separators
+
+Windows uses backslashes (`\`), while macOS/Linux uses forward slashes (`/`). When copying commands from online guides, check the path separators.
+
+### 📌 Checking Your Current Location
+
+When you open a terminal, you always start in a specific folder — usually your home folder (`~`). If you're not sure where you are, check with:
+
+```bash
+pwd
+```
+
+This works in Windows PowerShell too.
+
+## ⌨️ Essential Commands You Must Know
+
+Here are the most frequently used commands in vibe coding. These work in both Windows PowerShell and macOS/Linux terminals.
+
+### 📁 cd — Change Directory
+
+```bash
+cd projects          # Move to the projects folder
+cd my-first-site     # Move to my-first-site folder
+cd ..                # Move to parent folder
+cd ~                 # Move to home folder
+```
+
+`cd` stands for "change directory." It's the most used command, so memorize it. You need to navigate to your project folder before running commands like `npm run dev`, so `cd` is always the first command you use in vibe coding.
+
+### 📋 ls — List Files
+
+```bash
+ls                   # List files/folders in current directory
+ls -la               # Detailed list including hidden files (macOS/Linux)
+```
+
+`ls` also works in Windows PowerShell. Use it to see what files are in the current folder. Running `ls` in a project folder should show files like `package.json` and `node_modules`.
+
+### 📁 mkdir — Make Directory
+
+```bash
+mkdir projects       # Create a folder called "projects"
+mkdir my-new-site    # Create a folder called "my-new-site"
+```
+
+Use this to create folders for organizing your projects. For example, run `mkdir projects` in your home folder, then `cd projects` to keep your projects tidy.
+
+### 🔍 pwd — Print Working Directory
+
+```bash
+pwd                  # Show the full path of your current folder
+```
+
+This is the first command to run when you're lost in the terminal. It tells you exactly where you are.
+
+### 📄 cat — View File Contents
+
+```bash
+cat package.json     # Display the contents of package.json
+```
+
+`cat` works in Windows PowerShell too. Use it to quickly view file contents without opening the file. Handy for checking short configuration files.
+
+### 🧹 clear — Clear Screen
+
+```bash
+clear                # Clear the terminal screen
+```
+
+In Windows PowerShell, use `cls` instead. This cleans up the screen when it gets cluttered. Your command history isn't deleted — only the display is cleared.
+
+### 📌 Command Summary
+
+| Command | Function | Windows PowerShell | macOS/Linux |
+|---------|----------|-------------------|-------------|
+| `cd` | Change directory | ✅ | ✅ |
+| `ls` | List files | ✅ | ✅ |
+| `mkdir` | Create folder | ✅ | ✅ |
+| `pwd` | Show current path | ✅ | ✅ |
+| `cat` | View file contents | ✅ | ✅ |
+| `clear` | Clear screen | Use `cls` | ✅ |
+| `cp` | Copy files | ✅ | ✅ |
+| `mv` | Move/rename files | ✅ | ✅ |
+| `rm` | Delete files | ✅ (caution) | ✅ (caution) |
+
+The `rm` (delete) command **permanently deletes files without going to the trash**. Recovery is difficult, so use it carefully. For vibe coding beginners, deleting files through the file explorer is safer.
+
+## 🎹 Terminal Keyboard Shortcuts
+
+Beyond typing commands, these keyboard shortcuts make terminal use much smoother.
+
+| Action | Shortcut | Description |
+|--------|----------|-------------|
+| Autocomplete | `Tab` | Type part of a file/folder name and press Tab to fill in the rest |
+| Previous command | `↑` (Up arrow) | Recall the last command you ran |
+| Cancel execution | `Ctrl+C` | Force-stop a running command |
+| Paste | `Ctrl+V` / Right-click | Paste a copied command into the terminal |
+| Cursor to start | `Home` or `Ctrl+A` | Useful for editing long commands |
+| Cursor to end | `End` or `Ctrl+E` | Jump to end of command |
+
+**Tab autocomplete** is the most useful feature. For example, type `cd pro` and press Tab — it autocompletes to `cd projects/`. No need to type long folder names, which reduces typos and saves time.
+
+**`Ctrl+C`** is essential for stopping the development server (`npm run dev`). The dev server keeps running after you start it — press `Ctrl+C` to stop it.
+
+## 🛠️ Commands You'll Actually Use in Vibe Coding
+
+Beyond the basics above, here are commands frequently used in vibe coding. No need to memorize them — just copy and paste when needed.
+
+### 📦 npm/npx Commands
+
+```bash
+npx create-next-app@latest my-site   # Create a new Next.js project
+npm install                          # Install project packages
+npm run dev                          # Start the development server
+npm run build                        # Build the project
+```
+
+### 🔧 Basic Git Commands
+
+```bash
+git init                             # Initialize current folder as a Git repository
+git add .                            # Stage all changed files
+git commit -m "message"              # Save changes with a message
+git status                           # Check current status
+git log --oneline                    # View save history
+```
+
+### 💙 VS Code Commands
+
+```bash
+code .                               # Open current folder in VS Code
+code index.html                      # Open a specific file in VS Code
+```
+
+## ⚠️ Terminal Error Messages and How to Handle Them
+
+Terminal errors can be intimidating, but most error messages directly tell you the cause.
+
+### 🚫 "command not found"
+
+The program isn't installed, or it's installed but not added to PATH.
+
+**Steps to fix:**
+1. Close and reopen the terminal. PATH changes may not have taken effect yet.
+2. Check if the tool is actually installed.
+3. If not installed, install the tool.
+
+### 🚫 "permission denied"
+
+You don't have access permissions for the file or folder.
+
+**How to fix:**
+- macOS/Linux: Add `sudo` before the command. Example: `sudo npm install -g something`
+- Windows: Open PowerShell as Administrator and try again.
+- Use `sudo` sparingly — it affects the entire system.
+
+### 🚫 "no such file or directory"
+
+The specified file or folder doesn't exist at the given path.
+
+**How to fix:**
+1. Run `pwd` to check your current location.
+2. Run `ls` to see what files exist in the current folder.
+3. Check for typos. File names are case-sensitive on macOS/Linux.
+
+### 🚫 "EACCES" Error (npm related)
+
+A permission issue when installing global npm packages. Common on macOS.
+
+**How to fix:** Using nvm fundamentally solves this problem. See the [macOS Setup Guide](/blog/vibe-coding-macos-setup) for nvm installation instructions.
+
+## 🏋️ Practice Exercises
+
+Try these safe commands to practice. None of them will affect your system.
+
+```bash
+# 1. Check your current location
+pwd
+
+# 2. View current folder contents
+ls
+
+# 3. Create a practice folder
+mkdir terminal-practice
+
+# 4. Move to the practice folder
+cd terminal-practice
+
+# 5. Check your location again
+pwd
+
+# 6. Go back to parent folder
+cd ..
+
+# 7. Delete the practice folder (optional)
+rm -r terminal-practice
+```
+
+Run each command one at a time and observe the results. Practicing the flow of `cd` to move folders and `pwd` to confirm your location helps you avoid getting "lost" in the terminal.
+
+## 💡 Tips for Terminal Beginners
+
+### 📌 Before Running Unknown Commands
+
+Don't immediately run commands copied from the internet. Commands like `sudo rm -rf` that delete system files are extremely dangerous. If you don't know what a command does, search for it first.
+
+### 📌 Read Error Messages
+
+Terminal error messages are mostly in English but directly explain the cause. Copy the entire error message and search for it — you'll almost always find a solution.
+
+### 📌 Close and Reopen Terminal After Installing
+
+If a command isn't recognized after installing a program, closing and reopening the terminal is the first fix. Environment variables (PATH) are only loaded once when the terminal starts.
+
+### 📌 Use Tab Autocomplete Actively
+
+Typing long folder or file names manually leads to typos. Build the habit of typing the first few characters and pressing Tab — it makes terminal use much faster.
+
+### 📌 Use VS Code's Integrated Terminal as Your Main Terminal
+
+You can do everything inside VS Code without opening a separate terminal app. Seeing code and terminal on one screen keeps your vibe coding workflow uninterrupted.
+
+## ⚡ Quick Setup with VibeStart
+
+If typing terminal commands one by one feels overwhelming, try [VibeStart](/onboarding). It provides step-by-step commands with copy buttons for one-click pasting. Even if you're new to the terminal, following the guide step by step will complete your development environment setup.
+
+## 🔗 Related Posts
+
+- [Complete Guide to Setting Up Your Vibe Coding Dev Environment](/blog/vibe-coding-dev-environment-setup-guide)
+- [Setting Up a Vibe Coding Environment on Windows A to Z](/blog/vibe-coding-windows-setup)
+- [macOS Vibe Coding Environment Setup Guide](/blog/vibe-coding-macos-setup)
+- [VS Code Settings Guide for Vibe Coding](/blog/vibe-coding-vscode-settings)
+- [Why You Need Git for Vibe Coding + 5-Minute Install Guide](/blog/vibe-coding-git-install)
+
+## 📑 References
+
+- [VS Code Official Docs — Integrated Terminal](https://code.visualstudio.com/docs/terminal/basics)
+- [Microsoft PowerShell Documentation](https://learn.microsoft.com/en-us/powershell/)
+- [macOS Terminal User Guide](https://support.apple.com/guide/terminal/welcome/mac)
