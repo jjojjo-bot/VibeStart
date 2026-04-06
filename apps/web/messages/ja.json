@@ -658,6 +658,11 @@
     "metaDescription": "バイブコーディングの始め方、Gitインストール、VS Code設定、Node.jsインストールなど開発環境構築に必要なすべてのガイド。",
     "noPosts": "まだ記事がありません。",
     "backToList": "一覧に戻る",
-    "nav": "ブログ"
+    "nav": "ブログ",
+    "searchPlaceholder": "タイトルまたはタグで検索",
+    "noResults": "検索結果がありません。",
+    "pagination": "ページナビゲーション",
+    "prev": "前へ",
+    "next": "次へ"
   }
 }

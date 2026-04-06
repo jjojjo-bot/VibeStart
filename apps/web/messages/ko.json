@@ -658,6 +658,11 @@
     "metaDescription": "바이브코딩 시작 방법, Git 설치, VS Code 설정, Node.js 설치 등 개발 환경 설정에 필요한 모든 가이드를 제공합니다.",
     "noPosts": "아직 작성된 글이 없습니다.",
     "backToList": "목록으로 돌아가기",
-    "nav": "블로그"
+    "nav": "블로그",
+    "searchPlaceholder": "제목 또는 태그로 검색",
+    "noResults": "검색 결과가 없습니다.",
+    "pagination": "페이지 이동",
+    "prev": "이전",
+    "next": "다음"
   }
 }

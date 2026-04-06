@@ -658,6 +658,11 @@
     "metaDescription": "氛围编程入门、Git安装、VS Code设置、Node.js安装等开发环境搭建所需的所有指南。",
     "noPosts": "暂无文章。",
     "backToList": "返回列表",
-    "nav": "博客"
+    "nav": "博客",
+    "searchPlaceholder": "按标题或标签搜索",
+    "noResults": "未找到结果。",
+    "pagination": "页面导航",
+    "prev": "上一页",
+    "next": "下一页"
   }
 }

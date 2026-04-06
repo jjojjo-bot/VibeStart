@@ -658,6 +658,11 @@
     "metaDescription": "Everything you need to start vibe coding: Git installation, VS Code setup, Node.js installation, and dev environment configuration guides.",
     "noPosts": "No posts yet.",
     "backToList": "Back to list",
-    "nav": "Blog"
+    "nav": "Blog",
+    "searchPlaceholder": "Search by title or tag",
+    "noResults": "No results found.",
+    "pagination": "Page navigation",
+    "prev": "Previous",
+    "next": "Next"
   }
 }
