@@ -1,0 +1,337 @@
+---
+title: "Claude Code for Beginners: From Installation to Your First Project (2026)"
+description: "A complete beginner's guide to Claude Code. Covers Node.js setup, API key generation, installation, first project creation, and troubleshooting common issues."
+date: "2026-04-09"
+tags: ["vibe coding", "Claude Code", "Claude Code install", "Claude Code beginner", "vibe coding Claude", "AI coding tools", "terminal coding", "beginner coding", "Anthropic API", "Claude Code tutorial"]
+---
+
+## 🤖 What Is Claude Code and How It Differs from Other Tools
+
+Claude Code is an AI coding tool that runs in your terminal. Instead of installing a separate editor like Cursor, you have a conversation with AI directly in a terminal window. You can ask it to create files, write code, design project structures, and fix errors — all through conversation.
+
+Tools like Cursor or VS Code + Copilot use AI as an assistant inside an editor. Claude Code is different — AI takes the lead in managing your entire project. It creates files, edits them, and even runs terminal commands. For non-developers, it feels closer to "tell AI what you want and it builds it for you."
+
+This guide walks you through installing Claude Code and asking AI to build a website from scratch.
+
+## 📋 What You Need Before Installation
+
+You need three things to use Claude Code.
+
+### 💻 System Requirements
+
+| Item | Requirement |
+|------|------------|
+| OS | Windows 10+, macOS 12+, or Linux |
+| Node.js | Version 18 or higher |
+| RAM | 4GB minimum |
+| Internet | Always required for AI requests |
+
+### 📌 Check Your Node.js Installation
+
+Claude Code runs on Node.js. Open your terminal and type:
+
+```bash
+node --version
+```
+
+If you see a version number `v18.0.0` or higher, you're set. If nothing appears or the version is below 18, follow the [Node.js Installation Guide](/blog/nodejs-install-vibe-coding).
+
+### 🔑 Anthropic API Key or Claude Subscription
+
+There are two ways to use Claude Code:
+
+| Method | Cost | Details |
+|--------|------|---------|
+| **Claude Max Subscription** | $100–$200/month | Log in with subscription, usage limits apply |
+| **Anthropic API Key** | Pay per use | Generate key in API console, fine-grained cost control |
+
+For beginners, the API key approach is recommended. Costs are minimal with light usage, and you can monitor spending directly.
+
+## 🔑 Getting Your Anthropic API Key
+
+### 📌 Create an Account
+
+1. Go to [console.anthropic.com](https://console.anthropic.com/) in your browser.
+2. Click "Sign Up" and register with email or Google.
+3. Complete email verification.
+
+### 📌 Generate an API Key
+
+1. After logging in, click "API Keys" in the left menu.
+2. Click "Create Key."
+3. Enter a name (e.g., "claude-code-local").
+4. Copy the generated key. It's shown only once, so save it somewhere safe.
+
+The API key is a long string starting with `sk-ant-`. Never share this key with others or put it directly in your code. If it leaks, someone else could use the API at your expense.
+
+### 📌 Add a Payment Method
+
+API usage requires a payment method. Go to "Billing" in the left menu and add a credit card. You can set a spending limit to prevent unexpected charges. Start with $5–$10 for peace of mind.
+
+## 📥 Installing Claude Code
+
+Open your terminal and run:
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+The `-g` flag installs it globally so you can use it from any directory. Verify the installation:
+
+```bash
+claude --version
+```
+
+If a version number appears, installation succeeded. If you see "command not found," close and reopen your terminal. If it still doesn't work, check that Node.js's global package path is included in your system PATH.
+
+### 🍎 Permission Error on macOS
+
+On macOS, `npm install -g` may throw an `EACCES` error. Prefix the command with `sudo`:
+
+```bash
+sudo npm install -g @anthropic-ai/claude-code
+```
+
+When prompted for a password, enter your Mac login password. Nothing appears on screen while typing — that's normal.
+
+## 🔧 Setting Up Your API Key
+
+After installation, connect your API key to Claude Code.
+
+### 📌 Set as Environment Variable
+
+**Windows (PowerShell):**
+
+```powershell
+$env:ANTHROPIC_API_KEY = "sk-ant-paste-your-key-here"
+```
+
+**macOS / Linux:**
+
+```bash
+export ANTHROPIC_API_KEY="sk-ant-paste-your-key-here"
+```
+
+This setting disappears when you close the terminal. For convenience, make it permanent.
+
+### 📌 Make It Permanent
+
+**macOS / Linux:**
+
+Add it to your shell configuration file:
+
+```bash
+echo 'export ANTHROPIC_API_KEY="sk-ant-paste-your-key-here"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+If you use bash instead of zsh, replace `~/.zshrc` with `~/.bashrc`.
+
+**Windows (PowerShell):**
+
+Set it as a system environment variable:
+
+```powershell
+[System.Environment]::SetEnvironmentVariable("ANTHROPIC_API_KEY", "sk-ant-paste-your-key-here", "User")
+```
+
+Close and reopen your terminal for the change to take effect.
+
+### 📌 Using a Claude Subscription Instead
+
+If you have a Claude Max subscription, you can use Claude Code without an API key. Type `claude` in your terminal and a login screen will appear. A browser window opens where you can sign in with your Claude account.
+
+## 🚀 Running Claude Code for the First Time
+
+### 📌 Getting Started
+
+Navigate to a folder where you want to create your project, then type `claude`:
+
+```bash
+# Windows
+cd C:\Users\YourUsername\Documents
+mkdir my-claude-project
+cd my-claude-project
+
+# macOS
+cd ~/Documents
+mkdir my-claude-project
+cd my-claude-project
+```
+
+```bash
+claude
+```
+
+When Claude Code starts, a `>` prompt appears. Type what you want in English or any other language.
+
+### 📌 Understanding the Interface
+
+Claude Code's interface is straightforward:
+
+| Element | Description |
+|---------|-------------|
+| `>` prompt | Where you type your requests |
+| Claude's response | AI's answers and execution plans |
+| Tool use notifications | Shown when Claude reads or modifies files |
+| Permission requests | User confirmation before file changes or commands |
+
+Claude always asks for confirmation before modifying files or running commands. Type "y" to allow, "n" to deny. Take it one step at a time when you're starting out.
+
+## 📁 Creating Your First Project
+
+### 📌 Ask Claude to Create a Next.js Project
+
+At the Claude Code prompt, type:
+
+```
+Create a Next.js project in this folder. Use TypeScript and
+the App Router. Also create a simple personal introduction page
+with the name "Jane Doe", bio "A non-developer starting vibe coding",
+and three favorite things: "coffee, cats, travel".
+```
+
+Claude shows its execution plan and proceeds after your approval:
+
+1. Runs `npx create-next-app`
+2. Creates the project file structure
+3. Modifies `app/page.tsx` into a personal intro page
+4. Updates style files
+
+At each step, Claude explains what it's about to do and asks for permission. Read the plan and press "y" to approve.
+
+### 📌 Start the Development Server
+
+After project creation, ask Claude:
+
+```
+Start the development server
+```
+
+Or run it directly:
+
+```bash
+npm run dev
+```
+
+Open `http://localhost:3000` in your browser to see the AI-created introduction page.
+
+### 📌 Request Additional Changes
+
+Keep the conversation going to refine the page:
+
+```
+Change the background to light blue, add a circular placeholder
+for a profile photo, and make it responsive for mobile.
+```
+
+Claude modifies the files. Refresh your browser to see the changes.
+
+## ✅ Installation Verification Checklist
+
+| Item | How to Check | Success Signal |
+|------|-------------|----------------|
+| Node.js | `node --version` | v18+ displayed |
+| Claude Code installed | `claude --version` | Version number displayed |
+| API key set | Run `claude` | Prompt appears without errors |
+| Project creation | Ask Claude to create a project | Files generated |
+| Dev server | `npm run dev` | localhost:3000 accessible |
+
+## ⚠️ Common Issues and Solutions
+
+### 🚫 "command not found: claude"
+
+Node.js's global package path isn't in your system PATH. Check the path:
+
+```bash
+npm config get prefix
+```
+
+The `bin` subfolder (on Windows, the root folder) of the output path must be in your PATH. Alternatively, run Claude Code with `npx`:
+
+```bash
+npx @anthropic-ai/claude-code
+```
+
+### 🚫 "Invalid API key" Error
+
+The key was entered incorrectly or the environment variable isn't set. Verify:
+
+**macOS / Linux:**
+```bash
+echo $ANTHROPIC_API_KEY
+```
+
+**Windows (PowerShell):**
+```powershell
+echo $env:ANTHROPIC_API_KEY
+```
+
+If nothing prints, the variable isn't set. Follow the "Setting Up Your API Key" section again. Also check for stray spaces when copying the key.
+
+### 🚫 "EACCES permission denied" Error (macOS)
+
+This is a permissions issue with global installation. Use `sudo`:
+
+```bash
+sudo npm install -g @anthropic-ai/claude-code
+```
+
+### 🚫 Claude Doesn't Modify Files
+
+Claude Code always asks for user confirmation before changing files. Type "y" when prompted. If nothing happens at all, try writing a more specific prompt.
+
+### 🚫 Worried About API Costs
+
+Set a spending limit on the "Billing" page in the Anthropic console. The API stops automatically when you hit the limit, preventing surprise charges. Typical beginner vibe coding usage stays under $5/month.
+
+## 💡 Tips for Using Claude Code Effectively
+
+### 📌 Ask One Thing at a Time
+
+Instead of "build me a complete website," try "first, create the main page layout." Check the result after each step, then request the next one. This produces more accurate results.
+
+### 📌 Paste Error Messages Directly
+
+When errors occur during development, paste the full error message to Claude. "I got an error" gives vague help — the actual error text leads to precise solutions.
+
+### 📌 Use the /help Command
+
+Type `/help` in Claude Code to see available commands. `/clear` resets the conversation, `/cost` shows the current session's API cost, and other useful commands are available.
+
+### 📌 Use a CLAUDE.md File
+
+Create a `CLAUDE.md` file in your project root with your project rules and preferred coding style. For example, "use English comments" or "use functional components only." Claude references this file to generate consistent code.
+
+## 🔄 Using Cursor and Claude Code Together
+
+Cursor and Claude Code aren't competitors — they complement each other. Use Claude Code to scaffold projects and build major features, then switch to Cursor for fine-tuning specific files.
+
+| Task | Recommended Tool |
+|------|-----------------|
+| Project creation & architecture | Claude Code |
+| Large feature implementation | Claude Code |
+| Fine-tuning specific files | Cursor |
+| Code review & explanation | Either |
+| Debugging errors | Either |
+
+A detailed comparison of both tools is coming in a future post.
+
+## ⚡ Quick Setup with VibeStart
+
+If Node.js and Git aren't installed yet, try [VibeStart](/onboarding). It provides step-by-step installation commands for your operating system. Get your development environment ready first, then install Claude Code to start vibe coding immediately.
+
+## 🔗 Related Posts
+
+- [Complete Guide to Setting Up Your Vibe Coding Environment](/blog/vibe-coding-dev-environment-setup-guide)
+- [How to Install Cursor and Create Your First Project](/blog/cursor-install-first-project)
+- [Node.js Installation: 3 Steps to Start Vibe Coding](/blog/nodejs-install-vibe-coding)
+- [Terminal Basics for Non-Developers](/blog/vibe-coding-terminal-basics)
+- [Why You Need Git for Vibe Coding + 5-Minute Install Guide](/blog/vibe-coding-git-install)
+
+## 📑 References
+
+- [Claude Code Official Documentation](https://docs.anthropic.com/en/docs/claude-code/overview)
+- [Anthropic API Console](https://console.anthropic.com/)
+- [Node.js Official Downloads](https://nodejs.org/)
+- [Next.js Official Docs — Getting Started](https://nextjs.org/docs/getting-started)

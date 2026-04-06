@@ -1,0 +1,245 @@
+---
+title: "How to Install Cursor and Create Your First Project: Windows/macOS Guide (2026)"
+description: "Step-by-step guide to installing Cursor AI editor and creating your first project. Covers Windows and macOS installation, initial setup, AI features, and troubleshooting."
+date: "2026-04-08"
+tags: ["vibe coding", "Cursor install", "Cursor AI", "Cursor setup guide", "vibe coding Cursor", "AI code editor", "Cursor Windows", "Cursor macOS", "beginner coding", "AI coding tools"]
+---
+
+## 🚀 What Is Cursor and Why Vibe Coders Use It
+
+Cursor is a code editor with AI built in. It uses nearly the same interface as VS Code, but lets you ask AI to write code directly inside the editor. You don't need to switch between a browser and ChatGPT — everything happens in one place, keeping your vibe coding workflow uninterrupted.
+
+If you already use VS Code, you can import your settings, extensions, and keybindings directly. If you're starting fresh, everything you've learned about VS Code applies to Cursor as well. This guide walks you through installing Cursor and creating your first project with AI assistance.
+
+## 📋 Pre-Installation Checklist
+
+Check these items before installing Cursor.
+
+### 💻 System Requirements
+
+| Item | Windows | macOS |
+|------|---------|-------|
+| OS Version | Windows 10 or later | macOS 12 (Monterey) or later |
+| RAM | 8GB+ recommended | 8GB+ recommended |
+| Disk Space | ~500MB | ~500MB |
+| Internet | Required for install and AI features | Required for install and AI features |
+
+### 📌 Install Node.js and Git First
+
+Cursor itself installs without Node.js or Git. However, you need both to create web projects with vibe coding. If you haven't installed them yet, do that first.
+
+- [Git Installation Guide](/blog/vibe-coding-git-install)
+- [Node.js Installation Guide](/blog/nodejs-install-vibe-coding)
+
+Run `git --version` and `node --version` in your terminal. If version numbers appear, you're ready.
+
+## 📥 Downloading and Installing Cursor
+
+### 🪟 Windows Installation
+
+1. Open your browser and go to [cursor.com](https://www.cursor.com/).
+2. Click the "Download" button on the main page. The Windows installer (.exe) downloads automatically.
+3. Run the downloaded `.exe` file.
+4. Follow the installation wizard by clicking "Next" at each step. Default settings work fine.
+5. Cursor launches automatically after installation completes.
+
+Keep the default installation path unless you have a specific reason to change it. The default location is the safest choice for most users.
+
+### 🍎 macOS Installation
+
+1. Go to [cursor.com](https://www.cursor.com/).
+2. Click "Download" to get the macOS `.dmg` file.
+3. Double-click the downloaded `.dmg` file.
+4. Drag the Cursor icon into the Applications folder.
+5. Open Cursor from the Applications folder.
+
+You may see a security warning saying "This app was downloaded from the internet." Click "Open" to proceed. If you have an Apple Silicon Mac (M1/M2/M3/M4), Cursor runs natively without any extra configuration.
+
+## 🔧 First Launch and Initial Setup
+
+When you first launch Cursor, you'll see a few setup screens.
+
+### 🎨 Theme Selection
+
+Choose between a dark theme or light theme. You can change this later in settings, so pick whatever feels comfortable.
+
+### 📦 Import VS Code Settings
+
+If you've used VS Code before, select "Import VS Code Settings." Your extensions, settings, and keybindings will be imported automatically. If you've never used VS Code, skip this step.
+
+### 🔑 Account Creation and Login
+
+You need an account to use Cursor's AI features.
+
+1. Click "Sign Up" or "Log In."
+2. You can sign up with email, Google, or GitHub.
+3. Start with the free plan (Hobby). It includes 2,000 completions and 50 slow premium requests per month.
+
+Once signed in, you'll see a profile icon in the upper right corner of the editor. That confirms you're logged in.
+
+### ⌨️ Keybinding Selection
+
+VS Code-style keybindings are selected by default. Keep this if you're familiar with VS Code. If you prefer Vim, Emacs, or another editor's shortcuts, you can select those instead.
+
+## 🤖 Exploring Cursor's AI Features
+
+Cursor has three main AI features.
+
+### 💬 Chat
+
+Press `Ctrl+L` (macOS: `Cmd+L`) to open the chat panel on the right. Here you can ask AI to write, explain, or modify code freely.
+
+| Example Request | Description |
+|----------------|-------------|
+| "Explain this file's code" | AI explains the currently open file |
+| "Create a login form component" | AI generates new code |
+| "How do I fix this error?" | AI suggests solutions based on the error |
+
+Use `@` in the chat to reference specific files or folders. Type `@filename` and AI will base its response on that file's content.
+
+### ✏️ Inline Edit
+
+Select a section of code and press `Ctrl+K` (macOS: `Cmd+K`) to open inline editing. Ask something like "Convert this function to TypeScript" and AI modifies the code right there. Changes appear as a diff so you can review them before accepting.
+
+### 🔮 Tab (Autocomplete)
+
+While typing code, AI suggests what comes next. Press `Tab` to accept or `Esc` to dismiss. Often, typing just a function name triggers AI to suggest the entire function body.
+
+## 📁 Creating Your First Project
+
+With Cursor installed and configured, let's create an actual project.
+
+### 📌 Create a Project Folder
+
+1. Open the integrated terminal (`` Ctrl+` `` or Terminal → New Terminal from the menu).
+2. Navigate to where you want to create your project.
+
+```bash
+# Windows
+cd C:\Users\YourUsername\Documents
+
+# macOS
+cd ~/Documents
+```
+
+3. Create a new folder and navigate into it.
+
+```bash
+mkdir my-first-project
+cd my-first-project
+```
+
+### 📌 Ask AI to Create the Project
+
+Open chat with `Ctrl+L` (macOS: `Cmd+L`) and type:
+
+```
+Create a Next.js project in this folder. Use TypeScript and 
+the App Router with a basic structure.
+```
+
+AI will suggest a terminal command, typically something like:
+
+```bash
+npx create-next-app@latest . --typescript --app --eslint
+```
+
+Run the suggested command in your terminal. If prompted with options during installation, follow AI's recommendations.
+
+### 📌 Start the Development Server
+
+After project creation, start the dev server:
+
+```bash
+npm run dev
+```
+
+When you see `http://localhost:3000` in the terminal, you're good. Open that URL in your browser to see the default Next.js page.
+
+### 📌 Ask AI to Modify the Page
+
+With the dev server running, open `app/page.tsx` and ask in chat (`Ctrl+L`):
+
+```
+Turn this page into a simple personal introduction page.
+Show a name, one-line bio, and three favorite things.
+```
+
+After AI modifies the code, refresh `localhost:3000` in your browser. The page now reflects your request. This is the basic flow of vibe coding.
+
+## ✅ Installation Verification Checklist
+
+Confirm everything works by checking these items:
+
+| Item | How to Check | Success Signal |
+|------|-------------|----------------|
+| Cursor installed | Launch the Cursor app | Editor screen opens |
+| Account login | Check upper right corner | Profile icon visible |
+| AI chat | Press `Ctrl+L` | Chat panel opens, AI responds |
+| Terminal | Press `` Ctrl+` `` | Terminal prompt appears |
+| Node.js integration | Run `node --version` in terminal | Version number displayed |
+| Project creation | Run `npx create-next-app` | Project files generated |
+| Dev server | Run `npm run dev` | `localhost:3000` accessible |
+
+## ⚠️ Common Issues and Solutions
+
+### 🚫 Security Warning When Running Installer
+
+On Windows, you may see "Windows protected your PC." Click "More info" then "Run anyway." Cursor is distributed from the official site with a signed installer, so it's safe.
+
+On macOS, if you see an "unidentified developer" warning, go to System Settings → Privacy & Security and click "Open Anyway."
+
+### 🚫 AI Features Not Working
+
+You may not be logged in, or your free usage may be exhausted. Click the profile icon in the upper right to check your login status and remaining quota. Corporate or school firewalls can also block Cursor's API requests — try switching to a personal network.
+
+### 🚫 VS Code Settings Import Failed
+
+VS Code must be installed for the import to work. If it's installed but the import still fails, quit Cursor and relaunch. The import prompt only appears on first launch; afterwards, go to Settings → General to import manually.
+
+### 🚫 Terminal Doesn't Recognize node Command
+
+Node.js either isn't installed or isn't in your PATH. Follow the [Node.js Installation Guide](/blog/nodejs-install-vibe-coding), then completely quit and reopen Cursor for PATH changes to take effect.
+
+## 🆓 Cursor Free vs Paid Plans
+
+| Feature | Hobby (Free) | Pro ($20/mo) |
+|---------|-------------|--------------|
+| Completions | 2,000/month | Unlimited |
+| Slow premium requests | 50/month | Unlimited (includes 500 fast requests) |
+| Model selection | Limited | GPT-4o, Claude Sonnet, etc. |
+
+The free plan is sufficient for getting started with vibe coding. Consider upgrading to Pro when you feel limited by request quotas. Free usage resets at the beginning of each month.
+
+## 💡 Tips for Using Cursor Effectively
+
+### 📌 Write Specific Prompts
+
+Instead of "make a button," try "make a submit button with a blue background and white text that turns dark blue on hover." Specific requests get you closer to what you want on the first try.
+
+### 📌 Use @File References
+
+Type `@filename` in chat to make AI reference that file. You can reference multiple files at once. Giving AI project context produces more accurate code.
+
+### 📌 Always Review the Diff
+
+AI shows a diff (change comparison) for every modification. Green means added, red means removed. Build a habit of checking that AI didn't modify unintended parts before accepting changes.
+
+## ⚡ Quick Setup with VibeStart
+
+If you haven't installed Git, Node.js, or VS Code yet, try [VibeStart](/onboarding). It provides step-by-step installation commands tailored to your operating system. Complete the environment setup first, then install Cursor to start vibe coding right away.
+
+## 🔗 Related Posts
+
+- [Complete Guide to Setting Up Your Vibe Coding Environment](/blog/vibe-coding-dev-environment-setup-guide)
+- [VS Code Settings Guide for Vibe Coding](/blog/vibe-coding-vscode-settings)
+- [Node.js Installation: 3 Steps to Start Vibe Coding](/blog/nodejs-install-vibe-coding)
+- [Terminal Basics for Non-Developers](/blog/vibe-coding-terminal-basics)
+- [Why You Need Git for Vibe Coding + 5-Minute Install Guide](/blog/vibe-coding-git-install)
+
+## 📑 References
+
+- [Cursor Official Website](https://www.cursor.com/)
+- [Cursor Official Documentation](https://docs.cursor.com/)
+- [Next.js Official Docs — Getting Started](https://nextjs.org/docs/getting-started)
+- [VS Code Official Docs — User Interface](https://code.visualstudio.com/docs/getstarted/userinterface)
