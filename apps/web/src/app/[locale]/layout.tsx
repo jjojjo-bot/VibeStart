@@ -8,7 +8,7 @@ import { routing } from "@/i18n/routing";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
-const GA_ID = "G-T3GQ0P5N6P";
+const GA_ID = "G-MMWJLMSYHJ";
 const siteUrl = "https://vibe-start-web.vercel.app";
 
 const LOCALE_MAP: Record<string, string> = {
