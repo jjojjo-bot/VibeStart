@@ -1,0 +1,215 @@
+---
+title: "바이브코딩 도구별 개발환경 요구사항 총정리 (2026)"
+description: "Cursor, Claude Code, GitHub Copilot, Google AI Studio 등 바이브코딩 도구의 설치 요구사항을 한눈에 비교합니다. OS, Node.js, 계정, 비용까지 정리했습니다."
+date: "2026-04-11"
+tags: ["바이브코딩", "바이브코딩 도구", "개발환경 세팅", "Cursor 요구사항", "Claude Code 요구사항", "GitHub Copilot", "Google AI Studio", "AI 코딩 도구 비교", "바이브코딩 시작", "개발환경 요구사항"]
+---
+
+## 📌 이 글을 읽어야 하는 이유
+
+바이브코딩 도구는 종류마다 설치 조건이 다릅니다. 어떤 도구는 앱만 설치하면 바로 되고, 어떤 도구는 Node.js와 API 키가 필요합니다. 도구를 설치하려다 "이게 왜 안 되지?"에서 막히는 경우가 대부분 사전 요구사항을 빠뜨렸기 때문입니다.
+
+이 글은 주요 바이브코딩 도구 5개의 설치 요구사항을 한 곳에 정리합니다. 자신이 쓸 도구가 정해졌다면 필요한 부분만 확인하고, 아직 정하지 않았다면 전체를 훑어보면서 어떤 도구가 자신의 환경에 맞는지 판단할 수 있습니다.
+
+## 📋 한눈에 비교표
+
+| 요구사항 | Cursor | Claude Code | GitHub Copilot | Google AI Studio | Windsurf |
+|----------|--------|-------------|----------------|------------------|----------|
+| OS | Windows 10+, macOS 12+ | Windows 10+, macOS 12+, Linux | Windows 10+, macOS 12+, Linux | 웹 브라우저만 필요 | Windows 10+, macOS 12+ |
+| Node.js | 프로젝트용 (선택) | 필수 (v18+) | 프로젝트용 (선택) | 불필요 | 프로젝트용 (선택) |
+| Git | 프로젝트용 (선택) | 권장 | 필수 | 불필요 | 프로젝트용 (선택) |
+| 설치 방식 | 앱 다운로드 | npm 명령어 | VS Code 확장 | 웹 접속 | 앱 다운로드 |
+| 계정 | Cursor 계정 | Anthropic 또는 Claude 계정 | GitHub 계정 | Google 계정 | Windsurf 계정 |
+| 무료 사용 | 월 2,000 자동완성 | API 종량제 (최소 비용) | 월 2,000 자동완성 | 무료 (일일 한도) | 월 크레딧 제공 |
+| 인터넷 | AI 기능 사용 시 필요 | 항상 필요 | AI 기능 사용 시 필요 | 항상 필요 | AI 기능 사용 시 필요 |
+| 디스크 공간 | ~500MB | ~50MB | ~100MB (확장) | 0 (웹) | ~500MB |
+| RAM | 8GB 권장 | 4GB 이상 | 8GB 권장 | 브라우저 실행 가능하면 됨 | 8GB 권장 |
+
+## 🖱️ Cursor
+
+### 설치 요구사항
+
+| 항목 | 내용 |
+|------|------|
+| OS | Windows 10 이상 또는 macOS 12 (Monterey) 이상 |
+| RAM | 8GB 이상 권장 |
+| 디스크 | 약 500MB |
+| 계정 | Cursor 계정 (이메일/Google/GitHub 가입) |
+
+### 사전 설치가 필요한 것
+
+Cursor 자체는 별도 사전 설치 없이 동작합니다. 하지만 바이브코딩으로 웹 프로젝트를 만들려면 아래 도구가 필요합니다.
+
+- **Node.js** (v18 이상): 프로젝트 생성 및 실행에 필요
+- **Git**: 버전 관리 및 프로젝트 초기화에 필요
+
+### 비용
+
+- Hobby (무료): 월 2,000 자동완성, 50 느린 프리미엄 요청
+- Pro ($20/월): 무제한 자동완성, 500 빠른 프리미엄 요청
+
+### 설치 가이드
+
+→ [Cursor 설치 방법과 첫 프로젝트 만들기](/blog/cursor-install-first-project)
+
+## 🤖 Claude Code
+
+### 설치 요구사항
+
+| 항목 | 내용 |
+|------|------|
+| OS | Windows 10 이상, macOS 12 이상, Linux |
+| Node.js | v18 이상 (필수 — 설치 자체에 필요) |
+| RAM | 4GB 이상 |
+| 계정 | Anthropic API 계정 또는 Claude 구독 |
+
+### 사전 설치가 필요한 것
+
+Claude Code는 Node.js 기반으로 동작하기 때문에 **Node.js가 반드시 먼저 설치돼 있어야** 합니다.
+
+- **Node.js** (v18 이상): `npm install -g` 명령어 실행에 필수
+- **Git** (권장): 프로젝트 관리에 유용
+
+### API 키 또는 구독
+
+| 방법 | 비용 | 설정 난이도 |
+|------|------|-----------|
+| Anthropic API 키 | 종량제 ($1~$5/월 입문) | 중간 (키 발급 + 환경 변수 설정) |
+| Claude Max 구독 | $100~$200/월 | 쉬움 (로그인만) |
+
+입문자에게는 API 키 방식을 권장합니다. 비용이 적고 사용량을 직접 관리할 수 있습니다.
+
+### 설치 가이드
+
+→ [Claude Code 설치부터 첫 코딩까지 비전공자 가이드](/blog/claude-code-beginner-guide)
+
+## 🧑‍✈️ GitHub Copilot
+
+### 설치 요구사항
+
+| 항목 | 내용 |
+|------|------|
+| 에디터 | VS Code, JetBrains IDE, Neovim 등 |
+| 계정 | GitHub 계정 (필수) |
+| Git | 필수 (GitHub 연동) |
+| RAM | 8GB 이상 권장 |
+
+### 사전 설치가 필요한 것
+
+- **VS Code** 또는 지원하는 에디터: Copilot은 에디터 확장 프로그램으로 동작합니다.
+- **Git**: GitHub 연동에 필수
+- **GitHub 계정**: Copilot을 활성화하려면 GitHub 계정이 필요합니다.
+
+### 비용
+
+- Free: 월 2,000 자동완성, 50 채팅 메시지
+- Pro ($10/월): 무제한 자동완성, 무제한 채팅
+- Pro+ ($39/월): 에이전트 모드 포함
+
+### 특징
+
+Copilot은 VS Code 안에서 확장 프로그램으로 동작하므로, 기존 VS Code 사용자가 가장 쉽게 추가할 수 있는 AI 도구입니다. 다만 단독으로 프로젝트를 생성하는 기능은 Cursor나 Claude Code보다 제한적입니다.
+
+## 🧪 Google AI Studio
+
+### 설치 요구사항
+
+| 항목 | 내용 |
+|------|------|
+| 필요 소프트웨어 | 웹 브라우저 (Chrome 권장) |
+| 계정 | Google 계정 |
+| 설치 | 불필요 (웹 기반) |
+
+### 사전 설치가 필요한 것
+
+없습니다. 웹 브라우저만 있으면 됩니다. 별도 소프트웨어 설치가 필요 없기 때문에 진입 장벽이 가장 낮습니다.
+
+### 비용
+
+- 무료: 일일 요청 한도 내 사용 가능
+- 유료 (Gemini API): 사용량에 따라 과금
+
+### 특징
+
+Google AI Studio는 브라우저에서 바로 AI와 대화하며 코드를 생성할 수 있습니다. 별도 설치가 필요 없어 가장 빠르게 시작할 수 있지만, 생성된 코드를 로컬 프로젝트에 적용하려면 복사-붙여넣기가 필요합니다. 에디터와 직접 연동되지 않는 점이 다른 도구와의 차이입니다.
+
+## 🏄 Windsurf
+
+### 설치 요구사항
+
+| 항목 | 내용 |
+|------|------|
+| OS | Windows 10 이상, macOS 12 이상 |
+| RAM | 8GB 이상 권장 |
+| 디스크 | 약 500MB |
+| 계정 | Windsurf 계정 |
+
+### 사전 설치가 필요한 것
+
+Cursor와 마찬가지로 앱 자체는 독립적으로 설치됩니다. 프로젝트 작업에는 Node.js와 Git이 필요합니다.
+
+- **Node.js** (v18 이상): 프로젝트용
+- **Git**: 프로젝트용
+
+### 비용
+
+- Free: 월 크레딧 제공 (자동완성 + AI 채팅)
+- Pro ($15/월): 더 많은 크레딧과 모델 선택
+
+### 특징
+
+Windsurf는 Cursor와 유사한 AI 코드 에디터입니다. VS Code 기반이며, AI가 코드 맥락을 파악해서 제안하는 "Flow" 기능이 특징입니다. Cursor와 비슷한 사용 경험을 원하지만 다른 옵션도 살펴보고 싶다면 고려해볼 만합니다.
+
+## 🗺️ 공통으로 필요한 것
+
+어떤 도구를 선택하든 바이브코딩으로 웹 프로젝트를 만들려면 아래 도구가 필요합니다.
+
+### 필수
+
+| 도구 | 용도 | 확인 명령어 |
+|------|------|-----------|
+| Node.js (v18+) | 프로젝트 생성 및 실행 | `node --version` |
+| Git | 버전 관리, 프로젝트 초기화 | `git --version` |
+
+### 권장
+
+| 도구 | 용도 |
+|------|------|
+| VS Code 또는 Cursor | 코드 편집 및 확인 |
+| 터미널 사용법 | 명령어 실행, 프로젝트 관리 |
+| GitHub 계정 | 코드 저장 및 공유 |
+
+Node.js와 Git이 설치돼 있다면 어떤 도구든 바로 시작할 수 있습니다. 이 두 가지가 바이브코딩의 기본 인프라입니다.
+
+## 🏁 도구 선택 플로차트
+
+자신의 상황에 맞는 도구를 빠르게 찾아보세요.
+
+**터미널을 써본 적 없다면** → Cursor 또는 Windsurf로 시작
+**터미널은 괜찮고, AI에게 많이 맡기고 싶다면** → Claude Code
+**VS Code를 이미 쓰고 있고, 가볍게 추가하고 싶다면** → GitHub Copilot
+**아무것도 설치하지 않고 바로 시작하고 싶다면** → Google AI Studio
+**잘 모르겠다면** → Cursor 무료 플랜으로 시작 (가장 균형 잡힌 선택)
+
+어느 도구로 시작해도 나중에 다른 도구로 전환하거나 병행할 수 있습니다. 첫 선택에 너무 고민하지 마세요.
+
+## ⚡ 한 번에 끝내기: VibeStart 활용
+
+Node.js, Git 등 공통 필수 도구의 설치가 아직 안 됐다면 [VibeStart](/onboarding)를 이용해보세요. 운영체제에 맞는 설치 명령어를 단계별로 안내합니다. 공통 환경을 먼저 준비하면 어떤 AI 도구든 바로 설치하고 사용할 수 있습니다.
+
+## 🔗 관련 글
+
+- [바이브코딩 시작 전 개발환경 세팅 완벽 가이드](/blog/vibe-coding-dev-environment-setup-guide)
+- [Cursor vs Claude Code: 비전공자에게 더 나은 선택은?](/blog/cursor-vs-claude-code)
+- [Cursor 설치 방법과 첫 프로젝트 만들기](/blog/cursor-install-first-project)
+- [Claude Code 설치부터 첫 코딩까지 비전공자 가이드](/blog/claude-code-beginner-guide)
+- [Node.js 설치부터 바이브코딩 시작까지 3단계](/blog/nodejs-install-vibe-coding)
+
+## 📑 참고 자료
+
+- [Cursor 공식 사이트](https://www.cursor.com/)
+- [Claude Code 공식 문서](https://docs.anthropic.com/en/docs/claude-code/overview)
+- [GitHub Copilot 공식 문서](https://docs.github.com/en/copilot)
+- [Google AI Studio](https://aistudio.google.com/)
+- [Windsurf 공식 사이트](https://windsurf.com/)
+- [Node.js 공식 다운로드](https://nodejs.org/)

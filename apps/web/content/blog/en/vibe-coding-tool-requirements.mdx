@@ -1,0 +1,215 @@
+---
+title: "Vibe Coding Tool Requirements: Complete Environment Guide (2026)"
+description: "Compare installation requirements for Cursor, Claude Code, GitHub Copilot, Google AI Studio, and Windsurf. Covers OS, Node.js, accounts, and costs in one place."
+date: "2026-04-11"
+tags: ["vibe coding", "vibe coding tools", "dev environment setup", "Cursor requirements", "Claude Code requirements", "GitHub Copilot", "Google AI Studio", "AI coding tools comparison", "vibe coding setup", "development environment"]
+---
+
+## 📌 Why You Need This Guide
+
+Every vibe coding tool has different installation requirements. Some work right after downloading an app; others need Node.js and API keys. Most beginners get stuck not because the tool is hard, but because they missed a prerequisite.
+
+This guide lists the requirements for 5 major vibe coding tools in one place. If you've already chosen a tool, check just that section. If you're still deciding, scan the full comparison to see which tool fits your setup.
+
+## 📋 Quick Comparison Table
+
+| Requirement | Cursor | Claude Code | GitHub Copilot | Google AI Studio | Windsurf |
+|-------------|--------|-------------|----------------|------------------|----------|
+| OS | Windows 10+, macOS 12+ | Windows 10+, macOS 12+, Linux | Windows 10+, macOS 12+, Linux | Any (web browser) | Windows 10+, macOS 12+ |
+| Node.js | For projects (optional) | Required (v18+) | For projects (optional) | Not needed | For projects (optional) |
+| Git | For projects (optional) | Recommended | Required | Not needed | For projects (optional) |
+| Installation | App download | npm command | VS Code extension | Web access | App download |
+| Account | Cursor account | Anthropic or Claude account | GitHub account | Google account | Windsurf account |
+| Free tier | 2,000 completions/month | API pay-per-use (minimal cost) | 2,000 completions/month | Free (daily limits) | Monthly credits |
+| Internet | For AI features | Always required | For AI features | Always required | For AI features |
+| Disk space | ~500MB | ~50MB | ~100MB (extension) | 0 (web) | ~500MB |
+| RAM | 8GB recommended | 4GB minimum | 8GB recommended | Browser-capable | 8GB recommended |
+
+## 🖱️ Cursor
+
+### Requirements
+
+| Item | Details |
+|------|---------|
+| OS | Windows 10+ or macOS 12 (Monterey)+ |
+| RAM | 8GB recommended |
+| Disk | ~500MB |
+| Account | Cursor account (email/Google/GitHub signup) |
+
+### Prerequisites
+
+Cursor itself installs without any prerequisites. However, for building web projects with vibe coding, you'll need:
+
+- **Node.js** (v18+): For creating and running projects
+- **Git**: For version control and project initialization
+
+### Cost
+
+- Hobby (Free): 2,000 completions/month, 50 slow premium requests
+- Pro ($20/month): Unlimited completions, 500 fast premium requests
+
+### Setup Guide
+
+→ [How to Install Cursor and Create Your First Project](/blog/cursor-install-first-project)
+
+## 🤖 Claude Code
+
+### Requirements
+
+| Item | Details |
+|------|---------|
+| OS | Windows 10+, macOS 12+, Linux |
+| Node.js | v18+ (required — needed for installation itself) |
+| RAM | 4GB minimum |
+| Account | Anthropic API account or Claude subscription |
+
+### Prerequisites
+
+Claude Code runs on Node.js, so **Node.js must be installed first**.
+
+- **Node.js** (v18+): Required to run `npm install -g`
+- **Git** (recommended): Useful for project management
+
+### API Key or Subscription
+
+| Method | Cost | Setup Difficulty |
+|--------|------|-----------------|
+| Anthropic API key | Pay-per-use ($1–$5/month for beginners) | Medium (key generation + environment variable) |
+| Claude Max subscription | $100–$200/month | Easy (just log in) |
+
+The API key approach is recommended for beginners — low cost with direct usage control.
+
+### Setup Guide
+
+→ [Claude Code for Beginners: From Installation to Your First Project](/blog/claude-code-beginner-guide)
+
+## 🧑‍✈️ GitHub Copilot
+
+### Requirements
+
+| Item | Details |
+|------|---------|
+| Editor | VS Code, JetBrains IDEs, Neovim, etc. |
+| Account | GitHub account (required) |
+| Git | Required (GitHub integration) |
+| RAM | 8GB recommended |
+
+### Prerequisites
+
+- **VS Code** or a supported editor: Copilot runs as an editor extension.
+- **Git**: Required for GitHub integration.
+- **GitHub account**: Needed to activate Copilot.
+
+### Cost
+
+- Free: 2,000 completions/month, 50 chat messages
+- Pro ($10/month): Unlimited completions and chat
+- Pro+ ($39/month): Includes agent mode
+
+### Key Notes
+
+Copilot works as a VS Code extension, making it the easiest AI tool to add for existing VS Code users. However, its project scaffolding capabilities are more limited than Cursor or Claude Code.
+
+## 🧪 Google AI Studio
+
+### Requirements
+
+| Item | Details |
+|------|---------|
+| Software needed | Web browser (Chrome recommended) |
+| Account | Google account |
+| Installation | None (web-based) |
+
+### Prerequisites
+
+None. A web browser is all you need. The lowest barrier to entry of any vibe coding tool.
+
+### Cost
+
+- Free: Available within daily request limits
+- Paid (Gemini API): Pay per usage
+
+### Key Notes
+
+Google AI Studio lets you generate code through browser-based AI conversations. No installation means the fastest start, but applying generated code to local projects requires copy-pasting. It doesn't integrate directly with your editor like other tools do.
+
+## 🏄 Windsurf
+
+### Requirements
+
+| Item | Details |
+|------|---------|
+| OS | Windows 10+, macOS 12+ |
+| RAM | 8GB recommended |
+| Disk | ~500MB |
+| Account | Windsurf account |
+
+### Prerequisites
+
+Like Cursor, the app itself installs independently. For project work, you'll need:
+
+- **Node.js** (v18+): For projects
+- **Git**: For projects
+
+### Cost
+
+- Free: Monthly credits (completions + AI chat)
+- Pro ($15/month): More credits and model selection
+
+### Key Notes
+
+Windsurf is an AI code editor similar to Cursor. Built on VS Code, it features "Flow" — AI that understands your code context and suggests accordingly. Worth considering if you want a Cursor-like experience but want to explore alternatives.
+
+## 🗺️ What Every Tool Needs
+
+Regardless of which tool you choose, building web projects with vibe coding requires these common foundations.
+
+### Essential
+
+| Tool | Purpose | Verify Command |
+|------|---------|---------------|
+| Node.js (v18+) | Project creation and execution | `node --version` |
+| Git | Version control, project init | `git --version` |
+
+### Recommended
+
+| Tool | Purpose |
+|------|---------|
+| VS Code or Cursor | Code editing and review |
+| Terminal basics | Running commands, project management |
+| GitHub account | Code storage and sharing |
+
+With Node.js and Git installed, you can start with any tool immediately. These two are the foundational infrastructure for vibe coding.
+
+## 🏁 Tool Selection Flowchart
+
+Find the right tool for your situation:
+
+**Never used a terminal?** → Start with Cursor or Windsurf
+**Comfortable with terminal, want AI to do more?** → Claude Code
+**Already using VS Code, want a lightweight add-on?** → GitHub Copilot
+**Want to start without installing anything?** → Google AI Studio
+**Not sure?** → Start with Cursor's free plan (most balanced choice)
+
+You can always switch to or add another tool later. Don't overthink your first choice.
+
+## ⚡ Quick Setup with VibeStart
+
+If common prerequisites like Node.js and Git aren't installed yet, try [VibeStart](/onboarding). It provides step-by-step installation commands for your operating system. Get the common foundation ready first, then install any AI tool and start vibe coding immediately.
+
+## 🔗 Related Posts
+
+- [Complete Guide to Setting Up Your Vibe Coding Environment](/blog/vibe-coding-dev-environment-setup-guide)
+- [Cursor vs Claude Code: Which Is Better for Non-Developers?](/blog/cursor-vs-claude-code)
+- [How to Install Cursor and Create Your First Project](/blog/cursor-install-first-project)
+- [Claude Code for Beginners: From Installation to Your First Project](/blog/claude-code-beginner-guide)
+- [Node.js Installation: 3 Steps to Start Vibe Coding](/blog/nodejs-install-vibe-coding)
+
+## 📑 References
+
+- [Cursor Official Site](https://www.cursor.com/)
+- [Claude Code Official Documentation](https://docs.anthropic.com/en/docs/claude-code/overview)
+- [GitHub Copilot Documentation](https://docs.github.com/en/copilot)
+- [Google AI Studio](https://aistudio.google.com/)
+- [Windsurf Official Site](https://windsurf.com/)
+- [Node.js Official Downloads](https://nodejs.org/)
