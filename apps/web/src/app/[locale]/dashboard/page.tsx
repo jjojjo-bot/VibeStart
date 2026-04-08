@@ -1,42 +1,54 @@
 /**
- * Phase 2 — 대시보드 (보호된 페이지의 본보기).
+ * Phase 2 — 대시보드.
  *
- * Phase 2a에서 이 페이지는 "로그인이 작동한다"를 증명하는 스텁이다. 이후
- * 프로젝트 목록, 트랙 선택, 마일스톤 트리가 여기에 붙는다.
+ * 로그인 후 진입하는 메인 화면. 사용자의 프로젝트 목록과 "새 프로젝트
+ * 만들기" 진입점을 제공한다. 프로젝트가 없으면 안내 카드가 보이고, 있으면
+ * 간단한 요약 리스트가 보인다.
  */
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { redirect } from "@/i18n/navigation";
+import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 
+import { Link, redirect } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/dal";
+import { TrackBadge } from "@/components/milestone";
+import { Button } from "@/components/ui/button";
+import { listDummyProjects } from "@/lib/projects/in-memory-store";
+
 import { signOutAction } from "../login/actions";
 
 interface DashboardPageProps {
   params: Promise<{ locale: string }>;
 }
 
-export default async function DashboardPage({ params }: DashboardPageProps) {
+export default async function DashboardPage({
+  params,
+}: DashboardPageProps): Promise<React.ReactNode> {
   const { locale } = await params;
   setRequestLocale(locale);
 
   const user = await getCurrentUser();
   if (!user) {
     redirect({ href: "/login", locale });
-    // redirect()는 내부적으로 예외를 던져 이 줄에 도달하지 않지만, next-intl의
-    // 타입에 never가 없으므로 컴파일러를 돕기 위해 명시적으로 중단한다.
     return null;
   }
 
   const t = await getTranslations({ locale, namespace: "Dashboard" });
+  const tProjects = await getTranslations({
+    locale,
+    namespace: "Projects",
+  });
+
+  const projects = listDummyProjects(user.id);
+  const catalog = createInMemoryMilestoneCatalog();
 
   return (
-    <main
-      id="main-content"
-      className="mx-auto max-w-4xl px-6 py-16"
-    >
+    <main id="main-content" className="mx-auto max-w-4xl px-6 py-16">
       <header className="mb-10 flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">{t("welcome", { name: user.displayName })}</h1>
+          <h1 className="text-3xl font-bold">
+            {t("welcome", { name: user.displayName })}
+          </h1>
           <p className="mt-1 text-sm text-muted-foreground">{user.email}</p>
         </div>
         <form action={signOutAction}>
@@ -49,11 +61,58 @@ export default async function DashboardPage({ params }: DashboardPageProps) {
         </form>
       </header>
 
-      <section className="rounded-lg border border-border bg-card p-8 text-center">
-        <p className="text-sm text-muted-foreground">
-          {t("stubNotice")}
-        </p>
-      </section>
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-lg font-semibold">
+          {tProjects("treeTitle", { name: "" }).replace("{name}", "").trim() ||
+            "내 프로젝트"}
+        </h2>
+        <Link href="/projects/new" className="no-underline">
+          <Button size="sm">{tProjects("createButton")}</Button>
+        </Link>
+      </div>
+
+      {projects.length === 0 ? (
+        <section className="rounded-lg border border-dashed border-border bg-card/50 p-8 text-center">
+          <p className="text-sm text-muted-foreground">{t("stubNotice")}</p>
+          <div className="mt-4">
+            <Link href="/projects/new" className="no-underline">
+              <Button>{tProjects("createButton")}</Button>
+            </Link>
+          </div>
+        </section>
+      ) : (
+        <ul className="space-y-3">
+          {projects.map((project) => {
+            const track = catalog.getTrack(project.track);
+            if (!track) return null;
+            return (
+              <li key={project.id}>
+                <Link
+                  href={`/projects/${project.id}`}
+                  className="no-underline"
+                >
+                  <article className="flex items-center gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/60">
+                    <TrackBadge
+                      track={track.id}
+                      color={track.colorToken}
+                      size="sm"
+                    />
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-base font-semibold">
+                        {project.name}
+                      </h3>
+                      <p className="text-xs text-muted-foreground">
+                        {project.createdAt.slice(0, 10)}
+                      </p>
+                    </div>
+                    <span className="text-sm text-muted-foreground">→</span>
+                  </article>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      )}
     </main>
   );
 }

@@ -38,6 +38,9 @@ importers:
       '@vibestart/task-catalog':
         specifier: workspace:*
         version: link:../../packages/task-catalog
+      '@vibestart/track-catalog':
+        specifier: workspace:^
+        version: link:../../packages/track-catalog
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
