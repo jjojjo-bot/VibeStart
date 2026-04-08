@@ -109,6 +109,12 @@ importers:
         specifier: workspace:*
         version: link:../task-catalog
 
+  packages/ports:
+    dependencies:
+      '@vibestart/shared-types':
+        specifier: workspace:*
+        version: link:../shared-types
+
   packages/script-generator:
     dependencies:
       '@vibestart/policy-engine':
