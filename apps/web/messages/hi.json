@@ -675,5 +675,145 @@
     "welcome": "स्वागत है, {name}",
     "signOut": "साइन आउट",
     "stubNotice": "आपकी प्रोजेक्ट सूची और माइलस्टोन ट्री जल्द ही यहाँ दिखाई देगी।"
+  },
+  "Tracks": {
+    "static": {
+      "name": "पोर्टफोलियो",
+      "tagline": "5 स्टेप में आपकी साइट इंटरनेट पर"
+    },
+    "dynamic": {
+      "name": "ब्लॉग / SaaS",
+      "tagline": "डेटा सहेजें और उपयोगकर्ताओं को लें",
+      "comingSoon": "जल्द आ रहा है"
+    },
+    "ai": {
+      "name": "AI टूल",
+      "tagline": "AI से अपने डेटा पर जवाब पाएं",
+      "comingSoon": "जल्द आ रहा है"
+    },
+    "ecommerce": {
+      "name": "ई-कॉमर्स",
+      "tagline": "वास्तविक दुकान जो भुगतान स्वीकार करती है",
+      "comingSoon": "जल्द आ रहा है"
+    }
+  },
+  "Projects": {
+    "newTitle": "आप क्या बनाना चाहते हैं?",
+    "newSubtitle": "एक ट्रैक चुनें और 5–10 माइलस्टोन खुलेंगे",
+    "createButton": "इस ट्रैक से शुरू करें",
+    "comingSoonBadge": "जल्द आ रहा है",
+    "treeTitle": "{name} माइलस्टोन",
+    "treeSubtitle": "हर कदम पर असली बदलाव होता है",
+    "lockedHint": "पिछला कदम पूरा करने पर खुलेगा",
+    "trackBadge": "{trackName} ट्रैक",
+    "milestoneIndex": "M{current}/{total}",
+    "notFound": "प्रोजेक्ट नहीं मिला",
+    "backToTree": "माइलस्टोन सूची पर वापस"
+  },
+  "MilestoneRun": {
+    "headerOutcome": "जब आप यह पूरा कर लेंगे",
+    "substepsTitle": "चरण",
+    "previewTitle": "परिणाम पूर्वावलोकन",
+    "checkLabel": "पूर्ण",
+    "completedAt": "{time} को पूर्ण",
+    "nextMilestoneCta": "अगला माइलस्टोन →",
+    "allDoneTitle": "सभी माइलस्टोन पूर्ण",
+    "estimatedSeconds": "लगभग {seconds} सेकंड",
+    "autoRunning": "स्वचालित रूप से चल रहा है",
+    "userActionRequired": "कृपया स्वयं करें",
+    "openExternal": "बाहरी पेज खोलें",
+    "verifyCta": "मैंने सत्यापित किया",
+    "mcpInstallTitle": "पूरा होने पर स्वचालित रूप से इंस्टॉल",
+    "helpCta": "सहायता खोलें",
+    "retryCta": "पुनः प्रयास"
+  },
+  "ExtensionStatus": {
+    "connected": "VS Code कनेक्टेड",
+    "disconnected": "VS Code एक्सटेंशन कनेक्ट नहीं है",
+    "pairing": "पेयरिंग — कोड {code} दर्ज करें",
+    "unknown": "कनेक्शन जाँच रहा है",
+    "installCta": "एक्सटेंशन इंस्टॉल कैसे करें"
+  },
+  "Milestones": {
+    "m1-deploy": {
+      "title": "आपकी साइट इंटरनेट पर लाइव है",
+      "outcome": "आप किसी मित्र को vercel.app लिंक भेज सकते हैं",
+      "short": "GitHub पर कोड पुश करें और Vercel पर डिप्लॉय करें",
+      "substeps": {
+        "m1.s1.github-oauth": "GitHub अकाउंट कनेक्ट करें",
+        "m1.s2.create-repo": "रिपॉजिटरी स्वचालित रूप से बनाएं",
+        "m1.s3.vercel-oauth": "Vercel अकाउंट कनेक्ट करें",
+        "m1.s4.first-deploy": "पहला डिप्लॉयमेंट चलाएं",
+        "m1.s5.verify-url": "URL खुलने की पुष्टि करें"
+      },
+      "mcp": {
+        "github": "GitHub MCP — Claude Code से रिपॉजिटरी प्रबंधन",
+        "vercel": "Vercel MCP — डिप्लॉय स्टेटस और लॉग"
+      }
+    },
+    "m2-google-auth": {
+      "title": "दोस्त आपकी साइट पर साइन अप कर सकते हैं",
+      "outcome": "आपकी साइट पर \"Google से साइन इन\" बटन दिखाई देता है",
+      "short": "Supabase + Google OAuth के साथ साइन-अप जोड़ें",
+      "substeps": {
+        "m2.s1.supabase-oauth": "Supabase अकाउंट कनेक्ट करें",
+        "m2.s2.create-supabase-project": "Supabase प्रोजेक्ट स्वचालित रूप से बनाएं",
+        "m2.s3.google-oauth-keys": "Google OAuth क्लाइंट कुंजियाँ प्राप्त करें",
+        "m2.s4.enable-google-provider": "Supabase में Google Provider सक्षम करें",
+        "m2.s5.install-auth-ui": "साइट पर साइन-इन बटन जोड़ें",
+        "m2.s6.verify-signup": "अपने अकाउंट से साइन-अप टेस्ट करें"
+      },
+      "mcp": {
+        "supabase": "Supabase MCP — Claude Code से DB और उपयोगकर्ता प्रबंधन"
+      }
+    },
+    "m3-analytics": {
+      "title": "देखें कौन आपकी साइट पर आता है",
+      "outcome": "दैनिक आगंतुक संख्या ग्राफ के रूप में",
+      "short": "Vercel Analytics + GA4 स्वचालित सेटअप",
+      "substeps": {
+        "m3.s1.enable-vercel-analytics": "Vercel Web Analytics सक्षम करें",
+        "m3.s2.install-vercel-analytics-pkg": "@vercel/analytics इंस्टॉल + कंपोनेंट",
+        "m3.s3.create-ga4-property": "GA4 प्रॉपर्टी बनाएं (Google Analytics)",
+        "m3.s4.paste-measurement-id": "मेज़रमेंट ID पेस्ट करें और ऑटो-इन्सर्ट",
+        "m3.s5.verify-events": "1 रियलटाइम उपयोगकर्ता की पुष्टि"
+      },
+      "mcp": {
+        "vercel-analytics": "Vercel Analytics MCP — ट्रैफ़िक सारांश क्वेरी"
+      }
+    },
+    "m4-sentry": {
+      "title": "आप उपयोगकर्ताओं से पहले त्रुटियाँ जानते हैं",
+      "outcome": "उपयोगकर्ताओं द्वारा देखे जाने से पहले त्रुटियाँ पकड़ें",
+      "short": "Sentry स्वचालित सेटअप + त्रुटि विश्लेषण के लिए MCP",
+      "substeps": {
+        "m4.s1.sentry-oauth": "Sentry अकाउंट कनेक्ट करें",
+        "m4.s2.create-sentry-project": "Sentry प्रोजेक्ट स्वचालित रूप से बनाएं",
+        "m4.s3.set-dsn-env": "DSN एनवायरनमेंट वेरिएबल रजिस्टर",
+        "m4.s4.install-sentry-pkg": "@sentry/nextjs इंस्टॉल + कॉन्फ़िग फ़ाइलें",
+        "m4.s5.redeploy": "पुनः डिप्लॉय",
+        "m4.s6.verify-first-error": "एक टेस्ट त्रुटि सत्यापित करें"
+      },
+      "mcp": {
+        "sentry": "Sentry MCP — Claude Code में त्रुटियों का विश्लेषण"
+      }
+    },
+    "m5-domain": {
+      "title": "असली डोमेन जुड़ गया",
+      "outcome": "आपका चुना हुआ डोमेन vercel.app एड्रेस की जगह लेता है",
+      "short": "Cloudflare Registrar डोमेन कनेक्ट करें (~$10/वर्ष)",
+      "substeps": {
+        "m5.s1.search-domain": "डोमेन खोजें",
+        "m5.s2.user-purchase": "Cloudflare पर खरीदें",
+        "m5.s3.cloudflare-oauth": "Cloudflare अकाउंट कनेक्ट करें",
+        "m5.s4.apply-dns": "DNS रिकॉर्ड स्वचालित रूप से लागू करें",
+        "m5.s5.add-to-vercel": "Vercel में डोमेन जोड़ें",
+        "m5.s6.wait-ssl": "SSL प्रतीक्षा (5–30 मिनट)",
+        "m5.s7.verify-connected": "नया एड्रेस काम करने की पुष्टि"
+      },
+      "mcp": {
+        "cloudflare": "Cloudflare MCP — डोमेन स्थिति और रीडायरेक्ट प्रबंधन"
+      }
+    }
   }
 }

@@ -675,5 +675,145 @@
     "welcome": "欢迎,{name}",
     "signOut": "退出登录",
     "stubNotice": "您的项目列表和里程碑树即将显示在这里。"
+  },
+  "Tracks": {
+    "static": {
+      "name": "作品集",
+      "tagline": "5 步让你的网站上线"
+    },
+    "dynamic": {
+      "name": "博客 / SaaS",
+      "tagline": "存储数据,接受用户",
+      "comingSoon": "即将推出"
+    },
+    "ai": {
+      "name": "AI 工具",
+      "tagline": "让 AI 查询你的数据",
+      "comingSoon": "即将推出"
+    },
+    "ecommerce": {
+      "name": "电子商务",
+      "tagline": "真正能收款的店铺",
+      "comingSoon": "即将推出"
+    }
+  },
+  "Projects": {
+    "newTitle": "你想做什么?",
+    "newSubtitle": "选择一个赛道,将展开 5~10 个里程碑",
+    "createButton": "用这个赛道开始",
+    "comingSoonBadge": "即将推出",
+    "treeTitle": "{name} 里程碑",
+    "treeSubtitle": "每一步都会带来真正的变化",
+    "lockedHint": "完成前一步后解锁",
+    "trackBadge": "{trackName} 赛道",
+    "milestoneIndex": "M{current}/{total}",
+    "notFound": "找不到项目",
+    "backToTree": "返回里程碑列表"
+  },
+  "MilestoneRun": {
+    "headerOutcome": "完成这一步后",
+    "substepsTitle": "进行步骤",
+    "previewTitle": "结果预览",
+    "checkLabel": "完成",
+    "completedAt": "{time} 完成",
+    "nextMilestoneCta": "下一个里程碑 →",
+    "allDoneTitle": "所有里程碑已完成",
+    "estimatedSeconds": "约 {seconds} 秒",
+    "autoRunning": "自动执行中",
+    "userActionRequired": "请您自行操作",
+    "openExternal": "打开外部页面",
+    "verifyCta": "已确认",
+    "mcpInstallTitle": "完成时自动安装",
+    "helpCta": "打开帮助",
+    "retryCta": "重试"
+  },
+  "ExtensionStatus": {
+    "connected": "VS Code 已连接",
+    "disconnected": "VS Code 扩展未连接",
+    "pairing": "正在配对 — 输入代码 {code}",
+    "unknown": "正在检查连接",
+    "installCta": "扩展安装指南"
+  },
+  "Milestones": {
+    "m1-deploy": {
+      "title": "你的网站上线了",
+      "outcome": "可以向朋友发送 vercel.app 链接",
+      "short": "把代码推到 GitHub,首次部署到 Vercel",
+      "substeps": {
+        "m1.s1.github-oauth": "连接 GitHub 账号",
+        "m1.s2.create-repo": "自动创建仓库",
+        "m1.s3.vercel-oauth": "连接 Vercel 账号",
+        "m1.s4.first-deploy": "执行首次部署",
+        "m1.s5.verify-url": "确认地址能真正打开"
+      },
+      "mcp": {
+        "github": "GitHub MCP — 在 Claude Code 中用自然语言管理仓库",
+        "vercel": "Vercel MCP — 查看部署状态和日志"
+      }
+    },
+    "m2-google-auth": {
+      "title": "朋友可以在你的网站注册",
+      "outcome": "网站上出现「使用 Google 登录」按钮",
+      "short": "用 Supabase + Google OAuth 添加注册功能",
+      "substeps": {
+        "m2.s1.supabase-oauth": "连接 Supabase 账号",
+        "m2.s2.create-supabase-project": "自动创建 Supabase 项目",
+        "m2.s3.google-oauth-keys": "获取 Google OAuth 客户端密钥",
+        "m2.s4.enable-google-provider": "在 Supabase 启用 Google Provider",
+        "m2.s5.install-auth-ui": "把登录按钮添加到网站",
+        "m2.s6.verify-signup": "用自己的账号测试注册"
+      },
+      "mcp": {
+        "supabase": "Supabase MCP — 在 Claude Code 中管理 DB 和用户"
+      }
+    },
+    "m3-analytics": {
+      "title": "看看谁访问了你的网站",
+      "outcome": "可以用图表查看每日访客数量",
+      "short": "Vercel Analytics + GA4 自动配置",
+      "substeps": {
+        "m3.s1.enable-vercel-analytics": "启用 Vercel Web Analytics",
+        "m3.s2.install-vercel-analytics-pkg": "安装 @vercel/analytics + 组件",
+        "m3.s3.create-ga4-property": "创建 GA4 媒体资源 (Google Analytics)",
+        "m3.s4.paste-measurement-id": "粘贴衡量 ID 并自动插入",
+        "m3.s5.verify-events": "确认有 1 名实时用户"
+      },
+      "mcp": {
+        "vercel-analytics": "Vercel Analytics MCP — 流量摘要查询"
+      }
+    },
+    "m4-sentry": {
+      "title": "有错误时你比用户先知道",
+      "outcome": "在用户之前就能发现错误",
+      "short": "Sentry 自动配置 + MCP 错误分析",
+      "substeps": {
+        "m4.s1.sentry-oauth": "连接 Sentry 账号",
+        "m4.s2.create-sentry-project": "自动创建 Sentry 项目",
+        "m4.s3.set-dsn-env": "自动注册 DSN 环境变量",
+        "m4.s4.install-sentry-pkg": "安装 @sentry/nextjs + 配置文件",
+        "m4.s5.redeploy": "重新部署",
+        "m4.s6.verify-first-error": "确认 1 条测试错误"
+      },
+      "mcp": {
+        "sentry": "Sentry MCP — 在 Claude Code 中总结和分析错误"
+      }
+    },
+    "m5-domain": {
+      "title": "真正的域名附上来",
+      "outcome": "用你选的真实域名替代 vercel.app 地址",
+      "short": "连接 Cloudflare Registrar 域名(约 $10/年)",
+      "substeps": {
+        "m5.s1.search-domain": "搜索想要的域名",
+        "m5.s2.user-purchase": "在 Cloudflare 购买域名",
+        "m5.s3.cloudflare-oauth": "连接 Cloudflare 账号",
+        "m5.s4.apply-dns": "自动应用 DNS 记录",
+        "m5.s5.add-to-vercel": "把域名添加到 Vercel",
+        "m5.s6.wait-ssl": "等待 SSL 签发(5~30 分钟)",
+        "m5.s7.verify-connected": "确认新地址可访问"
+      },
+      "mcp": {
+        "cloudflare": "Cloudflare MCP — 检查域名状态,管理重定向"
+      }
+    }
   }
 }

@@ -8,6 +8,10 @@ export * from './project.types';
 export * from './oauth.types';
 export * from './resource.types';
 
+// Phase 2 — 트랙/마일스톤 카탈로그 도메인 (정적 정의)
+export * from './track.types';
+export * from './milestone-definition.types';
+
 // Phase 2 — 외부 서비스 데이터 형태 (포트 어댑터가 정규화한 결과)
 export * from './vcs.types';
 export * from './deploy.types';

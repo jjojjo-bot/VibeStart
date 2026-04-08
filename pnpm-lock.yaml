@@ -141,6 +141,15 @@ importers:
         specifier: workspace:*
         version: link:../shared-types
 
+  packages/track-catalog:
+    dependencies:
+      '@vibestart/ports':
+        specifier: workspace:*
+        version: link:../ports
+      '@vibestart/shared-types':
+        specifier: workspace:*
+        version: link:../shared-types
+
 packages:
 
   '@alloc/quick-lru@5.2.0':

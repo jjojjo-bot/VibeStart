@@ -675,5 +675,145 @@
     "welcome": "환영합니다, {name} 님",
     "signOut": "로그아웃",
     "stubNotice": "여기에 곧 프로젝트 목록과 마일스톤 트리가 생깁니다."
+  },
+  "Tracks": {
+    "static": {
+      "name": "포트폴리오",
+      "tagline": "5단계로 내 사이트가 인터넷에 뜬다"
+    },
+    "dynamic": {
+      "name": "블로그/SaaS",
+      "tagline": "데이터를 저장하고 사용자를 받는다",
+      "comingSoon": "곧 제공"
+    },
+    "ai": {
+      "name": "AI 도구",
+      "tagline": "AI에게 내 데이터를 물어본다",
+      "comingSoon": "곧 제공"
+    },
+    "ecommerce": {
+      "name": "이커머스",
+      "tagline": "결제까지 받는 진짜 가게",
+      "comingSoon": "곧 제공"
+    }
+  },
+  "Projects": {
+    "newTitle": "어떤 걸 만들고 싶어요?",
+    "newSubtitle": "트랙을 고르면 5~10개의 마일스톤이 펼쳐져요",
+    "createButton": "이 트랙으로 시작하기",
+    "comingSoonBadge": "곧 제공",
+    "treeTitle": "{name} 마일스톤",
+    "treeSubtitle": "단계마다 진짜 변화가 일어나요",
+    "lockedHint": "이전 단계를 완료하면 열려요",
+    "trackBadge": "{trackName} 트랙",
+    "milestoneIndex": "M{current}/{total}",
+    "notFound": "프로젝트를 찾을 수 없어요",
+    "backToTree": "마일스톤 목록으로"
+  },
+  "MilestoneRun": {
+    "headerOutcome": "이 단계가 끝나면",
+    "substepsTitle": "진행 단계",
+    "previewTitle": "결과 미리보기",
+    "checkLabel": "완료",
+    "completedAt": "{time}에 완료",
+    "nextMilestoneCta": "다음 마일스톤으로 →",
+    "allDoneTitle": "모든 마일스톤을 완료했어요",
+    "estimatedSeconds": "약 {seconds}초",
+    "autoRunning": "자동 실행 중",
+    "userActionRequired": "직접 해주세요",
+    "openExternal": "외부 페이지 열기",
+    "verifyCta": "확인했어요",
+    "mcpInstallTitle": "완료 시 자동 설치",
+    "helpCta": "도움말 열기",
+    "retryCta": "다시 시도"
+  },
+  "ExtensionStatus": {
+    "connected": "VS Code 연결됨",
+    "disconnected": "VS Code Extension이 연결되지 않았어요",
+    "pairing": "페어링 중 — 코드 {code} 입력",
+    "unknown": "연결 확인 중",
+    "installCta": "Extension 설치 안내"
+  },
+  "Milestones": {
+    "m1-deploy": {
+      "title": "인터넷에 내 사이트가 뜬다",
+      "outcome": "친구한테 vercel.app 링크를 보낼 수 있어요",
+      "short": "GitHub에 코드를 올리고 Vercel로 첫 배포",
+      "substeps": {
+        "m1.s1.github-oauth": "GitHub 계정 연결",
+        "m1.s2.create-repo": "저장소 자동 생성",
+        "m1.s3.vercel-oauth": "Vercel 계정 연결",
+        "m1.s4.first-deploy": "첫 배포 실행",
+        "m1.s5.verify-url": "주소가 진짜 열리는지 확인"
+      },
+      "mcp": {
+        "github": "GitHub MCP — Claude Code에서 자연어로 저장소 관리",
+        "vercel": "Vercel MCP — 배포 상태/로그 조회"
+      }
+    },
+    "m2-google-auth": {
+      "title": "친구가 내 사이트에 가입한다",
+      "outcome": "사이트에 \"Google로 로그인\" 버튼이 생겨요",
+      "short": "Supabase + Google OAuth로 회원가입 기능 추가",
+      "substeps": {
+        "m2.s1.supabase-oauth": "Supabase 계정 연결",
+        "m2.s2.create-supabase-project": "Supabase 프로젝트 자동 생성",
+        "m2.s3.google-oauth-keys": "Google OAuth 클라이언트 키 발급",
+        "m2.s4.enable-google-provider": "Supabase에 Google Provider 활성화",
+        "m2.s5.install-auth-ui": "로그인 버튼을 사이트에 추가",
+        "m2.s6.verify-signup": "본인 계정으로 가입 테스트"
+      },
+      "mcp": {
+        "supabase": "Supabase MCP — Claude Code에서 자연어로 DB·사용자 관리"
+      }
+    },
+    "m3-analytics": {
+      "title": "누가 내 사이트에 왔는지 본다",
+      "outcome": "매일 방문자 수를 그래프로 볼 수 있어요",
+      "short": "Vercel Analytics + GA4 자동 셋업",
+      "substeps": {
+        "m3.s1.enable-vercel-analytics": "Vercel Web Analytics 활성화",
+        "m3.s2.install-vercel-analytics-pkg": "@vercel/analytics 설치 + 컴포넌트 삽입",
+        "m3.s3.create-ga4-property": "GA4 속성 만들기 (Google Analytics)",
+        "m3.s4.paste-measurement-id": "측정 ID 붙여넣고 자동 삽입",
+        "m3.s5.verify-events": "실시간 사용자 1명 확인"
+      },
+      "mcp": {
+        "vercel-analytics": "Vercel Analytics MCP — 트래픽 요약 조회"
+      }
+    },
+    "m4-sentry": {
+      "title": "에러가 나도 내가 안다",
+      "outcome": "사용자보다 내가 먼저 에러를 알 수 있어요",
+      "short": "Sentry 자동 설정 + MCP로 에러 분석",
+      "substeps": {
+        "m4.s1.sentry-oauth": "Sentry 계정 연결",
+        "m4.s2.create-sentry-project": "Sentry 프로젝트 자동 생성",
+        "m4.s3.set-dsn-env": "DSN 환경변수 자동 등록",
+        "m4.s4.install-sentry-pkg": "@sentry/nextjs 설치 + 설정 파일 생성",
+        "m4.s5.redeploy": "재배포",
+        "m4.s6.verify-first-error": "테스트 에러 1건 확인"
+      },
+      "mcp": {
+        "sentry": "Sentry MCP — Claude Code에서 에러 요약·원인 분석"
+      }
+    },
+    "m5-domain": {
+      "title": "진짜 도메인이 붙는다",
+      "outcome": "vercel.app 대신 내가 고른 진짜 주소로 바뀌어요",
+      "short": "Cloudflare Registrar 도메인 연결 (약 1만원/년)",
+      "substeps": {
+        "m5.s1.search-domain": "원하는 도메인 검색",
+        "m5.s2.user-purchase": "Cloudflare에서 도메인 구매",
+        "m5.s3.cloudflare-oauth": "Cloudflare 계정 연결",
+        "m5.s4.apply-dns": "DNS 레코드 자동 설정",
+        "m5.s5.add-to-vercel": "Vercel에 도메인 추가",
+        "m5.s6.wait-ssl": "SSL 발급 대기 (5~30분)",
+        "m5.s7.verify-connected": "새 주소로 접속 확인"
+      },
+      "mcp": {
+        "cloudflare": "Cloudflare MCP — 도메인 상태 확인·리다이렉트 관리"
+      }
+    }
   }
 }
