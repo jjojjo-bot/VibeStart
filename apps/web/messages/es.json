@@ -740,11 +740,11 @@
       "outcome": "Puedes enviar un enlace de vercel.app a un amigo",
       "short": "Sube el código a GitHub y despliega en Vercel",
       "substeps": {
-        "m1.s1.github-oauth": "Conectar cuenta de GitHub",
-        "m1.s2.create-repo": "Crear repositorio automáticamente",
-        "m1.s3.vercel-oauth": "Conectar cuenta de Vercel",
-        "m1.s4.first-deploy": "Ejecutar el primer despliegue",
-        "m1.s5.verify-url": "Confirmar que la URL abre"
+        "m1-s1-github-oauth": "Conectar cuenta de GitHub",
+        "m1-s2-create-repo": "Crear repositorio automáticamente",
+        "m1-s3-vercel-oauth": "Conectar cuenta de Vercel",
+        "m1-s4-first-deploy": "Ejecutar el primer despliegue",
+        "m1-s5-verify-url": "Confirmar que la URL abre"
       },
       "mcp": {
         "github": "GitHub MCP — gestiona repositorios desde Claude Code",
@@ -756,12 +756,12 @@
       "outcome": "Aparece un botón \"Iniciar con Google\" en tu sitio",
       "short": "Añade registro con Supabase + Google OAuth",
       "substeps": {
-        "m2.s1.supabase-oauth": "Conectar cuenta de Supabase",
-        "m2.s2.create-supabase-project": "Crear proyecto de Supabase automáticamente",
-        "m2.s3.google-oauth-keys": "Obtener claves de cliente Google OAuth",
-        "m2.s4.enable-google-provider": "Activar Google Provider en Supabase",
-        "m2.s5.install-auth-ui": "Añadir botón de inicio de sesión al sitio",
-        "m2.s6.verify-signup": "Probar el registro con tu cuenta"
+        "m2-s1-supabase-oauth": "Conectar cuenta de Supabase",
+        "m2-s2-create-supabase-project": "Crear proyecto de Supabase automáticamente",
+        "m2-s3-google-oauth-keys": "Obtener claves de cliente Google OAuth",
+        "m2-s4-enable-google-provider": "Activar Google Provider en Supabase",
+        "m2-s5-install-auth-ui": "Añadir botón de inicio de sesión al sitio",
+        "m2-s6-verify-signup": "Probar el registro con tu cuenta"
       },
       "mcp": {
         "supabase": "Supabase MCP — gestiona DB y usuarios desde Claude Code"
@@ -772,11 +772,11 @@
       "outcome": "Visitantes diarios en un gráfico",
       "short": "Configuración automática de Vercel Analytics + GA4",
       "substeps": {
-        "m3.s1.enable-vercel-analytics": "Activar Vercel Web Analytics",
-        "m3.s2.install-vercel-analytics-pkg": "Instalar @vercel/analytics + componente",
-        "m3.s3.create-ga4-property": "Crear propiedad GA4 (Google Analytics)",
-        "m3.s4.paste-measurement-id": "Pegar ID de medición e insertar",
-        "m3.s5.verify-events": "Confirmar 1 usuario en tiempo real"
+        "m3-s1-enable-vercel-analytics": "Activar Vercel Web Analytics",
+        "m3-s2-install-vercel-analytics-pkg": "Instalar @vercel/analytics + componente",
+        "m3-s3-create-ga4-property": "Crear propiedad GA4 (Google Analytics)",
+        "m3-s4-paste-measurement-id": "Pegar ID de medición e insertar",
+        "m3-s5-verify-events": "Confirmar 1 usuario en tiempo real"
       },
       "mcp": {
         "vercel-analytics": "Vercel Analytics MCP — consultas de resumen de tráfico"
@@ -787,12 +787,12 @@
       "outcome": "Detectas errores antes de que los usuarios los noten",
       "short": "Sentry automático + MCP para análisis de errores",
       "substeps": {
-        "m4.s1.sentry-oauth": "Conectar cuenta de Sentry",
-        "m4.s2.create-sentry-project": "Crear proyecto Sentry automáticamente",
-        "m4.s3.set-dsn-env": "Registrar variable de entorno DSN",
-        "m4.s4.install-sentry-pkg": "Instalar @sentry/nextjs + archivos de config",
-        "m4.s5.redeploy": "Volver a desplegar",
-        "m4.s6.verify-first-error": "Verificar un error de prueba"
+        "m4-s1-sentry-oauth": "Conectar cuenta de Sentry",
+        "m4-s2-create-sentry-project": "Crear proyecto Sentry automáticamente",
+        "m4-s3-set-dsn-env": "Registrar variable de entorno DSN",
+        "m4-s4-install-sentry-pkg": "Instalar @sentry/nextjs + archivos de config",
+        "m4-s5-redeploy": "Volver a desplegar",
+        "m4-s6-verify-first-error": "Verificar un error de prueba"
       },
       "mcp": {
         "sentry": "Sentry MCP — resumir y analizar errores en Claude Code"
@@ -803,13 +803,13 @@
       "outcome": "Tu dominio reemplaza la dirección vercel.app",
       "short": "Conecta un dominio Cloudflare Registrar (~$10/año)",
       "substeps": {
-        "m5.s1.search-domain": "Buscar un dominio",
-        "m5.s2.user-purchase": "Comprar en Cloudflare",
-        "m5.s3.cloudflare-oauth": "Conectar cuenta de Cloudflare",
-        "m5.s4.apply-dns": "Aplicar registros DNS automáticamente",
-        "m5.s5.add-to-vercel": "Añadir dominio a Vercel",
-        "m5.s6.wait-ssl": "Esperar SSL (5–30 min)",
-        "m5.s7.verify-connected": "Verificar que la nueva dirección funciona"
+        "m5-s1-search-domain": "Buscar un dominio",
+        "m5-s2-user-purchase": "Comprar en Cloudflare",
+        "m5-s3-cloudflare-oauth": "Conectar cuenta de Cloudflare",
+        "m5-s4-apply-dns": "Aplicar registros DNS automáticamente",
+        "m5-s5-add-to-vercel": "Añadir dominio a Vercel",
+        "m5-s6-wait-ssl": "Esperar SSL (5–30 min)",
+        "m5-s7-verify-connected": "Verificar que la nueva dirección funciona"
       },
       "mcp": {
         "cloudflare": "Cloudflare MCP — estado del dominio y redirecciones"

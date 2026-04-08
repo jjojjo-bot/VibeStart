@@ -740,11 +740,11 @@
       "outcome": "आप किसी मित्र को vercel.app लिंक भेज सकते हैं",
       "short": "GitHub पर कोड पुश करें और Vercel पर डिप्लॉय करें",
       "substeps": {
-        "m1.s1.github-oauth": "GitHub अकाउंट कनेक्ट करें",
-        "m1.s2.create-repo": "रिपॉजिटरी स्वचालित रूप से बनाएं",
-        "m1.s3.vercel-oauth": "Vercel अकाउंट कनेक्ट करें",
-        "m1.s4.first-deploy": "पहला डिप्लॉयमेंट चलाएं",
-        "m1.s5.verify-url": "URL खुलने की पुष्टि करें"
+        "m1-s1-github-oauth": "GitHub अकाउंट कनेक्ट करें",
+        "m1-s2-create-repo": "रिपॉजिटरी स्वचालित रूप से बनाएं",
+        "m1-s3-vercel-oauth": "Vercel अकाउंट कनेक्ट करें",
+        "m1-s4-first-deploy": "पहला डिप्लॉयमेंट चलाएं",
+        "m1-s5-verify-url": "URL खुलने की पुष्टि करें"
       },
       "mcp": {
         "github": "GitHub MCP — Claude Code से रिपॉजिटरी प्रबंधन",
@@ -756,12 +756,12 @@
       "outcome": "आपकी साइट पर \"Google से साइन इन\" बटन दिखाई देता है",
       "short": "Supabase + Google OAuth के साथ साइन-अप जोड़ें",
       "substeps": {
-        "m2.s1.supabase-oauth": "Supabase अकाउंट कनेक्ट करें",
-        "m2.s2.create-supabase-project": "Supabase प्रोजेक्ट स्वचालित रूप से बनाएं",
-        "m2.s3.google-oauth-keys": "Google OAuth क्लाइंट कुंजियाँ प्राप्त करें",
-        "m2.s4.enable-google-provider": "Supabase में Google Provider सक्षम करें",
-        "m2.s5.install-auth-ui": "साइट पर साइन-इन बटन जोड़ें",
-        "m2.s6.verify-signup": "अपने अकाउंट से साइन-अप टेस्ट करें"
+        "m2-s1-supabase-oauth": "Supabase अकाउंट कनेक्ट करें",
+        "m2-s2-create-supabase-project": "Supabase प्रोजेक्ट स्वचालित रूप से बनाएं",
+        "m2-s3-google-oauth-keys": "Google OAuth क्लाइंट कुंजियाँ प्राप्त करें",
+        "m2-s4-enable-google-provider": "Supabase में Google Provider सक्षम करें",
+        "m2-s5-install-auth-ui": "साइट पर साइन-इन बटन जोड़ें",
+        "m2-s6-verify-signup": "अपने अकाउंट से साइन-अप टेस्ट करें"
       },
       "mcp": {
         "supabase": "Supabase MCP — Claude Code से DB और उपयोगकर्ता प्रबंधन"
@@ -772,11 +772,11 @@
       "outcome": "दैनिक आगंतुक संख्या ग्राफ के रूप में",
       "short": "Vercel Analytics + GA4 स्वचालित सेटअप",
       "substeps": {
-        "m3.s1.enable-vercel-analytics": "Vercel Web Analytics सक्षम करें",
-        "m3.s2.install-vercel-analytics-pkg": "@vercel/analytics इंस्टॉल + कंपोनेंट",
-        "m3.s3.create-ga4-property": "GA4 प्रॉपर्टी बनाएं (Google Analytics)",
-        "m3.s4.paste-measurement-id": "मेज़रमेंट ID पेस्ट करें और ऑटो-इन्सर्ट",
-        "m3.s5.verify-events": "1 रियलटाइम उपयोगकर्ता की पुष्टि"
+        "m3-s1-enable-vercel-analytics": "Vercel Web Analytics सक्षम करें",
+        "m3-s2-install-vercel-analytics-pkg": "@vercel/analytics इंस्टॉल + कंपोनेंट",
+        "m3-s3-create-ga4-property": "GA4 प्रॉपर्टी बनाएं (Google Analytics)",
+        "m3-s4-paste-measurement-id": "मेज़रमेंट ID पेस्ट करें और ऑटो-इन्सर्ट",
+        "m3-s5-verify-events": "1 रियलटाइम उपयोगकर्ता की पुष्टि"
       },
       "mcp": {
         "vercel-analytics": "Vercel Analytics MCP — ट्रैफ़िक सारांश क्वेरी"
@@ -787,12 +787,12 @@
       "outcome": "उपयोगकर्ताओं द्वारा देखे जाने से पहले त्रुटियाँ पकड़ें",
       "short": "Sentry स्वचालित सेटअप + त्रुटि विश्लेषण के लिए MCP",
       "substeps": {
-        "m4.s1.sentry-oauth": "Sentry अकाउंट कनेक्ट करें",
-        "m4.s2.create-sentry-project": "Sentry प्रोजेक्ट स्वचालित रूप से बनाएं",
-        "m4.s3.set-dsn-env": "DSN एनवायरनमेंट वेरिएबल रजिस्टर",
-        "m4.s4.install-sentry-pkg": "@sentry/nextjs इंस्टॉल + कॉन्फ़िग फ़ाइलें",
-        "m4.s5.redeploy": "पुनः डिप्लॉय",
-        "m4.s6.verify-first-error": "एक टेस्ट त्रुटि सत्यापित करें"
+        "m4-s1-sentry-oauth": "Sentry अकाउंट कनेक्ट करें",
+        "m4-s2-create-sentry-project": "Sentry प्रोजेक्ट स्वचालित रूप से बनाएं",
+        "m4-s3-set-dsn-env": "DSN एनवायरनमेंट वेरिएबल रजिस्टर",
+        "m4-s4-install-sentry-pkg": "@sentry/nextjs इंस्टॉल + कॉन्फ़िग फ़ाइलें",
+        "m4-s5-redeploy": "पुनः डिप्लॉय",
+        "m4-s6-verify-first-error": "एक टेस्ट त्रुटि सत्यापित करें"
       },
       "mcp": {
         "sentry": "Sentry MCP — Claude Code में त्रुटियों का विश्लेषण"
@@ -803,13 +803,13 @@
       "outcome": "आपका चुना हुआ डोमेन vercel.app एड्रेस की जगह लेता है",
       "short": "Cloudflare Registrar डोमेन कनेक्ट करें (~$10/वर्ष)",
       "substeps": {
-        "m5.s1.search-domain": "डोमेन खोजें",
-        "m5.s2.user-purchase": "Cloudflare पर खरीदें",
-        "m5.s3.cloudflare-oauth": "Cloudflare अकाउंट कनेक्ट करें",
-        "m5.s4.apply-dns": "DNS रिकॉर्ड स्वचालित रूप से लागू करें",
-        "m5.s5.add-to-vercel": "Vercel में डोमेन जोड़ें",
-        "m5.s6.wait-ssl": "SSL प्रतीक्षा (5–30 मिनट)",
-        "m5.s7.verify-connected": "नया एड्रेस काम करने की पुष्टि"
+        "m5-s1-search-domain": "डोमेन खोजें",
+        "m5-s2-user-purchase": "Cloudflare पर खरीदें",
+        "m5-s3-cloudflare-oauth": "Cloudflare अकाउंट कनेक्ट करें",
+        "m5-s4-apply-dns": "DNS रिकॉर्ड स्वचालित रूप से लागू करें",
+        "m5-s5-add-to-vercel": "Vercel में डोमेन जोड़ें",
+        "m5-s6-wait-ssl": "SSL प्रतीक्षा (5–30 मिनट)",
+        "m5-s7-verify-connected": "नया एड्रेस काम करने की पुष्टि"
       },
       "mcp": {
         "cloudflare": "Cloudflare MCP — डोमेन स्थिति और रीडायरेक्ट प्रबंधन"

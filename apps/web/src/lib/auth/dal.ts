@@ -20,13 +20,20 @@ import "server-only";
 import { cache } from "react";
 import type { AuthUser } from "@vibestart/shared-types";
 
+import { hasAuthSupabaseEnv } from "@/lib/supabase/auth-env";
 import { createSupabaseAuthAdapter } from "./supabase-auth.adapter";
 
 /**
  * 현재 세션의 사용자를 반환한다. 없으면 null.
  * Server Component에서 "로그인 했을 때만" 표시되는 UI를 그릴 때 사용.
+ *
+ * Phase 2 Supabase 환경변수가 아직 설정되지 않은 상태(로컬 개발 초기,
+ * SETUP.md 미완료)에서는 예외를 던지지 않고 조용히 null을 반환해 Phase 1
+ * 페이지와 공존하게 한다. 보호된 페이지는 null을 받아 /login으로 보내고,
+ * /login은 hasAuthSupabaseEnv()로 자체 SetupNotice를 표시한다.
  */
 export const getCurrentUser = cache(async (): Promise<AuthUser | null> => {
+  if (!hasAuthSupabaseEnv()) return null;
   const adapter = createSupabaseAuthAdapter();
   return adapter.getCurrentUser();
 });

@@ -740,11 +740,11 @@
       "outcome": "You can send a vercel.app link to a friend",
       "short": "Push code to GitHub and deploy to Vercel",
       "substeps": {
-        "m1.s1.github-oauth": "Connect GitHub account",
-        "m1.s2.create-repo": "Create repository automatically",
-        "m1.s3.vercel-oauth": "Connect Vercel account",
-        "m1.s4.first-deploy": "Run the first deployment",
-        "m1.s5.verify-url": "Open the URL to confirm"
+        "m1-s1-github-oauth": "Connect GitHub account",
+        "m1-s2-create-repo": "Create repository automatically",
+        "m1-s3-vercel-oauth": "Connect Vercel account",
+        "m1-s4-first-deploy": "Run the first deployment",
+        "m1-s5-verify-url": "Open the URL to confirm"
       },
       "mcp": {
         "github": "GitHub MCP — manage repositories from Claude Code",
@@ -756,12 +756,12 @@
       "outcome": "A \"Sign in with Google\" button appears on your site",
       "short": "Add sign-up with Supabase + Google OAuth",
       "substeps": {
-        "m2.s1.supabase-oauth": "Connect Supabase account",
-        "m2.s2.create-supabase-project": "Create Supabase project automatically",
-        "m2.s3.google-oauth-keys": "Get Google OAuth client keys",
-        "m2.s4.enable-google-provider": "Enable Google Provider in Supabase",
-        "m2.s5.install-auth-ui": "Add sign-in button to your site",
-        "m2.s6.verify-signup": "Test sign-up with your own account"
+        "m2-s1-supabase-oauth": "Connect Supabase account",
+        "m2-s2-create-supabase-project": "Create Supabase project automatically",
+        "m2-s3-google-oauth-keys": "Get Google OAuth client keys",
+        "m2-s4-enable-google-provider": "Enable Google Provider in Supabase",
+        "m2-s5-install-auth-ui": "Add sign-in button to your site",
+        "m2-s6-verify-signup": "Test sign-up with your own account"
       },
       "mcp": {
         "supabase": "Supabase MCP — manage DB and users from Claude Code"
@@ -772,11 +772,11 @@
       "outcome": "Daily visitor counts shown as a graph",
       "short": "Auto setup Vercel Analytics + GA4",
       "substeps": {
-        "m3.s1.enable-vercel-analytics": "Enable Vercel Web Analytics",
-        "m3.s2.install-vercel-analytics-pkg": "Install @vercel/analytics + component",
-        "m3.s3.create-ga4-property": "Create GA4 property (Google Analytics)",
-        "m3.s4.paste-measurement-id": "Paste measurement ID and auto-insert",
-        "m3.s5.verify-events": "Confirm 1 realtime user"
+        "m3-s1-enable-vercel-analytics": "Enable Vercel Web Analytics",
+        "m3-s2-install-vercel-analytics-pkg": "Install @vercel/analytics + component",
+        "m3-s3-create-ga4-property": "Create GA4 property (Google Analytics)",
+        "m3-s4-paste-measurement-id": "Paste measurement ID and auto-insert",
+        "m3-s5-verify-events": "Confirm 1 realtime user"
       },
       "mcp": {
         "vercel-analytics": "Vercel Analytics MCP — traffic summary queries"
@@ -787,12 +787,12 @@
       "outcome": "You catch errors before users even notice",
       "short": "Auto setup Sentry + MCP for error analysis",
       "substeps": {
-        "m4.s1.sentry-oauth": "Connect Sentry account",
-        "m4.s2.create-sentry-project": "Create Sentry project automatically",
-        "m4.s3.set-dsn-env": "Register DSN environment variable",
-        "m4.s4.install-sentry-pkg": "Install @sentry/nextjs + config files",
-        "m4.s5.redeploy": "Redeploy",
-        "m4.s6.verify-first-error": "Verify one test error"
+        "m4-s1-sentry-oauth": "Connect Sentry account",
+        "m4-s2-create-sentry-project": "Create Sentry project automatically",
+        "m4-s3-set-dsn-env": "Register DSN environment variable",
+        "m4-s4-install-sentry-pkg": "Install @sentry/nextjs + config files",
+        "m4-s5-redeploy": "Redeploy",
+        "m4-s6-verify-first-error": "Verify one test error"
       },
       "mcp": {
         "sentry": "Sentry MCP — summarize and analyze errors in Claude Code"
@@ -803,13 +803,13 @@
       "outcome": "Your chosen domain replaces the vercel.app address",
       "short": "Connect a Cloudflare Registrar domain (~$10/year)",
       "substeps": {
-        "m5.s1.search-domain": "Search for a domain",
-        "m5.s2.user-purchase": "Purchase on Cloudflare",
-        "m5.s3.cloudflare-oauth": "Connect Cloudflare account",
-        "m5.s4.apply-dns": "Apply DNS records automatically",
-        "m5.s5.add-to-vercel": "Add domain to Vercel",
-        "m5.s6.wait-ssl": "Wait for SSL (5–30 min)",
-        "m5.s7.verify-connected": "Verify the new address works"
+        "m5-s1-search-domain": "Search for a domain",
+        "m5-s2-user-purchase": "Purchase on Cloudflare",
+        "m5-s3-cloudflare-oauth": "Connect Cloudflare account",
+        "m5-s4-apply-dns": "Apply DNS records automatically",
+        "m5-s5-add-to-vercel": "Add domain to Vercel",
+        "m5-s6-wait-ssl": "Wait for SSL (5–30 min)",
+        "m5-s7-verify-connected": "Verify the new address works"
       },
       "mcp": {
         "cloudflare": "Cloudflare MCP — check domain status and manage redirects"

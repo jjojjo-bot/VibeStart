@@ -740,11 +740,11 @@
       "outcome": "친구한테 vercel.app 링크를 보낼 수 있어요",
       "short": "GitHub에 코드를 올리고 Vercel로 첫 배포",
       "substeps": {
-        "m1.s1.github-oauth": "GitHub 계정 연결",
-        "m1.s2.create-repo": "저장소 자동 생성",
-        "m1.s3.vercel-oauth": "Vercel 계정 연결",
-        "m1.s4.first-deploy": "첫 배포 실행",
-        "m1.s5.verify-url": "주소가 진짜 열리는지 확인"
+        "m1-s1-github-oauth": "GitHub 계정 연결",
+        "m1-s2-create-repo": "저장소 자동 생성",
+        "m1-s3-vercel-oauth": "Vercel 계정 연결",
+        "m1-s4-first-deploy": "첫 배포 실행",
+        "m1-s5-verify-url": "주소가 진짜 열리는지 확인"
       },
       "mcp": {
         "github": "GitHub MCP — Claude Code에서 자연어로 저장소 관리",
@@ -756,12 +756,12 @@
       "outcome": "사이트에 \"Google로 로그인\" 버튼이 생겨요",
       "short": "Supabase + Google OAuth로 회원가입 기능 추가",
       "substeps": {
-        "m2.s1.supabase-oauth": "Supabase 계정 연결",
-        "m2.s2.create-supabase-project": "Supabase 프로젝트 자동 생성",
-        "m2.s3.google-oauth-keys": "Google OAuth 클라이언트 키 발급",
-        "m2.s4.enable-google-provider": "Supabase에 Google Provider 활성화",
-        "m2.s5.install-auth-ui": "로그인 버튼을 사이트에 추가",
-        "m2.s6.verify-signup": "본인 계정으로 가입 테스트"
+        "m2-s1-supabase-oauth": "Supabase 계정 연결",
+        "m2-s2-create-supabase-project": "Supabase 프로젝트 자동 생성",
+        "m2-s3-google-oauth-keys": "Google OAuth 클라이언트 키 발급",
+        "m2-s4-enable-google-provider": "Supabase에 Google Provider 활성화",
+        "m2-s5-install-auth-ui": "로그인 버튼을 사이트에 추가",
+        "m2-s6-verify-signup": "본인 계정으로 가입 테스트"
       },
       "mcp": {
         "supabase": "Supabase MCP — Claude Code에서 자연어로 DB·사용자 관리"
@@ -772,11 +772,11 @@
       "outcome": "매일 방문자 수를 그래프로 볼 수 있어요",
       "short": "Vercel Analytics + GA4 자동 셋업",
       "substeps": {
-        "m3.s1.enable-vercel-analytics": "Vercel Web Analytics 활성화",
-        "m3.s2.install-vercel-analytics-pkg": "@vercel/analytics 설치 + 컴포넌트 삽입",
-        "m3.s3.create-ga4-property": "GA4 속성 만들기 (Google Analytics)",
-        "m3.s4.paste-measurement-id": "측정 ID 붙여넣고 자동 삽입",
-        "m3.s5.verify-events": "실시간 사용자 1명 확인"
+        "m3-s1-enable-vercel-analytics": "Vercel Web Analytics 활성화",
+        "m3-s2-install-vercel-analytics-pkg": "@vercel/analytics 설치 + 컴포넌트 삽입",
+        "m3-s3-create-ga4-property": "GA4 속성 만들기 (Google Analytics)",
+        "m3-s4-paste-measurement-id": "측정 ID 붙여넣고 자동 삽입",
+        "m3-s5-verify-events": "실시간 사용자 1명 확인"
       },
       "mcp": {
         "vercel-analytics": "Vercel Analytics MCP — 트래픽 요약 조회"
@@ -787,12 +787,12 @@
       "outcome": "사용자보다 내가 먼저 에러를 알 수 있어요",
       "short": "Sentry 자동 설정 + MCP로 에러 분석",
       "substeps": {
-        "m4.s1.sentry-oauth": "Sentry 계정 연결",
-        "m4.s2.create-sentry-project": "Sentry 프로젝트 자동 생성",
-        "m4.s3.set-dsn-env": "DSN 환경변수 자동 등록",
-        "m4.s4.install-sentry-pkg": "@sentry/nextjs 설치 + 설정 파일 생성",
-        "m4.s5.redeploy": "재배포",
-        "m4.s6.verify-first-error": "테스트 에러 1건 확인"
+        "m4-s1-sentry-oauth": "Sentry 계정 연결",
+        "m4-s2-create-sentry-project": "Sentry 프로젝트 자동 생성",
+        "m4-s3-set-dsn-env": "DSN 환경변수 자동 등록",
+        "m4-s4-install-sentry-pkg": "@sentry/nextjs 설치 + 설정 파일 생성",
+        "m4-s5-redeploy": "재배포",
+        "m4-s6-verify-first-error": "테스트 에러 1건 확인"
       },
       "mcp": {
         "sentry": "Sentry MCP — Claude Code에서 에러 요약·원인 분석"
@@ -803,13 +803,13 @@
       "outcome": "vercel.app 대신 내가 고른 진짜 주소로 바뀌어요",
       "short": "Cloudflare Registrar 도메인 연결 (약 1만원/년)",
       "substeps": {
-        "m5.s1.search-domain": "원하는 도메인 검색",
-        "m5.s2.user-purchase": "Cloudflare에서 도메인 구매",
-        "m5.s3.cloudflare-oauth": "Cloudflare 계정 연결",
-        "m5.s4.apply-dns": "DNS 레코드 자동 설정",
-        "m5.s5.add-to-vercel": "Vercel에 도메인 추가",
-        "m5.s6.wait-ssl": "SSL 발급 대기 (5~30분)",
-        "m5.s7.verify-connected": "새 주소로 접속 확인"
+        "m5-s1-search-domain": "원하는 도메인 검색",
+        "m5-s2-user-purchase": "Cloudflare에서 도메인 구매",
+        "m5-s3-cloudflare-oauth": "Cloudflare 계정 연결",
+        "m5-s4-apply-dns": "DNS 레코드 자동 설정",
+        "m5-s5-add-to-vercel": "Vercel에 도메인 추가",
+        "m5-s6-wait-ssl": "SSL 발급 대기 (5~30분)",
+        "m5-s7-verify-connected": "새 주소로 접속 확인"
       },
       "mcp": {
         "cloudflare": "Cloudflare MCP — 도메인 상태 확인·리다이렉트 관리"
