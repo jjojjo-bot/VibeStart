@@ -25,7 +25,6 @@ interface DummyStore {
   completedSubsteps: Map<string, Map<MilestoneId, Set<string>>>;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const globalCache = globalThis as unknown as {
   __vibestartDummyStore?: DummyStore;
 };

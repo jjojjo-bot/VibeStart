@@ -75,9 +75,10 @@ export function MilestoneCard({
         variant === "summary" && "flex-col items-stretch gap-2",
         className,
       )}
+      data-milestone-id={milestone.id}
       data-state={state}
       data-variant={variant}
-      aria-disabled={locked}
+      data-disabled={locked}
     >
       {/* 좌측: 번호 + 상태 아이콘 */}
       <div

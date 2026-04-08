@@ -39,11 +39,16 @@ function SetupContent() {
     projectCreate: t("groups.projectCreate"),
   };
 
-  // 마운트 시 localStorage에서 복원
+  // 마운트 시 localStorage에서 복원. localStorage는 서버에서 접근 불가하므로
+  // useEffect 내 setState가 불가피하다. 이 한 번의 하이드레이션은 cascading
+  // render를 일으키지 않는다 (storageKey는 함수형 상수).
   useEffect(() => {
     try {
       const saved = localStorage.getItem(storageKey);
-      if (saved) setCompleted(new Set<string>(JSON.parse(saved) as string[]));
+      if (saved) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setCompleted(new Set<string>(JSON.parse(saved) as string[]));
+      }
     } catch { /* 무시 */ }
     setHydrated(true);
   }, [storageKey]);
