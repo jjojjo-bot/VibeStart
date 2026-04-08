@@ -1,0 +1,180 @@
+---
+title: "10 Prompt Writing Tips for AI Coding (Beginner Guide)"
+description: "Learn 10 practical prompt writing techniques for Cursor, Claude Code, and other AI coding tools. Written for non-developers, with examples and common mistakes."
+date: "2026-04-08"
+tags: ["vibe coding", "AI coding prompts", "prompt engineering", "Cursor prompts", "Claude Code prompts", "AI coding tools", "beginner coding", "prompt writing", "AI code generation", "vibe coding tips"]
+---
+
+## 🤔 Why Prompts Matter More Than Tools
+
+When non-developers first try AI coding tools, the difference between getting a working result in 5 minutes and giving up after 30 minutes usually has nothing to do with the tool. It comes down to prompts: how clearly you tell the AI what you want.
+
+This guide collects 10 practical prompt techniques for AI coding tools like Cursor, Claude Code, and GitHub Copilot Chat. You don't need to know how to write code. You just need to learn how to describe what you want clearly enough that the AI can do almost all the work for you.
+
+## 📋 The 10 Principles at a Glance
+
+| # | Principle | One-line summary |
+|---|-----------|------------------|
+| 1 | State the goal in one sentence | What you're building and why |
+| 2 | Name your tech stack | Next.js, React, etc. |
+| 3 | Define inputs and outputs | What goes in, what comes out |
+| 4 | List constraints up front | "No new packages", "Korean text", etc. |
+| 5 | Break work into steps | One task per request |
+| 6 | Provide context | Attach existing files and structure |
+| 7 | Show examples | Sample data, screenshots, references |
+| 8 | Paste error messages verbatim | Don't summarize errors |
+| 9 | Assign a role | "Explain like a senior dev to a beginner" |
+| 10 | Ask how to verify | Get a test plan, not just code |
+
+## 🎯 1. State the Goal in One Sentence
+
+A good prompt makes the goal obvious in the first sentence. The AI cannot read your mind, so vague requests lead to the most generic possible answer. That's why "build me a thing" produces a different result every time you try.
+
+When you write a request, frame it as "who / what / why" in a single sentence. For example, "I want a form where visitors enter an email and get added to my newsletter list" produces far better results than "make me a form." If the first reply matches your intent at least 90%, your goal sentence was clear enough.
+
+### Bad vs Good
+
+```
+Bad:  Build login.
+
+Good: I want a Next.js 15 page where users sign in with email and password.
+      On success, redirect to /dashboard. On failure, show an error message.
+```
+
+## 🛠️ 2. Name Your Tech Stack Explicitly
+
+The same "make a button" request produces completely different code in React, Vue, plain HTML, or Flutter. Without a stack, the AI guesses the most common form, which often won't fit your project when you paste it in.
+
+Mention your stack somewhere obvious, such as the first line of the prompt. Something like "Next.js 15 + TypeScript + Tailwind CSS" is enough. If repeating it gets tedious, set it once in Cursor's Rules or in a `CLAUDE.md` file for Claude Code. If the AI returns code that doesn't match your stack, ask it to recheck before continuing.
+
+## 📥 3. Spell Out Inputs and Outputs
+
+Functions and screens are essentially "what comes in and what goes out." Once you describe both, the AI has very little to guess. Even non-developers can describe this in everyday language: what does the user click, and what should appear on screen?
+
+For example, "a component where the user clicks a 1–5 star rating and the average rating updates on screen" gives the AI everything it needs. Add one or two lines about edge cases — the input range (1–5) and what should happen with invalid input (0 or 6) — to get safer code without extra rounds of fixes.
+
+## 🚧 4. State Constraints Before You Need Them
+
+Anything you don't say will likely be ignored. That's why AI sometimes pulls in random new libraries or designs that don't fit your existing setup. Constraints, especially "do not" rules, must be written explicitly.
+
+Common constraints worth adding:
+
+- Don't add new dependencies. Use what's already in `package.json`.
+- Assume Korean text and a mobile-first layout.
+- Skip the database and keep everything in memory for now.
+
+Each line steers the resulting code in a different direction. The more likely you are to get stuck on a constraint, the more important it is to mention it up front.
+
+## 🪜 5. One Task Per Request
+
+The most common beginner mistake is asking for "sign-up, login, profile, and payments — all of it." The AI will accept the request, but the longer the generated code gets, the more one small mistake breaks something else. Splitting the work into smaller pieces is faster in the long run.
+
+For larger jobs, start with "Before writing any code, list the steps you would take." Then ask for each step separately, only moving on once you've confirmed the previous one works. This approach dramatically reduces debugging time.
+
+## 📂 6. Share Existing Code and File Structure
+
+The AI doesn't know any code it hasn't seen. So if you say "reuse the helper function from earlier," but the AI never saw it, it will write a brand new one. Both Cursor and Claude Code let you attach files or reference paths — use this aggressively.
+
+The most reliable approach is to attach 1–3 directly relevant files. If the folder structure is complex, even a `tree`-style listing helps. For details on how each tool handles context, see [Cursor vs Claude Code](/blog/cursor-vs-claude-code).
+
+## 🖼️ 7. Show an Example of the Result
+
+For things that are hard to describe in words — designs, JSON shapes, table layouts — examples are the fastest shortcut. A reference website URL, a screenshot, or even a small JSON sample is worth ten lines of explanation.
+
+When showing JSON, include the actual shape:
+
+```json
+{
+  "id": 1,
+  "title": "Today's tasks",
+  "done": false,
+  "createdAt": "2026-04-08T09:00:00+09:00"
+}
+```
+
+This single example communicates field names, types, and date format all at once. For UI work, link a reference site or use familiar comparisons like "rounded corners and a soft shadow, like a Notion card."
+
+## 🐛 8. Paste Error Messages Verbatim
+
+When something breaks, don't say "it doesn't work." Copy the entire error from your terminal or browser console and paste it directly. Error messages contain critical hints about where and why the problem occurred, and the AI uses them to give a much more accurate diagnosis.
+
+When sending an error, include three things:
+
+1. What you were trying to do (e.g., `pnpm dev`)
+2. What actually happened (the full error message)
+3. The change you made just before (if any)
+
+Once this becomes a habit, your debugging time drops by more than half.
+
+## 🎓 9. Assign the AI a Role
+
+The same question changes tone and depth dramatically when you add "answer like a senior developer explaining to a beginner." The AI is more likely to translate jargon, explain why each line exists, and call out gotchas.
+
+A single sentence is enough:
+
+- "Answer as if explaining to someone reading code for the first time."
+- "Review this like a senior developer who cares about security."
+- "Explain like an instructor who knows the Next.js 15 docs well."
+
+If you're moving past "just give me the code" and want to actually understand the result, add "explain each line briefly in comments." That alone speeds up learning a lot.
+
+## ✅ 10. Always Ask How to Verify
+
+The most frustrating moment is having code in your editor and no idea whether it actually works. Make it a habit to request not just the code, but also "how do I know this works?" At minimum, ask for one of these:
+
+- Which command to run to see the result
+- What screen or value confirms it's working
+- What should happen in edge cases (empty input, network error, etc.)
+
+Asking for tests at the same time is even safer. When you run the code and the result matches, that step is done. When it doesn't, the difference becomes the perfect material for your next prompt.
+
+## 🧩 Common Prompt Mistakes
+
+| Mistake | Why it fails | What to do instead |
+|---------|-------------|--------------------|
+| Just saying "it doesn't work" | AI has to guess the cause | Attach error + last action |
+| Five features in one request | Long code, hard to debug | Split into ordered steps |
+| No tech stack mentioned | You get the wrong framework | Put stack in line 1 or Rules |
+| Repeating the exact same prompt | AI gives the same answer | Add one missing detail and retry |
+| Pasting code without context | Tiny differences break it | Attach the file with "this is mine" |
+
+## 🛟 When You're Stuck: A Diagnostic Checklist
+
+If reworking the prompt still doesn't get you what you want, walk through this list:
+
+1. Does your goal sentence fit in one line, or are two requests mixed in?
+2. Did you state your stack and version?
+3. Are inputs and outputs concrete?
+4. Are the relevant files attached as context?
+5. Did you ask for a way to verify the result?
+
+Most stuck moments come from missing 1–2 of these. Add the missing one and try again. If the result is still off, your next move is to break the task into smaller steps.
+
+## 🧪 Slight Differences Between Tools
+
+| Tool | How to attach context | Recommended pattern |
+|------|----------------------|---------------------|
+| Cursor | `@filename`, `@folder`, `@docs` | Inline edits + chat side by side |
+| Claude Code | Mention file paths directly, `CLAUDE.md` | Step-by-step conversations for big tasks |
+| GitHub Copilot Chat | Open file is the implicit context | Short questions inside VS Code |
+
+The way each tool handles context is slightly different, but the principles for writing good prompts are the same. Whichever tool you use, applying these 10 ideas will visibly improve your results.
+
+## 🚀 Skip the Setup with VibeStart
+
+Even the best prompts don't help if your environment isn't ready to run the code. If Node.js, Git, or VS Code aren't installed yet, [VibeStart](/onboarding) walks you through OS-specific install commands step by step. Once your environment is set up, you can try any AI coding tool and start testing prompts immediately.
+
+## 🔗 Related Posts
+
+- [Cursor vs Claude Code: Which Is Better for Non-Developers? (2026)](/blog/cursor-vs-claude-code)
+- [Cursor Installation and Your First Project](/blog/cursor-install-first-project)
+- [Claude Code: From Install to First Coding Session](/blog/claude-code-beginner-guide)
+- [Vibe Coding Tool Requirements: Complete Environment Guide (2026)](/blog/vibe-coding-tool-requirements)
+- [Vibe Coding Dev Environment Setup: The Complete Guide](/blog/vibe-coding-dev-environment-setup-guide)
+
+## 📑 References
+
+- [Anthropic Prompt Engineering Guide](https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview)
+- [OpenAI Prompt Engineering Guide](https://platform.openai.com/docs/guides/prompt-engineering)
+- [Cursor Documentation](https://docs.cursor.com/)
+- [Claude Code Documentation](https://docs.anthropic.com/en/docs/claude-code/overview)
