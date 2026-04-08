@@ -664,5 +664,16 @@
     "pagination": "页面导航",
     "prev": "上一页",
     "next": "下一页"
+  },
+  "Login": {
+    "title": "登录 VibeStart",
+    "description": "用 Google 账号一秒开始。\nVibeStart 将全程陪伴你的项目。",
+    "googleButton": "使用 Google 继续",
+    "privacyNotice": "登录即表示您同意我们的隐私政策和服务条款。"
+  },
+  "Dashboard": {
+    "welcome": "欢迎,{name}",
+    "signOut": "退出登录",
+    "stubNotice": "您的项目列表和里程碑树即将显示在这里。"
   }
 }

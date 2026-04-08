@@ -664,5 +664,16 @@
     "pagination": "ページナビゲーション",
     "prev": "前へ",
     "next": "次へ"
+  },
+  "Login": {
+    "title": "VibeStartにサインイン",
+    "description": "Googleアカウントで1秒ではじめましょう。\nあなたのプロジェクトをVibeStartが最後までサポートします。",
+    "googleButton": "Googleで続行",
+    "privacyNotice": "サインインすると、プライバシーポリシーと利用規約に同意したことになります。"
+  },
+  "Dashboard": {
+    "welcome": "ようこそ、{name} さん",
+    "signOut": "サインアウト",
+    "stubNotice": "まもなくここにプロジェクト一覧とマイルストーンツリーが表示されます。"
   }
 }

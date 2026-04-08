@@ -664,5 +664,16 @@
     "pagination": "Page navigation",
     "prev": "Previous",
     "next": "Next"
+  },
+  "Login": {
+    "title": "Sign in to VibeStart",
+    "description": "Get started in one second with your Google account.\nVibeStart will guide your project every step of the way.",
+    "googleButton": "Continue with Google",
+    "privacyNotice": "By signing in, you agree to our Privacy Policy and Terms of Service."
+  },
+  "Dashboard": {
+    "welcome": "Welcome, {name}",
+    "signOut": "Sign out",
+    "stubNotice": "Your project list and milestone tree will appear here soon."
   }
 }

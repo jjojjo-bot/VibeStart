@@ -664,5 +664,16 @@
     "pagination": "페이지 이동",
     "prev": "이전",
     "next": "다음"
+  },
+  "Login": {
+    "title": "VibeStart에 로그인",
+    "description": "Google 계정으로 1초 만에 시작하세요.\n내가 만든 프로젝트를 VibeStart가 끝까지 함께할게요.",
+    "googleButton": "Google로 계속하기",
+    "privacyNotice": "로그인하면 개인정보처리방침과 이용약관에 동의하게 됩니다."
+  },
+  "Dashboard": {
+    "welcome": "환영합니다, {name} 님",
+    "signOut": "로그아웃",
+    "stubNotice": "여기에 곧 프로젝트 목록과 마일스톤 트리가 생깁니다."
   }
 }
