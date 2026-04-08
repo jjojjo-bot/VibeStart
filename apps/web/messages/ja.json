@@ -737,6 +737,14 @@
     "unknown": "接続確認中",
     "installCta": "拡張機能のインストール方法"
   },
+  "Connections": {
+    "title": "連携アカウント",
+    "connectButton": "接続する",
+    "connectedAs": "{username} として接続済み",
+    "comingSoon": "近日公開",
+    "successGithub": "GitHubアカウントが接続されました",
+    "errorGeneric": "接続失敗: {code}"
+  },
   "Milestones": {
     "m1-deploy": {
       "title": "あなたのサイトがネットに公開される",

@@ -23,22 +23,35 @@ import {
   SubstepList,
   TrackBadge,
 } from "@/components/milestone";
+import {
+  OAuthConnectionPanel,
+  type OAuthConnectionRow,
+} from "@/components/milestone/oauth-connection-panel";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { getOAuthConnection } from "@/lib/auth/oauth-connections";
 import {
   getCompletedSubstepIds,
   getDummyProject,
   getProjectProgress,
 } from "@/lib/projects/in-memory-store";
+import {
+  SUPPORTED_PROVIDERS,
+  providerFromSubstepId,
+  providerLabel,
+} from "@/lib/projects/substep-provider";
 
 interface MilestoneRunPageProps {
   params: Promise<{ locale: string; id: string; milestoneId: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export default async function MilestoneRunPage({
   params,
+  searchParams,
 }: MilestoneRunPageProps): Promise<React.ReactNode> {
   const { locale, id, milestoneId } = await params;
+  const query = await searchParams;
   setRequestLocale(locale);
 
   const user = await getCurrentUser();
@@ -76,6 +89,50 @@ export default async function MilestoneRunPage({
   const tRun = await getTranslations("MilestoneRun");
   const tMilestones = await getTranslations("Milestones");
   const tProjects = await getTranslations("Projects");
+  const tConnections = await getTranslations("Connections");
+
+  // OAuth 연결 패널 데이터 — 이 마일스톤의 oauth kind 서브스텝을 모아
+  // provider별 연결 상태를 조회한다. connectedLabel은 next-intl이 호출
+  // 시점에 placeholder 값을 요구하므로 row 루프에서 해석한다.
+  const oauthSubsteps = milestone.substeps.filter((s) => s.kind === "oauth");
+  const connectionRows: OAuthConnectionRow[] = [];
+  for (const step of oauthSubsteps) {
+    const provider = providerFromSubstepId(step.id);
+    if (!provider) continue;
+    const supported = SUPPORTED_PROVIDERS.has(provider);
+    let connected = false;
+    let username: string | null = null;
+    if (supported) {
+      const conn = await getOAuthConnection(user.id, provider);
+      connected = conn !== null;
+      username = conn?.providerUsername ?? null;
+    }
+    connectionRows.push({
+      substepId: step.id,
+      provider,
+      providerLabel: providerLabel(provider),
+      connected,
+      connectedLabel:
+        connected && username
+          ? tConnections("connectedAs", { username })
+          : null,
+      supported,
+    });
+  }
+
+  // 성공/에러 토스트 메시지
+  const githubConnected = query.github_connected === "1";
+  const oauthError =
+    typeof query.oauth_error === "string" ? query.oauth_error : null;
+  const connectionLabels = {
+    title: tConnections("title"),
+    connectButton: tConnections("connectButton"),
+    comingSoon: tConnections("comingSoon"),
+    successMessage: githubConnected ? tConnections("successGithub") : null,
+    errorMessage: oauthError
+      ? tConnections("errorGeneric", { code: oauthError })
+      : null,
+  };
 
   // Server에서 substep 제목과 예상 시간 라벨을 미리 해석해 Client 컴포넌트에
   // 문자열로 전달한다.
@@ -131,6 +188,15 @@ export default async function MilestoneRunPage({
           </p>
         </div>
       </header>
+
+      {/* OAuth 연결 관리 패널 (oauth kind 서브스텝이 있을 때만) */}
+      <OAuthConnectionPanel
+        rows={connectionRows}
+        projectId={project.id}
+        milestoneId={milestone.id}
+        locale={locale}
+        labels={connectionLabels}
+      />
 
       {/* 본문 — 서브스텝 + 결과 미리보기 */}
       <div className="grid gap-8 lg:grid-cols-2">

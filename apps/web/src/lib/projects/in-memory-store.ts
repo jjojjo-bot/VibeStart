@@ -110,3 +110,81 @@ export function getCompletedSubstepIds(
   const set = getStore().completedSubsteps.get(projectId)?.get(milestoneId);
   return set ? Array.from(set) : [];
 }
+
+/**
+ * 서브스텝을 완료로 마킹하고, 모든 서브스텝이 완료되면 자동으로 마일스톤을
+ * completed로 전환한 뒤 다음 마일스톤을 unlock(in_progress)한다.
+ *
+ * 카탈로그를 주입받아 완료 판정 로직을 결정한다. 호출자가 해당 트랙의
+ * 마일스톤 정의를 넘겨줘야 한다 (순환 의존 방지).
+ */
+export function markSubstepCompleted(input: {
+  projectId: string;
+  milestoneId: MilestoneId;
+  substepId: string;
+  totalSubsteps: number;
+  allMilestoneIds: ReadonlyArray<MilestoneId>;
+}): { milestoneCompleted: boolean; unlockedNext: MilestoneId | null } {
+  const store = getStore();
+
+  // substep 저장
+  if (!store.completedSubsteps.has(input.projectId)) {
+    store.completedSubsteps.set(input.projectId, new Map());
+  }
+  const byMilestone = store.completedSubsteps.get(input.projectId)!;
+  if (!byMilestone.has(input.milestoneId)) {
+    byMilestone.set(input.milestoneId, new Set());
+  }
+  byMilestone.get(input.milestoneId)!.add(input.substepId);
+
+  const completedCount = byMilestone.get(input.milestoneId)!.size;
+  const isDone = completedCount >= input.totalSubsteps;
+
+  if (!isDone) {
+    return { milestoneCompleted: false, unlockedNext: null };
+  }
+
+  // 마일스톤 자체를 completed로 전환 + 다음 마일스톤 unlock
+  if (!store.milestoneStates.has(input.projectId)) {
+    store.milestoneStates.set(input.projectId, new Map());
+  }
+  const states = store.milestoneStates.get(input.projectId)!;
+  states.set(input.milestoneId, "completed");
+
+  const currentIndex = input.allMilestoneIds.indexOf(input.milestoneId);
+  const nextId = input.allMilestoneIds[currentIndex + 1] ?? null;
+  if (nextId) {
+    states.set(nextId, "in_progress");
+  }
+
+  // 프로젝트의 currentMilestone 갱신
+  const project = store.projects.get(input.projectId);
+  if (project && nextId) {
+    const updated: Project = {
+      ...project,
+      currentMilestone: currentIndex + 2, // 1-based
+      updatedAt: new Date().toISOString(),
+    };
+    store.projects.set(input.projectId, updated);
+  }
+
+  return { milestoneCompleted: true, unlockedNext: nextId };
+}
+
+/**
+ * 사용자가 서브스텝을 수동으로 체크 해제할 때. completed 상태 마일스톤은
+ * in_progress로 되돌리고, 이후 마일스톤이 unlock 상태였다면 다시 locked로.
+ * (라)-1 범위에서는 사용하지 않지만 대칭성을 위해 둠.
+ */
+export function unmarkSubstepCompleted(
+  projectId: string,
+  milestoneId: MilestoneId,
+  substepId: string,
+): void {
+  const store = getStore();
+  store.completedSubsteps.get(projectId)?.get(milestoneId)?.delete(substepId);
+  const states = store.milestoneStates.get(projectId);
+  if (states?.get(milestoneId) === "completed") {
+    states.set(milestoneId, "in_progress");
+  }
+}

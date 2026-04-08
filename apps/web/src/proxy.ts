@@ -42,7 +42,11 @@ export async function proxy(request: NextRequest): Promise<NextResponse> {
 }
 
 export const config = {
+  // /auth/* 경로 전체 제외 — Supabase Auth(/auth/callback)와 GitHub OAuth
+  // (/auth/github/callback) 같은 provider 콜백은 locale 리라이팅 대상이 아니다.
+  // 이 경로들은 세션 쿠키를 자체 처리하며 Server Component로 렌더되지 않는
+  // Route Handler이므로 next-intl을 태울 필요가 없다.
   matcher: [
-    "/((?!api|auth/callback|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|opengraph-image).*)",
+    "/((?!api|auth|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|opengraph-image).*)",
   ],
 };

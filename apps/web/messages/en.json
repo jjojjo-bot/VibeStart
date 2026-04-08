@@ -737,6 +737,14 @@
     "unknown": "Checking connection",
     "installCta": "How to install the extension"
   },
+  "Connections": {
+    "title": "Connected accounts",
+    "connectButton": "Connect",
+    "connectedAs": "Connected as {username}",
+    "comingSoon": "Coming soon",
+    "successGithub": "Your GitHub account is connected",
+    "errorGeneric": "Connection failed: {code}"
+  },
   "Milestones": {
     "m1-deploy": {
       "title": "Your site is live on the internet",

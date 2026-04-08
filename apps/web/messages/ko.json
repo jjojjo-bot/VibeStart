@@ -737,6 +737,14 @@
     "unknown": "연결 확인 중",
     "installCta": "Extension 설치 안내"
   },
+  "Connections": {
+    "title": "연결 관리",
+    "connectButton": "연결하기",
+    "connectedAs": "{username} 연결됨",
+    "comingSoon": "곧 제공",
+    "successGithub": "GitHub 계정이 연결됐어요",
+    "errorGeneric": "연결 실패: {code}"
+  },
   "Milestones": {
     "m1-deploy": {
       "title": "인터넷에 내 사이트가 뜬다",

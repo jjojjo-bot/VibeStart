@@ -737,6 +737,14 @@
     "unknown": "कनेक्शन जाँच रहा है",
     "installCta": "एक्सटेंशन इंस्टॉल कैसे करें"
   },
+  "Connections": {
+    "title": "कनेक्टेड अकाउंट",
+    "connectButton": "कनेक्ट करें",
+    "connectedAs": "{username} के रूप में कनेक्टेड",
+    "comingSoon": "जल्द आ रहा है",
+    "successGithub": "आपका GitHub अकाउंट कनेक्ट हो गया",
+    "errorGeneric": "कनेक्शन विफल: {code}"
+  },
   "Milestones": {
     "m1-deploy": {
       "title": "आपकी साइट इंटरनेट पर लाइव है",

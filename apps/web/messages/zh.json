@@ -737,6 +737,14 @@
     "unknown": "正在检查连接",
     "installCta": "扩展安装指南"
   },
+  "Connections": {
+    "title": "连接管理",
+    "connectButton": "连接",
+    "connectedAs": "已连接 {username}",
+    "comingSoon": "即将推出",
+    "successGithub": "GitHub 账号已连接",
+    "errorGeneric": "连接失败: {code}"
+  },
   "Milestones": {
     "m1-deploy": {
       "title": "你的网站上线了",
