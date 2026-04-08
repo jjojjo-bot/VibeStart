@@ -708,7 +708,10 @@
     "trackBadge": "{trackName} トラック",
     "milestoneIndex": "M{current}/{total}",
     "notFound": "プロジェクトが見つかりません",
-    "backToTree": "マイルストーン一覧に戻る"
+    "backToTree": "マイルストーン一覧に戻る",
+    "myProjectsTitle": "マイプロジェクト",
+    "createNewButton": "新しいプロジェクトを作成",
+    "emptyHint": "まだプロジェクトがありません。最初のプロジェクトでバイブコーディングを始めましょう!"
   },
   "MilestoneRun": {
     "headerOutcome": "このステップが終わると",

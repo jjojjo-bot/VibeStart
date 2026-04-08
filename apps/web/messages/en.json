@@ -708,7 +708,10 @@
     "trackBadge": "{trackName} track",
     "milestoneIndex": "M{current}/{total}",
     "notFound": "Project not found",
-    "backToTree": "Back to milestones"
+    "backToTree": "Back to milestones",
+    "myProjectsTitle": "My projects",
+    "createNewButton": "Create new project",
+    "emptyHint": "You haven't created any project yet. Start vibe-coding with your first one!"
   },
   "MilestoneRun": {
     "headerOutcome": "When you finish this",

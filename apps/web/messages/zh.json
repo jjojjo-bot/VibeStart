@@ -708,7 +708,10 @@
     "trackBadge": "{trackName} 赛道",
     "milestoneIndex": "M{current}/{total}",
     "notFound": "找不到项目",
-    "backToTree": "返回里程碑列表"
+    "backToTree": "返回里程碑列表",
+    "myProjectsTitle": "我的项目",
+    "createNewButton": "创建新项目",
+    "emptyHint": "您还没有创建任何项目。用第一个项目开始氛围编程吧!"
   },
   "MilestoneRun": {
     "headerOutcome": "完成这一步后",

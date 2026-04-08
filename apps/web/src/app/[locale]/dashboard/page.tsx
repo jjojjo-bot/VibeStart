@@ -62,21 +62,20 @@ export default async function DashboardPage({
       </header>
 
       <div className="mb-6 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">
-          {tProjects("treeTitle", { name: "" }).replace("{name}", "").trim() ||
-            "내 프로젝트"}
-        </h2>
+        <h2 className="text-lg font-semibold">{tProjects("myProjectsTitle")}</h2>
         <Link href="/projects/new" className="no-underline">
-          <Button size="sm">{tProjects("createButton")}</Button>
+          <Button size="sm">{tProjects("createNewButton")}</Button>
         </Link>
       </div>
 
       {projects.length === 0 ? (
         <section className="rounded-lg border border-dashed border-border bg-card/50 p-8 text-center">
-          <p className="text-sm text-muted-foreground">{t("stubNotice")}</p>
+          <p className="text-sm text-muted-foreground">
+            {tProjects("emptyHint")}
+          </p>
           <div className="mt-4">
             <Link href="/projects/new" className="no-underline">
-              <Button>{tProjects("createButton")}</Button>
+              <Button>{tProjects("createNewButton")}</Button>
             </Link>
           </div>
         </section>

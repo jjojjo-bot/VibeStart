@@ -708,7 +708,10 @@
     "trackBadge": "{trackName} ट्रैक",
     "milestoneIndex": "M{current}/{total}",
     "notFound": "प्रोजेक्ट नहीं मिला",
-    "backToTree": "माइलस्टोन सूची पर वापस"
+    "backToTree": "माइलस्टोन सूची पर वापस",
+    "myProjectsTitle": "मेरे प्रोजेक्ट",
+    "createNewButton": "नया प्रोजेक्ट बनाएं",
+    "emptyHint": "आपने अभी तक कोई प्रोजेक्ट नहीं बनाया है। अपने पहले प्रोजेक्ट के साथ वाइब कोडिंग शुरू करें!"
   },
   "MilestoneRun": {
     "headerOutcome": "जब आप यह पूरा कर लेंगे",
