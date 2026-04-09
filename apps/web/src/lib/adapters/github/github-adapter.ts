@@ -24,6 +24,7 @@ import { getGitHubOAuthConfig } from "./github-env";
 const AUTHORIZE_URL = "https://github.com/login/oauth/authorize";
 const TOKEN_URL = "https://github.com/login/oauth/access_token";
 const USER_URL = "https://api.github.com/user";
+const REPOS_URL = "https://api.github.com/user/repos";
 
 interface GitHubUser {
   id: number;
@@ -38,6 +39,16 @@ interface GitHubTokenResponse {
   scope?: string;
   error?: string;
   error_description?: string;
+}
+
+interface GitHubRepoResponse {
+  id: number;
+  name: string;
+  full_name: string;
+  html_url: string;
+  clone_url: string;
+  default_branch: string;
+  private: boolean;
 }
 
 /**
@@ -128,11 +139,56 @@ export function createGitHubAdapter(): VcsPort {
     },
 
     async createRepo(
-      _accessToken: string,
-      _opts: CreateRepoOptions,
+      accessToken: string,
+      opts: CreateRepoOptions,
     ): Promise<VcsRepo> {
-      // (라)-2에서 구현. 지금 호출되면 눈에 띄는 에러로.
-      throw new Error("createRepo는 아직 구현되지 않았습니다 (Phase 2a (라)-2).");
+      // 빈 저장소 + auto_init README. (라)-2 결정사항: 외부 템플릿 복제나
+      // 초기 파일 push는 하지 않는다. Vercel 첫 배포는 사용자가 코드를
+      // push한 뒤 또는 후속 마일스톤에서 처리.
+      const res = await fetch(REPOS_URL, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/vnd.github+json",
+          "Content-Type": "application/json",
+          "User-Agent": "VibeStart",
+          "X-GitHub-Api-Version": "2022-11-28",
+        },
+        body: JSON.stringify({
+          name: opts.name,
+          description: opts.description,
+          private: opts.isPrivate,
+          auto_init: true,
+        }),
+      });
+
+      if (res.status === 401) {
+        throw new Error("github:unauthorized");
+      }
+      if (res.status === 403) {
+        throw new Error("github:forbidden");
+      }
+      if (res.status === 422) {
+        // GitHub은 이름 중복도 422로 보낸다. body의 errors[].message에
+        // "name already exists on this account"가 들어있으나, 사용자
+        // 메시지는 i18n에서 코드로 매핑하므로 여기서는 단일 코드만.
+        throw new Error("github:name_exists");
+      }
+      if (!res.ok) {
+        throw new Error(`github:http_${res.status}`);
+      }
+
+      const repo = (await res.json()) as GitHubRepoResponse;
+
+      return {
+        id: String(repo.id),
+        name: repo.name,
+        fullName: repo.full_name,
+        htmlUrl: repo.html_url,
+        cloneUrl: repo.clone_url,
+        defaultBranch: repo.default_branch,
+        isPrivate: repo.private,
+      };
     },
 
     async ensureCollaborator(

@@ -15,14 +15,28 @@ import "server-only";
 import type {
   MilestoneId,
   MilestoneState,
+  OAuthProvider,
   Project,
+  ProjectId,
+  ProjectResource,
   ProjectTrack,
+  ResourceType,
 } from "@vibestart/shared-types";
+
+/**
+ * In-memory store에서 사용하는 ProjectResource 확장형.
+ * shared-types의 ProjectResource에 createdAt이 아직 없어서 (Phase 2b Supabase
+ * 이관 때 함께 정리) 여기서만 추가한다. 외부로 노출되는 시그니처는 동일.
+ */
+export interface StoredProjectResource extends ProjectResource {
+  createdAt: string;
+}
 
 interface DummyStore {
   projects: Map<string, Project>;
   milestoneStates: Map<string, Map<MilestoneId, MilestoneState>>;
   completedSubsteps: Map<string, Map<MilestoneId, Set<string>>>;
+  resources: Map<string, StoredProjectResource[]>;
 }
 
 const globalCache = globalThis as unknown as {
@@ -35,9 +49,17 @@ function getStore(): DummyStore {
       projects: new Map(),
       milestoneStates: new Map(),
       completedSubsteps: new Map(),
+      resources: new Map(),
     };
   }
-  return globalCache.__vibestartDummyStore;
+  // Hot reload 도중 store schema가 확장되면 캐시된 구버전 store에는 새 필드가
+  // 없을 수 있다. 누락된 슬롯을 안전하게 채워서 .get() 류 호출이 undefined에
+  // 부딪히지 않도록 한다. 새 슬롯이 추가되면 여기에도 한 줄씩 추가할 것.
+  const store = globalCache.__vibestartDummyStore;
+  if (!store.resources) {
+    store.resources = new Map();
+  }
+  return store;
 }
 
 function toSlug(name: string): string {
@@ -169,6 +191,85 @@ export function markSubstepCompleted(input: {
   }
 
   return { milestoneCompleted: true, unlockedNext: nextId };
+}
+
+/**
+ * Phase 2a 더미 store의 project_resources 슬롯.
+ *
+ * vibestart가 사용자 대신 만들어준 외부 리소스(GitHub repo, Vercel project,
+ * Supabase project 등)를 프로젝트별로 기록한다. Phase 2b에서 Supabase의
+ * `project_resources` 테이블로 이관 예정이며, 컬럼 순서/이름을 SQL 스키마와
+ * 일치시켜 어댑터 작성 시 매핑 코드를 단순하게 만든다.
+ */
+
+export interface AddProjectResourceInput {
+  projectId: ProjectId;
+  provider: OAuthProvider;
+  resourceType: ResourceType;
+  externalId: string;
+  url: string | null;
+  metadata: Record<string, unknown>;
+}
+
+/**
+ * 리소스를 추가한다. (projectId, resourceType, externalId)가 동일한 row가
+ * 이미 있으면 새로 만들지 않고 기존 row를 반환한다 (idempotent). GitHub은
+ * 같은 이름의 repo를 두 번 만들 수 없으므로 호출자는 이 가드를 신뢰해도 된다.
+ */
+export function addProjectResource(
+  input: AddProjectResourceInput,
+): StoredProjectResource {
+  const store = getStore();
+  if (!store.resources.has(input.projectId)) {
+    store.resources.set(input.projectId, []);
+  }
+  const list = store.resources.get(input.projectId)!;
+
+  const existing = list.find(
+    (r) =>
+      r.resourceType === input.resourceType &&
+      r.externalId === input.externalId,
+  );
+  if (existing) {
+    return existing;
+  }
+
+  const row: StoredProjectResource = {
+    id: crypto.randomUUID(),
+    projectId: input.projectId,
+    provider: input.provider,
+    resourceType: input.resourceType,
+    externalId: input.externalId,
+    url: input.url,
+    metadata: input.metadata,
+    createdAt: new Date().toISOString(),
+  };
+  list.push(row);
+  return row;
+}
+
+/**
+ * 프로젝트의 리소스 목록을 반환한다. provider 필터 선택.
+ */
+export function listProjectResources(
+  projectId: string,
+  provider?: OAuthProvider,
+): ReadonlyArray<StoredProjectResource> {
+  const list = getStore().resources.get(projectId) ?? [];
+  if (!provider) return list;
+  return list.filter((r) => r.provider === provider);
+}
+
+/**
+ * 특정 resourceType의 첫 리소스를 반환한다 (없으면 null). M1 GitHub repo
+ * 같은 "프로젝트당 1개" 리소스를 조회할 때 사용.
+ */
+export function getProjectResourceByType(
+  projectId: string,
+  resourceType: ResourceType,
+): StoredProjectResource | null {
+  const list = getStore().resources.get(projectId) ?? [];
+  return list.find((r) => r.resourceType === resourceType) ?? null;
 }
 
 /**

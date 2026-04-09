@@ -745,6 +745,20 @@
     "successGithub": "GitHub 账号已连接",
     "errorGeneric": "连接失败: {code}"
   },
+  "CreateRepo": {
+    "title": "创建 GitHub 仓库",
+    "description": "我们将在你的 GitHub 账号中自动创建一个私有仓库",
+    "ctaCreateRepo": "创建仓库",
+    "waitingOauth": "请先完成上方的 GitHub 连接",
+    "createdSuccess": "仓库已创建",
+    "alreadyExists": "已有关联的仓库",
+    "openOnGithub": "在 GitHub 上打开",
+    "errorGeneric": "创建仓库失败: {code}",
+    "errorNameExists": "GitHub 上已存在同名仓库。请删除已有仓库或重命名你的项目。",
+    "errorNoToken": "找不到 GitHub 令牌。请重新连接你的 GitHub 账号。",
+    "errorUnauthorized": "GitHub 令牌已过期。请重新连接你的 GitHub 账号。",
+    "errorForbidden": "GitHub API 权限不足或调用次数已达上限。请稍后再试。"
+  },
   "Milestones": {
     "m1-deploy": {
       "title": "你的网站上线了",

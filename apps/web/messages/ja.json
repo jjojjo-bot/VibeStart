@@ -745,6 +745,20 @@
     "successGithub": "GitHubアカウントが接続されました",
     "errorGeneric": "接続失敗: {code}"
   },
+  "CreateRepo": {
+    "title": "GitHubリポジトリを作成",
+    "description": "あなたのGitHubアカウントにプライベートリポジトリを自動で作成します",
+    "ctaCreateRepo": "リポジトリを作成",
+    "waitingOauth": "先に上のGitHub接続を完了してください",
+    "createdSuccess": "リポジトリを作成しました",
+    "alreadyExists": "すでにリポジトリが連携されています",
+    "openOnGithub": "GitHubで開く",
+    "errorGeneric": "リポジトリ作成に失敗しました: {code}",
+    "errorNameExists": "同じ名前のリポジトリがGitHubに既に存在します。既存のものを削除するか、プロジェクト名を変更してください。",
+    "errorNoToken": "GitHubトークンが見つかりません。GitHub接続をやり直してください。",
+    "errorUnauthorized": "GitHubトークンの有効期限が切れました。GitHub接続をやり直してください。",
+    "errorForbidden": "GitHub APIの権限不足、または呼び出し回数の上限に達しました。しばらくしてからもう一度お試しください。"
+  },
   "Milestones": {
     "m1-deploy": {
       "title": "あなたのサイトがネットに公開される",

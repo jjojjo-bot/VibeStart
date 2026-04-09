@@ -17,6 +17,8 @@ import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 import { Link, redirect } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/dal";
 import {
+  CreateRepoPanel,
+  type CreateRepoPanelState,
   type DisplaySubstep,
   ExtensionStatus,
   ResultPreview,
@@ -34,6 +36,7 @@ import {
   getCompletedSubstepIds,
   getDummyProject,
   getProjectProgress,
+  getProjectResourceByType,
 } from "@/lib/projects/in-memory-store";
 import {
   SUPPORTED_PROVIDERS,
@@ -44,6 +47,22 @@ import {
 interface MilestoneRunPageProps {
   params: Promise<{ locale: string; id: string; milestoneId: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
+}
+
+/**
+ * `?create_repo_error=...` 쿼리 파라미터를 사용자 친화 메시지로 매핑.
+ * github-adapter.ts와 actions.ts가 던지는 에러 코드(github:name_exists 등)
+ * 와 server action이 직접 추가하는 코드(no_token)를 모두 처리한다.
+ */
+function resolveCreateRepoError(
+  raw: string,
+  t: (key: string, values?: Record<string, string | number>) => string,
+): string {
+  if (raw.includes("name_exists")) return t("errorNameExists");
+  if (raw.includes("no_token")) return t("errorNoToken");
+  if (raw.includes("unauthorized")) return t("errorUnauthorized");
+  if (raw.includes("forbidden")) return t("errorForbidden");
+  return t("errorGeneric", { code: raw });
 }
 
 export default async function MilestoneRunPage({
@@ -90,6 +109,7 @@ export default async function MilestoneRunPage({
   const tMilestones = await getTranslations("Milestones");
   const tProjects = await getTranslations("Projects");
   const tConnections = await getTranslations("Connections");
+  const tCreateRepo = await getTranslations("CreateRepo");
 
   // OAuth 연결 패널 데이터 — 이 마일스톤의 oauth kind 서브스텝을 모아
   // provider별 연결 상태를 조회한다. connectedLabel은 next-intl이 호출
@@ -133,6 +153,70 @@ export default async function MilestoneRunPage({
       ? tConnections("errorGeneric", { code: oauthError })
       : null,
   };
+
+  // CreateRepoPanel — m1-deploy 마일스톤에서만 표시.
+  // 다른 트랙/마일스톤에 동일 패턴이 더 필요해지면 그때 추상화한다.
+  const createRepoSubstep = milestone.substeps.find(
+    (s) => s.id === "m1-s2-create-repo",
+  );
+  let createRepoPanelData: {
+    state: CreateRepoPanelState;
+    existingRepoUrl: string | null;
+    labels: {
+      title: string;
+      description: string;
+      ctaCreateRepo: string;
+      waitingOauth: string;
+      createdSuccess: string | null;
+      alreadyExists: string | null;
+      openOnGithub: string;
+      errorMessage: string | null;
+    };
+  } | null = null;
+
+  if (createRepoSubstep) {
+    const githubRow = connectionRows.find((r) => r.provider === "github");
+    const githubLinked = githubRow?.connected ?? false;
+    const existingRepo = getProjectResourceByType(project.id, "github_repo");
+    const createRepoDone = initialCompletedSubsteps.includes(
+      createRepoSubstep.id,
+    );
+
+    let state: CreateRepoPanelState;
+    if (createRepoDone || existingRepo) {
+      state = "created";
+    } else if (githubLinked) {
+      state = "ready";
+    } else {
+      state = "needs-oauth";
+    }
+
+    const repoCreatedFlag =
+      query.repo_created === "1" ? "fresh" : query.repo_created === "already" ? "already" : null;
+    const createRepoErrorRaw =
+      typeof query.create_repo_error === "string"
+        ? query.create_repo_error
+        : null;
+
+    createRepoPanelData = {
+      state,
+      existingRepoUrl: existingRepo?.url ?? null,
+      labels: {
+        title: tCreateRepo("title"),
+        description: tCreateRepo("description"),
+        ctaCreateRepo: tCreateRepo("ctaCreateRepo"),
+        waitingOauth: tCreateRepo("waitingOauth"),
+        createdSuccess:
+          repoCreatedFlag === "fresh" ? tCreateRepo("createdSuccess") : null,
+        alreadyExists:
+          repoCreatedFlag === "already" ? tCreateRepo("alreadyExists") : null,
+        openOnGithub: tCreateRepo("openOnGithub"),
+        errorMessage: createRepoErrorRaw
+          ? resolveCreateRepoError(createRepoErrorRaw, tCreateRepo)
+          : null,
+      },
+    };
+  }
 
   // Server에서 substep 제목과 예상 시간 라벨을 미리 해석해 Client 컴포넌트에
   // 문자열로 전달한다.
@@ -197,6 +281,19 @@ export default async function MilestoneRunPage({
         locale={locale}
         labels={connectionLabels}
       />
+
+      {/* GitHub 저장소 자동 생성 패널 (m1-deploy 마일스톤 한정) */}
+      {createRepoPanelData && createRepoSubstep && (
+        <CreateRepoPanel
+          projectId={project.id}
+          milestoneId={milestone.id}
+          substepId={createRepoSubstep.id}
+          locale={locale}
+          state={createRepoPanelData.state}
+          existingRepoUrl={createRepoPanelData.existingRepoUrl}
+          labels={createRepoPanelData.labels}
+        />
+      )}
 
       {/* 본문 — 서브스텝 + 결과 미리보기 */}
       <div className="grid gap-8 lg:grid-cols-2">

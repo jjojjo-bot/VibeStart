@@ -745,6 +745,20 @@
     "successGithub": "आपका GitHub अकाउंट कनेक्ट हो गया",
     "errorGeneric": "कनेक्शन विफल: {code}"
   },
+  "CreateRepo": {
+    "title": "GitHub रिपॉजिटरी बनाएं",
+    "description": "हम आपके GitHub अकाउंट में एक प्राइवेट रिपॉजिटरी अपने आप बना देंगे",
+    "ctaCreateRepo": "रिपॉजिटरी बनाएं",
+    "waitingOauth": "पहले ऊपर दिया GitHub कनेक्शन पूरा करें",
+    "createdSuccess": "रिपॉजिटरी बन गई",
+    "alreadyExists": "पहले से एक रिपॉजिटरी जुड़ी हुई है",
+    "openOnGithub": "GitHub पर खोलें",
+    "errorGeneric": "रिपॉजिटरी बनाने में विफल: {code}",
+    "errorNameExists": "GitHub पर इसी नाम की रिपॉजिटरी पहले से मौजूद है। मौजूदा रिपॉजिटरी हटाएं या प्रोजेक्ट का नाम बदलें।",
+    "errorNoToken": "GitHub टोकन नहीं मिला। कृपया अपना GitHub अकाउंट फिर से कनेक्ट करें।",
+    "errorUnauthorized": "आपका GitHub टोकन समाप्त हो चुका है। कृपया अपना GitHub अकाउंट फिर से कनेक्ट करें।",
+    "errorForbidden": "GitHub API की अनुमति नहीं है या कॉल सीमा पार हो गई है। कृपया कुछ देर बाद फिर से कोशिश करें।"
+  },
   "Milestones": {
     "m1-deploy": {
       "title": "आपकी साइट इंटरनेट पर लाइव है",

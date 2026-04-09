@@ -745,6 +745,20 @@
     "successGithub": "GitHub 계정이 연결됐어요",
     "errorGeneric": "연결 실패: {code}"
   },
+  "CreateRepo": {
+    "title": "GitHub 저장소 만들기",
+    "description": "내 GitHub 계정에 비공개 저장소를 자동으로 만들어 드려요",
+    "ctaCreateRepo": "저장소 생성",
+    "waitingOauth": "먼저 위의 GitHub 연결을 끝내 주세요",
+    "createdSuccess": "저장소가 만들어졌어요",
+    "alreadyExists": "이미 만들어진 저장소가 있어요",
+    "openOnGithub": "GitHub에서 열기",
+    "errorGeneric": "저장소 생성 실패: {code}",
+    "errorNameExists": "같은 이름의 저장소가 GitHub에 이미 있어요. 기존 저장소를 삭제하거나 프로젝트 이름을 바꿔 주세요",
+    "errorNoToken": "GitHub 토큰을 찾을 수 없어요. GitHub 연결을 다시 시도해 주세요",
+    "errorUnauthorized": "GitHub 토큰이 만료됐어요. GitHub 연결을 다시 시도해 주세요",
+    "errorForbidden": "GitHub API 권한이 부족하거나 호출 한도를 초과했어요. 잠시 후 다시 시도해 주세요"
+  },
   "Milestones": {
     "m1-deploy": {
       "title": "인터넷에 내 사이트가 뜬다",

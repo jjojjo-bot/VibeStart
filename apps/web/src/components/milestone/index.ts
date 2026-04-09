@@ -25,3 +25,9 @@ export {
   type MilestoneCardProps,
   type MilestoneCardVariant,
 } from "./milestone-card";
+export {
+  CreateRepoPanel,
+  type CreateRepoPanelProps,
+  type CreateRepoPanelLabels,
+  type CreateRepoPanelState,
+} from "./create-repo-panel";

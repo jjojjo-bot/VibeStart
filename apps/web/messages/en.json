@@ -745,6 +745,20 @@
     "successGithub": "Your GitHub account is connected",
     "errorGeneric": "Connection failed: {code}"
   },
+  "CreateRepo": {
+    "title": "Create a GitHub repository",
+    "description": "We'll create a private repository in your GitHub account",
+    "ctaCreateRepo": "Create repository",
+    "waitingOauth": "Connect your GitHub account first",
+    "createdSuccess": "Repository created",
+    "alreadyExists": "A repository is already linked",
+    "openOnGithub": "Open on GitHub",
+    "errorGeneric": "Failed to create repository: {code}",
+    "errorNameExists": "A repository with this name already exists on GitHub. Delete the existing one or rename your project.",
+    "errorNoToken": "GitHub token not found. Please reconnect your GitHub account.",
+    "errorUnauthorized": "Your GitHub token has expired. Please reconnect your GitHub account.",
+    "errorForbidden": "GitHub API permission is missing or rate limit exceeded. Please try again later."
+  },
   "Milestones": {
     "m1-deploy": {
       "title": "Your site is live on the internet",

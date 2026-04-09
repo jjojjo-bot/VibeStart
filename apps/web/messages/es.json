@@ -745,6 +745,20 @@
     "successGithub": "Tu cuenta de GitHub está conectada",
     "errorGeneric": "Conexión fallida: {code}"
   },
+  "CreateRepo": {
+    "title": "Crear un repositorio de GitHub",
+    "description": "Crearemos un repositorio privado en tu cuenta de GitHub",
+    "ctaCreateRepo": "Crear repositorio",
+    "waitingOauth": "Conecta tu cuenta de GitHub primero",
+    "createdSuccess": "Repositorio creado",
+    "alreadyExists": "Ya hay un repositorio vinculado",
+    "openOnGithub": "Abrir en GitHub",
+    "errorGeneric": "Error al crear el repositorio: {code}",
+    "errorNameExists": "Ya existe un repositorio con este nombre en GitHub. Elimina el existente o renombra tu proyecto.",
+    "errorNoToken": "No se encontró el token de GitHub. Vuelve a conectar tu cuenta de GitHub.",
+    "errorUnauthorized": "Tu token de GitHub ha expirado. Vuelve a conectar tu cuenta de GitHub.",
+    "errorForbidden": "Faltan permisos de la API de GitHub o se ha superado el límite de llamadas. Vuelve a intentarlo más tarde."
+  },
   "Milestones": {
     "m1-deploy": {
       "title": "Tu sitio está en línea",
