@@ -62,6 +62,7 @@ const PROVIDER_EMOJI: Record<OAuthProvider, string> = {
   github: "🐙",
   vercel: "▲",
   supabase_mgmt: "⚡",
+  google: "🔑",
   cloudflare: "☁️",
   resend: "📧",
   sentry: "🛡️",

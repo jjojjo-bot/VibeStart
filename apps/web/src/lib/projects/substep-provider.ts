@@ -39,6 +39,7 @@ const PROVIDER_LABEL: Record<OAuthProvider, string> = {
   github: "GitHub",
   vercel: "Vercel",
   supabase_mgmt: "Supabase",
+  google: "Google",
   cloudflare: "Cloudflare",
   resend: "Resend",
   sentry: "Sentry",

@@ -13,6 +13,7 @@ export type ResourceType =
   | 'github_repo'
   | 'vercel_project'
   | 'supabase_project'
+  | 'google_oauth_keys'
   | 'r2_bucket'
   | 'resend_domain'
   | 'sentry_project'

@@ -25,6 +25,8 @@ import {
   type DeployPanelState,
   type DisplaySubstep,
   ExtensionStatus,
+  GoogleOAuthKeysPanel,
+  type GoogleOAuthKeysPanelState,
   ResultPreview,
   SubstepList,
   TrackBadge,
@@ -117,6 +119,15 @@ function resolveSupabaseProjectError(
   return t("errorGeneric", { code: raw });
 }
 
+function resolveGoogleKeysError(
+  raw: string,
+  t: (key: string, values?: Record<string, string | number>) => string,
+): string {
+  if (raw.includes("empty")) return t("errorEmpty");
+  if (raw.includes("too_long")) return t("errorTooLong");
+  return t("errorGeneric", { code: raw });
+}
+
 export default async function MilestoneRunPage({
   params,
   searchParams,
@@ -164,6 +175,7 @@ export default async function MilestoneRunPage({
   const tCreateRepo = await getTranslations("CreateRepo");
   const tDeploy = await getTranslations("FirstDeploy");
   const tCreateSupabase = await getTranslations("CreateSupabaseProject");
+  const tGoogleKeys = await getTranslations("GoogleOAuthKeys");
 
   // OAuth 연결 패널 데이터 — 이 마일스톤의 oauth kind 서브스텝을 모아
   // provider별 연결 상태를 조회한다. connectedLabel은 next-intl이 호출
@@ -548,6 +560,160 @@ export default async function MilestoneRunPage({
     }
   }
 
+  // M2 (마)-3: Google OAuth 키 수집 패널 데이터.
+  const googleKeysSubstep = milestone.substeps.find(
+    (s) => s.id === "m2-s3-google-oauth-keys",
+  );
+  const existingGoogleKeys = getProjectResourceByType(
+    project.id,
+    "google_oauth_keys",
+  );
+
+  // Supabase 프로젝트 metadata에서 ref를 꺼내 redirect URI 계산.
+  // existingSupabaseProject.metadata.ref는 (마)-2에서 저장한 값.
+  const supabaseRef =
+    existingSupabaseProject &&
+    typeof existingSupabaseProject.metadata === "object" &&
+    existingSupabaseProject.metadata !== null &&
+    "ref" in existingSupabaseProject.metadata &&
+    typeof (existingSupabaseProject.metadata as { ref?: unknown }).ref ===
+      "string"
+      ? ((existingSupabaseProject.metadata as { ref: string }).ref as string)
+      : null;
+
+  const googleRedirectUri = supabaseRef
+    ? `https://${supabaseRef}.supabase.co/auth/v1/callback`
+    : null;
+
+  let googleKeysPanelData: {
+    state: GoogleOAuthKeysPanelState;
+    redirectUri: string | null;
+    externalUrl: string;
+    savedClientIdMasked: string | null;
+    labels: {
+      title: string;
+      description: string;
+      waitingSupabase: string;
+      step1Label: string;
+      externalLinkCta: string;
+      step2Label: string;
+      redirectUriLabel: string;
+      redirectUriHelp: string;
+      copyButton: string;
+      copiedLabel: string;
+      step3Label: string;
+      clientIdLabel: string;
+      clientIdPlaceholder: string;
+      clientSecretLabel: string;
+      clientSecretPlaceholder: string;
+      ctaSave: string;
+      saving: string;
+      savedSuccess: string | null;
+      alreadySaved: string | null;
+      errorMessage: string | null;
+      noticeMessage: string | null;
+      savedClientIdLabel: string;
+      editButton: string;
+      resetting: string;
+    };
+  } | null = null;
+
+  if (googleKeysSubstep) {
+    let keysState: GoogleOAuthKeysPanelState;
+    if (existingGoogleKeys) {
+      keysState = "saved";
+    } else if (existingSupabaseProject) {
+      keysState = "ready";
+    } else {
+      keysState = "waiting-supabase";
+    }
+
+    // 마스킹된 clientId 생성: 앞 12자 + '****' + 뒤 25자 (google usercontent 도메인 보존)
+    // 예: "000000000000-xxxx****.apps.googleusercontent.com"
+    let savedClientIdMasked: string | null = null;
+    if (existingGoogleKeys) {
+      const rawClientId =
+        typeof existingGoogleKeys.metadata === "object" &&
+        existingGoogleKeys.metadata !== null &&
+        "clientId" in existingGoogleKeys.metadata &&
+        typeof (existingGoogleKeys.metadata as { clientId?: unknown })
+          .clientId === "string"
+          ? ((existingGoogleKeys.metadata as { clientId: string }).clientId)
+          : null;
+      if (rawClientId) {
+        if (rawClientId.length <= 16) {
+          savedClientIdMasked = "••••";
+        } else {
+          const head = rawClientId.slice(0, 12);
+          const tail = rawClientId.slice(-25);
+          savedClientIdMasked = `${head}••••${tail}`;
+        }
+      }
+    }
+
+    const googleKeysSavedFlag =
+      query.google_keys_saved === "1"
+        ? "fresh"
+        : query.google_keys_saved === "already"
+          ? "already"
+          : null;
+    const googleKeysResetFlag = query.google_keys_reset === "1";
+    const googleKeysErrorRaw =
+      typeof query.google_keys_error === "string"
+        ? query.google_keys_error
+        : null;
+
+    googleKeysPanelData = {
+      state: keysState,
+      redirectUri: googleRedirectUri,
+      externalUrl:
+        googleKeysSubstep.externalUrl ??
+        "https://console.cloud.google.com/apis/credentials",
+      savedClientIdMasked,
+      labels: {
+        title: tGoogleKeys("title"),
+        description: tGoogleKeys("description"),
+        waitingSupabase: tGoogleKeys("waitingSupabase"),
+        step1Label: tGoogleKeys("step1Label"),
+        externalLinkCta: tGoogleKeys("externalLinkCta"),
+        step2Label: tGoogleKeys("step2Label"),
+        redirectUriLabel: tGoogleKeys("redirectUriLabel"),
+        redirectUriHelp: tGoogleKeys("redirectUriHelp"),
+        copyButton: tGoogleKeys("copyButton"),
+        copiedLabel: tGoogleKeys("copiedLabel"),
+        step3Label: tGoogleKeys("step3Label"),
+        clientIdLabel: tGoogleKeys("clientIdLabel"),
+        clientIdPlaceholder: tGoogleKeys("clientIdPlaceholder"),
+        clientSecretLabel: tGoogleKeys("clientSecretLabel"),
+        clientSecretPlaceholder: tGoogleKeys("clientSecretPlaceholder"),
+        ctaSave: tGoogleKeys("ctaSave"),
+        saving: tGoogleKeys("saving"),
+        savedSuccess:
+          googleKeysSavedFlag === "fresh" ? tGoogleKeys("savedSuccess") : null,
+        alreadySaved:
+          googleKeysSavedFlag === "already"
+            ? tGoogleKeys("alreadySaved")
+            : null,
+        errorMessage: googleKeysErrorRaw
+          ? resolveGoogleKeysError(googleKeysErrorRaw, tGoogleKeys)
+          : null,
+        noticeMessage: googleKeysResetFlag
+          ? tGoogleKeys("resetSuccess")
+          : null,
+        savedClientIdLabel: tGoogleKeys("savedClientIdLabel"),
+        editButton: tGoogleKeys("editButton"),
+        resetting: tGoogleKeys("resetting"),
+      },
+    };
+  }
+
+  // google_oauth_keys 존재 시 m2-s3을 derive에 추가.
+  if (existingGoogleKeys && googleKeysSubstep) {
+    if (!initialCompletedSubsteps.includes(googleKeysSubstep.id)) {
+      initialCompletedSubsteps.push(googleKeysSubstep.id);
+    }
+  }
+
   // vercel_project 존재 시 m1-s4 + 다음 verify substep을 derive에 추가.
   if (existingVercelProject && deploySubstep) {
     if (!initialCompletedSubsteps.includes(deploySubstep.id)) {
@@ -698,6 +864,21 @@ export default async function MilestoneRunPage({
               state={createSupabasePanelData.state}
               dashboardUrl={createSupabasePanelData.dashboardUrl}
               labels={createSupabasePanelData.labels}
+            />
+          )}
+
+          {/* M2 (3) Google OAuth 키 수집 — m2-s3 */}
+          {googleKeysPanelData && googleKeysSubstep && (
+            <GoogleOAuthKeysPanel
+              projectId={project.id}
+              milestoneId={milestone.id}
+              substepId={googleKeysSubstep.id}
+              locale={locale}
+              state={googleKeysPanelData.state}
+              redirectUri={googleKeysPanelData.redirectUri}
+              externalUrl={googleKeysPanelData.externalUrl}
+              savedClientIdMasked={googleKeysPanelData.savedClientIdMasked}
+              labels={googleKeysPanelData.labels}
             />
           )}
 

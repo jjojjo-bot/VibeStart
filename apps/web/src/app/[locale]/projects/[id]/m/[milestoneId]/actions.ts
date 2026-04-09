@@ -64,6 +64,8 @@ import {
   getDummyProject,
   getProjectResourceByType,
   markSubstepCompleted,
+  removeProjectResourceByType,
+  unmarkSubstepCompleted,
 } from "@/lib/projects/in-memory-store";
 import { routing } from "@/i18n/routing";
 
@@ -889,4 +891,135 @@ export async function createSupabaseProjectAction(
 
   revalidatePath(returnTo);
   redirect(`${returnTo}?supabase_project_created=1`);
+}
+
+/**
+ * (마)-3 — Google OAuth 키 저장.
+ *
+ * Google Cloud Console은 API로 OAuth 클라이언트를 만들 수 없어 사용자가
+ * 직접 발급받은 client_id / client_secret을 폼으로 받아 저장한다. (마)-4의
+ * enable Google provider 단계에서 Supabase Auth 설정에 주입될 값들.
+ *
+ * - 입력 검증: 비어있지 않은 trimmed string, 지나치게 긴 값 차단
+ * - client_secret은 평문으로 project_resources.metadata에 저장 (⚠️ Phase 2b Vault 이관)
+ * - 로그에 client_secret은 절대 찍지 않는다
+ * - idempotent: 이미 저장돼 있으면 새로 쓰지 않고 redirect(already)
+ */
+export async function saveGoogleOAuthKeysAction(
+  formData: FormData,
+): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("로그인이 필요합니다");
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const milestoneId = String(formData.get("milestoneId") ?? "");
+  const substepId = String(formData.get("substepId") ?? "");
+  const locale = resolveLocale(formData.get("locale"));
+
+  if (!projectId || !milestoneId || !substepId) {
+    throw new Error("필수 파라미터 누락");
+  }
+
+  const project = getDummyProject(projectId);
+  if (!project || project.userId !== user.id) {
+    throw new Error("프로젝트를 찾을 수 없습니다");
+  }
+
+  const returnTo = buildReturnTo(locale, projectId, milestoneId);
+
+  const catalog = createInMemoryMilestoneCatalog();
+  const milestone = catalog.getMilestone(project.track, milestoneId);
+  const allMilestones = catalog.listMilestones(project.track);
+
+  function completeSubstep(): void {
+    if (!milestone) return;
+    markSubstepCompleted({
+      projectId: project!.id,
+      milestoneId,
+      substepId,
+      totalSubsteps: milestone.substeps.length,
+      allMilestoneIds: allMilestones.map((m) => m.id),
+    });
+  }
+
+  // Idempotent guard
+  const existing = getProjectResourceByType(project.id, "google_oauth_keys");
+  if (existing) {
+    completeSubstep();
+    revalidatePath(returnTo);
+    redirect(`${returnTo}?google_keys_saved=already`);
+  }
+
+  // 입력 검증
+  const clientIdRaw = formData.get("clientId");
+  const clientSecretRaw = formData.get("clientSecret");
+  const clientId =
+    typeof clientIdRaw === "string" ? clientIdRaw.trim() : "";
+  const clientSecret =
+    typeof clientSecretRaw === "string" ? clientSecretRaw.trim() : "";
+
+  if (!clientId || !clientSecret) {
+    redirect(`${returnTo}?google_keys_error=empty`);
+  }
+
+  // Google OAuth client_id는 보통 `.apps.googleusercontent.com`으로 끝나지만
+  // 형식이 바뀔 수 있으므로 엄격 검증은 피하고 길이만 제한한다.
+  if (clientId.length > 256 || clientSecret.length > 256) {
+    redirect(`${returnTo}?google_keys_error=too_long`);
+  }
+
+  // 저장 — externalId는 clientId를 쓴다 (동일 clientId 재저장 방지 idempotency)
+  addProjectResource({
+    projectId: project.id,
+    provider: "google",
+    resourceType: "google_oauth_keys",
+    externalId: clientId,
+    url: null,
+    metadata: {
+      clientId,
+      clientSecret, // ⚠️ 평문 저장 — Phase 2b Vault로 이관 예정
+    },
+  });
+  completeSubstep();
+
+  revalidatePath(returnTo);
+  redirect(`${returnTo}?google_keys_saved=1`);
+}
+
+/**
+ * (마)-3 — 저장된 Google OAuth 키 리셋.
+ *
+ * 잘못 입력한 값을 수정할 수 있도록 in-memory 리소스를 삭제하고 m2-s3
+ * substep을 unmark한다. (마)-4가 이미 완료되었다면 Supabase Auth에는 옛 키가
+ * 주입된 상태이므로, 사용자에게 (마)-4를 다시 돌려야 한다는 경고는 UI에서
+ * 띄운다 (resetGoogleOAuthKeysAction은 m2-s4는 건드리지 않음 — 사용자가
+ * 명시적으로 재실행해야).
+ */
+export async function resetGoogleOAuthKeysAction(
+  formData: FormData,
+): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("로그인이 필요합니다");
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const milestoneId = String(formData.get("milestoneId") ?? "");
+  const substepId = String(formData.get("substepId") ?? "");
+  const locale = resolveLocale(formData.get("locale"));
+
+  if (!projectId || !milestoneId || !substepId) {
+    throw new Error("필수 파라미터 누락");
+  }
+
+  const project = getDummyProject(projectId);
+  if (!project || project.userId !== user.id) {
+    throw new Error("프로젝트를 찾을 수 없습니다");
+  }
+
+  const returnTo = buildReturnTo(locale, projectId, milestoneId);
+
+  removeProjectResourceByType(project.id, "google_oauth_keys");
+  unmarkSubstepCompleted(project.id, milestoneId, substepId);
+
+  revalidatePath(returnTo);
+  redirect(`${returnTo}?google_keys_reset=1`);
 }

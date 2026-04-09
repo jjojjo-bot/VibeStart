@@ -12,6 +12,7 @@ export type OAuthProvider =
   | 'github'
   | 'vercel'
   | 'supabase_mgmt'
+  | 'google'
   | 'cloudflare'
   | 'resend'
   | 'sentry';

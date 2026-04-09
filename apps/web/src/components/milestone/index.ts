@@ -43,3 +43,9 @@ export {
   type CreateSupabaseProjectPanelLabels,
   type CreateSupabaseProjectPanelState,
 } from "./create-supabase-project-panel";
+export {
+  GoogleOAuthKeysPanel,
+  type GoogleOAuthKeysPanelProps,
+  type GoogleOAuthKeysPanelLabels,
+  type GoogleOAuthKeysPanelState,
+} from "./google-oauth-keys-panel";

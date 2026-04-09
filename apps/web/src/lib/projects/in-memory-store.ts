@@ -273,6 +273,22 @@ export function getProjectResourceByType(
 }
 
 /**
+ * 특정 resourceType의 첫 리소스를 삭제한다. 존재했다면 true, 없었다면 false.
+ * (마)-3 사용자가 잘못 입력한 Google OAuth 키를 수정할 때 사용.
+ */
+export function removeProjectResourceByType(
+  projectId: string,
+  resourceType: ResourceType,
+): boolean {
+  const list = getStore().resources.get(projectId);
+  if (!list) return false;
+  const idx = list.findIndex((r) => r.resourceType === resourceType);
+  if (idx === -1) return false;
+  list.splice(idx, 1);
+  return true;
+}
+
+/**
  * 사용자가 서브스텝을 수동으로 체크 해제할 때. completed 상태 마일스톤은
  * in_progress로 되돌리고, 이후 마일스톤이 unlock 상태였다면 다시 locked로.
  * (라)-1 범위에서는 사용하지 않지만 대칭성을 위해 둠.
