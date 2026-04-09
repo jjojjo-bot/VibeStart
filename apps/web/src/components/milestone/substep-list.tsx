@@ -112,51 +112,59 @@ export function SubstepList({
               {isDone ? "✓" : ""}
             </button>
             <div className="min-w-0 flex-1">
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-1.5 text-sm">
-                  <span aria-hidden="true" className="text-base leading-none">
-                    {KIND_ICON[step.kind]}
-                  </span>
-                  <span
-                    className={cn(
-                      isDone && "text-muted-foreground line-through",
-                    )}
-                  >
-                    {step.title}
-                  </span>
-                </div>
-                {step.estimatedLabel !== null && (
-                  <span className="shrink-0 text-[10px] text-muted-foreground">
-                    {step.estimatedLabel}
-                  </span>
-                )}
+              {/* 1줄: emoji + title (전체 너비 사용) */}
+              <div className="flex items-center gap-1.5 text-sm">
+                <span aria-hidden="true" className="text-base leading-none">
+                  {KIND_ICON[step.kind]}
+                </span>
+                <span
+                  className={cn(
+                    "min-w-0 flex-1",
+                    isDone && "text-muted-foreground line-through",
+                  )}
+                >
+                  {step.title}
+                </span>
               </div>
-              {step.kind === "auto" && !isDone && (
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {labels.autoRunning}
-                </p>
-              )}
-              {step.kind === "user-action" && !isDone && (
-                <div className="mt-1 flex items-center gap-2 text-xs">
-                  <span className="text-amber-400">
-                    {labels.userActionRequired}
-                  </span>
-                  {step.externalUrl && (
-                    <a
-                      href={step.externalUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary underline underline-offset-2"
-                    >
-                      {labels.openExternal} ↗
-                    </a>
+              {/* 2줄: 메타 정보 (예상시간 + 보조 메시지) */}
+              {(step.estimatedLabel ||
+                (step.kind === "auto" && !isDone) ||
+                (step.kind === "user-action" && !isDone) ||
+                (step.kind === "verify" && !isDone)) && (
+                <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+                  {step.estimatedLabel !== null && (
+                    <span className="text-[10px] text-muted-foreground">
+                      {step.estimatedLabel}
+                    </span>
+                  )}
+                  {step.kind === "auto" && !isDone && (
+                    <span className="text-muted-foreground">
+                      {labels.autoRunning}
+                    </span>
+                  )}
+                  {step.kind === "user-action" && !isDone && (
+                    <>
+                      <span className="text-amber-400">
+                        {labels.userActionRequired}
+                      </span>
+                      {step.externalUrl && (
+                        <a
+                          href={step.externalUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary underline underline-offset-2"
+                        >
+                          {labels.openExternal} ↗
+                        </a>
+                      )}
+                    </>
+                  )}
+                  {step.kind === "verify" && !isDone && (
+                    <span className="text-muted-foreground">
+                      {labels.verifyCta}
+                    </span>
                   )}
                 </div>
-              )}
-              {step.kind === "verify" && !isDone && (
-                <p className="mt-1 text-xs text-muted-foreground">
-                  {labels.verifyCta}
-                </p>
               )}
             </div>
           </li>

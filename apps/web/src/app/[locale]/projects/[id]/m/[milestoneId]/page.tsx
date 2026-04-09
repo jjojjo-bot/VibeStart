@@ -546,10 +546,22 @@ export default async function MilestoneRunPage({
         </div>
       </header>
 
-      {/* 사이드바(진행 단계, sticky) + 메인(액션 패널들) 2단 레이아웃 */}
-      <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
-        {/* 좌측 사이드바 — 진행 단계. lg+ 에서 sticky로 고정. */}
-        <aside className="lg:sticky lg:top-6 lg:self-start">
+      {/* 사이드바(진행 단계, sticky) + 메인(액션 패널들) 2단 레이아웃.
+          flex with align-items: flex-start — sticky가 안정적으로 동작하는
+          가장 검증된 패턴. md 미만(768px)에서는 단일 컬럼 stack. */}
+      <div className="flex flex-col gap-8 md:flex-row md:items-start">
+        <aside
+          className="w-full md:shrink-0"
+          style={{
+            flexBasis: "400px",
+            maxWidth: "400px",
+            position: "sticky",
+            top: "1.5rem",
+            maxHeight: "calc(100vh - 3rem)",
+            overflowY: "auto",
+            alignSelf: "flex-start",
+          }}
+        >
           <section className="rounded-lg border border-border bg-card p-4">
             <h2 className="mb-3 text-sm font-medium text-muted-foreground">
               {tRun("substepsTitle")}
@@ -563,7 +575,7 @@ export default async function MilestoneRunPage({
         </aside>
 
         {/* 우측 메인 — 액션 패널들 + 결과 미리보기 */}
-        <div className="min-w-0">
+        <div className="min-w-0 md:flex-1">
           {/* M2 (1) Supabase 계정 연결 — m2-s1 */}
           {supabaseRows.length > 0 && (
             <OAuthConnectionPanel
