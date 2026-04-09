@@ -772,6 +772,22 @@
     "errorUnauthorized": "GitHubトークンの有効期限が切れました。GitHub接続をやり直してください。",
     "errorForbidden": "GitHub APIの権限不足、または呼び出し回数の上限に達しました。しばらくしてからもう一度お試しください。"
   },
+  "CreateSupabaseProject": {
+    "title": "Supabaseプロジェクトを作成",
+    "description": "あなたのSupabaseアカウントに新しいプロジェクトを自動で作成します（Seoulリージョン、Freeプラン）",
+    "ctaCreate": "プロジェクトを作成",
+    "creating": "作成中…（1〜2分）",
+    "waitingOauth": "先に上のSupabase接続を完了してください",
+    "createdSuccess": "Supabaseプロジェクトを作成しました",
+    "alreadyExists": "既に作成されたプロジェクトがあります",
+    "openDashboard": "Supabaseダッシュボードを開く",
+    "errorGeneric": "プロジェクト作成失敗: {code}",
+    "errorNoToken": "Supabaseトークンが見つかりません。Supabase接続をやり直してください。",
+    "errorNoOrganization": "Supabase組織が見つかりません。supabase.comで組織があるか確認してください。",
+    "errorPlanLimit": "Supabase無料プランのプロジェクト数上限に達しました。",
+    "errorInvalidToken": "Supabaseトークンの有効期限が切れました。再接続してください。",
+    "errorInitFailed": "プロジェクトの初期化に失敗しました。しばらくしてからもう一度お試しください。"
+  },
   "FirstDeploy": {
     "title": "初回デプロイ",
     "description": "GitHubリポジトリのランディングページをVercelにデプロイします",

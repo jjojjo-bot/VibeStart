@@ -27,7 +27,11 @@ vi.mock("@/lib/adapters/supabase-mgmt/supabase-mgmt-env", () => ({
   hasSupabaseMgmtOAuthEnv: (): boolean => true,
 }));
 
-import { createSupabaseMgmtAdapter } from "@/lib/adapters/supabase-mgmt/supabase-mgmt-adapter";
+import {
+  createSupabaseMgmtAdapter,
+  createSupabaseProject,
+  getSupabaseProject,
+} from "@/lib/adapters/supabase-mgmt/supabase-mgmt-adapter";
 
 interface FetchCall {
   url: string;
@@ -203,5 +207,99 @@ describe("createSupabaseMgmtAdapter().completeAuthorize", () => {
     );
     expect(result.accessToken).toBe("tok");
     expect(result.metadata.organizationId).toBe("");
+  });
+});
+
+describe("createSupabaseProject", () => {
+  it("성공 시 SupabaseProjectResult를 반환한다", async () => {
+    stubFetchSequence([
+      new Response(
+        JSON.stringify({
+          id: "prj_uuid_123",
+          ref: "abcdefghijklmnop",
+          name: "my-blog",
+          status: "COMING_UP",
+        }),
+        { status: 201 },
+      ),
+    ]);
+
+    const result = await createSupabaseProject("token", {
+      organizationId: "org_123",
+      name: "my-blog",
+      dbPass: "strong_pass_dont_log",
+      region: "ap-northeast-2",
+      plan: "free",
+    });
+
+    expect(result).toEqual({
+      id: "prj_uuid_123",
+      ref: "abcdefghijklmnop",
+      name: "my-blog",
+      status: "COMING_UP",
+      apiUrl: "https://abcdefghijklmnop.supabase.co",
+    });
+
+    const call = fetchCalls[0]!;
+    expect(call.url).toBe("https://api.supabase.com/v1/projects");
+    expect(call.init.method).toBe("POST");
+    const headers = call.init.headers as Record<string, string>;
+    expect(headers.Authorization).toBe("Bearer token");
+    const body = JSON.parse(call.init.body as string);
+    expect(body).toEqual({
+      organization_id: "org_123",
+      name: "my-blog",
+      db_pass: "strong_pass_dont_log",
+      region: "ap-northeast-2",
+      plan: "free",
+    });
+  });
+
+  it("402 시 supabase:plan_limit 에러", async () => {
+    stubFetchSequence([new Response("payment required", { status: 402 })]);
+
+    await expect(
+      createSupabaseProject("token", {
+        organizationId: "o",
+        name: "x",
+        dbPass: "p",
+      }),
+    ).rejects.toThrow("supabase:plan_limit");
+  });
+
+  it("401 시 supabase:invalid_token 에러", async () => {
+    stubFetchSequence([new Response("nope", { status: 401 })]);
+
+    await expect(
+      createSupabaseProject("bad", {
+        organizationId: "o",
+        name: "x",
+        dbPass: "p",
+      }),
+    ).rejects.toThrow("supabase:invalid_token");
+  });
+});
+
+describe("getSupabaseProject", () => {
+  it("프로젝트 정보를 반환한다", async () => {
+    stubFetchSequence([
+      new Response(
+        JSON.stringify({
+          id: "prj_uuid_123",
+          ref: "abcdefghijklmnop",
+          name: "my-blog",
+          status: "ACTIVE_HEALTHY",
+        }),
+        { status: 200 },
+      ),
+    ]);
+
+    const result = await getSupabaseProject("token", "abcdefghijklmnop");
+    expect(result?.status).toBe("ACTIVE_HEALTHY");
+  });
+
+  it("404면 null", async () => {
+    stubFetchSequence([new Response("not found", { status: 404 })]);
+    expect(await getSupabaseProject("token", "nope")).toBeNull();
   });
 });

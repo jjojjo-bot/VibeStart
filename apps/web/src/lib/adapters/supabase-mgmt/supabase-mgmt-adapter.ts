@@ -24,6 +24,7 @@ import { getSupabaseMgmtOAuthConfig } from "./supabase-mgmt-env";
 const AUTHORIZE_URL = "https://api.supabase.com/v1/oauth/authorize";
 const TOKEN_URL = "https://api.supabase.com/v1/oauth/token";
 const ORGANIZATIONS_URL = "https://api.supabase.com/v1/organizations";
+const PROJECTS_URL = "https://api.supabase.com/v1/projects";
 
 interface SupabaseTokenResponse {
   access_token?: string;
@@ -167,5 +168,132 @@ export function createSupabaseMgmtAdapter(): SupabaseMgmtAdapter {
         },
       };
     },
+  };
+}
+
+// ─────────────────────────────────────────────────────────────
+// (마)-2: Supabase 프로젝트 자동 생성 + 폴링
+// ─────────────────────────────────────────────────────────────
+
+const SUPABASE_HEADERS = (token: string): Record<string, string> => ({
+  Authorization: `Bearer ${token}`,
+  Accept: "application/json",
+  "Content-Type": "application/json",
+  "User-Agent": "VibeStart",
+});
+
+export interface SupabaseProjectResult {
+  /** Supabase project ID (e.g., "uuid-form") */
+  id: string;
+  /** Subdomain ref (e.g., "abcdefghijklmnop") used in api URLs */
+  ref: string;
+  name: string;
+  /** ACTIVE_HEALTHY | COMING_UP | INIT_FAILED | ... */
+  status: string;
+  /** API URL: https://{ref}.supabase.co */
+  apiUrl: string;
+}
+
+export interface CreateSupabaseProjectInput {
+  organizationId: string;
+  name: string;
+  /** 강력한 DB 비밀번호 (호출자가 생성해서 전달) */
+  dbPass: string;
+  /** 'ap-northeast-2' (Seoul) 등. 기본 'ap-northeast-2' */
+  region?: string;
+  /** 'free' | 'pro' 등 */
+  plan?: string;
+}
+
+/**
+ * 새 Supabase 프로젝트를 만든다. 응답은 즉시 오지만 status가 COMING_UP이며
+ * ACTIVE_HEALTHY 도달까지 보통 30~120초가 걸린다. 호출자가 폴링해야 함.
+ */
+export async function createSupabaseProject(
+  accessToken: string,
+  input: CreateSupabaseProjectInput,
+): Promise<SupabaseProjectResult> {
+  const res = await fetch(PROJECTS_URL, {
+    method: "POST",
+    headers: SUPABASE_HEADERS(accessToken),
+    body: JSON.stringify({
+      organization_id: input.organizationId,
+      name: input.name,
+      db_pass: input.dbPass,
+      region: input.region ?? "ap-northeast-2",
+      plan: input.plan ?? "free",
+    }),
+  });
+
+  if (res.status === 401) throw new Error("supabase:invalid_token");
+  if (res.status === 402) throw new Error("supabase:plan_limit");
+  if (res.status === 403) throw new Error("supabase:forbidden");
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("[supabase-mgmt] createProject failed", {
+      status: res.status,
+      body: text.slice(0, 300),
+    });
+    // Supabase는 free plan 한도 초과를 종종 400으로 응답하면서 메시지에
+    // "maximum limits" / "project limit" 등의 문구를 포함한다.
+    if (
+      text.includes("maximum limits") ||
+      text.includes("project limit") ||
+      text.includes("active free projects")
+    ) {
+      throw new Error("supabase:plan_limit");
+    }
+    throw new Error(`supabase:create_http_${res.status}`);
+  }
+
+  const data = (await res.json()) as {
+    id?: string;
+    ref?: string;
+    name?: string;
+    status?: string;
+  };
+
+  if (!data.id || !data.ref) {
+    throw new Error("supabase:create_malformed_response");
+  }
+
+  return {
+    id: data.id,
+    ref: data.ref,
+    name: data.name ?? input.name,
+    status: data.status ?? "COMING_UP",
+    apiUrl: `https://${data.ref}.supabase.co`,
+  };
+}
+
+/**
+ * 프로젝트 ref로 현재 상태를 조회한다. 폴링용.
+ * 응답에 status 필드가 있으며 ACTIVE_HEALTHY가 "준비 완료" 상태.
+ */
+export async function getSupabaseProject(
+  accessToken: string,
+  projectRef: string,
+): Promise<SupabaseProjectResult | null> {
+  const res = await fetch(
+    `${PROJECTS_URL}/${encodeURIComponent(projectRef)}`,
+    { method: "GET", headers: SUPABASE_HEADERS(accessToken) },
+  );
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`supabase:get_http_${res.status}`);
+
+  const data = (await res.json()) as {
+    id?: string;
+    ref?: string;
+    name?: string;
+    status?: string;
+  };
+  if (!data.id || !data.ref) return null;
+
+  return {
+    id: data.id,
+    ref: data.ref,
+    name: data.name ?? "",
+    status: data.status ?? "COMING_UP",
+    apiUrl: `https://${data.ref}.supabase.co`,
   };
 }

@@ -29,9 +29,15 @@ import { redirect } from "next/navigation";
 import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 import type { VcsRepo } from "@vibestart/shared-types";
 
+import crypto from "node:crypto";
+
 import { getCurrentUser } from "@/lib/auth/dal";
 import { createGitHubAdapter } from "@/lib/adapters/github/github-adapter";
-import { createSupabaseMgmtAdapter } from "@/lib/adapters/supabase-mgmt/supabase-mgmt-adapter";
+import {
+  createSupabaseMgmtAdapter,
+  createSupabaseProject,
+  getSupabaseProject,
+} from "@/lib/adapters/supabase-mgmt/supabase-mgmt-adapter";
 import {
   createVercelProject,
   fetchVercelUser,
@@ -50,6 +56,7 @@ import {
 } from "@/lib/auth/oauth-state";
 import {
   getOAuthAccessToken,
+  getOAuthConnection,
   saveOAuthConnection,
 } from "@/lib/auth/oauth-connections";
 import {
@@ -690,4 +697,196 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
 
   revalidatePath(returnTo);
   redirect(`${returnTo}?deploy_created=1`);
+}
+
+/**
+ * (마)-2 — Supabase 프로젝트 자동 생성.
+ *
+ * 1. (마)-1에서 저장한 organizationId와 access token 사용
+ * 2. createSupabaseProject 호출 (POST /v1/projects)
+ * 3. ACTIVE_HEALTHY 상태가 될 때까지 폴링 (최대 90초)
+ * 4. 결과 + db_pass를 supabase_project 리소스로 저장
+ * 5. substep 완료 마킹
+ *
+ * 주의: db_pass는 로그에 절대 찍지 않는다.
+ */
+export async function createSupabaseProjectAction(
+  formData: FormData,
+): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("로그인이 필요합니다");
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const milestoneId = String(formData.get("milestoneId") ?? "");
+  const substepId = String(formData.get("substepId") ?? "");
+  const locale = resolveLocale(formData.get("locale"));
+
+  if (!projectId || !milestoneId || !substepId) {
+    throw new Error("필수 파라미터 누락");
+  }
+
+  const project = getDummyProject(projectId);
+  if (!project || project.userId !== user.id) {
+    throw new Error("프로젝트를 찾을 수 없습니다");
+  }
+
+  const returnTo = buildReturnTo(locale, projectId, milestoneId);
+
+  const catalog = createInMemoryMilestoneCatalog();
+  const milestone = catalog.getMilestone(project.track, milestoneId);
+  const allMilestones = catalog.listMilestones(project.track);
+
+  function completeSubstep(): void {
+    if (!milestone) return;
+    markSubstepCompleted({
+      projectId: project!.id,
+      milestoneId,
+      substepId,
+      totalSubsteps: milestone.substeps.length,
+      allMilestoneIds: allMilestones.map((m) => m.id),
+    });
+  }
+
+  // 1) Idempotent guard — 이미 supabase_project 리소스가 있으면 skip
+  const existingProject = getProjectResourceByType(
+    project.id,
+    "supabase_project",
+  );
+  if (existingProject) {
+    completeSubstep();
+    revalidatePath(returnTo);
+    redirect(`${returnTo}?supabase_project_created=already`);
+  }
+
+  // 2) (마)-1 OAuth 연결에서 토큰 + organization_id 조회
+  const supabaseToken = await getOAuthAccessToken(user.id, "supabase_mgmt");
+  if (!supabaseToken) {
+    redirect(`${returnTo}?supabase_project_error=no_token`);
+  }
+
+  const conn = await getOAuthConnection(user.id, "supabase_mgmt");
+  if (!conn) {
+    redirect(`${returnTo}?supabase_project_error=no_connection`);
+  }
+
+  // OAuth metadata에서 organizationId 추출 (saveOAuthConnection metadata 안에)
+  // getOAuthConnection은 메타를 반환하지 않으므로 별도 쿼리가 필요한데,
+  // (마)-1에서 organizationId를 직접 받기 위해 saveOAuthConnection에 metadata로
+  // 저장. 여기서는 organizationId 조회를 위한 getOAuthConnectionMetadata 같은
+  // 함수가 필요하지만, 임시로 oauth_connections를 직접 select하거나, 또는
+  // /v1/organizations를 다시 호출해 첫 조직을 사용한다.
+  // 단순화: /v1/organizations를 다시 호출.
+  let organizationId: string | null = null;
+  try {
+    const orgsRes = await fetch("https://api.supabase.com/v1/organizations", {
+      headers: {
+        Authorization: `Bearer ${supabaseToken}`,
+        Accept: "application/json",
+        "User-Agent": "VibeStart",
+      },
+    });
+    if (orgsRes.ok) {
+      const orgs = (await orgsRes.json()) as Array<{ id?: string }>;
+      organizationId = orgs[0]?.id ?? null;
+    }
+  } catch (err) {
+    console.error("[createSupabaseProjectAction] org fetch failed", {
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+
+  if (!organizationId) {
+    redirect(`${returnTo}?supabase_project_error=no_organization`);
+  }
+
+  // 3) DB 비밀번호 자동 생성 (32바이트 → base64) — 로그에 안 찍힘
+  const dbPass = crypto.randomBytes(24).toString("base64");
+
+  // 4) 프로젝트 생성
+  let createdProject: {
+    id: string;
+    ref: string;
+    name: string;
+    status: string;
+    apiUrl: string;
+  } | null = null;
+  let errCode: string | null = null;
+  try {
+    createdProject = await createSupabaseProject(supabaseToken, {
+      organizationId,
+      name: project.slug,
+      dbPass,
+      region: "ap-northeast-2",
+      plan: "free",
+    });
+  } catch (err) {
+    console.error("[createSupabaseProjectAction] createSupabaseProject failed", {
+      userId: user.id,
+      projectId: project.id,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    errCode =
+      err instanceof Error
+        ? err.message.replace(/\s+/g, "_").slice(0, 120)
+        : "unknown";
+  }
+
+  if (errCode || !createdProject) {
+    redirect(
+      `${returnTo}?supabase_project_error=${encodeURIComponent(errCode ?? "unknown")}`,
+    );
+  }
+
+  // 5) 폴링: ACTIVE_HEALTHY 도달까지 (최대 90초)
+  const POLL_INTERVAL = 5000;
+  const POLL_MAX = 90000;
+  const start = Date.now();
+  let finalStatus = createdProject.status;
+
+  try {
+    while (Date.now() - start < POLL_MAX) {
+      if (finalStatus === "ACTIVE_HEALTHY") break;
+      if (
+        finalStatus === "INIT_FAILED" ||
+        finalStatus === "REMOVED" ||
+        finalStatus === "GOING_DOWN"
+      ) {
+        break;
+      }
+      await new Promise((r) => setTimeout(r, POLL_INTERVAL));
+      const polled = await getSupabaseProject(supabaseToken, createdProject.ref);
+      if (polled) {
+        finalStatus = polled.status;
+      }
+    }
+  } catch (err) {
+    console.error("[createSupabaseProjectAction] polling failed", {
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+
+  if (finalStatus === "INIT_FAILED") {
+    redirect(`${returnTo}?supabase_project_error=init_failed`);
+  }
+
+  // 6) 리소스 저장 (db_pass 포함 — 추후 (마)-4/5에서 필요)
+  addProjectResource({
+    projectId: project.id,
+    provider: "supabase_mgmt",
+    resourceType: "supabase_project",
+    externalId: createdProject.id,
+    url: `https://supabase.com/dashboard/project/${createdProject.ref}`,
+    metadata: {
+      ref: createdProject.ref,
+      name: createdProject.name,
+      apiUrl: createdProject.apiUrl,
+      organizationId,
+      dbPass, // ⚠️ 평문 저장 — Phase 2b Vault로 이관 예정
+      finalStatus,
+    },
+  });
+  completeSubstep();
+
+  revalidatePath(returnTo);
+  redirect(`${returnTo}?supabase_project_created=1`);
 }

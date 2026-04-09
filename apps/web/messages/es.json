@@ -772,6 +772,22 @@
     "errorUnauthorized": "Tu token de GitHub ha expirado. Vuelve a conectar tu cuenta de GitHub.",
     "errorForbidden": "Faltan permisos de la API de GitHub o se ha superado el límite de llamadas. Vuelve a intentarlo más tarde."
   },
+  "CreateSupabaseProject": {
+    "title": "Crear un proyecto de Supabase",
+    "description": "Crearemos un nuevo proyecto en tu cuenta de Supabase (región Seoul, plan Free)",
+    "ctaCreate": "Crear proyecto",
+    "creating": "Creando... (1-2 min)",
+    "waitingOauth": "Conecta tu cuenta de Supabase primero",
+    "createdSuccess": "Proyecto de Supabase creado",
+    "alreadyExists": "Ya hay un proyecto vinculado",
+    "openDashboard": "Abrir panel de Supabase",
+    "errorGeneric": "Error al crear el proyecto: {code}",
+    "errorNoToken": "No se encontró el token de Supabase. Vuelve a conectar tu cuenta de Supabase.",
+    "errorNoOrganization": "No se encontró organización de Supabase. Asegúrate de tener una en supabase.com.",
+    "errorPlanLimit": "Has alcanzado el límite de proyectos del plan gratuito de Supabase.",
+    "errorInvalidToken": "Tu token de Supabase ha expirado. Vuelve a conectar.",
+    "errorInitFailed": "La inicialización del proyecto falló. Vuelve a intentarlo más tarde."
+  },
   "FirstDeploy": {
     "title": "Primer despliegue",
     "description": "Despliega una página de aterrizaje desde tu repositorio de GitHub en Vercel",

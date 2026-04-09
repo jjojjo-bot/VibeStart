@@ -772,6 +772,22 @@
     "errorUnauthorized": "Your GitHub token has expired. Please reconnect your GitHub account.",
     "errorForbidden": "GitHub API permission is missing or rate limit exceeded. Please try again later."
   },
+  "CreateSupabaseProject": {
+    "title": "Create a Supabase project",
+    "description": "We'll create a new project in your Supabase account (Seoul region, Free plan)",
+    "ctaCreate": "Create project",
+    "creating": "Creating... (1-2 min)",
+    "waitingOauth": "Connect your Supabase account first",
+    "createdSuccess": "Supabase project created",
+    "alreadyExists": "A project is already linked",
+    "openDashboard": "Open Supabase dashboard",
+    "errorGeneric": "Failed to create project: {code}",
+    "errorNoToken": "Supabase token not found. Please reconnect your Supabase account.",
+    "errorNoOrganization": "No Supabase organization found. Please make sure you have an organization on supabase.com.",
+    "errorPlanLimit": "You have reached the project limit on the Supabase free plan.",
+    "errorInvalidToken": "Your Supabase token has expired. Please reconnect.",
+    "errorInitFailed": "Project initialization failed. Please try again later."
+  },
   "FirstDeploy": {
     "title": "First deploy",
     "description": "Deploy a landing page from your GitHub repository to Vercel",

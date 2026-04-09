@@ -772,6 +772,22 @@
     "errorUnauthorized": "आपका GitHub टोकन समाप्त हो चुका है। कृपया अपना GitHub अकाउंट फिर से कनेक्ट करें।",
     "errorForbidden": "GitHub API की अनुमति नहीं है या कॉल सीमा पार हो गई है। कृपया कुछ देर बाद फिर से कोशिश करें।"
   },
+  "CreateSupabaseProject": {
+    "title": "Supabase प्रोजेक्ट बनाएं",
+    "description": "हम आपके Supabase अकाउंट में एक नया प्रोजेक्ट अपने आप बना देंगे (Seoul रीजन, Free प्लान)",
+    "ctaCreate": "प्रोजेक्ट बनाएं",
+    "creating": "बना रहा है... (1-2 मिनट)",
+    "waitingOauth": "पहले ऊपर दिया Supabase कनेक्शन पूरा करें",
+    "createdSuccess": "Supabase प्रोजेक्ट बन गया",
+    "alreadyExists": "पहले से एक प्रोजेक्ट जुड़ा हुआ है",
+    "openDashboard": "Supabase डैशबोर्ड खोलें",
+    "errorGeneric": "प्रोजेक्ट बनाने में विफल: {code}",
+    "errorNoToken": "Supabase टोकन नहीं मिला। कृपया अपना Supabase अकाउंट फिर से कनेक्ट करें।",
+    "errorNoOrganization": "Supabase संगठन नहीं मिला। कृपया supabase.com पर अपना संगठन सुनिश्चित करें।",
+    "errorPlanLimit": "Supabase फ्री प्लान की प्रोजेक्ट सीमा पार हो गई।",
+    "errorInvalidToken": "आपका Supabase टोकन समाप्त हो चुका है। कृपया फिर से कनेक्ट करें।",
+    "errorInitFailed": "प्रोजेक्ट इनिशियलाइज़ेशन विफल। कृपया कुछ देर बाद फिर से कोशिश करें।"
+  },
   "FirstDeploy": {
     "title": "पहला डिप्लॉय",
     "description": "GitHub रिपॉजिटरी से लैंडिंग पेज को Vercel पर डिप्लॉय करें",

@@ -19,6 +19,8 @@ import { getCurrentUser } from "@/lib/auth/dal";
 import {
   CreateRepoPanel,
   type CreateRepoPanelState,
+  CreateSupabaseProjectPanel,
+  type CreateSupabaseProjectPanelState,
   DeployPanel,
   type DeployPanelState,
   type DisplaySubstep,
@@ -103,6 +105,18 @@ function resolveDeployError(
   return t("errorGeneric", { code: raw });
 }
 
+function resolveSupabaseProjectError(
+  raw: string,
+  t: (key: string, values?: Record<string, string | number>) => string,
+): string {
+  if (raw.includes("no_token")) return t("errorNoToken");
+  if (raw.includes("no_organization")) return t("errorNoOrganization");
+  if (raw.includes("plan_limit")) return t("errorPlanLimit");
+  if (raw.includes("invalid_token")) return t("errorInvalidToken");
+  if (raw.includes("init_failed")) return t("errorInitFailed");
+  return t("errorGeneric", { code: raw });
+}
+
 export default async function MilestoneRunPage({
   params,
   searchParams,
@@ -149,6 +163,7 @@ export default async function MilestoneRunPage({
   const tConnections = await getTranslations("Connections");
   const tCreateRepo = await getTranslations("CreateRepo");
   const tDeploy = await getTranslations("FirstDeploy");
+  const tCreateSupabase = await getTranslations("CreateSupabaseProject");
 
   // OAuth 연결 패널 데이터 — 이 마일스톤의 oauth kind 서브스텝을 모아
   // provider별 연결 상태를 조회한다. connectedLabel은 next-intl이 호출
@@ -447,6 +462,92 @@ export default async function MilestoneRunPage({
     };
   }
 
+  // M2 (마)-2: Supabase 프로젝트 생성 패널 데이터 계산.
+  const createSupabaseSubstep = milestone.substeps.find(
+    (s) => s.id === "m2-s2-create-supabase-project",
+  );
+  const existingSupabaseProject = getProjectResourceByType(
+    project.id,
+    "supabase_project",
+  );
+
+  let createSupabasePanelData: {
+    state: CreateSupabaseProjectPanelState;
+    dashboardUrl: string | null;
+    labels: {
+      title: string;
+      description: string;
+      ctaCreate: string;
+      creating: string;
+      waitingOauth: string;
+      createdSuccess: string | null;
+      alreadyExists: string | null;
+      openDashboard: string;
+      errorMessage: string | null;
+    };
+  } | null = null;
+
+  if (createSupabaseSubstep) {
+    const supabaseRow = connectionRows.find(
+      (r) => r.provider === "supabase_mgmt",
+    );
+    const supabaseLinked = supabaseRow?.connected ?? false;
+
+    let panelState: CreateSupabaseProjectPanelState;
+    if (existingSupabaseProject) {
+      panelState = "created";
+    } else if (supabaseLinked) {
+      panelState = "ready";
+    } else {
+      panelState = "needs-oauth";
+    }
+
+    const supabaseProjectCreatedFlag =
+      query.supabase_project_created === "1"
+        ? "fresh"
+        : query.supabase_project_created === "already"
+          ? "already"
+          : null;
+    const supabaseProjectErrorRaw =
+      typeof query.supabase_project_error === "string"
+        ? query.supabase_project_error
+        : null;
+
+    createSupabasePanelData = {
+      state: panelState,
+      dashboardUrl: existingSupabaseProject?.url ?? null,
+      labels: {
+        title: tCreateSupabase("title"),
+        description: tCreateSupabase("description"),
+        ctaCreate: tCreateSupabase("ctaCreate"),
+        creating: tCreateSupabase("creating"),
+        waitingOauth: tCreateSupabase("waitingOauth"),
+        createdSuccess:
+          supabaseProjectCreatedFlag === "fresh"
+            ? tCreateSupabase("createdSuccess")
+            : null,
+        alreadyExists:
+          supabaseProjectCreatedFlag === "already"
+            ? tCreateSupabase("alreadyExists")
+            : null,
+        openDashboard: tCreateSupabase("openDashboard"),
+        errorMessage: supabaseProjectErrorRaw
+          ? resolveSupabaseProjectError(
+              supabaseProjectErrorRaw,
+              tCreateSupabase,
+            )
+          : null,
+      },
+    };
+  }
+
+  // supabase_project 존재 시 m2-s2를 derive에 추가.
+  if (existingSupabaseProject && createSupabaseSubstep) {
+    if (!initialCompletedSubsteps.includes(createSupabaseSubstep.id)) {
+      initialCompletedSubsteps.push(createSupabaseSubstep.id);
+    }
+  }
+
   // vercel_project 존재 시 m1-s4 + 다음 verify substep을 derive에 추가.
   if (existingVercelProject && deploySubstep) {
     if (!initialCompletedSubsteps.includes(deploySubstep.id)) {
@@ -584,6 +685,19 @@ export default async function MilestoneRunPage({
               milestoneId={milestone.id}
               locale={locale}
               labels={supabasePanelLabels}
+            />
+          )}
+
+          {/* M2 (2) Supabase 프로젝트 자동 생성 — m2-s2 */}
+          {createSupabasePanelData && createSupabaseSubstep && (
+            <CreateSupabaseProjectPanel
+              projectId={project.id}
+              milestoneId={milestone.id}
+              substepId={createSupabaseSubstep.id}
+              locale={locale}
+              state={createSupabasePanelData.state}
+              dashboardUrl={createSupabasePanelData.dashboardUrl}
+              labels={createSupabasePanelData.labels}
             />
           )}
 

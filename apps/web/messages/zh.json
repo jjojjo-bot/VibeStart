@@ -772,6 +772,22 @@
     "errorUnauthorized": "GitHub 令牌已过期。请重新连接你的 GitHub 账号。",
     "errorForbidden": "GitHub API 权限不足或调用次数已达上限。请稍后再试。"
   },
+  "CreateSupabaseProject": {
+    "title": "创建 Supabase 项目",
+    "description": "我们将在你的 Supabase 账号中自动创建一个新项目（首尔区域，免费计划）",
+    "ctaCreate": "创建项目",
+    "creating": "创建中…（1-2 分钟）",
+    "waitingOauth": "请先完成上方的 Supabase 连接",
+    "createdSuccess": "Supabase 项目已创建",
+    "alreadyExists": "已有关联的项目",
+    "openDashboard": "打开 Supabase 控制台",
+    "errorGeneric": "创建项目失败: {code}",
+    "errorNoToken": "找不到 Supabase 令牌。请重新连接你的 Supabase 账号。",
+    "errorNoOrganization": "未找到 Supabase 组织。请确认你在 supabase.com 上有组织。",
+    "errorPlanLimit": "已达到 Supabase 免费计划的项目数限制。",
+    "errorInvalidToken": "Supabase 令牌已过期。请重新连接。",
+    "errorInitFailed": "项目初始化失败。请稍后再试。"
+  },
   "FirstDeploy": {
     "title": "首次部署",
     "description": "将 GitHub 仓库中的落地页部署到 Vercel",

@@ -37,3 +37,9 @@ export {
   type DeployPanelLabels,
   type DeployPanelState,
 } from "./deploy-panel";
+export {
+  CreateSupabaseProjectPanel,
+  type CreateSupabaseProjectPanelProps,
+  type CreateSupabaseProjectPanelLabels,
+  type CreateSupabaseProjectPanelState,
+} from "./create-supabase-project-panel";
