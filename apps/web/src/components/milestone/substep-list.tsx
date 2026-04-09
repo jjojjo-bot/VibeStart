@@ -12,7 +12,7 @@
  * 전달해야 한다. 국제화 해석은 전부 서버에서 완료된다.
  */
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import type { SubstepKind } from "@vibestart/shared-types";
 
 import { cn } from "@/lib/utils";
@@ -58,6 +58,18 @@ export function SubstepList({
     () => new Set(initialCompletedIds),
   );
   const [, startTransition] = useTransition();
+
+  // 서버 액션이 substep을 완료 처리하고 revalidate한 뒤 페이지가 다시
+  // 렌더되면 새 initialCompletedIds가 props로 들어온다. useState는 lazy
+  // 초기화라 props 변경을 알아채지 못하므로, 서버가 새 스냅샷을 줄 때마다
+  // 동기화한다. 사용자의 로컬 토글은 서버 스냅샷이 그것을 포함하지 않으면
+  // 다음 갱신 때 덮여쓰지지만, Phase 2a에서는 manual toggle이 임시 UX이므로
+  // 의도된 동작.
+  const initialKey = initialCompletedIds.join("|");
+  useEffect(() => {
+    setCompleted(new Set(initialCompletedIds));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialKey]);
 
   const toggle = (id: string): void => {
     startTransition(() => {
