@@ -745,6 +745,7 @@
     "comingSoon": "近日公開",
     "successGithub": "GitHubアカウントが接続されました",
     "successVercel": "Vercelアカウントが接続されました",
+    "successSupabase": "Supabaseアカウントが接続されました",
     "errorGeneric": "接続失敗: {code}",
     "vercelHelperText": "vercel.comでPersonal Access Tokenを作成して貼り付けてください。トークンは安全に保存されます。",
     "vercelHelperLink": "トークンを作成する",

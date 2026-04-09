@@ -252,16 +252,21 @@ export default async function MilestoneRunPage({
   // 공유하므로 둘 다 처리. 동시 발생은 거의 없지만 vercel을 우선으로 표시.
   const githubConnected = query.github_connected === "1";
   const vercelConnected = query.vercel_connected === "1";
+  const supabaseConnected = query.supabase_connected === "1";
   const oauthError =
     typeof query.oauth_error === "string" ? query.oauth_error : null;
   const vercelError =
     typeof query.vercel_error === "string" ? query.vercel_error : null;
 
-  // Substep 카탈로그 순서 (s1 GitHub → s2 저장소 → s3 Vercel)에 맞춰 OAuth
-  // 패널을 provider별로 분리해 렌더한다. 각 패널은 자기 provider 토스트만
-  // 표시.
+  // Substep 카탈로그 순서에 맞춰 OAuth 패널을 provider별로 분리해 렌더.
+  // 각 패널은 자기 provider 토스트만 표시.
+  // - M1: github → vercel
+  // - M2: supabase_mgmt
   const githubRows = connectionRows.filter((r) => r.provider === "github");
   const vercelRows = connectionRows.filter((r) => r.provider === "vercel");
+  const supabaseRows = connectionRows.filter(
+    (r) => r.provider === "supabase_mgmt",
+  );
 
   const baseConnectionLabels = {
     connectButton: tConnections("connectButton"),
@@ -271,6 +276,15 @@ export default async function MilestoneRunPage({
     vercelHelperLink: tConnections("vercelHelperLink"),
     vercelTokenPlaceholder: tConnections("vercelTokenPlaceholder"),
     vercelConnectButton: tConnections("vercelConnectButton"),
+  };
+
+  const supabasePanelLabels = {
+    ...baseConnectionLabels,
+    title: null,
+    successMessage: supabaseConnected ? tConnections("successSupabase") : null,
+    errorMessage: oauthError
+      ? tConnections("errorGeneric", { code: oauthError })
+      : null,
   };
 
   const githubPanelLabels = {
@@ -550,7 +564,18 @@ export default async function MilestoneRunPage({
 
         {/* 우측 메인 — 액션 패널들 + 결과 미리보기 */}
         <div className="min-w-0">
-          {/* (1) GitHub 계정 연결 — m1-s1 */}
+          {/* M2 (1) Supabase 계정 연결 — m2-s1 */}
+          {supabaseRows.length > 0 && (
+            <OAuthConnectionPanel
+              rows={supabaseRows}
+              projectId={project.id}
+              milestoneId={milestone.id}
+              locale={locale}
+              labels={supabasePanelLabels}
+            />
+          )}
+
+          {/* M1 (1) GitHub 계정 연결 — m1-s1 */}
           {githubRows.length > 0 && (
             <OAuthConnectionPanel
               rows={githubRows}

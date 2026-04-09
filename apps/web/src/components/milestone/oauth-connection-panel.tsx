@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 
 import {
   connectGitHubAction,
+  connectSupabaseAction,
   connectVercelAction,
 } from "@/app/[locale]/projects/[id]/m/[milestoneId]/actions";
 
@@ -130,6 +131,28 @@ export function OAuthConnectionPanel({
                 </span>
               ) : row.provider === "github" ? (
                 <form action={connectGitHubAction}>
+                  <input type="hidden" name="projectId" value={projectId} />
+                  <input
+                    type="hidden"
+                    name="milestoneId"
+                    value={milestoneId}
+                  />
+                  <input
+                    type="hidden"
+                    name="substepId"
+                    value={row.substepId}
+                  />
+                  <input type="hidden" name="locale" value={locale} />
+                  <PendingButton
+                    type="submit"
+                    size="sm"
+                    pendingText={labels.connecting}
+                  >
+                    {labels.connectButton}
+                  </PendingButton>
+                </form>
+              ) : row.provider === "supabase_mgmt" ? (
+                <form action={connectSupabaseAction}>
                   <input type="hidden" name="projectId" value={projectId} />
                   <input
                     type="hidden"

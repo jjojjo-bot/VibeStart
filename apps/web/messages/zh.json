@@ -745,6 +745,7 @@
     "comingSoon": "即将推出",
     "successGithub": "GitHub 账号已连接",
     "successVercel": "Vercel 账号已连接",
+    "successSupabase": "Supabase 账号已连接",
     "errorGeneric": "连接失败: {code}",
     "vercelHelperText": "请在 vercel.com 创建 Personal Access Token 并粘贴到此处。我们会安全地存储该令牌。",
     "vercelHelperLink": "去创建令牌",

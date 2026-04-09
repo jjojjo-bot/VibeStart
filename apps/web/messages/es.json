@@ -745,6 +745,7 @@
     "comingSoon": "Próximamente",
     "successGithub": "Tu cuenta de GitHub está conectada",
     "successVercel": "Tu cuenta de Vercel está conectada",
+    "successSupabase": "Tu cuenta de Supabase está conectada",
     "errorGeneric": "Conexión fallida: {code}",
     "vercelHelperText": "Crea un Personal Access Token en vercel.com y pégalo aquí. Lo guardaremos de forma segura.",
     "vercelHelperLink": "Crear un token",

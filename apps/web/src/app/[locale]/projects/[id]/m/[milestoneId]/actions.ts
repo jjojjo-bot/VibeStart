@@ -31,6 +31,7 @@ import type { VcsRepo } from "@vibestart/shared-types";
 
 import { getCurrentUser } from "@/lib/auth/dal";
 import { createGitHubAdapter } from "@/lib/adapters/github/github-adapter";
+import { createSupabaseMgmtAdapter } from "@/lib/adapters/supabase-mgmt/supabase-mgmt-adapter";
 import {
   createVercelProject,
   fetchVercelUser,
@@ -126,6 +127,66 @@ export async function connectGitHubAction(formData: FormData): Promise<void> {
   const redirectUri = `${origin}/auth/github/callback`;
 
   const adapter = createGitHubAdapter();
+  const { url } = await adapter.beginAuthorize(payload.state, redirectUri);
+
+  redirect(url);
+}
+
+/**
+ * (마)-1 — Supabase Management OAuth 플로우 시작.
+ *
+ * connectGitHubAction과 동일한 패턴. callback은 /auth/supabase/callback이며
+ * redirect_uri는 그쪽에서 다시 origin으로 재구성한다 (RFC 6749 일치 필수).
+ */
+export async function connectSupabaseAction(
+  formData: FormData,
+): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) {
+    throw new Error("로그인이 필요합니다");
+  }
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const milestoneId = String(formData.get("milestoneId") ?? "");
+  const substepId = String(formData.get("substepId") ?? "");
+  const locale = resolveLocale(formData.get("locale"));
+
+  if (!projectId || !milestoneId || !substepId) {
+    throw new Error("필수 파라미터 누락");
+  }
+
+  const project = getDummyProject(projectId);
+  if (!project || project.userId !== user.id) {
+    throw new Error("프로젝트를 찾을 수 없습니다");
+  }
+
+  const payload = buildPayload({
+    userId: user.id,
+    projectId,
+    milestoneId,
+    substepId,
+    returnTo: buildReturnTo(locale, projectId, milestoneId),
+  });
+
+  const signed = signOAuthState(payload);
+  const cookieStore = await cookies();
+  cookieStore.set(OAUTH_STATE_COOKIE, signed, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: OAUTH_STATE_TTL_SECONDS,
+    path: "/",
+  });
+
+  const hdrs = await headers();
+  const host = hdrs.get("host") ?? "localhost:3000";
+  const proto =
+    hdrs.get("x-forwarded-proto") ??
+    (host.startsWith("localhost") ? "http" : "https");
+  const origin = `${proto}://${host}`;
+  const redirectUri = `${origin}/auth/supabase/callback`;
+
+  const adapter = createSupabaseMgmtAdapter();
   const { url } = await adapter.beginAuthorize(payload.state, redirectUri);
 
   redirect(url);

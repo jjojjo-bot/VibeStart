@@ -745,6 +745,7 @@
     "comingSoon": "जल्द आ रहा है",
     "successGithub": "आपका GitHub अकाउंट कनेक्ट हो गया",
     "successVercel": "आपका Vercel अकाउंट कनेक्ट हो गया",
+    "successSupabase": "आपका Supabase अकाउंट कनेक्ट हो गया",
     "errorGeneric": "कनेक्शन विफल: {code}",
     "vercelHelperText": "vercel.com पर Personal Access Token बनाकर यहां पेस्ट करें। हम इसे सुरक्षित रूप से सहेजेंगे।",
     "vercelHelperLink": "टोकन बनाएं",

@@ -745,6 +745,7 @@
     "comingSoon": "Coming soon",
     "successGithub": "Your GitHub account is connected",
     "successVercel": "Your Vercel account is connected",
+    "successSupabase": "Your Supabase account is connected",
     "errorGeneric": "Connection failed: {code}",
     "vercelHelperText": "Create a Personal Access Token on vercel.com and paste it here. We'll store it securely.",
     "vercelHelperLink": "Create a token",

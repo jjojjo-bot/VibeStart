@@ -745,6 +745,7 @@
     "comingSoon": "곧 제공",
     "successGithub": "GitHub 계정이 연결됐어요",
     "successVercel": "Vercel 계정이 연결됐어요",
+    "successSupabase": "Supabase 계정이 연결됐어요",
     "errorGeneric": "연결 실패: {code}",
     "vercelHelperText": "vercel.com에서 Personal Access Token을 만들어 붙여넣어 주세요. 토큰은 안전하게 저장돼요.",
     "vercelHelperLink": "토큰 만들러 가기",
