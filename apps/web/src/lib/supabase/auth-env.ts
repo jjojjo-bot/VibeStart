@@ -1,9 +1,11 @@
 /**
- * Phase 2 — vibestart 자체 Supabase 프로젝트 (사용자/프로젝트/OAuth 데이터) env.
+ * Phase 2 — vibestart 자체 Supabase 프로젝트 env.
  *
- * 통계용 Supabase 프로젝트(NEXT_PUBLIC_SUPABASE_URL / ANON_KEY)와는 완전히
- * 분리된 별도 프로젝트다. 2026-04-08 결정으로 통계와 사용자 데이터는 서로
- * 다른 Supabase 프로젝트에 둔다.
+ * 사용자/프로젝트/OAuth 데이터 + 통계 데이터를 모두 담는 단일 프로젝트다.
+ * 2026-04-08 결정으로 둘을 분리했었으나 2026-04-09에 Supabase Free 플랜의
+ * 프로젝트 2개 한도 때문에 (마)-2 단계 사용자 사이트 DB 자동 생성이 막혀
+ * 통계를 같은 DB로 합쳤다. 통계 테이블은 RLS로 익명 SELECT만 허용 + RPC로만
+ * 쓰기 가능하게 격리되어 있어 사용자 데이터와 같은 DB에 있어도 노출 위험 없음.
  *
  * 필요한 env:
  *   NEXT_PUBLIC_AUTH_SUPABASE_URL

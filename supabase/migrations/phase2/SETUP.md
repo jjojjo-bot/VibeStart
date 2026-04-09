@@ -1,6 +1,9 @@
 # VibeStart Phase 2 — Supabase 셋업 가이드
 
-Phase 2의 사용자/프로젝트/OAuth 데이터는 **기존 통계용 Supabase 프로젝트와 분리된 새 Supabase 프로젝트**에 저장합니다. 2026-04-08 결정: 통계는 익명·공개 가능하지만 사용자 데이터는 민감하므로 물리적으로 분리합니다.
+Phase 2의 사용자/프로젝트/OAuth/통계 데이터는 단일 Supabase 프로젝트(`vibestart-auth`)에 저장됩니다.
+
+> **2026-04-08 결정**: 통계와 사용자 데이터를 두 프로젝트로 물리 분리하기로 했음.
+> **2026-04-09 결정 변경**: Supabase Free 플랜의 organization당 active 프로젝트 2개 한도로 인해 (마)-2 단계의 사용자 사이트 DB 자동 생성이 막혔다. 통계 테이블을 RLS로 격리(익명 SELECT 허용 + RPC만 쓰기)해 동일 DB에 통합하고 옛 통계 프로젝트를 폐기. 마이그레이션 절차는 `MIGRATION_GUIDE_003.md` 참조.
 
 이 가이드는 새 Supabase 프로젝트 생성부터 vibestart 로컬 개발 환경에서 Google 로그인이 작동하기까지의 전 과정을 설명합니다.
 
