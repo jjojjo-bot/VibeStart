@@ -380,6 +380,22 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
       totalSubsteps: milestone.substeps.length,
       allMilestoneIds: allMilestones.map((m) => m.id),
     });
+
+    // (라)-5: 배포 성공 직후 따라오는 verify kind substep을 자동 완료.
+    // 사용자가 이미 "배포하기"를 명시적으로 눌렀고 결과 URL도 받았으므로
+    // verify는 의례적인 단계. 다음 substep이 verify면 자동으로 완료 처리해
+    // 마일스톤이 자연스럽게 닫히게 한다.
+    const currentIdx = milestone.substeps.findIndex((s) => s.id === substepId);
+    const nextSubstep = milestone.substeps[currentIdx + 1];
+    if (nextSubstep && nextSubstep.kind === "verify") {
+      markSubstepCompleted({
+        projectId: project!.id,
+        milestoneId,
+        substepId: nextSubstep.id,
+        totalSubsteps: milestone.substeps.length,
+        allMilestoneIds: allMilestones.map((m) => m.id),
+      });
+    }
   }
 
   // 1) Idempotent guard — 이미 vercel_project 리소스가 있으면 skip

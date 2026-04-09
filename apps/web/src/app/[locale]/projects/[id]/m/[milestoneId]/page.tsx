@@ -44,6 +44,7 @@ import {
   getDummyProject,
   getProjectProgress,
   getProjectResourceByType,
+  markSubstepCompleted,
 } from "@/lib/projects/in-memory-store";
 import {
   SUPPORTED_PROVIDERS,
@@ -136,7 +137,7 @@ export default async function MilestoneRunPage({
     project.id,
     allMilestones.map((m) => m.id),
   );
-  const currentState = progress[milestone.id] ?? "locked";
+  let currentState = progress[milestone.id] ?? "locked";
   const storedCompletedSubsteps = getCompletedSubstepIds(
     project.id,
     milestone.id,
@@ -432,13 +433,48 @@ export default async function MilestoneRunPage({
     };
   }
 
-  // vercel_project 존재 시 m1-s4 완료로 derive (oauth 패턴과 동일)
+  // vercel_project 존재 시 m1-s4 + 다음 verify substep을 derive에 추가.
   if (existingVercelProject && deploySubstep) {
-    // derivedCompletedFromResources에 이미 push하려면 위에서 했어야 하지만,
-    // 여기서 initialCompletedSubsteps 배열은 이미 계산됐으므로 직접 추가.
     if (!initialCompletedSubsteps.includes(deploySubstep.id)) {
       initialCompletedSubsteps.push(deploySubstep.id);
     }
+    // 다음 substep이 verify면 자동 완료 (firstDeployAction의 동작과 동일)
+    const idx = milestone.substeps.findIndex(
+      (s) => s.id === deploySubstep.id,
+    );
+    const nextSubstep = milestone.substeps[idx + 1];
+    if (
+      nextSubstep &&
+      nextSubstep.kind === "verify" &&
+      !initialCompletedSubsteps.includes(nextSubstep.id)
+    ) {
+      initialCompletedSubsteps.push(nextSubstep.id);
+    }
+  }
+
+  // 모든 derive 결과를 store에 동기화 — OAuth/Resource derive로만 UI에 표시되던
+  // substep을 retroactively store에 마킹해 milestoneState가 정상 전환되도록.
+  // store가 이미 가진 substep은 markSubstepCompleted가 idempotent로 처리.
+  const alreadyStored = new Set(storedCompletedSubsteps);
+  let storeChanged = false;
+  for (const id of initialCompletedSubsteps) {
+    if (!alreadyStored.has(id)) {
+      markSubstepCompleted({
+        projectId: project.id,
+        milestoneId: milestone.id,
+        substepId: id,
+        totalSubsteps: milestone.substeps.length,
+        allMilestoneIds: allMilestones.map((m) => m.id),
+      });
+      storeChanged = true;
+    }
+  }
+  if (storeChanged) {
+    const updatedProgress = getProjectProgress(
+      project.id,
+      allMilestones.map((m) => m.id),
+    );
+    currentState = updatedProgress[milestone.id] ?? currentState;
   }
 
   // Server에서 substep 제목과 예상 시간 라벨을 미리 해석해 Client 컴포넌트에
