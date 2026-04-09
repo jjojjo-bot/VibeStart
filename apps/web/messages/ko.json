@@ -743,7 +743,17 @@
     "connectedAs": "{username} 연결됨",
     "comingSoon": "곧 제공",
     "successGithub": "GitHub 계정이 연결됐어요",
-    "errorGeneric": "연결 실패: {code}"
+    "successVercel": "Vercel 계정이 연결됐어요",
+    "errorGeneric": "연결 실패: {code}",
+    "vercelHelperText": "vercel.com에서 Personal Access Token을 만들어 붙여넣어 주세요. 토큰은 안전하게 저장돼요.",
+    "vercelHelperLink": "토큰 만들러 가기",
+    "vercelTokenPlaceholder": "여기에 토큰을 붙여넣어 주세요",
+    "vercelConnectButton": "Vercel 연결",
+    "vercelErrorMissingToken": "토큰을 입력해 주세요",
+    "vercelErrorInvalidToken": "토큰이 유효하지 않아요. vercel.com에서 새 토큰을 발급해 다시 시도해 주세요",
+    "vercelErrorForbidden": "토큰의 권한이 부족해요. Full Account 권한으로 새로 발급해 주세요",
+    "vercelErrorServiceUnavailable": "Vercel 서버 응답이 없어요. 잠시 후 다시 시도해 주세요",
+    "vercelErrorGeneric": "Vercel 연결 실패: {code}"
   },
   "CreateRepo": {
     "title": "GitHub 저장소 만들기",

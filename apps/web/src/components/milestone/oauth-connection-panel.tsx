@@ -14,7 +14,10 @@ import type { OAuthProvider } from "@vibestart/shared-types";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-import { connectGitHubAction } from "@/app/[locale]/projects/[id]/m/[milestoneId]/actions";
+import {
+  connectGitHubAction,
+  connectVercelAction,
+} from "@/app/[locale]/projects/[id]/m/[milestoneId]/actions";
 
 export interface OAuthConnectionRow {
   substepId: string;
@@ -30,11 +33,17 @@ export interface OAuthConnectionRow {
 }
 
 export interface OAuthConnectionPanelLabels {
-  title: string;
+  /** null이면 섹션 제목을 렌더하지 않는다 (단일 row 패널 등). */
+  title: string | null;
   connectButton: string;
   comingSoon: string;
   successMessage: string | null;
   errorMessage: string | null;
+  /** Vercel PAT 입력 폼 라벨들. (라)-3에서 추가. */
+  vercelHelperText: string;
+  vercelHelperLink: string;
+  vercelTokenPlaceholder: string;
+  vercelConnectButton: string;
 }
 
 export interface OAuthConnectionPanelProps {
@@ -65,9 +74,11 @@ export function OAuthConnectionPanel({
 
   return (
     <section className="mb-8 rounded-lg border border-border bg-card p-5">
-      <h2 className="mb-3 text-sm font-medium text-muted-foreground">
-        {labels.title}
-      </h2>
+      {labels.title && (
+        <h2 className="mb-3 text-sm font-medium text-muted-foreground">
+          {labels.title}
+        </h2>
+      )}
 
       {labels.successMessage && (
         <div className="mb-3 rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-400">
@@ -85,45 +96,102 @@ export function OAuthConnectionPanel({
           <li
             key={row.substepId}
             className={cn(
-              "flex items-center gap-3 rounded-md border border-border bg-background/40 p-3",
+              "rounded-md border border-border bg-background/40 p-3",
               row.connected && "border-primary/40 bg-primary/5",
             )}
             data-provider={row.provider}
             data-connected={row.connected}
           >
-            <span aria-hidden="true" className="text-xl leading-none">
-              {PROVIDER_EMOJI[row.provider]}
-            </span>
-            <div className="min-w-0 flex-1">
-              <div className="text-sm font-medium">{row.providerLabel}</div>
-              {row.connected && row.connectedLabel && (
-                <div className="text-xs text-muted-foreground">
-                  {row.connectedLabel}
-                </div>
-              )}
+            <div className="flex items-center gap-3">
+              <span aria-hidden="true" className="text-xl leading-none">
+                {PROVIDER_EMOJI[row.provider]}
+              </span>
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-medium">{row.providerLabel}</div>
+                {row.connected && row.connectedLabel && (
+                  <div className="text-xs text-muted-foreground">
+                    {row.connectedLabel}
+                  </div>
+                )}
+              </div>
+              {row.connected ? (
+                <span
+                  aria-label="connected"
+                  className="text-sm text-emerald-400"
+                >
+                  ✓
+                </span>
+              ) : !row.supported ? (
+                <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
+                  {labels.comingSoon}
+                </span>
+              ) : row.provider === "github" ? (
+                <form action={connectGitHubAction}>
+                  <input type="hidden" name="projectId" value={projectId} />
+                  <input
+                    type="hidden"
+                    name="milestoneId"
+                    value={milestoneId}
+                  />
+                  <input
+                    type="hidden"
+                    name="substepId"
+                    value={row.substepId}
+                  />
+                  <input type="hidden" name="locale" value={locale} />
+                  <Button type="submit" size="sm">
+                    {labels.connectButton}
+                  </Button>
+                </form>
+              ) : null}
             </div>
-            {row.connected ? (
-              <span
-                aria-label="connected"
-                className="text-sm text-emerald-400"
-              >
-                ✓
-              </span>
-            ) : !row.supported ? (
-              <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
-                {labels.comingSoon}
-              </span>
-            ) : row.provider === "github" ? (
-              <form action={connectGitHubAction}>
-                <input type="hidden" name="projectId" value={projectId} />
-                <input type="hidden" name="milestoneId" value={milestoneId} />
-                <input type="hidden" name="substepId" value={row.substepId} />
-                <input type="hidden" name="locale" value={locale} />
-                <Button type="submit" size="sm">
-                  {labels.connectButton}
-                </Button>
-              </form>
-            ) : null}
+
+            {/* Vercel은 토큰 입력창이 필요해 row 아래쪽에 별도 form 영역 */}
+            {!row.connected &&
+              row.supported &&
+              row.provider === "vercel" && (
+                <form
+                  action={connectVercelAction}
+                  className="mt-3 flex flex-col gap-2"
+                >
+                  <input type="hidden" name="projectId" value={projectId} />
+                  <input
+                    type="hidden"
+                    name="milestoneId"
+                    value={milestoneId}
+                  />
+                  <input
+                    type="hidden"
+                    name="substepId"
+                    value={row.substepId}
+                  />
+                  <input type="hidden" name="locale" value={locale} />
+                  <p className="text-xs text-muted-foreground">
+                    {labels.vercelHelperText}{" "}
+                    <a
+                      href="https://vercel.com/account/tokens"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary underline underline-offset-2"
+                    >
+                      {labels.vercelHelperLink} ↗
+                    </a>
+                  </p>
+                  <div className="flex gap-2">
+                    <input
+                      type="password"
+                      name="vercelToken"
+                      autoComplete="off"
+                      spellCheck={false}
+                      placeholder={labels.vercelTokenPlaceholder}
+                      className="min-w-0 flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm font-mono"
+                    />
+                    <Button type="submit" size="sm">
+                      {labels.vercelConnectButton}
+                    </Button>
+                  </div>
+                </form>
+              )}
           </li>
         ))}
       </ul>

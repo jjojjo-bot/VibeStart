@@ -33,6 +33,16 @@ export default function LandingPage() {
           </Link>
         </div>
 
+        {/* TEMP: Phase 2 dev 진입점. Phase 2 정식 오픈 전까지 개발 편의용. */}
+        <div className="mt-4">
+          <Link
+            href="/dashboard"
+            className="text-xs text-muted-foreground/60 hover:text-muted-foreground underline underline-offset-4"
+          >
+            Phase 2 미리보기 →
+          </Link>
+        </div>
+
         {/* 진행 방식 소개 */}
         <div className="mt-20 grid gap-6 sm:grid-cols-3">
           {STEP_NUMBERS.map((num) => (

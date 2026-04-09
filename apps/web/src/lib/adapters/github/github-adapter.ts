@@ -200,3 +200,48 @@ export function createGitHubAdapter(): VcsPort {
     },
   };
 }
+
+/**
+ * 특정 owner/name 저장소가 존재하는지 확인하고, 있으면 VcsRepo로 매핑해
+ * 반환한다. 없으면 null. (라)-2 idempotent recovery 용도 — Phase 2a의
+ * in-memory project_resources가 dev 재시작으로 비워졌을 때 GitHub.com에는
+ * 실제로 repo가 살아있는 케이스를 구제한다.
+ *
+ * VcsPort에 정식으로 추가하지 않는 이유: Phase 2b에서 project_resources가
+ * Supabase로 옮겨가면 이 recovery 자체가 불필요해지기 때문에 임시 헬퍼로
+ * 자리잡는 게 적절.
+ */
+export async function fetchGitHubRepoIfExists(
+  accessToken: string,
+  owner: string,
+  name: string,
+): Promise<VcsRepo | null> {
+  const res = await fetch(
+    `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(name)}`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        Accept: "application/vnd.github+json",
+        "User-Agent": "VibeStart",
+        "X-GitHub-Api-Version": "2022-11-28",
+      },
+    },
+  );
+
+  if (res.status === 404) return null;
+  if (res.status === 401) throw new Error("github:unauthorized");
+  if (res.status === 403) throw new Error("github:forbidden");
+  if (!res.ok) throw new Error(`github:http_${res.status}`);
+
+  const repo = (await res.json()) as GitHubRepoResponse;
+  return {
+    id: String(repo.id),
+    name: repo.name,
+    fullName: repo.full_name,
+    htmlUrl: repo.html_url,
+    cloneUrl: repo.clone_url,
+    defaultBranch: repo.default_branch,
+    isPrivate: repo.private,
+  };
+}

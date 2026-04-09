@@ -743,7 +743,17 @@
     "connectedAs": "Conectado como {username}",
     "comingSoon": "Próximamente",
     "successGithub": "Tu cuenta de GitHub está conectada",
-    "errorGeneric": "Conexión fallida: {code}"
+    "successVercel": "Tu cuenta de Vercel está conectada",
+    "errorGeneric": "Conexión fallida: {code}",
+    "vercelHelperText": "Crea un Personal Access Token en vercel.com y pégalo aquí. Lo guardaremos de forma segura.",
+    "vercelHelperLink": "Crear un token",
+    "vercelTokenPlaceholder": "Pega tu token aquí",
+    "vercelConnectButton": "Conectar Vercel",
+    "vercelErrorMissingToken": "Introduce un token",
+    "vercelErrorInvalidToken": "El token no es válido. Genera uno nuevo en vercel.com y vuelve a intentarlo.",
+    "vercelErrorForbidden": "El token no tiene permisos suficientes. Genera uno con permiso Full Account.",
+    "vercelErrorServiceUnavailable": "Vercel no responde. Vuelve a intentarlo más tarde.",
+    "vercelErrorGeneric": "Conexión a Vercel fallida: {code}"
   },
   "CreateRepo": {
     "title": "Crear un repositorio de GitHub",

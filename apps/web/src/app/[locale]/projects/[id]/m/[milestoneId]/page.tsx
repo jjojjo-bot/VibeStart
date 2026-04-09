@@ -31,8 +31,13 @@ import {
 } from "@/components/milestone/oauth-connection-panel";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { getOAuthConnection } from "@/lib/auth/oauth-connections";
+import { fetchGitHubRepoIfExists } from "@/lib/adapters/github/github-adapter";
 import {
+  getOAuthAccessToken,
+  getOAuthConnection,
+} from "@/lib/auth/oauth-connections";
+import {
+  addProjectResource,
   getCompletedSubstepIds,
   getDummyProject,
   getProjectProgress,
@@ -63,6 +68,22 @@ function resolveCreateRepoError(
   if (raw.includes("unauthorized")) return t("errorUnauthorized");
   if (raw.includes("forbidden")) return t("errorForbidden");
   return t("errorGeneric", { code: raw });
+}
+
+/**
+ * `?vercel_error=...` 쿼리 파라미터를 사용자 친화 메시지로 매핑.
+ * vercel-adapter.ts의 에러 코드와 connectVercelAction의 missing_token 처리.
+ */
+function resolveVercelError(
+  raw: string,
+  t: (key: string, values?: Record<string, string | number>) => string,
+): string {
+  if (raw.includes("missing_token")) return t("vercelErrorMissingToken");
+  if (raw.includes("invalid_token")) return t("vercelErrorInvalidToken");
+  if (raw.includes("forbidden")) return t("vercelErrorForbidden");
+  if (raw.includes("service_unavailable"))
+    return t("vercelErrorServiceUnavailable");
+  return t("vercelErrorGeneric", { code: raw });
 }
 
 export default async function MilestoneRunPage({
@@ -100,7 +121,7 @@ export default async function MilestoneRunPage({
     allMilestones.map((m) => m.id),
   );
   const currentState = progress[milestone.id] ?? "locked";
-  const initialCompletedSubsteps = getCompletedSubstepIds(
+  const storedCompletedSubsteps = getCompletedSubstepIds(
     project.id,
     milestone.id,
   );
@@ -140,25 +161,120 @@ export default async function MilestoneRunPage({
     });
   }
 
-  // 성공/에러 토스트 메시지
+  // OAuth 연결은 Supabase에 영구 저장되지만 substep 완료 상태는 (Phase 2a
+  // 한정) in-memory store에만 있어서 dev 서버 재시작 시 사라진다. 사용자가
+  // 같은 작업을 다시 하지 않아도 되도록, 연결이 살아있는 OAuth substep은
+  // 자동으로 완료된 것으로 간주한다. Phase 2b에서 substep 완료 상태가 DB로
+  // 옮겨가면 이 derive 로직은 제거.
+  const derivedCompletedFromOauth = connectionRows
+    .filter((r) => r.connected)
+    .map((r) => r.substepId);
+
+  // m1-s2-create-repo recovery: in-memory project_resources는 dev 재시작 시
+  // 비워지지만 GitHub.com에는 실제 repo가 살아있다. GitHub OAuth가 연결돼
+  // 있으면 GitHub API로 `<username>/<slug>` 저장소 존재 여부를 확인하고,
+  // 있으면 in-memory에 다시 등록한다. Phase 2b 이후 불필요.
+  const createRepoSubstep = milestone.substeps.find(
+    (s) => s.id === "m1-s2-create-repo",
+  );
+  let existingRepo = getProjectResourceByType(project.id, "github_repo");
+  if (createRepoSubstep && !existingRepo) {
+    const githubRow = connectionRows.find((r) => r.provider === "github");
+    if (githubRow?.connected) {
+      try {
+        const githubConn = await getOAuthConnection(user.id, "github");
+        const githubToken = await getOAuthAccessToken(user.id, "github");
+        if (githubConn?.providerUsername && githubToken) {
+          const repo = await fetchGitHubRepoIfExists(
+            githubToken,
+            githubConn.providerUsername,
+            project.slug,
+          );
+          if (repo) {
+            existingRepo = addProjectResource({
+              projectId: project.id,
+              provider: "github",
+              resourceType: "github_repo",
+              externalId: repo.fullName,
+              url: repo.htmlUrl,
+              metadata: {
+                repoId: repo.id,
+                defaultBranch: repo.defaultBranch,
+                cloneUrl: repo.cloneUrl,
+                isPrivate: repo.isPrivate,
+              },
+            });
+          }
+        }
+      } catch (err) {
+        console.error("[milestone page] github repo recovery failed", {
+          projectId: project.id,
+          error: err instanceof Error ? err.message : String(err),
+        });
+        // recovery 실패해도 사용자는 여전히 "저장소 생성" 버튼으로 재시도 가능
+      }
+    }
+  }
+
+  // project_resources에서 derive: github_repo가 있으면 m1-s2 완료로 간주.
+  const derivedCompletedFromResources: string[] = [];
+  if (existingRepo && createRepoSubstep) {
+    derivedCompletedFromResources.push(createRepoSubstep.id);
+  }
+
+  const initialCompletedSubsteps = Array.from(
+    new Set([
+      ...storedCompletedSubsteps,
+      ...derivedCompletedFromOauth,
+      ...derivedCompletedFromResources,
+    ]),
+  );
+
+  // 성공/에러 토스트 메시지. github와 vercel 두 provider가 같은 패널을
+  // 공유하므로 둘 다 처리. 동시 발생은 거의 없지만 vercel을 우선으로 표시.
   const githubConnected = query.github_connected === "1";
+  const vercelConnected = query.vercel_connected === "1";
   const oauthError =
     typeof query.oauth_error === "string" ? query.oauth_error : null;
-  const connectionLabels = {
-    title: tConnections("title"),
+  const vercelError =
+    typeof query.vercel_error === "string" ? query.vercel_error : null;
+
+  // Substep 카탈로그 순서 (s1 GitHub → s2 저장소 → s3 Vercel)에 맞춰 OAuth
+  // 패널을 provider별로 분리해 렌더한다. 각 패널은 자기 provider 토스트만
+  // 표시.
+  const githubRows = connectionRows.filter((r) => r.provider === "github");
+  const vercelRows = connectionRows.filter((r) => r.provider === "vercel");
+
+  const baseConnectionLabels = {
     connectButton: tConnections("connectButton"),
     comingSoon: tConnections("comingSoon"),
+    vercelHelperText: tConnections("vercelHelperText"),
+    vercelHelperLink: tConnections("vercelHelperLink"),
+    vercelTokenPlaceholder: tConnections("vercelTokenPlaceholder"),
+    vercelConnectButton: tConnections("vercelConnectButton"),
+  };
+
+  const githubPanelLabels = {
+    ...baseConnectionLabels,
+    title: null,
     successMessage: githubConnected ? tConnections("successGithub") : null,
     errorMessage: oauthError
       ? tConnections("errorGeneric", { code: oauthError })
       : null,
   };
 
+  const vercelPanelLabels = {
+    ...baseConnectionLabels,
+    title: null,
+    successMessage: vercelConnected ? tConnections("successVercel") : null,
+    errorMessage: vercelError
+      ? resolveVercelError(vercelError, tConnections)
+      : null,
+  };
+
   // CreateRepoPanel — m1-deploy 마일스톤에서만 표시.
   // 다른 트랙/마일스톤에 동일 패턴이 더 필요해지면 그때 추상화한다.
-  const createRepoSubstep = milestone.substeps.find(
-    (s) => s.id === "m1-s2-create-repo",
-  );
+  // createRepoSubstep / existingRepo는 위쪽 recovery 블록에서 이미 계산됨.
   let createRepoPanelData: {
     state: CreateRepoPanelState;
     existingRepoUrl: string | null;
@@ -177,7 +293,6 @@ export default async function MilestoneRunPage({
   if (createRepoSubstep) {
     const githubRow = connectionRows.find((r) => r.provider === "github");
     const githubLinked = githubRow?.connected ?? false;
-    const existingRepo = getProjectResourceByType(project.id, "github_repo");
     const createRepoDone = initialCompletedSubsteps.includes(
       createRepoSubstep.id,
     );
@@ -240,7 +355,7 @@ export default async function MilestoneRunPage({
   };
 
   return (
-    <main id="main-content" className="mx-auto max-w-5xl px-6 py-12">
+    <main id="main-content" className="mx-auto max-w-6xl px-6 py-12">
       {/* 상단: 대시보드로 돌아가기 */}
       <div className="mb-6">
         <Link
@@ -273,47 +388,66 @@ export default async function MilestoneRunPage({
         </div>
       </header>
 
-      {/* OAuth 연결 관리 패널 (oauth kind 서브스텝이 있을 때만) */}
-      <OAuthConnectionPanel
-        rows={connectionRows}
-        projectId={project.id}
-        milestoneId={milestone.id}
-        locale={locale}
-        labels={connectionLabels}
-      />
+      {/* 사이드바(진행 단계, sticky) + 메인(액션 패널들) 2단 레이아웃 */}
+      <div className="grid gap-8 lg:grid-cols-[320px_1fr]">
+        {/* 좌측 사이드바 — 진행 단계. lg+ 에서 sticky로 고정. */}
+        <aside className="lg:sticky lg:top-6 lg:self-start">
+          <section className="rounded-lg border border-border bg-card p-4">
+            <h2 className="mb-3 text-sm font-medium text-muted-foreground">
+              {tRun("substepsTitle")}
+            </h2>
+            <SubstepList
+              substeps={displaySubsteps}
+              initialCompletedIds={initialCompletedSubsteps}
+              labels={substepLabels}
+            />
+          </section>
+        </aside>
 
-      {/* GitHub 저장소 자동 생성 패널 (m1-deploy 마일스톤 한정) */}
-      {createRepoPanelData && createRepoSubstep && (
-        <CreateRepoPanel
-          projectId={project.id}
-          milestoneId={milestone.id}
-          substepId={createRepoSubstep.id}
-          locale={locale}
-          state={createRepoPanelData.state}
-          existingRepoUrl={createRepoPanelData.existingRepoUrl}
-          labels={createRepoPanelData.labels}
-        />
-      )}
+        {/* 우측 메인 — 액션 패널들 + 결과 미리보기 */}
+        <div className="min-w-0">
+          {/* (1) GitHub 계정 연결 — m1-s1 */}
+          {githubRows.length > 0 && (
+            <OAuthConnectionPanel
+              rows={githubRows}
+              projectId={project.id}
+              milestoneId={milestone.id}
+              locale={locale}
+              labels={githubPanelLabels}
+            />
+          )}
 
-      {/* 본문 — 서브스텝 + 결과 미리보기 */}
-      <div className="grid gap-8 lg:grid-cols-2">
-        <section>
-          <h2 className="mb-3 text-sm font-medium text-muted-foreground">
-            {tRun("substepsTitle")}
-          </h2>
-          <SubstepList
-            substeps={displaySubsteps}
-            initialCompletedIds={initialCompletedSubsteps}
-            labels={substepLabels}
-          />
-        </section>
-        <section>
+          {/* (2) GitHub 저장소 자동 생성 — m1-s2 */}
+          {createRepoPanelData && createRepoSubstep && (
+            <CreateRepoPanel
+              projectId={project.id}
+              milestoneId={milestone.id}
+              substepId={createRepoSubstep.id}
+              locale={locale}
+              state={createRepoPanelData.state}
+              existingRepoUrl={createRepoPanelData.existingRepoUrl}
+              labels={createRepoPanelData.labels}
+            />
+          )}
+
+          {/* (3) Vercel 계정 연결 — m1-s3 */}
+          {vercelRows.length > 0 && (
+            <OAuthConnectionPanel
+              rows={vercelRows}
+              projectId={project.id}
+              milestoneId={milestone.id}
+              locale={locale}
+              labels={vercelPanelLabels}
+            />
+          )}
+
+          {/* 결과 미리보기 */}
           <ResultPreview
             kind={milestone.previewKind}
             completed={currentState === "completed"}
             title={tRun("previewTitle")}
           />
-        </section>
+        </div>
       </div>
 
       <Separator className="my-10" />

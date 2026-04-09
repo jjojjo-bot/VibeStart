@@ -743,7 +743,17 @@
     "connectedAs": "已连接 {username}",
     "comingSoon": "即将推出",
     "successGithub": "GitHub 账号已连接",
-    "errorGeneric": "连接失败: {code}"
+    "successVercel": "Vercel 账号已连接",
+    "errorGeneric": "连接失败: {code}",
+    "vercelHelperText": "请在 vercel.com 创建 Personal Access Token 并粘贴到此处。我们会安全地存储该令牌。",
+    "vercelHelperLink": "去创建令牌",
+    "vercelTokenPlaceholder": "在此粘贴令牌",
+    "vercelConnectButton": "连接 Vercel",
+    "vercelErrorMissingToken": "请输入令牌",
+    "vercelErrorInvalidToken": "令牌无效。请在 vercel.com 重新生成令牌后再试。",
+    "vercelErrorForbidden": "令牌权限不足。请使用 Full Account 权限重新生成。",
+    "vercelErrorServiceUnavailable": "Vercel 服务器无响应。请稍后再试。",
+    "vercelErrorGeneric": "Vercel 连接失败: {code}"
   },
   "CreateRepo": {
     "title": "创建 GitHub 仓库",

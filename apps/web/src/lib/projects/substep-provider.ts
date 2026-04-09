@@ -24,10 +24,13 @@ export function providerFromSubstepId(substepId: string): OAuthProvider | null {
 }
 
 /**
- * Phase 2a (라)-1에서 실제로 구현된 provider들. 나머지는 UI에 "곧 제공"으로.
+ * Phase 2a (라)-1/3에서 실제로 구현된 provider들. 나머지는 UI에 "곧 제공"으로.
+ * - github: (라)-1 OAuth flow
+ * - vercel: (라)-3 PAT 붙여넣기 (Vercel은 일반 OAuth Integration 미지원)
  */
 export const SUPPORTED_PROVIDERS: ReadonlySet<OAuthProvider> = new Set<OAuthProvider>([
   "github",
+  "vercel",
 ]);
 
 const PROVIDER_LABEL: Record<OAuthProvider, string> = {

@@ -15,6 +15,11 @@
  * private 저장소를 만들고 (auto_init=true), project_resources에 기록 후
  * substep을 완료 마킹한다. 동일 리소스가 이미 있으면 GitHub API 호출 없이
  * idempotent하게 redirect.
+ *
+ * connectVercelAction: (라)-3 — 사용자가 vercel.com에서 발급한 Personal
+ * Access Token을 폼으로 받아 /v2/user로 검증하고, oauth_connections에
+ * upsert한 뒤 substep을 완료 마킹한다. Vercel은 일반 OAuth Integration을
+ * 지원하지 않아 PAT 방식.
  */
 
 import { cookies, headers } from "next/headers";
@@ -27,12 +32,19 @@ import type { VcsRepo } from "@vibestart/shared-types";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { createGitHubAdapter } from "@/lib/adapters/github/github-adapter";
 import {
+  fetchVercelUser,
+  type VercelUserMeta,
+} from "@/lib/adapters/vercel/vercel-adapter";
+import {
   OAUTH_STATE_COOKIE,
   OAUTH_STATE_TTL_SECONDS,
   buildPayload,
   signOAuthState,
 } from "@/lib/auth/oauth-state";
-import { getOAuthAccessToken } from "@/lib/auth/oauth-connections";
+import {
+  getOAuthAccessToken,
+  saveOAuthConnection,
+} from "@/lib/auth/oauth-connections";
 import {
   addProjectResource,
   getDummyProject,
@@ -222,4 +234,98 @@ export async function createGitHubRepoAction(
 
   revalidatePath(returnTo);
   redirect(`${returnTo}?repo_created=1`);
+}
+
+/**
+ * (라)-3 — Vercel Personal Access Token 연결.
+ *
+ * Vercel은 일반 OAuth Integration을 지원하지 않아 사용자가 vercel.com에서
+ * 직접 토큰을 발급해 폼에 붙여넣는다. 우리는 그 토큰으로 /v2/user를 호출해
+ * 사용자 메타데이터를 얻고, 검증이 끝나면 oauth_connections에 그대로 저장.
+ *
+ * (라)-2와 동일한 try/catch 함정 회피 패턴: redirect()는 NEXT_REDIRECT를
+ * throw하므로 try 안에서는 변수만 채우고 redirect는 밖에서 호출.
+ *
+ * 보안: 토큰은 절대 console에 찍지 않는다. errCode와 userId만 로그.
+ */
+export async function connectVercelAction(formData: FormData): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) {
+    throw new Error("로그인이 필요합니다");
+  }
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const milestoneId = String(formData.get("milestoneId") ?? "");
+  const substepId = String(formData.get("substepId") ?? "");
+  const locale = resolveLocale(formData.get("locale"));
+  const vercelToken = String(formData.get("vercelToken") ?? "").trim();
+
+  if (!projectId || !milestoneId || !substepId) {
+    throw new Error("필수 파라미터 누락");
+  }
+
+  const project = getDummyProject(projectId);
+  if (!project || project.userId !== user.id) {
+    throw new Error("프로젝트를 찾을 수 없습니다");
+  }
+
+  const returnTo = buildReturnTo(locale, projectId, milestoneId);
+
+  if (!vercelToken) {
+    redirect(`${returnTo}?vercel_error=missing_token`);
+  }
+
+  let meta: VercelUserMeta | null = null;
+  let errCode: string | null = null;
+  try {
+    meta = await fetchVercelUser(vercelToken);
+  } catch (err) {
+    console.error("[connectVercelAction] fetchVercelUser failed", {
+      userId: user.id,
+      projectId: project.id,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    errCode =
+      err instanceof Error
+        ? err.message.replace(/\s+/g, "_").slice(0, 120)
+        : "unknown";
+  }
+
+  if (errCode || !meta) {
+    redirect(
+      `${returnTo}?vercel_error=${encodeURIComponent(errCode ?? "unknown")}`,
+    );
+  }
+
+  await saveOAuthConnection({
+    userId: user.id,
+    provider: "vercel",
+    accessToken: vercelToken,
+    refreshToken: null,
+    scope: "personal-token",
+    expiresAt: null,
+    metadata: {
+      providerUserId: meta.providerUserId,
+      providerUsername: meta.providerUsername,
+      providerDisplayName: meta.providerDisplayName,
+      providerAvatarUrl: meta.providerAvatarUrl,
+    },
+  });
+
+  // substep 완료 마킹
+  const catalog = createInMemoryMilestoneCatalog();
+  const milestone = catalog.getMilestone(project.track, milestoneId);
+  const allMilestones = catalog.listMilestones(project.track);
+  if (milestone) {
+    markSubstepCompleted({
+      projectId: project.id,
+      milestoneId,
+      substepId,
+      totalSubsteps: milestone.substeps.length,
+      allMilestoneIds: allMilestones.map((m) => m.id),
+    });
+  }
+
+  revalidatePath(returnTo);
+  redirect(`${returnTo}?vercel_connected=1`);
 }

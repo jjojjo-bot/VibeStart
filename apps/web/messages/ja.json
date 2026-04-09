@@ -743,7 +743,17 @@
     "connectedAs": "{username} として接続済み",
     "comingSoon": "近日公開",
     "successGithub": "GitHubアカウントが接続されました",
-    "errorGeneric": "接続失敗: {code}"
+    "successVercel": "Vercelアカウントが接続されました",
+    "errorGeneric": "接続失敗: {code}",
+    "vercelHelperText": "vercel.comでPersonal Access Tokenを作成して貼り付けてください。トークンは安全に保存されます。",
+    "vercelHelperLink": "トークンを作成する",
+    "vercelTokenPlaceholder": "ここにトークンを貼り付けてください",
+    "vercelConnectButton": "Vercelに接続",
+    "vercelErrorMissingToken": "トークンを入力してください",
+    "vercelErrorInvalidToken": "トークンが無効です。vercel.comで新しいトークンを発行してもう一度お試しください。",
+    "vercelErrorForbidden": "トークンの権限が不足しています。Full Account権限で新規発行してください。",
+    "vercelErrorServiceUnavailable": "Vercelサーバーから応答がありません。しばらくしてからもう一度お試しください。",
+    "vercelErrorGeneric": "Vercel接続失敗: {code}"
   },
   "CreateRepo": {
     "title": "GitHubリポジトリを作成",
