@@ -32,9 +32,15 @@ import type { VcsRepo } from "@vibestart/shared-types";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { createGitHubAdapter } from "@/lib/adapters/github/github-adapter";
 import {
+  createVercelProject,
   fetchVercelUser,
+  getLatestDeployment,
+  getVercelProjectProductionUrl,
+  triggerVercelDeployment,
   type VercelUserMeta,
 } from "@/lib/adapters/vercel/vercel-adapter";
+import { pushFileToGitHub } from "@/lib/adapters/github/github-adapter";
+import { buildLandingHtml } from "@/lib/deploy/landing-template";
 import {
   OAUTH_STATE_COOKIE,
   OAUTH_STATE_TTL_SECONDS,
@@ -328,4 +334,283 @@ export async function connectVercelAction(formData: FormData): Promise<void> {
 
   revalidatePath(returnTo);
   redirect(`${returnTo}?vercel_connected=1`);
+}
+
+/**
+ * (라)-4 — Vercel 첫 배포 (GitHub 연동).
+ *
+ * 1. GitHub repo에 index.html push (랜딩 페이지)
+ * 2. Vercel 프로젝트 생성 + GitHub repo git-link
+ * 3. Vercel이 자동 배포한 결과를 폴링
+ * 4. vercel_project 리소스 저장 + substep 완료
+ *
+ * 이후 GitHub에 push하면 Vercel이 자동 재배포 (실전 CI/CD).
+ */
+export async function firstDeployAction(formData: FormData): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("로그인이 필요합니다");
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const milestoneId = String(formData.get("milestoneId") ?? "");
+  const substepId = String(formData.get("substepId") ?? "");
+  const locale = resolveLocale(formData.get("locale"));
+
+  if (!projectId || !milestoneId || !substepId) {
+    throw new Error("필수 파라미터 누락");
+  }
+
+  const project = getDummyProject(projectId);
+  if (!project || project.userId !== user.id) {
+    throw new Error("프로젝트를 찾을 수 없습니다");
+  }
+
+  const returnTo = buildReturnTo(locale, projectId, milestoneId);
+
+  // 카탈로그 조회 (substep 완료 마킹용)
+  const catalog = createInMemoryMilestoneCatalog();
+  const milestone = catalog.getMilestone(project.track, milestoneId);
+  const allMilestones = catalog.listMilestones(project.track);
+
+  function completeSubstep(): void {
+    if (!milestone) return;
+    markSubstepCompleted({
+      projectId: project!.id,
+      milestoneId,
+      substepId,
+      totalSubsteps: milestone.substeps.length,
+      allMilestoneIds: allMilestones.map((m) => m.id),
+    });
+  }
+
+  // 1) Idempotent guard — 이미 vercel_project 리소스가 있으면 skip
+  const existingDeploy = getProjectResourceByType(
+    project.id,
+    "vercel_project",
+  );
+  if (existingDeploy) {
+    completeSubstep();
+    revalidatePath(returnTo);
+    redirect(`${returnTo}?deploy_created=already`);
+  }
+
+  // 2) 선행 리소스 + 토큰 조회
+  const githubRepo = getProjectResourceByType(project.id, "github_repo");
+  if (!githubRepo) {
+    redirect(`${returnTo}?deploy_error=no_repo`);
+  }
+  const ghToken = await getOAuthAccessToken(user.id, "github");
+  if (!ghToken) {
+    redirect(`${returnTo}?deploy_error=no_github_token`);
+  }
+  const vercelToken = await getOAuthAccessToken(user.id, "vercel");
+  if (!vercelToken) {
+    redirect(`${returnTo}?deploy_error=no_vercel_token`);
+  }
+
+  // externalId는 "owner/repo" 형태 (fullName)
+  const gitRepoFullName = githubRepo.externalId;
+  const [owner, repoName] = gitRepoFullName.split("/");
+  if (!owner || !repoName) {
+    redirect(`${returnTo}?deploy_error=invalid_repo`);
+  }
+
+  // 3) GitHub repo에 index.html push
+  let errCode: string | null = null;
+  try {
+    const html = buildLandingHtml(project.name);
+    await pushFileToGitHub(
+      ghToken,
+      owner,
+      repoName,
+      "index.html",
+      html,
+      "feat: add landing page via VibeStart",
+    );
+  } catch (err) {
+    console.error("[firstDeployAction] pushFileToGitHub failed", {
+      userId: user.id,
+      projectId: project.id,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    errCode =
+      err instanceof Error
+        ? err.message.replace(/\s+/g, "_").slice(0, 120)
+        : "unknown";
+  }
+
+  if (errCode) {
+    redirect(
+      `${returnTo}?deploy_error=${encodeURIComponent(`push_failed:${errCode}`)}`,
+    );
+  }
+
+  // 4) Vercel 프로젝트 생성 + GitHub repo 연결
+  let vercelProject: { id: string; name: string } | null = null;
+  try {
+    vercelProject = await createVercelProject(
+      vercelToken,
+      project.slug,
+      gitRepoFullName,
+    );
+  } catch (err) {
+    console.error("[firstDeployAction] createVercelProject failed", {
+      userId: user.id,
+      projectId: project.id,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    errCode =
+      err instanceof Error
+        ? err.message.replace(/\s+/g, "_").slice(0, 120)
+        : "unknown";
+  }
+
+  if (errCode || !vercelProject) {
+    redirect(
+      `${returnTo}?deploy_error=${encodeURIComponent(errCode ?? "unknown")}`,
+    );
+  }
+
+  // 5) deployment 확보 — 자동 배포 5초 대기 후 없으면 수동 trigger.
+  // GitHub App 권한이 있으면 createVercelProject가 자동 배포할 수 있고
+  // 그렇지 않으면 수동 trigger가 필요하다. 두 케이스를 한 번에 처리.
+  const defaultBranch =
+    typeof githubRepo.metadata.defaultBranch === "string"
+      ? githubRepo.metadata.defaultBranch
+      : "main";
+
+  // 자동 배포 잠깐 대기 (Vercel이 webhook을 처리할 시간)
+  await new Promise((r) => setTimeout(r, 5000));
+
+  let deploymentId: string | null = null;
+  let deployUrl: string | null = null;
+  let finalState = "timeout";
+
+  try {
+    const auto = await getLatestDeployment(vercelToken, vercelProject.id);
+    if (auto) {
+      // 자동 배포 발생 — 그것을 사용
+      deploymentId = auto.id;
+      deployUrl = auto.url;
+      console.log("[firstDeployAction] using auto deployment", { id: auto.id });
+    } else {
+      // 자동 배포 없음 — 수동 trigger
+      console.log("[firstDeployAction] no auto deployment, triggering manually");
+      const triggered = await triggerVercelDeployment(
+        vercelToken,
+        vercelProject.name,
+        owner,
+        repoName,
+        defaultBranch,
+      );
+      deploymentId = triggered.id;
+      deployUrl = triggered.url;
+    }
+  } catch (err) {
+    console.error("[firstDeployAction] deployment trigger failed", {
+      userId: user.id,
+      projectId: project.id,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    errCode =
+      err instanceof Error
+        ? err.message.replace(/\s+/g, "_").slice(0, 120)
+        : "unknown";
+  }
+
+  if (errCode || !deploymentId) {
+    redirect(
+      `${returnTo}?deploy_error=${encodeURIComponent(errCode ?? "no_deployment")}`,
+    );
+  }
+
+  // 6) deployment가 READY/ERROR/CANCELED에 도달할 때까지 폴링
+  const POLL_INTERVAL = 3000;
+  const POLL_MAX = 60000;
+  const start = Date.now();
+
+  try {
+    while (Date.now() - start < POLL_MAX) {
+      const current = await getLatestDeployment(
+        vercelToken,
+        vercelProject.id,
+      );
+      if (current) {
+        deployUrl = current.url;
+        if (current.readyState === "READY") {
+          finalState = "READY";
+          break;
+        }
+        if (
+          current.readyState === "ERROR" ||
+          current.readyState === "CANCELED"
+        ) {
+          finalState = current.readyState;
+          break;
+        }
+      }
+      await new Promise((r) => setTimeout(r, POLL_INTERVAL));
+    }
+  } catch (err) {
+    console.error("[firstDeployAction] polling failed", {
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+
+  // 7) 배포 실패/타임아웃 처리 — URL 저장하지 않음 (잘못된 fallback URL을
+  // 사용자에게 보이지 않게).
+  if (finalState === "ERROR" || finalState === "CANCELED") {
+    redirect(
+      `${returnTo}?deploy_error=${encodeURIComponent(`deploy_${finalState.toLowerCase()}`)}`,
+    );
+  }
+
+  if (finalState === "timeout") {
+    // 배포가 60초 안에 완료되지 않음. 리소스 저장하지 않고 타임아웃 안내만.
+    // 사용자가 잠시 후 다시 시도하면 자동 배포가 완료돼 있을 수 있음.
+    redirect(`${returnTo}?deploy_error=timeout`);
+  }
+
+  // 8) READY 상태 — 안정적인 production URL 조회 후 리소스 저장.
+  let productionAlias: string | null = null;
+  try {
+    productionAlias = await getVercelProjectProductionUrl(
+      vercelToken,
+      vercelProject.id,
+    );
+  } catch (err) {
+    console.error("[firstDeployAction] getVercelProjectProductionUrl failed", {
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+
+  // production alias > per-deployment URL. 둘 다 없으면 에러로 처리
+  // (project name 기반 fallback URL은 이미 다른 사람이 쓰고 있을 수 있어 위험)
+  const siteUrl = productionAlias
+    ? `https://${productionAlias}`
+    : deployUrl
+      ? `https://${deployUrl}`
+      : null;
+
+  if (!siteUrl) {
+    redirect(`${returnTo}?deploy_error=no_url`);
+  }
+
+  addProjectResource({
+    projectId: project.id,
+    provider: "vercel",
+    resourceType: "vercel_project",
+    externalId: vercelProject.id,
+    url: siteUrl,
+    metadata: {
+      vercelProjectName: vercelProject.name,
+      deploymentId,
+      deployUrl,
+      productionAlias,
+      readyState: finalState,
+    },
+  });
+  completeSubstep();
+
+  revalidatePath(returnTo);
+  redirect(`${returnTo}?deploy_created=1`);
 }

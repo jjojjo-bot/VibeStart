@@ -31,3 +31,9 @@ export {
   type CreateRepoPanelLabels,
   type CreateRepoPanelState,
 } from "./create-repo-panel";
+export {
+  DeployPanel,
+  type DeployPanelProps,
+  type DeployPanelLabels,
+  type DeployPanelState,
+} from "./deploy-panel";

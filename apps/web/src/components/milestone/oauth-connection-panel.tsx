@@ -12,6 +12,7 @@
 import type { OAuthProvider } from "@vibestart/shared-types";
 
 import { Button } from "@/components/ui/button";
+import { PendingButton } from "@/components/ui/pending-button";
 import { cn } from "@/lib/utils";
 
 import {
@@ -39,6 +40,8 @@ export interface OAuthConnectionPanelLabels {
   comingSoon: string;
   successMessage: string | null;
   errorMessage: string | null;
+  /** 버튼 pending 상태 텍스트 ("연결 중...") */
+  connecting: string;
   /** Vercel PAT 입력 폼 라벨들. (라)-3에서 추가. */
   vercelHelperText: string;
   vercelHelperLink: string;
@@ -139,9 +142,13 @@ export function OAuthConnectionPanel({
                     value={row.substepId}
                   />
                   <input type="hidden" name="locale" value={locale} />
-                  <Button type="submit" size="sm">
+                  <PendingButton
+                    type="submit"
+                    size="sm"
+                    pendingText={labels.connecting}
+                  >
                     {labels.connectButton}
-                  </Button>
+                  </PendingButton>
                 </form>
               ) : null}
             </div>
@@ -186,9 +193,13 @@ export function OAuthConnectionPanel({
                       placeholder={labels.vercelTokenPlaceholder}
                       className="min-w-0 flex-1 rounded-md border border-border bg-background px-3 py-1.5 text-sm font-mono"
                     />
-                    <Button type="submit" size="sm">
+                    <PendingButton
+                      type="submit"
+                      size="sm"
+                      pendingText={labels.connecting}
+                    >
                       {labels.vercelConnectButton}
-                    </Button>
+                    </PendingButton>
                   </div>
                 </form>
               )}

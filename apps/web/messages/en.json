@@ -740,6 +740,7 @@
   "Connections": {
     "title": "Connected accounts",
     "connectButton": "Connect",
+    "connecting": "Connecting...",
     "connectedAs": "Connected as {username}",
     "comingSoon": "Coming soon",
     "successGithub": "Your GitHub account is connected",
@@ -759,6 +760,7 @@
     "title": "Create a GitHub repository",
     "description": "We'll create a private repository in your GitHub account",
     "ctaCreateRepo": "Create repository",
+    "creating": "Creating...",
     "waitingOauth": "Connect your GitHub account first",
     "createdSuccess": "Repository created",
     "alreadyExists": "A repository is already linked",
@@ -768,6 +770,24 @@
     "errorNoToken": "GitHub token not found. Please reconnect your GitHub account.",
     "errorUnauthorized": "Your GitHub token has expired. Please reconnect your GitHub account.",
     "errorForbidden": "GitHub API permission is missing or rate limit exceeded. Please try again later."
+  },
+  "FirstDeploy": {
+    "title": "First deploy",
+    "description": "Deploy a landing page from your GitHub repository to Vercel",
+    "ctaDeploy": "Deploy",
+    "waitingRepo": "Create a repository first",
+    "waitingVercel": "Connect Vercel first",
+    "deployedSuccess": "Your site is live!",
+    "alreadyDeployed": "A deployed site already exists",
+    "openSite": "Open site",
+    "deploying": "Deploying...",
+    "errorGeneric": "Deploy failed: {code}",
+    "errorNoGithubToken": "GitHub token not found. Please reconnect GitHub.",
+    "errorNoVercelToken": "Vercel token not found. Please reconnect Vercel.",
+    "errorNoRepo": "GitHub repository not found. Please create a repository first.",
+    "errorPlanLimit": "Vercel free plan limit exceeded.",
+    "errorTimeout": "Deployment is still in progress. Check your site in a moment.",
+    "errorGithubAppNotInstalled": "Vercel cannot access your GitHub repository. Install the Vercel GitHub App at github.com/apps/vercel."
   },
   "Milestones": {
     "m1-deploy": {

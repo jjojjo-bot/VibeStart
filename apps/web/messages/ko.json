@@ -740,6 +740,7 @@
   "Connections": {
     "title": "연결 관리",
     "connectButton": "연결하기",
+    "connecting": "연결 중...",
     "connectedAs": "{username} 연결됨",
     "comingSoon": "곧 제공",
     "successGithub": "GitHub 계정이 연결됐어요",
@@ -759,6 +760,7 @@
     "title": "GitHub 저장소 만들기",
     "description": "내 GitHub 계정에 비공개 저장소를 자동으로 만들어 드려요",
     "ctaCreateRepo": "저장소 생성",
+    "creating": "생성 중...",
     "waitingOauth": "먼저 위의 GitHub 연결을 끝내 주세요",
     "createdSuccess": "저장소가 만들어졌어요",
     "alreadyExists": "이미 만들어진 저장소가 있어요",
@@ -768,6 +770,24 @@
     "errorNoToken": "GitHub 토큰을 찾을 수 없어요. GitHub 연결을 다시 시도해 주세요",
     "errorUnauthorized": "GitHub 토큰이 만료됐어요. GitHub 연결을 다시 시도해 주세요",
     "errorForbidden": "GitHub API 권한이 부족하거나 호출 한도를 초과했어요. 잠시 후 다시 시도해 주세요"
+  },
+  "FirstDeploy": {
+    "title": "첫 배포",
+    "description": "GitHub 저장소의 랜딩 페이지를 Vercel에 배포해요",
+    "ctaDeploy": "배포하기",
+    "waitingRepo": "먼저 저장소를 만들어 주세요",
+    "waitingVercel": "먼저 Vercel 연결을 끝내 주세요",
+    "deployedSuccess": "사이트가 배포됐어요!",
+    "alreadyDeployed": "이미 배포된 사이트가 있어요",
+    "openSite": "사이트 열기",
+    "deploying": "배포 중...",
+    "errorGeneric": "배포 실패: {code}",
+    "errorNoGithubToken": "GitHub 토큰을 찾을 수 없어요. GitHub을 다시 연결해 주세요",
+    "errorNoVercelToken": "Vercel 토큰을 찾을 수 없어요. Vercel을 다시 연결해 주세요",
+    "errorNoRepo": "GitHub 저장소를 찾을 수 없어요. 저장소를 다시 만들어 주세요",
+    "errorPlanLimit": "Vercel 무료 플랜 한도를 초과했어요",
+    "errorTimeout": "배포가 아직 진행 중이에요. 잠시 후 사이트를 확인해 보세요",
+    "errorGithubAppNotInstalled": "Vercel이 GitHub 저장소에 접근할 수 없어요. github.com/apps/vercel 에서 Vercel GitHub App을 설치해 주세요"
   },
   "Milestones": {
     "m1-deploy": {

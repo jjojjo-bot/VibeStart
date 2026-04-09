@@ -740,6 +740,7 @@
   "Connections": {
     "title": "连接管理",
     "connectButton": "连接",
+    "connecting": "连接中…",
     "connectedAs": "已连接 {username}",
     "comingSoon": "即将推出",
     "successGithub": "GitHub 账号已连接",
@@ -759,6 +760,7 @@
     "title": "创建 GitHub 仓库",
     "description": "我们将在你的 GitHub 账号中自动创建一个私有仓库",
     "ctaCreateRepo": "创建仓库",
+    "creating": "创建中…",
     "waitingOauth": "请先完成上方的 GitHub 连接",
     "createdSuccess": "仓库已创建",
     "alreadyExists": "已有关联的仓库",
@@ -768,6 +770,24 @@
     "errorNoToken": "找不到 GitHub 令牌。请重新连接你的 GitHub 账号。",
     "errorUnauthorized": "GitHub 令牌已过期。请重新连接你的 GitHub 账号。",
     "errorForbidden": "GitHub API 权限不足或调用次数已达上限。请稍后再试。"
+  },
+  "FirstDeploy": {
+    "title": "首次部署",
+    "description": "将 GitHub 仓库中的落地页部署到 Vercel",
+    "ctaDeploy": "部署",
+    "waitingRepo": "请先创建仓库",
+    "waitingVercel": "请先连接 Vercel",
+    "deployedSuccess": "网站已部署！",
+    "alreadyDeployed": "已有已部署的网站",
+    "openSite": "打开网站",
+    "deploying": "部署中…",
+    "errorGeneric": "部署失败: {code}",
+    "errorNoGithubToken": "找不到 GitHub 令牌。请重新连接 GitHub。",
+    "errorNoVercelToken": "找不到 Vercel 令牌。请重新连接 Vercel。",
+    "errorNoRepo": "找不到 GitHub 仓库。请先创建仓库。",
+    "errorPlanLimit": "已超出 Vercel 免费计划限制。",
+    "errorTimeout": "部署仍在进行中。请稍后查看您的网站。",
+    "errorGithubAppNotInstalled": "Vercel 无法访问您的 GitHub 仓库。请在 github.com/apps/vercel 安装 Vercel GitHub App。"
   },
   "Milestones": {
     "m1-deploy": {

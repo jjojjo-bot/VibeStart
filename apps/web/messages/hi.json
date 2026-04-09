@@ -740,6 +740,7 @@
   "Connections": {
     "title": "कनेक्टेड अकाउंट",
     "connectButton": "कनेक्ट करें",
+    "connecting": "कनेक्ट हो रहा है...",
     "connectedAs": "{username} के रूप में कनेक्टेड",
     "comingSoon": "जल्द आ रहा है",
     "successGithub": "आपका GitHub अकाउंट कनेक्ट हो गया",
@@ -759,6 +760,7 @@
     "title": "GitHub रिपॉजिटरी बनाएं",
     "description": "हम आपके GitHub अकाउंट में एक प्राइवेट रिपॉजिटरी अपने आप बना देंगे",
     "ctaCreateRepo": "रिपॉजिटरी बनाएं",
+    "creating": "बना रहा है...",
     "waitingOauth": "पहले ऊपर दिया GitHub कनेक्शन पूरा करें",
     "createdSuccess": "रिपॉजिटरी बन गई",
     "alreadyExists": "पहले से एक रिपॉजिटरी जुड़ी हुई है",
@@ -768,6 +770,24 @@
     "errorNoToken": "GitHub टोकन नहीं मिला। कृपया अपना GitHub अकाउंट फिर से कनेक्ट करें।",
     "errorUnauthorized": "आपका GitHub टोकन समाप्त हो चुका है। कृपया अपना GitHub अकाउंट फिर से कनेक्ट करें।",
     "errorForbidden": "GitHub API की अनुमति नहीं है या कॉल सीमा पार हो गई है। कृपया कुछ देर बाद फिर से कोशिश करें।"
+  },
+  "FirstDeploy": {
+    "title": "पहला डिप्लॉय",
+    "description": "GitHub रिपॉजिटरी से लैंडिंग पेज को Vercel पर डिप्लॉय करें",
+    "ctaDeploy": "डिप्लॉय करें",
+    "waitingRepo": "पहले रिपॉजिटरी बनाएं",
+    "waitingVercel": "पहले Vercel कनेक्ट करें",
+    "deployedSuccess": "आपकी साइट लाइव है!",
+    "alreadyDeployed": "पहले से एक डिप्लॉय की गई साइट मौजूद है",
+    "openSite": "साइट खोलें",
+    "deploying": "डिप्लॉय हो रहा है...",
+    "errorGeneric": "डिप्लॉय विफल: {code}",
+    "errorNoGithubToken": "GitHub टोकन नहीं मिला। कृपया GitHub फिर से कनेक्ट करें।",
+    "errorNoVercelToken": "Vercel टोकन नहीं मिला। कृपया Vercel फिर से कनेक्ट करें।",
+    "errorNoRepo": "GitHub रिपॉजिटरी नहीं मिली। कृपया पहले रिपॉजिटरी बनाएं।",
+    "errorPlanLimit": "Vercel मुफ्त प्लान की सीमा पार हो गई।",
+    "errorTimeout": "डिप्लॉय अभी भी प्रगति पर है। कुछ देर बाद अपनी साइट जांचें।",
+    "errorGithubAppNotInstalled": "Vercel आपकी GitHub रिपॉजिटरी तक पहुंच नहीं सकता। github.com/apps/vercel पर Vercel GitHub App इंस्टॉल करें।"
   },
   "Milestones": {
     "m1-deploy": {

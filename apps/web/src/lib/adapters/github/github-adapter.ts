@@ -202,6 +202,70 @@ export function createGitHubAdapter(): VcsPort {
 }
 
 /**
+ * GitHub repo에 파일 한 개를 push (생성 또는 업데이트). Contents API 사용.
+ *
+ * 파일이 이미 존재하면 422 → GET으로 기존 sha 조회 후 자동 재시도(업데이트).
+ * 반환값에 sha를 담아서 이후 업데이트 시 호출자가 재사용할 수 있다.
+ */
+export async function pushFileToGitHub(
+  accessToken: string,
+  owner: string,
+  repo: string,
+  path: string,
+  content: string,
+  commitMessage: string,
+): Promise<{ sha: string }> {
+  const url = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${path}`;
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${accessToken}`,
+    Accept: "application/vnd.github+json",
+    "Content-Type": "application/json",
+    "User-Agent": "VibeStart",
+    "X-GitHub-Api-Version": "2022-11-28",
+  };
+  const base64 = Buffer.from(content, "utf-8").toString("base64");
+
+  // 1차 시도: sha 없이 PUT (신규 파일)
+  const res = await fetch(url, {
+    method: "PUT",
+    headers,
+    body: JSON.stringify({ message: commitMessage, content: base64 }),
+  });
+
+  if (res.status === 201 || res.status === 200) {
+    const data = (await res.json()) as { content: { sha: string } };
+    return { sha: data.content.sha };
+  }
+
+  // 422: 파일이 이미 존재해 sha가 필요한 경우 → GET으로 기존 sha 조회
+  if (res.status === 422) {
+    const getRes = await fetch(url, { method: "GET", headers });
+    if (!getRes.ok) {
+      throw new Error(`github:http_${getRes.status}`);
+    }
+    const existing = (await getRes.json()) as { sha: string };
+    const retryRes = await fetch(url, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify({
+        message: commitMessage,
+        content: base64,
+        sha: existing.sha,
+      }),
+    });
+    if (retryRes.status === 200 || retryRes.status === 201) {
+      const data = (await retryRes.json()) as { content: { sha: string } };
+      return { sha: data.content.sha };
+    }
+    throw new Error(`github:http_${retryRes.status}`);
+  }
+
+  if (res.status === 401) throw new Error("github:unauthorized");
+  if (res.status === 403) throw new Error("github:forbidden");
+  throw new Error(`github:http_${res.status}`);
+}
+
+/**
  * 특정 owner/name 저장소가 존재하는지 확인하고, 있으면 VcsRepo로 매핑해
  * 반환한다. 없으면 null. (라)-2 idempotent recovery 용도 — Phase 2a의
  * in-memory project_resources가 dev 재시작으로 비워졌을 때 GitHub.com에는

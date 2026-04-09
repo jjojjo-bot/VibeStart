@@ -1,58 +1,60 @@
 /**
- * CreateRepoPanel — M1 마일스톤의 GitHub 저장소 자동 생성 패널.
+ * DeployPanel — M1 마일스톤의 Vercel 첫 배포 패널.
  *
- * OAuthConnectionPanel과 대칭. createGitHubRepoAction을 직접 import해서
- * <form action={...}>로 호출한다 ((라)-1에서 검증된 client → server action
- * 패턴). 상태별로 disabled / form / 성공 표시 분기.
- *
- * 비즈니스 판정(githubConnected, createRepoDone, existingRepo)은 모두 page
- * 서버 컴포넌트가 미리 계산해서 props로 전달한다.
+ * PendingButton(client component)을 사용해 서버 액션 진행 중 "배포 중..."
+ * 로딩 표시. firstDeployAction은 10~30초 걸릴 수 있으므로 피드백 필수.
  */
 
 import { Button } from "@/components/ui/button";
 import { PendingButton } from "@/components/ui/pending-button";
 import { cn } from "@/lib/utils";
 
-import { createGitHubRepoAction } from "@/app/[locale]/projects/[id]/m/[milestoneId]/actions";
+import { firstDeployAction } from "@/app/[locale]/projects/[id]/m/[milestoneId]/actions";
 
-export type CreateRepoPanelState = "needs-oauth" | "ready" | "created";
+export type DeployPanelState =
+  | "needs-repo"
+  | "needs-vercel"
+  | "ready"
+  | "deployed";
 
-export interface CreateRepoPanelLabels {
+export interface DeployPanelLabels {
   title: string;
-  /** 버튼 pending 상태 텍스트 ("생성 중...") */
-  creating: string;
   description: string;
-  ctaCreateRepo: string;
-  waitingOauth: string;
-  createdSuccess: string | null;
-  alreadyExists: string | null;
-  openOnGithub: string;
+  ctaDeploy: string;
+  /** 서버 액션 진행 중 버튼에 표시할 텍스트 ("배포 중...") */
+  deploying: string;
+  waitingRepo: string;
+  waitingVercel: string;
+  deployedSuccess: string | null;
+  alreadyDeployed: string | null;
+  deployingMessage: string | null;
+  openSite: string;
   errorMessage: string | null;
 }
 
-export interface CreateRepoPanelProps {
+export interface DeployPanelProps {
   projectId: string;
   milestoneId: string;
   substepId: string;
   locale: string;
-  state: CreateRepoPanelState;
-  existingRepoUrl: string | null;
-  labels: CreateRepoPanelLabels;
+  state: DeployPanelState;
+  deployedUrl: string | null;
+  labels: DeployPanelLabels;
 }
 
-export function CreateRepoPanel({
+export function DeployPanel({
   projectId,
   milestoneId,
   substepId,
   locale,
   state,
-  existingRepoUrl,
+  deployedUrl,
   labels,
-}: CreateRepoPanelProps): React.ReactNode {
+}: DeployPanelProps): React.ReactNode {
   return (
     <section
       className="mb-8 rounded-lg border border-border bg-card p-5"
-      data-testid="create-repo-panel"
+      data-testid="deploy-panel"
       data-state={state}
     >
       <h2 className="mb-1 text-sm font-medium text-muted-foreground">
@@ -66,54 +68,64 @@ export function CreateRepoPanel({
         </div>
       )}
 
-      {state === "created" && labels.createdSuccess && (
+      {state === "deployed" && labels.deployedSuccess && (
         <div className="mb-3 rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-400">
-          ✅ {labels.createdSuccess}
+          ✅ {labels.deployedSuccess}
         </div>
       )}
-      {state === "created" && !labels.createdSuccess && labels.alreadyExists && (
+      {state === "deployed" && !labels.deployedSuccess && labels.alreadyDeployed && (
         <div className="mb-3 rounded-md border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-sm text-emerald-400">
-          ✅ {labels.alreadyExists}
+          ✅ {labels.alreadyDeployed}
+        </div>
+      )}
+      {state === "deployed" && labels.deployingMessage && (
+        <div className="mb-3 rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-amber-400">
+          ⏳ {labels.deployingMessage}
         </div>
       )}
 
       <div
         className={cn(
           "flex items-center justify-between gap-3 rounded-md border border-border bg-background/40 p-3",
-          state === "created" && "border-primary/40 bg-primary/5",
+          state === "deployed" && "border-primary/40 bg-primary/5",
         )}
       >
         <span aria-hidden="true" className="text-xl leading-none">
-          📦
+          🚀
         </span>
         <div className="min-w-0 flex-1">
-          {state === "needs-oauth" && (
+          {state === "needs-repo" && (
             <p className="text-sm text-muted-foreground">
-              {labels.waitingOauth}
+              {labels.waitingRepo}
+            </p>
+          )}
+          {state === "needs-vercel" && (
+            <p className="text-sm text-muted-foreground">
+              {labels.waitingVercel}
             </p>
           )}
           {state === "ready" && (
-            <p className="text-sm text-foreground">{labels.ctaCreateRepo}</p>
+            <p className="text-sm text-foreground">{labels.ctaDeploy}</p>
           )}
-          {state === "created" && existingRepoUrl && (
+          {state === "deployed" && deployedUrl && (
             <a
-              href={existingRepoUrl}
+              href={deployedUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm text-primary underline underline-offset-2"
             >
-              {labels.openOnGithub} ↗
+              {labels.openSite} ↗
             </a>
           )}
         </div>
 
-        {state === "needs-oauth" && (
+        {(state === "needs-repo" || state === "needs-vercel") && (
           <Button type="button" size="sm" disabled>
-            {labels.ctaCreateRepo}
+            {labels.ctaDeploy}
           </Button>
         )}
         {state === "ready" && (
-          <form action={createGitHubRepoAction}>
+          <form action={firstDeployAction}>
             <input type="hidden" name="projectId" value={projectId} />
             <input type="hidden" name="milestoneId" value={milestoneId} />
             <input type="hidden" name="substepId" value={substepId} />
@@ -121,14 +133,14 @@ export function CreateRepoPanel({
             <PendingButton
               type="submit"
               size="sm"
-              pendingText={labels.creating}
+              pendingText={labels.deploying}
             >
-              {labels.ctaCreateRepo}
+              {labels.ctaDeploy}
             </PendingButton>
           </form>
         )}
-        {state === "created" && (
-          <span aria-label="created" className="text-sm text-emerald-400">
+        {state === "deployed" && (
+          <span aria-label="deployed" className="text-sm text-emerald-400">
             ✓
           </span>
         )}

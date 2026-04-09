@@ -19,6 +19,8 @@ import { getCurrentUser } from "@/lib/auth/dal";
 import {
   CreateRepoPanel,
   type CreateRepoPanelState,
+  DeployPanel,
+  type DeployPanelState,
   type DisplaySubstep,
   ExtensionStatus,
   ResultPreview,
@@ -86,6 +88,20 @@ function resolveVercelError(
   return t("vercelErrorGeneric", { code: raw });
 }
 
+function resolveDeployError(
+  raw: string,
+  t: (key: string, values?: Record<string, string | number>) => string,
+): string {
+  if (raw.includes("no_repo")) return t("errorNoRepo");
+  if (raw.includes("no_github_token")) return t("errorNoGithubToken");
+  if (raw.includes("no_vercel_token")) return t("errorNoVercelToken");
+  if (raw.includes("plan_limit")) return t("errorPlanLimit");
+  if (raw.includes("github_app_not_installed"))
+    return t("errorGithubAppNotInstalled");
+  if (raw.includes("timeout")) return t("errorTimeout");
+  return t("errorGeneric", { code: raw });
+}
+
 export default async function MilestoneRunPage({
   params,
   searchParams,
@@ -131,6 +147,7 @@ export default async function MilestoneRunPage({
   const tProjects = await getTranslations("Projects");
   const tConnections = await getTranslations("Connections");
   const tCreateRepo = await getTranslations("CreateRepo");
+  const tDeploy = await getTranslations("FirstDeploy");
 
   // OAuth 연결 패널 데이터 — 이 마일스톤의 oauth kind 서브스텝을 모아
   // provider별 연결 상태를 조회한다. connectedLabel은 next-intl이 호출
@@ -247,6 +264,7 @@ export default async function MilestoneRunPage({
 
   const baseConnectionLabels = {
     connectButton: tConnections("connectButton"),
+    connecting: tConnections("connecting"),
     comingSoon: tConnections("comingSoon"),
     vercelHelperText: tConnections("vercelHelperText"),
     vercelHelperLink: tConnections("vercelHelperLink"),
@@ -280,6 +298,7 @@ export default async function MilestoneRunPage({
     existingRepoUrl: string | null;
     labels: {
       title: string;
+      creating: string;
       description: string;
       ctaCreateRepo: string;
       waitingOauth: string;
@@ -318,6 +337,7 @@ export default async function MilestoneRunPage({
       existingRepoUrl: existingRepo?.url ?? null,
       labels: {
         title: tCreateRepo("title"),
+        creating: tCreateRepo("creating"),
         description: tCreateRepo("description"),
         ctaCreateRepo: tCreateRepo("ctaCreateRepo"),
         waitingOauth: tCreateRepo("waitingOauth"),
@@ -331,6 +351,94 @@ export default async function MilestoneRunPage({
           : null,
       },
     };
+  }
+
+  // DeployPanel — m1-s4-first-deploy. 선행: github_repo + vercel 연결.
+  const deploySubstep = milestone.substeps.find(
+    (s) => s.id === "m1-s4-first-deploy",
+  );
+  const existingVercelProject = getProjectResourceByType(
+    project.id,
+    "vercel_project",
+  );
+  let deployPanelData: {
+    state: DeployPanelState;
+    deployedUrl: string | null;
+    labels: {
+      title: string;
+      description: string;
+      ctaDeploy: string;
+      deploying: string;
+      waitingRepo: string;
+      waitingVercel: string;
+      deployedSuccess: string | null;
+      alreadyDeployed: string | null;
+      deployingMessage: string | null;
+      openSite: string;
+      errorMessage: string | null;
+    };
+  } | null = null;
+
+  if (deploySubstep) {
+    const vercelRow = connectionRows.find((r) => r.provider === "vercel");
+    const vercelLinked = vercelRow?.connected ?? false;
+    const deployDone =
+      initialCompletedSubsteps.includes(deploySubstep.id) ||
+      !!existingVercelProject;
+
+    let deployState: DeployPanelState;
+    if (deployDone) {
+      deployState = "deployed";
+    } else if (!existingRepo) {
+      deployState = "needs-repo";
+    } else if (!vercelLinked) {
+      deployState = "needs-vercel";
+    } else {
+      deployState = "ready";
+    }
+
+    const deployCreatedFlag =
+      query.deploy_created === "1"
+        ? "fresh"
+        : query.deploy_created === "already"
+          ? "already"
+          : query.deploy_created === "timeout"
+            ? "timeout"
+            : null;
+    const deployErrorRaw =
+      typeof query.deploy_error === "string" ? query.deploy_error : null;
+
+    deployPanelData = {
+      state: deployState,
+      deployedUrl: existingVercelProject?.url ?? null,
+      labels: {
+        title: tDeploy("title"),
+        description: tDeploy("description"),
+        ctaDeploy: tDeploy("ctaDeploy"),
+        deploying: tDeploy("deploying"),
+        waitingRepo: tDeploy("waitingRepo"),
+        waitingVercel: tDeploy("waitingVercel"),
+        deployedSuccess:
+          deployCreatedFlag === "fresh" ? tDeploy("deployedSuccess") : null,
+        alreadyDeployed:
+          deployCreatedFlag === "already" ? tDeploy("alreadyDeployed") : null,
+        deployingMessage:
+          deployCreatedFlag === "timeout" ? tDeploy("errorTimeout") : null,
+        openSite: tDeploy("openSite"),
+        errorMessage: deployErrorRaw
+          ? resolveDeployError(deployErrorRaw, tDeploy)
+          : null,
+      },
+    };
+  }
+
+  // vercel_project 존재 시 m1-s4 완료로 derive (oauth 패턴과 동일)
+  if (existingVercelProject && deploySubstep) {
+    // derivedCompletedFromResources에 이미 push하려면 위에서 했어야 하지만,
+    // 여기서 initialCompletedSubsteps 배열은 이미 계산됐으므로 직접 추가.
+    if (!initialCompletedSubsteps.includes(deploySubstep.id)) {
+      initialCompletedSubsteps.push(deploySubstep.id);
+    }
   }
 
   // Server에서 substep 제목과 예상 시간 라벨을 미리 해석해 Client 컴포넌트에
@@ -438,6 +546,19 @@ export default async function MilestoneRunPage({
               milestoneId={milestone.id}
               locale={locale}
               labels={vercelPanelLabels}
+            />
+          )}
+
+          {/* (4) 첫 배포 — m1-s4 */}
+          {deployPanelData && deploySubstep && (
+            <DeployPanel
+              projectId={project.id}
+              milestoneId={milestone.id}
+              substepId={deploySubstep.id}
+              locale={locale}
+              state={deployPanelData.state}
+              deployedUrl={deployPanelData.deployedUrl}
+              labels={deployPanelData.labels}
             />
           )}
 

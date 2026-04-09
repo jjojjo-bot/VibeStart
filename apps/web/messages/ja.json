@@ -740,6 +740,7 @@
   "Connections": {
     "title": "連携アカウント",
     "connectButton": "接続する",
+    "connecting": "接続中…",
     "connectedAs": "{username} として接続済み",
     "comingSoon": "近日公開",
     "successGithub": "GitHubアカウントが接続されました",
@@ -759,6 +760,7 @@
     "title": "GitHubリポジトリを作成",
     "description": "あなたのGitHubアカウントにプライベートリポジトリを自動で作成します",
     "ctaCreateRepo": "リポジトリを作成",
+    "creating": "作成中…",
     "waitingOauth": "先に上のGitHub接続を完了してください",
     "createdSuccess": "リポジトリを作成しました",
     "alreadyExists": "すでにリポジトリが連携されています",
@@ -768,6 +770,24 @@
     "errorNoToken": "GitHubトークンが見つかりません。GitHub接続をやり直してください。",
     "errorUnauthorized": "GitHubトークンの有効期限が切れました。GitHub接続をやり直してください。",
     "errorForbidden": "GitHub APIの権限不足、または呼び出し回数の上限に達しました。しばらくしてからもう一度お試しください。"
+  },
+  "FirstDeploy": {
+    "title": "初回デプロイ",
+    "description": "GitHubリポジトリのランディングページをVercelにデプロイします",
+    "ctaDeploy": "デプロイ",
+    "waitingRepo": "先にリポジトリを作成してください",
+    "waitingVercel": "先にVercelを接続してください",
+    "deployedSuccess": "サイトがデプロイされました！",
+    "alreadyDeployed": "既にデプロイ済みのサイトがあります",
+    "openSite": "サイトを開く",
+    "deploying": "デプロイ中…",
+    "errorGeneric": "デプロイ失敗: {code}",
+    "errorNoGithubToken": "GitHubトークンが見つかりません。GitHubを再接続してください。",
+    "errorNoVercelToken": "Vercelトークンが見つかりません。Vercelを再接続してください。",
+    "errorNoRepo": "GitHubリポジトリが見つかりません。リポジトリを再作成してください。",
+    "errorPlanLimit": "Vercel無料プランの上限を超えました。",
+    "errorTimeout": "デプロイはまだ進行中です。しばらくしてからサイトを確認してください。",
+    "errorGithubAppNotInstalled": "VercelがGitHubリポジトリにアクセスできません。github.com/apps/vercel でVercel GitHub Appをインストールしてください。"
   },
   "Milestones": {
     "m1-deploy": {

@@ -740,6 +740,7 @@
   "Connections": {
     "title": "Cuentas conectadas",
     "connectButton": "Conectar",
+    "connecting": "Conectando...",
     "connectedAs": "Conectado como {username}",
     "comingSoon": "Próximamente",
     "successGithub": "Tu cuenta de GitHub está conectada",
@@ -759,6 +760,7 @@
     "title": "Crear un repositorio de GitHub",
     "description": "Crearemos un repositorio privado en tu cuenta de GitHub",
     "ctaCreateRepo": "Crear repositorio",
+    "creating": "Creando...",
     "waitingOauth": "Conecta tu cuenta de GitHub primero",
     "createdSuccess": "Repositorio creado",
     "alreadyExists": "Ya hay un repositorio vinculado",
@@ -768,6 +770,24 @@
     "errorNoToken": "No se encontró el token de GitHub. Vuelve a conectar tu cuenta de GitHub.",
     "errorUnauthorized": "Tu token de GitHub ha expirado. Vuelve a conectar tu cuenta de GitHub.",
     "errorForbidden": "Faltan permisos de la API de GitHub o se ha superado el límite de llamadas. Vuelve a intentarlo más tarde."
+  },
+  "FirstDeploy": {
+    "title": "Primer despliegue",
+    "description": "Despliega una página de aterrizaje desde tu repositorio de GitHub en Vercel",
+    "ctaDeploy": "Desplegar",
+    "waitingRepo": "Crea un repositorio primero",
+    "waitingVercel": "Conecta Vercel primero",
+    "deployedSuccess": "Tu sitio está en línea!",
+    "alreadyDeployed": "Ya existe un sitio desplegado",
+    "openSite": "Abrir sitio",
+    "deploying": "Desplegando...",
+    "errorGeneric": "Despliegue fallido: {code}",
+    "errorNoGithubToken": "No se encontró el token de GitHub. Vuelve a conectar GitHub.",
+    "errorNoVercelToken": "No se encontró el token de Vercel. Vuelve a conectar Vercel.",
+    "errorNoRepo": "No se encontró el repositorio de GitHub. Crea un repositorio primero.",
+    "errorPlanLimit": "Se superó el límite del plan gratuito de Vercel.",
+    "errorTimeout": "El despliegue aún está en progreso. Revisa tu sitio en un momento.",
+    "errorGithubAppNotInstalled": "Vercel no puede acceder a tu repositorio de GitHub. Instala la Vercel GitHub App en github.com/apps/vercel."
   },
   "Milestones": {
     "m1-deploy": {
