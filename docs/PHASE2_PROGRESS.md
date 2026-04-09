@@ -15,19 +15,26 @@
 - (라)-4 첫 배포 (`m1-s4-first-deploy`, GitHub repo에 index.html push → Vercel 프로젝트 생성 + git link → 자동 배포 → canonical URL 추출)
 - (라)-5 verify URL (`m1-s5-verify-url`, deploy 성공 시 다음 verify substep 자동 완료)
 
-### M2 Google Auth 트랙 — 1, 2단계만 완료
+### M2 Google Auth 트랙 — 1, 2, 3단계 완료
 
 - (마)-1 Supabase Management OAuth (`m2-s1-supabase-oauth`) ✅
 - (마)-2 Supabase 프로젝트 자동 생성 (`m2-s2-create-supabase-project`) ✅
+- (마)-3 Google OAuth 키 수집 (`m2-s3-google-oauth-keys`) ✅ — 신규 `user-action` kind. 3단계 가이드 UI (Console 링크 → redirect URI 복사 → client_id/secret 폼) + 저장된 키 마스킹 표시 + "수정하기"로 리셋 플로우. Supabase 프로젝트 ref에서 redirect URI 자동 계산. 실기기 브라우저 검증 완료 (2026-04-09, commit `1b49c65`).
 
-## 남은 작업 — M2 (마)-3 이후
+## 남은 작업 — M2 (마)-4 이후
 
 `packages/track-catalog/src/milestones/m2-google-auth.ts` 카탈로그 기준:
 
-- **(마)-3 `m2-s3-google-oauth-keys`** (kind: `user-action`) — **신규 패턴**. 사용자가 Google Cloud Console에서 OAuth 클라이언트를 만들고 client_id/secret을 vibestart 폼에 붙여넣음. (라)-3 Vercel PAT와 비슷하지만 외부 페이지 안내 + 두 개 값 입력. 새 user-action UI 컴포넌트 필요.
-- **(마)-4 `m2-s4-enable-google-provider`** (kind: `auto`) — Supabase Management API로 PATCH /v1/projects/{ref}/config/auth (또는 별도 endpoint)에 Google provider 활성화 + client_id/secret 주입. (마)-2의 supabase_project metadata에서 ref + 연결 토큰 사용.
-- **(마)-5 `m2-s5-install-auth-ui`** (kind: `auto`) — GitHub repo에 auth UI 파일들 push (HTML + JS — Supabase JS SDK CDN으로 Google 로그인 버튼 + 콜백 처리). pushFileToGitHub 헬퍼 재사용. supabase_project metadata에서 apiUrl + anon key 필요 → (마)-2에서 anon key는 저장 안 됐으므로 (마)-5에서 추가 API 호출(GET /v1/projects/{ref}/api-keys) 필요.
+- **(마)-4 `m2-s4-enable-google-provider`** (kind: `auto`) — Supabase Management API로 Google provider 활성화 + client_id/secret 주입. (마)-3의 `google_oauth_keys` 리소스 + (마)-2의 `supabase_project` ref + (마)-1의 supabase access_token 사용. 엔드포인트: `PATCH /v1/projects/{ref}/config/auth`로 추정되지만 Supabase docs에서 정확한 경로/body 키(`external_google_enabled`, `external_google_client_id`, `external_google_secret`) 재확인 필요. `supabase-mgmt-adapter.ts`에 `updateSupabaseAuthConfig(token, ref, config)` 헬퍼 추가 예상.
+- **(마)-5 `m2-s5-install-auth-ui`** (kind: `auto`) — GitHub repo에 auth UI 파일들 push (HTML + JS — Supabase JS SDK CDN으로 Google 로그인 버튼 + 콜백 처리). pushFileToGitHub 헬퍼 재사용. supabase_project metadata에서 apiUrl + anon key 필요 → (마)-2에서 anon key는 저장 안 됐으므로 (마)-5에서 추가 API 호출(`GET /v1/projects/{ref}/api-keys`) 필요.
 - **(마)-6 `m2-s6-verify-signup`** (kind: `verify`) — auto-complete 패턴 ((라)-5와 동일).
+
+### (마)-3에서 만들어진 재사용 가능 블록
+
+- `resourceType: 'google_oauth_keys'` — metadata에 `{ clientId, clientSecret }` (평문, Phase 2b Vault 이관 예정)
+- `OAuthProvider` 유니온에 `google` 추가됨. PROVIDER_LABEL / PROVIDER_EMOJI 모두 반영.
+- `removeProjectResourceByType()` in-memory-store 헬퍼 — (마)-4 이후 단계에서 리셋 필요 시 재사용 가능.
+- `GoogleOAuthKeysPanel` 패턴은 추후 Sentry PAT, Cloudflare API token 같은 user-action 서브스텝의 템플릿으로 재활용 가능.
 
 ## 다른 기기에서 작업 이어갈 때 필요한 것
 
@@ -44,8 +51,8 @@
 
 ### Supabase 상태
 
-- 옛 `vibestart` 프로젝트 삭제 완료 → organization에 active 프로젝트 1개 슬롯 여유
-- (마)-2 동작 검증 완료. 새 프로젝트 자동 생성 → `(project.slug).supabase.co` 형태로 ACTIVE_HEALTHY 상태 도달 확인됨.
+- (마)-2 동작 검증 완료. 프로젝트 자동 생성 → `{ref}.supabase.co` ACTIVE_HEALTHY 도달 확인됨.
+- **⚠️ Free 플랜 2-project 한도 이슈** — 2026-04-09 세션에서 `jjojjo-bot` 조직이 한도 초과 에러 반환 (`plan_limit`). (마)-4 테스트 전 supabase.com 대시보드에서 기존 무료 프로젝트 하나 삭제 필요. 최근 (마)-3 테스트 시점에는 `hypwetpwjaqiqqxwnyaf.supabase.co` 프로젝트가 살아있어 redirect URI 계산은 정상 동작했음.
 
 ### 관련 문서
 
@@ -53,19 +60,28 @@
 - 마이그레이션 절차: `supabase/migrations/phase2/MIGRATION_GUIDE_003.md`
 - Phase 2 셋업 가이드: `supabase/migrations/phase2/SETUP.md`
 
-## (마)-3 시작 시 알아야 할 것
+## (마)-4 시작 시 알아야 할 것
 
-1. **`user-action` kind는 신규**. 기존 SubstepList는 user-action에 대해 "직접 해주세요 + 외부 링크" 메타만 표시하는데, (마)-3에서는 **폼 입력**이 필요. 새 패널 컴포넌트 만들거나 SubstepList 확장.
-2. **Google Cloud Console은 API로 OAuth 클라이언트 생성 불가** — 사용자가 직접 만들고 값 붙여넣는 방식이 유일.
-3. **수집할 값 2개**: `client_id`, `client_secret`. 둘 다 in-memory store의 project_resources 또는 별도 슬롯에 저장. (마)-4에서 Supabase Auth Provider 설정에 사용.
-4. **(마)-4 의존성**: (마)-3에서 받은 client_id/secret + (마)-2의 supabase_project ref + (마)-1의 supabase access_token으로 Supabase Management API 호출.
+1. **Supabase Management API 엔드포인트 불확실**. 공식 문서로 정확한 path/body 재확인 필요:
+   - 후보 1: `PATCH /v1/projects/{ref}/config/auth` — body에 `external_google_enabled`, `external_google_client_id`, `external_google_secret`
+   - 후보 2: 별도 `/v1/projects/{ref}/config/auth/providers/google` 형태일 수도 있음
+   - 어댑터 위치: `apps/web/src/lib/adapters/supabase-mgmt/supabase-mgmt-adapter.ts`에 `updateGoogleProvider(token, ref, { clientId, clientSecret })` 같은 헬퍼 추가
+2. **선행 조건 3개 모두 필요**:
+   - `getProjectResourceByType(projectId, 'supabase_project')` → metadata.ref + metadata (마)-1 토큰
+   - `getProjectResourceByType(projectId, 'google_oauth_keys')` → metadata.clientId + metadata.clientSecret
+   - `getOAuthAccessToken(userId, 'supabase_mgmt')`
+3. **(마)-4 패널은 auto kind** — `CreateSupabaseProjectPanel`과 패턴 동일. 상태: `needs-supabase` | `needs-keys` | `ready` | `enabled`. "활성화" 버튼 하나 + pending/success/error 토스트.
+4. **오류 케이스**: Supabase 토큰 만료, 프로젝트 INIT 중, 이미 활성화됨 (idempotent하게 처리), Google 키 형식 거부 (Supabase 쪽 검증).
+5. **서버 액션**: `enableGoogleProviderAction`. 서브스텝 완료 후 `result` 리소스는 별도 저장 안 하고 `supabase_project.metadata.googleProviderEnabled: true` 플래그로 기록할지 검토.
 
-## 다음 작업 시작 명령어
+## 다음 작업 시작 명령어 (다른 기기)
 
 ```bash
-git pull
-cd apps/web && pnpm install
+git pull                # 1b49c65 이상 포함 확인
+pnpm install            # root에서 — 새 deps는 없지만 workspace 링크 갱신
 pnpm dev:web
 ```
+
+별도 `.env.local` 셋업은 "환경 변수" 섹션 참조. Supabase 프로젝트 한도 이슈 먼저 해결.
 
 `.env.local` 셋업 후 dev 서버 띄우면 끝. (마)-3 작업 시작.
