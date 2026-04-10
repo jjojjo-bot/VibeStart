@@ -1360,7 +1360,20 @@ export async function installAuthUiAction(
     supabaseAnonKey: anonKey,
   });
 
-  // 5) GitHub에 index.html push (기존 (라)-4의 파일을 덮어쓰기)
+  // 5) 이전 deployment ID 기록 — push 후 새 deployment와 구분용
+  const vercelProjectId = vercelProjectResource.externalId;
+  const vercelToken = await getOAuthAccessToken(user.id, "vercel");
+  let previousDeploymentId: string | null = null;
+  if (vercelToken) {
+    try {
+      const prev = await getLatestDeployment(vercelToken, vercelProjectId);
+      previousDeploymentId = prev?.id ?? null;
+    } catch {
+      // non-fatal: 이전 deployment 모르면 폴링은 계속하되 구분 못함
+    }
+  }
+
+  // 6) GitHub에 index.html push (기존 (라)-4의 파일을 덮어쓰기)
   try {
     await pushFileToGitHub(
       ghToken,
@@ -1385,14 +1398,92 @@ export async function installAuthUiAction(
     );
   }
 
-  // 6) supabase_project metadata에 완료 플래그 기록
+  // 7) Vercel 재배포 폴링 — firstDeployAction 패턴 재사용.
+  //
+  // GitHub push → Vercel webhook → 새 deployment 트리거. deployment가
+  // READY에 도달할 때까지 대기하여 사용자가 "사이트 열기"를 눌렀을 때
+  // 실제로 새 버전을 볼 수 있게 한다.
+  //
+  // 타임아웃 시에도 파일은 이미 올라갔으므로 soft-success로 처리:
+  //   - READY: ?auth_ui_installed=1 (즉시 확인 가능)
+  //   - timeout: ?auth_ui_installed=pending (1~2분 후 확인 안내)
+  //   - ERROR/CANCELED: 에러 redirect
+  let deployResult: "ready" | "pending" | "error" = "pending";
+
+  if (vercelToken) {
+    // Vercel webhook 처리 대기
+    await new Promise((r) => setTimeout(r, 3000));
+
+    // 새 deployment 감지 (최대 15초) — id가 이전과 달라지면 새 빌드
+    let newDeploymentDetected = false;
+    const detectStart = Date.now();
+    while (Date.now() - detectStart < 15_000) {
+      try {
+        const latest = await getLatestDeployment(
+          vercelToken,
+          vercelProjectId,
+        );
+        if (latest && latest.id !== previousDeploymentId) {
+          newDeploymentDetected = true;
+          break;
+        }
+      } catch {
+        // retry
+      }
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+
+    // 새 deployment를 찾았으면 READY까지 폴링 (최대 60초)
+    if (newDeploymentDetected) {
+      const pollStart = Date.now();
+      while (Date.now() - pollStart < 60_000) {
+        try {
+          const current = await getLatestDeployment(
+            vercelToken,
+            vercelProjectId,
+          );
+          if (current) {
+            if (current.readyState === "READY") {
+              deployResult = "ready";
+              break;
+            }
+            if (
+              current.readyState === "ERROR" ||
+              current.readyState === "CANCELED"
+            ) {
+              deployResult = "error";
+              break;
+            }
+          }
+        } catch {
+          // retry
+        }
+        await new Promise((r) => setTimeout(r, 3000));
+      }
+    } else {
+      console.warn(
+        "[installAuthUiAction] no new Vercel deployment detected after 15s",
+        { projectId: project.id },
+      );
+    }
+  }
+
+  // ERROR/CANCELED — 파일은 올라갔으나 Vercel 빌드 실패
+  if (deployResult === "error") {
+    redirect(
+      `${returnTo}?install_auth_ui_error=deploy_failed`,
+    );
+  }
+
+  // 8) 플래그 저장 + substep 완료 (READY 또는 timeout — 파일은 반드시 올라감)
   updateProjectResourceMetadata(project.id, "supabase_project", {
     authUiInstalled: true,
   });
-
-  // 7) substep 완료 + 다음 verify 자동 완료
   completeSubstep();
 
   revalidatePath(returnTo);
-  redirect(`${returnTo}?auth_ui_installed=1`);
+  // READY → 즉시 확인, pending → "배포 중" 안내
+  redirect(
+    `${returnTo}?auth_ui_installed=${deployResult === "ready" ? "1" : "pending"}`,
+  );
 }

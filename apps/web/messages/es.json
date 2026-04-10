@@ -846,9 +846,10 @@
     "title": "Añadir un botón de inicio de sesión a tu sitio",
     "description": "Instalaremos automáticamente una página con un botón de inicio con Google en el index.html de tu sitio. Vercel volverá a desplegar en breve",
     "ctaInstall": "Instalar botón de inicio",
-    "installing": "Instalando... (30-60s)",
+    "installing": "Instalando + desplegando... (hasta ~60s)",
     "waitingProvider": "Primero termina de activar el proveedor de Google de arriba",
-    "installedSuccess": "Botón de inicio instalado. Míralo en tu sitio",
+    "installedSuccess": "Botón de inicio instalado y desplegado. Revisa tu sitio ahora",
+    "installedPending": "Archivo subido. Vercel aún está desplegando — revisa tu sitio en 1-2 minutos",
     "alreadyInstalled": "El botón de inicio ya está instalado",
     "openSite": "Abrir sitio",
     "errorGeneric": "Instalación fallida: {code}",
@@ -860,7 +861,8 @@
     "errorInvalidRepo": "La información del repositorio no es válida. Vuelve a crearlo",
     "errorFetchKeyFailed": "No se pudo obtener la clave anon de Supabase. Inténtalo de nuevo en un momento",
     "errorSiteConfigFailed": "No se pudo actualizar la configuración de URL del sitio en Supabase. Inténtalo de nuevo en un momento",
-    "errorPushFailed": "No se pudo subir el archivo a GitHub. Inténtalo de nuevo en un momento"
+    "errorPushFailed": "No se pudo subir el archivo a GitHub. Inténtalo de nuevo en un momento",
+    "errorDeployFailed": "El despliegue de Vercel falló. Revisa el panel de Vercel para ver los registros"
   },
   "FirstDeploy": {
     "title": "Primer despliegue",

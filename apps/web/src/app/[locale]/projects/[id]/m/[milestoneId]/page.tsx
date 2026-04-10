@@ -163,6 +163,7 @@ function resolveInstallAuthUiError(
   if (raw.includes("fetch_key_failed")) return t("errorFetchKeyFailed");
   if (raw.includes("site_config_failed")) return t("errorSiteConfigFailed");
   if (raw.includes("push_failed")) return t("errorPushFailed");
+  if (raw.includes("deploy_failed")) return t("errorDeployFailed");
   return t("errorGeneric", { code: raw });
 }
 
@@ -872,7 +873,13 @@ export default async function MilestoneRunPage({
       installState = "ready";
     }
 
-    const authUiInstalledFlag = query.auth_ui_installed === "1";
+    const authUiInstalledRaw = query.auth_ui_installed;
+    const authUiInstalledFlag =
+      authUiInstalledRaw === "1"
+        ? "ready"
+        : authUiInstalledRaw === "pending"
+          ? "pending"
+          : null;
     const installAuthUiErrorRaw =
       typeof query.install_auth_ui_error === "string"
         ? query.install_auth_ui_error
@@ -887,9 +894,12 @@ export default async function MilestoneRunPage({
         ctaInstall: tInstallAuthUi("ctaInstall"),
         installing: tInstallAuthUi("installing"),
         waitingProvider: tInstallAuthUi("waitingProvider"),
-        installedSuccess: authUiInstalledFlag
-          ? tInstallAuthUi("installedSuccess")
-          : null,
+        installedSuccess:
+          authUiInstalledFlag === "ready"
+            ? tInstallAuthUi("installedSuccess")
+            : authUiInstalledFlag === "pending"
+              ? tInstallAuthUi("installedPending")
+              : null,
         alreadyInstalled: tInstallAuthUi("alreadyInstalled"),
         openSite: tInstallAuthUi("openSite"),
         errorMessage: installAuthUiErrorRaw

@@ -846,9 +846,10 @@
     "title": "サイトにログインボタンを追加",
     "description": "あなたのサイトのindex.htmlに、Googleログインボタン付きのページを自動でインストールします。Vercelがまもなく再デプロイします",
     "ctaInstall": "ログインボタンをインストール",
-    "installing": "インストール中... (30〜60秒)",
+    "installing": "インストール + デプロイ中... (最大〜60秒)",
     "waitingProvider": "先に上のGoogle providerの有効化を完了してください",
-    "installedSuccess": "ログインボタンがインストールされました。サイトで確認してください",
+    "installedSuccess": "ログインボタンがインストール・デプロイされました。サイトで確認してください",
+    "installedPending": "ファイルはアップロード済みです。Vercelがデプロイ中なので1〜2分後にサイトをご確認ください",
     "alreadyInstalled": "ログインボタンはインストール済みです",
     "openSite": "サイトを開く",
     "errorGeneric": "インストールに失敗: {code}",
@@ -860,7 +861,8 @@
     "errorInvalidRepo": "リポジトリ情報が不正です。リポジトリを再作成してください",
     "errorFetchKeyFailed": "Supabase anonキーの取得に失敗しました。しばらくしてから再試行してください",
     "errorSiteConfigFailed": "SupabaseのサイトURL設定に失敗しました。しばらくしてから再試行してください",
-    "errorPushFailed": "GitHubへのファイルアップロードに失敗しました。しばらくしてから再試行してください"
+    "errorPushFailed": "GitHubへのファイルアップロードに失敗しました。しばらくしてから再試行してください",
+    "errorDeployFailed": "Vercelのデプロイに失敗しました。Vercelダッシュボードでログを確認してください"
   },
   "FirstDeploy": {
     "title": "初回デプロイ",

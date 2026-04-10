@@ -846,9 +846,10 @@
     "title": "Add a login button to your site",
     "description": "We'll automatically install a page with a Google sign-in button into your site's index.html. Vercel will redeploy shortly",
     "ctaInstall": "Install login button",
-    "installing": "Installing... (30-60s)",
+    "installing": "Installing + deploying... (up to ~60s)",
     "waitingProvider": "Finish enabling the Google provider above first",
-    "installedSuccess": "Login button installed. Check your site to see it",
+    "installedSuccess": "Login button installed and deployed. Check your site now",
+    "installedPending": "File uploaded. Vercel is still deploying — check your site in 1-2 minutes",
     "alreadyInstalled": "Login button is already installed",
     "openSite": "Open site",
     "errorGeneric": "Install failed: {code}",
@@ -860,7 +861,8 @@
     "errorInvalidRepo": "Repository info is invalid. Please recreate the repo",
     "errorFetchKeyFailed": "Couldn't fetch the Supabase anon key. Please try again in a moment",
     "errorSiteConfigFailed": "Failed to update Supabase site URL config. Please try again in a moment",
-    "errorPushFailed": "Failed to upload file to GitHub. Please try again in a moment"
+    "errorPushFailed": "Failed to upload file to GitHub. Please try again in a moment",
+    "errorDeployFailed": "Vercel deployment failed. Please check the Vercel dashboard for logs"
   },
   "FirstDeploy": {
     "title": "First deploy",

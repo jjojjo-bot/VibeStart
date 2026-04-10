@@ -846,9 +846,10 @@
     "title": "在网站上添加登录按钮",
     "description": "我们会自动将包含 Google 登录按钮的页面安装到你网站的 index.html。Vercel 稍后会重新部署",
     "ctaInstall": "安装登录按钮",
-    "installing": "安装中... (30〜60秒)",
+    "installing": "安装 + 部署中... (最多约60秒)",
     "waitingProvider": "请先完成上面的 Google provider 启用",
-    "installedSuccess": "登录按钮已安装。请在网站上查看",
+    "installedSuccess": "登录按钮已安装并部署。请立即在网站上查看",
+    "installedPending": "文件已上传。Vercel 正在部署中，请1-2分钟后查看网站",
     "alreadyInstalled": "登录按钮已经安装",
     "openSite": "打开网站",
     "errorGeneric": "安装失败:{code}",
@@ -860,7 +861,8 @@
     "errorInvalidRepo": "仓库信息不正确。请重新创建仓库",
     "errorFetchKeyFailed": "获取 Supabase anon 密钥失败。请稍后重试",
     "errorSiteConfigFailed": "Supabase 网站 URL 配置失败。请稍后重试",
-    "errorPushFailed": "上传文件到 GitHub 失败。请稍后重试"
+    "errorPushFailed": "上传文件到 GitHub 失败。请稍后重试",
+    "errorDeployFailed": "Vercel 部署失败。请在 Vercel 控制台查看日志"
   },
   "FirstDeploy": {
     "title": "首次部署",
