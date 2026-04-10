@@ -53,6 +53,10 @@
     "heroHighlight": "어디서부터 시작하지?",
     "heroDescription": "개발 도구 설치가 어려워서 포기하셨나요?\nVibeStart가 하나하나 안내해드릴게요.",
     "ctaButton": "시작하기",
+    "secondaryCta": {
+      "prefix": "이미 환경 설치 끝났어요?",
+      "link": "내 사이트 만들기 →"
+    },
     "steps": {
       "1": {
         "title": "간단한 질문",
@@ -583,9 +587,10 @@
       ]
     },
     "phase2": {
-      "badge": "Coming Soon",
-      "heading": "Phase 2: 내 서비스를 세상에 공개하기",
-      "description": "데이터베이스 연동, 파일 저장소, 실제 URL로 배포, 그리고 AI 팀 에이전트 설정까지 안내해드릴 예정이에요."
+      "badge": "다음 단계",
+      "heading": "이제 진짜 인터넷에 내 사이트를 올려볼까요?",
+      "description": "GitHub에 코드를 올리고 Vercel로 배포하면, 친구한테 보낼 수 있는 진짜 인터넷 주소가 생겨요. 단계별로 안내해드릴게요.",
+      "ctaButton": "내 사이트 만들기 시작"
     },
     "backToHome": "처음으로 돌아가기"
   },
@@ -833,6 +838,26 @@
     "errorForbidden": "Supabase API 권한이 부족해요. OAuth 연결을 다시 시도해 주세요",
     "errorProjectNotFound": "Supabase 프로젝트를 찾을 수 없어요. supabase.com 대시보드에서 프로젝트가 살아있는지 확인해 주세요",
     "errorRateLimited": "Supabase API 호출 한도를 초과했어요. 잠시 후 다시 시도해 주세요"
+  },
+  "InstallAuthUi": {
+    "title": "사이트에 로그인 버튼 달기",
+    "description": "내 사이트 index.html에 Google 로그인 버튼이 포함된 페이지를 자동으로 넣어 드려요. Vercel이 곧 새 버전을 배포해요",
+    "ctaInstall": "로그인 버튼 설치",
+    "installing": "설치 중... (30~60초)",
+    "waitingProvider": "먼저 위의 Google provider 활성화를 끝내 주세요",
+    "installedSuccess": "로그인 버튼이 설치됐어요. 사이트에서 확인해 보세요",
+    "alreadyInstalled": "로그인 버튼이 설치돼 있어요",
+    "openSite": "사이트 열기",
+    "errorGeneric": "설치 실패: {code}",
+    "errorNoRepo": "GitHub 저장소를 찾을 수 없어요. 저장소를 먼저 만들어 주세요",
+    "errorNoSupabaseProject": "Supabase 프로젝트를 찾을 수 없어요. (마)-2 단계를 다시 실행해 주세요",
+    "errorNoVercelProject": "Vercel 프로젝트를 찾을 수 없어요. (라)-4 배포 단계를 먼저 완료해 주세요",
+    "errorNoGithubToken": "GitHub 토큰을 찾을 수 없어요. GitHub을 다시 연결해 주세요",
+    "errorNoSupabaseToken": "Supabase 토큰을 찾을 수 없어요. Supabase를 다시 연결해 주세요",
+    "errorInvalidRepo": "저장소 정보가 올바르지 않아요. 저장소를 다시 만들어 주세요",
+    "errorFetchKeyFailed": "Supabase anon 키를 가져오지 못했어요. 잠시 후 다시 시도해 주세요",
+    "errorSiteConfigFailed": "Supabase 사이트 URL 설정에 실패했어요. 잠시 후 다시 시도해 주세요",
+    "errorPushFailed": "GitHub 파일 업로드에 실패했어요. 잠시 후 다시 시도해 주세요"
   },
   "FirstDeploy": {
     "title": "첫 배포",

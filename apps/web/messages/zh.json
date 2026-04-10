@@ -53,6 +53,10 @@
     "heroHighlight": "不知道从哪开始？",
     "heroDescription": "开发工具安装太难放弃了？\nVibeStart手把手教你。",
     "ctaButton": "开始",
+    "secondaryCta": {
+      "prefix": "已经完成环境安装了？",
+      "link": "创建我的网站 →"
+    },
     "steps": {
       "1": {
         "title": "简单提问",
@@ -583,9 +587,10 @@
       ]
     },
     "phase2": {
-      "badge": "Coming Soon",
-      "heading": "Phase 2：把你的服务发布到全世界",
-      "description": "数据库对接、文件存储、用真实URL部署，以及AI团队代理设置，我们都会一步步指导你。"
+      "badge": "下一步",
+      "heading": "现在把你的网站发布到真正的互联网上吧？",
+      "description": "把代码上传到 GitHub 并用 Vercel 部署，你就能得到一个可以分享给朋友的真实网址。我们会一步步带你完成。",
+      "ctaButton": "开始创建我的网站"
     },
     "backToHome": "返回首页"
   },
@@ -833,6 +838,26 @@
     "errorForbidden": "Supabase API 权限不足。请重新连接 OAuth",
     "errorProjectNotFound": "找不到 Supabase 项目。请在 supabase.com 控制台确认项目仍然存在",
     "errorRateLimited": "已超过 Supabase API 调用限制。请稍后重试"
+  },
+  "InstallAuthUi": {
+    "title": "在网站上添加登录按钮",
+    "description": "我们会自动将包含 Google 登录按钮的页面安装到你网站的 index.html。Vercel 稍后会重新部署",
+    "ctaInstall": "安装登录按钮",
+    "installing": "安装中... (30〜60秒)",
+    "waitingProvider": "请先完成上面的 Google provider 启用",
+    "installedSuccess": "登录按钮已安装。请在网站上查看",
+    "alreadyInstalled": "登录按钮已经安装",
+    "openSite": "打开网站",
+    "errorGeneric": "安装失败:{code}",
+    "errorNoRepo": "找不到 GitHub 仓库。请先创建仓库",
+    "errorNoSupabaseProject": "找不到 Supabase 项目。请重新运行 (마)-2 步骤",
+    "errorNoVercelProject": "找不到 Vercel 项目。请先完成 (라)-4 部署步骤",
+    "errorNoGithubToken": "找不到 GitHub 令牌。请重新连接 GitHub",
+    "errorNoSupabaseToken": "找不到 Supabase 令牌。请重新连接 Supabase",
+    "errorInvalidRepo": "仓库信息不正确。请重新创建仓库",
+    "errorFetchKeyFailed": "获取 Supabase anon 密钥失败。请稍后重试",
+    "errorSiteConfigFailed": "Supabase 网站 URL 配置失败。请稍后重试",
+    "errorPushFailed": "上传文件到 GitHub 失败。请稍后重试"
   },
   "FirstDeploy": {
     "title": "首次部署",

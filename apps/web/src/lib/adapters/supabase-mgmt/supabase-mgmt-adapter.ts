@@ -323,6 +323,123 @@ export async function updateGoogleProvider(
   }
 }
 
+// ─────────────────────────────────────────────────────────────
+// (마)-5: Auth UI 설치 시 필요한 헬퍼들
+// ─────────────────────────────────────────────────────────────
+
+interface ApiKeyEntry {
+  name: string;
+  type?: "legacy" | "publishable" | "secret" | null;
+  api_key?: string | null;
+}
+
+/**
+ * 프로젝트의 anon(publishable) API 키를 조회한다.
+ *
+ * 엔드포인트: GET /v1/projects/{ref}/api-keys?reveal=true
+ * reveal=true가 없으면 api_key 필드가 마스킹되거나 null이다.
+ *
+ * (마)-2에서 프로젝트 생성 직후에는 anon key를 따로 저장하지 않았으므로,
+ * (마)-5에서 auth UI를 install할 때 이 헬퍼로 가져와 HTML 템플릿에 박아
+ * 넣는다. 조회된 key는 supabase_project.metadata.anonKey로 함께 저장해
+ * 이후 단계/재사용 시 추가 호출을 피한다.
+ *
+ * 우선순위: name === "anon" (legacy) > type === "publishable" > 첫 번째 키.
+ */
+export async function fetchSupabaseAnonKey(
+  accessToken: string,
+  projectRef: string,
+): Promise<string> {
+  const url = `${PROJECTS_URL}/${encodeURIComponent(projectRef)}/api-keys?reveal=true`;
+  const res = await fetch(url, {
+    method: "GET",
+    headers: SUPABASE_HEADERS(accessToken),
+  });
+  if (res.status === 401) throw new Error("supabase:invalid_token");
+  if (res.status === 403) throw new Error("supabase:forbidden");
+  if (res.status === 404) throw new Error("supabase:project_not_found");
+  if (res.status === 429) throw new Error("supabase:rate_limited");
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("[supabase-mgmt] fetchSupabaseAnonKey failed", {
+      status: res.status,
+      bodyPreview: text.slice(0, 200),
+    });
+    throw new Error(`supabase:api_keys_http_${res.status}`);
+  }
+
+  const data = (await res.json()) as ApiKeyEntry[];
+  if (!Array.isArray(data) || data.length === 0) {
+    throw new Error("supabase:no_api_keys");
+  }
+
+  // Supabase는 "anon" (legacy) / "publishable" 두 이름을 혼용한다.
+  const legacyAnon = data.find(
+    (k) => k.name === "anon" && typeof k.api_key === "string" && k.api_key,
+  );
+  const publishable = data.find(
+    (k) =>
+      k.type === "publishable" && typeof k.api_key === "string" && k.api_key,
+  );
+  const picked = legacyAnon ?? publishable ?? null;
+  if (!picked || typeof picked.api_key !== "string") {
+    throw new Error("supabase:anon_key_missing");
+  }
+  return picked.api_key;
+}
+
+export interface UpdateAuthSiteConfigInput {
+  /** 사용자 사이트의 production URL (예: https://foo.vercel.app). 단일 값. */
+  siteUrl: string;
+  /**
+   * 추가로 허용할 redirect URL (쉼표로 join해 Supabase에 전달).
+   * wildcard 패턴(`/**`) 지원.
+   */
+  redirectUris: string[];
+}
+
+/**
+ * 사용자 Supabase 프로젝트의 Auth 설정에서 Site URL과 Redirect URL 허용
+ * 목록을 업데이트한다. (마)-5에서 사용자 사이트가 배포된 Vercel URL을
+ * Supabase에 알려줘, OAuth 완료 후 Supabase가 사용자 사이트로 제대로
+ * 돌려보낼 수 있게 한다.
+ *
+ * 엔드포인트는 (마)-4의 updateGoogleProvider와 동일 — PATCH /config/auth.
+ * body 필드:
+ *   - site_url: string (단일 URL)
+ *   - uri_allow_list: string (쉼표로 구분된 URL 목록, wildcard 허용)
+ *
+ * idempotent: 같은 값으로 다시 호출해도 200을 반환한다.
+ */
+export async function updateSupabaseSiteConfig(
+  accessToken: string,
+  projectRef: string,
+  input: UpdateAuthSiteConfigInput,
+): Promise<void> {
+  const url = `${PROJECTS_URL}/${encodeURIComponent(projectRef)}/config/auth`;
+  const res = await fetch(url, {
+    method: "PATCH",
+    headers: SUPABASE_HEADERS(accessToken),
+    body: JSON.stringify({
+      site_url: input.siteUrl,
+      uri_allow_list: input.redirectUris.join(","),
+    }),
+  });
+
+  if (res.status === 401) throw new Error("supabase:invalid_token");
+  if (res.status === 403) throw new Error("supabase:forbidden");
+  if (res.status === 404) throw new Error("supabase:project_not_found");
+  if (res.status === 429) throw new Error("supabase:rate_limited");
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("[supabase-mgmt] updateSupabaseSiteConfig failed", {
+      status: res.status,
+      bodyPreview: text.slice(0, 200),
+    });
+    throw new Error(`supabase:site_config_http_${res.status}`);
+  }
+}
+
 /**
  * 프로젝트 ref로 현재 상태를 조회한다. 폴링용.
  * 응답에 status 필드가 있으며 ACTIVE_HEALTHY가 "준비 완료" 상태.

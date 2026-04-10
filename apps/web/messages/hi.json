@@ -53,6 +53,10 @@
     "heroHighlight": "कहाँ से शुरू करें?",
     "heroDescription": "डेवलपमेंट टूल्स इंस्टॉल करना मुश्किल लगा और छोड़ दिया?\nVibeStart आपको एक-एक कदम बताएगा।",
     "ctaButton": "शुरू करें",
+    "secondaryCta": {
+      "prefix": "क्या आपने पहले ही इंस्टॉल कर लिया है?",
+      "link": "मेरी साइट बनाएँ →"
+    },
     "steps": {
       "1": {
         "title": "कुछ आसान सवाल",
@@ -583,9 +587,10 @@
       ]
     },
     "phase2": {
-      "badge": "Coming Soon",
-      "heading": "Phase 2: अपनी सर्विस दुनिया के सामने लाएँ",
-      "description": "डेटाबेस कनेक्शन, फाइल स्टोरेज, असली URL पर डिप्लॉय, और AI टीम एजेंट सेटअप — सब गाइड करेंगे।"
+      "badge": "अगला कदम",
+      "heading": "अब अपनी साइट को असली इंटरनेट पर डालें?",
+      "description": "अपना कोड GitHub पर अपलोड करें और Vercel से डिप्लॉय करें — आपको एक असली URL मिलेगा जिसे दोस्तों के साथ शेयर कर सकते हैं। हम आपको कदम-दर-कदम गाइड करेंगे।",
+      "ctaButton": "मेरी साइट बनाना शुरू करें"
     },
     "backToHome": "होम पर वापस जाएँ"
   },
@@ -833,6 +838,26 @@
     "errorForbidden": "Supabase API अनुमतियाँ अपर्याप्त हैं। कृपया OAuth फिर से कनेक्ट करें",
     "errorProjectNotFound": "Supabase प्रोजेक्ट नहीं मिला। कृपया supabase.com डैशबोर्ड में पुष्टि करें कि प्रोजेक्ट अभी भी मौजूद है",
     "errorRateLimited": "Supabase API कॉल सीमा पार हो गई। कृपया कुछ समय बाद पुनः प्रयास करें"
+  },
+  "InstallAuthUi": {
+    "title": "साइट पर लॉगिन बटन जोड़ें",
+    "description": "हम आपकी साइट के index.html में Google साइन-इन बटन वाला पेज अपने आप इंस्टॉल करेंगे। Vercel जल्द ही फिर से डिप्लॉय करेगा",
+    "ctaInstall": "लॉगिन बटन इंस्टॉल करें",
+    "installing": "इंस्टॉल हो रहा है... (30-60 सेकंड)",
+    "waitingProvider": "पहले ऊपर Google provider को सक्षम करना पूरा करें",
+    "installedSuccess": "लॉगिन बटन इंस्टॉल हो गया। कृपया अपनी साइट पर देखें",
+    "alreadyInstalled": "लॉगिन बटन पहले से इंस्टॉल है",
+    "openSite": "साइट खोलें",
+    "errorGeneric": "इंस्टॉल विफल: {code}",
+    "errorNoRepo": "GitHub रिपॉजिटरी नहीं मिली। कृपया पहले रिपॉजिटरी बनाएँ",
+    "errorNoSupabaseProject": "Supabase प्रोजेक्ट नहीं मिला। कृपया (마)-2 चरण फिर से चलाएँ",
+    "errorNoVercelProject": "Vercel प्रोजेक्ट नहीं मिला। कृपया पहले (라)-4 डिप्लॉय पूरा करें",
+    "errorNoGithubToken": "GitHub टोकन नहीं मिला। कृपया GitHub को फिर से कनेक्ट करें",
+    "errorNoSupabaseToken": "Supabase टोकन नहीं मिला। कृपया Supabase को फिर से कनेक्ट करें",
+    "errorInvalidRepo": "रिपॉजिटरी जानकारी अमान्य है। कृपया रिपॉजिटरी फिर से बनाएँ",
+    "errorFetchKeyFailed": "Supabase anon key प्राप्त नहीं कर सके। कृपया कुछ समय बाद पुनः प्रयास करें",
+    "errorSiteConfigFailed": "Supabase साइट URL कॉन्फ़िग अपडेट नहीं हुआ। कृपया कुछ समय बाद पुनः प्रयास करें",
+    "errorPushFailed": "GitHub पर फ़ाइल अपलोड विफल। कृपया कुछ समय बाद पुनः प्रयास करें"
   },
   "FirstDeploy": {
     "title": "पहला डिप्लॉय",

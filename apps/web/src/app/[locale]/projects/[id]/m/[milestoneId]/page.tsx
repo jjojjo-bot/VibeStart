@@ -29,6 +29,8 @@ import {
   ExtensionStatus,
   GoogleOAuthKeysPanel,
   type GoogleOAuthKeysPanelState,
+  InstallAuthUiPanel,
+  type InstallAuthUiPanelState,
   ResultPreview,
   SubstepList,
   TrackBadge,
@@ -146,6 +148,24 @@ function resolveGoogleProviderError(
   return t("errorGeneric", { code: raw });
 }
 
+function resolveInstallAuthUiError(
+  raw: string,
+  t: (key: string, values?: Record<string, string | number>) => string,
+): string {
+  if (raw.includes("no_repo")) return t("errorNoRepo");
+  if (raw.includes("no_supabase_project") || raw.includes("no_supabase_ref"))
+    return t("errorNoSupabaseProject");
+  if (raw.includes("no_vercel_project") || raw.includes("no_vercel_url"))
+    return t("errorNoVercelProject");
+  if (raw.includes("no_github_token")) return t("errorNoGithubToken");
+  if (raw.includes("no_supabase_token")) return t("errorNoSupabaseToken");
+  if (raw.includes("invalid_repo")) return t("errorInvalidRepo");
+  if (raw.includes("fetch_key_failed")) return t("errorFetchKeyFailed");
+  if (raw.includes("site_config_failed")) return t("errorSiteConfigFailed");
+  if (raw.includes("push_failed")) return t("errorPushFailed");
+  return t("errorGeneric", { code: raw });
+}
+
 export default async function MilestoneRunPage({
   params,
   searchParams,
@@ -195,6 +215,7 @@ export default async function MilestoneRunPage({
   const tCreateSupabase = await getTranslations("CreateSupabaseProject");
   const tGoogleKeys = await getTranslations("GoogleOAuthKeys");
   const tEnableGoogle = await getTranslations("EnableGoogleProvider");
+  const tInstallAuthUi = await getTranslations("InstallAuthUi");
 
   // OAuth 연결 패널 데이터 — 이 마일스톤의 oauth kind 서브스텝을 모아
   // provider별 연결 상태를 조회한다. connectedLabel은 next-intl이 호출
@@ -807,6 +828,90 @@ export default async function MilestoneRunPage({
     }
   }
 
+  // M2 (마)-5: Auth UI 설치 패널 데이터.
+  const installAuthUiSubstep = milestone.substeps.find(
+    (s) => s.id === "m2-s5-install-auth-ui",
+  );
+  const authUiAlreadyInstalled =
+    !!existingSupabaseProject &&
+    typeof existingSupabaseProject.metadata === "object" &&
+    existingSupabaseProject.metadata !== null &&
+    "authUiInstalled" in existingSupabaseProject.metadata &&
+    (existingSupabaseProject.metadata as { authUiInstalled?: unknown })
+      .authUiInstalled === true;
+
+  // (마)-6 verify: (마)-5가 완료되면 자동으로 m2-s6도 완료로 처리한다.
+  // firstDeployAction의 패턴과 동일.
+  const verifySignupSubstep = milestone.substeps.find(
+    (s) => s.id === "m2-s6-verify-signup",
+  );
+
+  let installAuthUiPanelData: {
+    state: InstallAuthUiPanelState;
+    deployedUrl: string | null;
+    labels: {
+      title: string;
+      description: string;
+      ctaInstall: string;
+      installing: string;
+      waitingProvider: string;
+      installedSuccess: string | null;
+      alreadyInstalled: string;
+      openSite: string;
+      errorMessage: string | null;
+    };
+  } | null = null;
+
+  if (installAuthUiSubstep) {
+    let installState: InstallAuthUiPanelState;
+    if (authUiAlreadyInstalled) {
+      installState = "installed";
+    } else if (!googleProviderAlreadyEnabled) {
+      installState = "needs-provider";
+    } else {
+      installState = "ready";
+    }
+
+    const authUiInstalledFlag = query.auth_ui_installed === "1";
+    const installAuthUiErrorRaw =
+      typeof query.install_auth_ui_error === "string"
+        ? query.install_auth_ui_error
+        : null;
+
+    installAuthUiPanelData = {
+      state: installState,
+      deployedUrl: existingVercelProject?.url ?? null,
+      labels: {
+        title: tInstallAuthUi("title"),
+        description: tInstallAuthUi("description"),
+        ctaInstall: tInstallAuthUi("ctaInstall"),
+        installing: tInstallAuthUi("installing"),
+        waitingProvider: tInstallAuthUi("waitingProvider"),
+        installedSuccess: authUiInstalledFlag
+          ? tInstallAuthUi("installedSuccess")
+          : null,
+        alreadyInstalled: tInstallAuthUi("alreadyInstalled"),
+        openSite: tInstallAuthUi("openSite"),
+        errorMessage: installAuthUiErrorRaw
+          ? resolveInstallAuthUiError(installAuthUiErrorRaw, tInstallAuthUi)
+          : null,
+      },
+    };
+  }
+
+  // authUiInstalled 플래그 시 m2-s5 + m2-s6 두 개를 derive에 추가.
+  if (authUiAlreadyInstalled && installAuthUiSubstep) {
+    if (!initialCompletedSubsteps.includes(installAuthUiSubstep.id)) {
+      initialCompletedSubsteps.push(installAuthUiSubstep.id);
+    }
+    if (
+      verifySignupSubstep &&
+      !initialCompletedSubsteps.includes(verifySignupSubstep.id)
+    ) {
+      initialCompletedSubsteps.push(verifySignupSubstep.id);
+    }
+  }
+
   // vercel_project 존재 시 m1-s4 + 다음 verify substep을 derive에 추가.
   if (existingVercelProject && deploySubstep) {
     if (!initialCompletedSubsteps.includes(deploySubstep.id)) {
@@ -984,6 +1089,19 @@ export default async function MilestoneRunPage({
               locale={locale}
               state={enableGooglePanelData.state}
               labels={enableGooglePanelData.labels}
+            />
+          )}
+
+          {/* M2 (5) Auth UI 설치 — m2-s5 (+ m2-s6 verify 자동 완료) */}
+          {installAuthUiPanelData && installAuthUiSubstep && (
+            <InstallAuthUiPanel
+              projectId={project.id}
+              milestoneId={milestone.id}
+              substepId={installAuthUiSubstep.id}
+              locale={locale}
+              state={installAuthUiPanelData.state}
+              deployedUrl={installAuthUiPanelData.deployedUrl}
+              labels={installAuthUiPanelData.labels}
             />
           )}
 

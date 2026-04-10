@@ -269,7 +269,8 @@ function CompleteContent() {
           </div>
         )}
 
-        {/* Phase 2 예고 */}
+        {/* Phase 2 진입 — Phase 1 끝낸 사용자가 자연스럽게 사이트 만들기로 넘어가는 진입점.
+            카피는 M1(배포) 결과물 중심으로, Phase 2의 더 넓은 범위(Auth/DB)는 일부러 강조하지 않는다. */}
         <div className="mb-10 rounded-xl bg-primary/5 border border-primary/20 p-6">
           <div className="mb-2 text-sm text-primary font-medium">
             {t("phase2.badge")}
@@ -278,6 +279,11 @@ function CompleteContent() {
           <p className="mt-2 text-sm text-muted-foreground">
             {t("phase2.description")}
           </p>
+          <div className="mt-4">
+            <Link href="/dashboard">
+              <Button size="lg">{t("phase2.ctaButton")}</Button>
+            </Link>
+          </div>
         </div>
 
         {/* 다시 시작 */}

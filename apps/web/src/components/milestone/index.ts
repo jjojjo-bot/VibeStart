@@ -55,3 +55,9 @@ export {
   type EnableGoogleProviderPanelLabels,
   type EnableGoogleProviderPanelState,
 } from "./enable-google-provider-panel";
+export {
+  InstallAuthUiPanel,
+  type InstallAuthUiPanelProps,
+  type InstallAuthUiPanelLabels,
+  type InstallAuthUiPanelState,
+} from "./install-auth-ui-panel";

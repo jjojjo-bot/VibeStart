@@ -53,6 +53,10 @@
     "heroHighlight": "don't know where to start?",
     "heroDescription": "Gave up because setting up dev tools was too hard?\nVibeStart walks you through it one step at a time.",
     "ctaButton": "Get Started",
+    "secondaryCta": {
+      "prefix": "Already finished setup?",
+      "link": "Build my site →"
+    },
     "steps": {
       "1": {
         "title": "A Few Quick Questions",
@@ -583,9 +587,10 @@
       ]
     },
     "phase2": {
-      "badge": "Coming Soon",
-      "heading": "Phase 2: Launch Your Service to the World",
-      "description": "We'll guide you through database setup, file storage, deploying to a real URL, and configuring AI team agents."
+      "badge": "Next Step",
+      "heading": "Ready to put your site on the real internet?",
+      "description": "Push your code to GitHub and deploy with Vercel — you'll get a real URL you can share with friends. We'll walk you through it step by step.",
+      "ctaButton": "Start building my site"
     },
     "backToHome": "Back to Home"
   },
@@ -833,6 +838,26 @@
     "errorForbidden": "Insufficient Supabase API permissions. Please reconnect OAuth",
     "errorProjectNotFound": "Supabase project not found. Please confirm in supabase.com dashboard that the project still exists",
     "errorRateLimited": "Supabase API rate limit exceeded. Please try again in a moment"
+  },
+  "InstallAuthUi": {
+    "title": "Add a login button to your site",
+    "description": "We'll automatically install a page with a Google sign-in button into your site's index.html. Vercel will redeploy shortly",
+    "ctaInstall": "Install login button",
+    "installing": "Installing... (30-60s)",
+    "waitingProvider": "Finish enabling the Google provider above first",
+    "installedSuccess": "Login button installed. Check your site to see it",
+    "alreadyInstalled": "Login button is already installed",
+    "openSite": "Open site",
+    "errorGeneric": "Install failed: {code}",
+    "errorNoRepo": "GitHub repository not found. Please create the repo first",
+    "errorNoSupabaseProject": "Supabase project not found. Please re-run step (마)-2",
+    "errorNoVercelProject": "Vercel project not found. Please finish step (라)-4 deploy first",
+    "errorNoGithubToken": "GitHub token not found. Please reconnect GitHub",
+    "errorNoSupabaseToken": "Supabase token not found. Please reconnect Supabase",
+    "errorInvalidRepo": "Repository info is invalid. Please recreate the repo",
+    "errorFetchKeyFailed": "Couldn't fetch the Supabase anon key. Please try again in a moment",
+    "errorSiteConfigFailed": "Failed to update Supabase site URL config. Please try again in a moment",
+    "errorPushFailed": "Failed to upload file to GitHub. Please try again in a moment"
   },
   "FirstDeploy": {
     "title": "First deploy",

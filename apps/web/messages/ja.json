@@ -53,6 +53,10 @@
     "heroHighlight": "どこから始めればいい？",
     "heroDescription": "開発ツールのインストールが難しくて諦めていませんか？\nVibeStartが一つずつご案内します。",
     "ctaButton": "始める",
+    "secondaryCta": {
+      "prefix": "もう環境のインストールは終わりましたか？",
+      "link": "自分のサイトを作る →"
+    },
     "steps": {
       "1": {
         "title": "簡単な質問",
@@ -583,9 +587,10 @@
       ]
     },
     "phase2": {
-      "badge": "Coming Soon",
-      "heading": "Phase 2: サービスを世界に公開しよう",
-      "description": "データベース連携、ファイルストレージ、実際のURLでのデプロイ、そしてAIチームエージェントの設定までご案内する予定です。"
+      "badge": "次のステップ",
+      "heading": "本物のインターネットに自分のサイトを公開しませんか？",
+      "description": "GitHubにコードをアップロードしてVercelでデプロイすると、友達に送れる本物のURLが手に入ります。手順を一つずつご案内します。",
+      "ctaButton": "自分のサイトを作り始める"
     },
     "backToHome": "トップに戻る"
   },
@@ -833,6 +838,26 @@
     "errorForbidden": "Supabase APIの権限が不足しています。OAuth接続を再試行してください",
     "errorProjectNotFound": "Supabaseプロジェクトが見つかりません。supabase.comダッシュボードでプロジェクトが存在するか確認してください",
     "errorRateLimited": "Supabase APIの呼び出し制限を超えました。しばらくしてから再試行してください"
+  },
+  "InstallAuthUi": {
+    "title": "サイトにログインボタンを追加",
+    "description": "あなたのサイトのindex.htmlに、Googleログインボタン付きのページを自動でインストールします。Vercelがまもなく再デプロイします",
+    "ctaInstall": "ログインボタンをインストール",
+    "installing": "インストール中... (30〜60秒)",
+    "waitingProvider": "先に上のGoogle providerの有効化を完了してください",
+    "installedSuccess": "ログインボタンがインストールされました。サイトで確認してください",
+    "alreadyInstalled": "ログインボタンはインストール済みです",
+    "openSite": "サイトを開く",
+    "errorGeneric": "インストールに失敗: {code}",
+    "errorNoRepo": "GitHubリポジトリが見つかりません。先にリポジトリを作成してください",
+    "errorNoSupabaseProject": "Supabaseプロジェクトが見つかりません。(마)-2 ステップを再実行してください",
+    "errorNoVercelProject": "Vercelプロジェクトが見つかりません。先に (라)-4 デプロイを完了してください",
+    "errorNoGithubToken": "GitHubトークンが見つかりません。GitHubを再接続してください",
+    "errorNoSupabaseToken": "Supabaseトークンが見つかりません。Supabaseを再接続してください",
+    "errorInvalidRepo": "リポジトリ情報が不正です。リポジトリを再作成してください",
+    "errorFetchKeyFailed": "Supabase anonキーの取得に失敗しました。しばらくしてから再試行してください",
+    "errorSiteConfigFailed": "SupabaseのサイトURL設定に失敗しました。しばらくしてから再試行してください",
+    "errorPushFailed": "GitHubへのファイルアップロードに失敗しました。しばらくしてから再試行してください"
   },
   "FirstDeploy": {
     "title": "初回デプロイ",

@@ -53,6 +53,10 @@
     "heroHighlight": "¿por dónde empiezo?",
     "heroDescription": "¿Renunciaste porque instalar herramientas de desarrollo era muy difícil?\nVibeStart te guía uno a uno.",
     "ctaButton": "Empezar",
+    "secondaryCta": {
+      "prefix": "¿Ya terminaste la instalación?",
+      "link": "Crear mi sitio →"
+    },
     "steps": {
       "1": {
         "title": "Preguntas sencillas",
@@ -583,9 +587,10 @@
       ]
     },
     "phase2": {
-      "badge": "Coming Soon",
-      "heading": "Fase 2: Publicar tu servicio al mundo",
-      "description": "Te guiaremos con la conexión a base de datos, almacenamiento de archivos, publicación con URL real y configuración de agentes de IA."
+      "badge": "Siguiente paso",
+      "heading": "¿Listo para poner tu sitio en internet de verdad?",
+      "description": "Sube tu código a GitHub y publícalo con Vercel: obtendrás una URL real que puedes compartir con tus amigos. Te guiamos paso a paso.",
+      "ctaButton": "Empezar a crear mi sitio"
     },
     "backToHome": "Volver al inicio"
   },
@@ -833,6 +838,26 @@
     "errorForbidden": "Permisos insuficientes en la API de Supabase. Vuelve a conectar OAuth",
     "errorProjectNotFound": "No se encontró el proyecto Supabase. Verifica en el panel de supabase.com que el proyecto siga existiendo",
     "errorRateLimited": "Se superó el límite de llamadas a la API de Supabase. Inténtalo de nuevo en un momento"
+  },
+  "InstallAuthUi": {
+    "title": "Añadir un botón de inicio de sesión a tu sitio",
+    "description": "Instalaremos automáticamente una página con un botón de inicio con Google en el index.html de tu sitio. Vercel volverá a desplegar en breve",
+    "ctaInstall": "Instalar botón de inicio",
+    "installing": "Instalando... (30-60s)",
+    "waitingProvider": "Primero termina de activar el proveedor de Google de arriba",
+    "installedSuccess": "Botón de inicio instalado. Míralo en tu sitio",
+    "alreadyInstalled": "El botón de inicio ya está instalado",
+    "openSite": "Abrir sitio",
+    "errorGeneric": "Instalación fallida: {code}",
+    "errorNoRepo": "No se encontró el repositorio de GitHub. Crea el repositorio primero",
+    "errorNoSupabaseProject": "No se encontró el proyecto Supabase. Vuelve a ejecutar el paso (마)-2",
+    "errorNoVercelProject": "No se encontró el proyecto Vercel. Primero completa el paso (라)-4 de despliegue",
+    "errorNoGithubToken": "No se encontró un token de GitHub. Vuelve a conectar GitHub",
+    "errorNoSupabaseToken": "No se encontró un token de Supabase. Vuelve a conectar Supabase",
+    "errorInvalidRepo": "La información del repositorio no es válida. Vuelve a crearlo",
+    "errorFetchKeyFailed": "No se pudo obtener la clave anon de Supabase. Inténtalo de nuevo en un momento",
+    "errorSiteConfigFailed": "No se pudo actualizar la configuración de URL del sitio en Supabase. Inténtalo de nuevo en un momento",
+    "errorPushFailed": "No se pudo subir el archivo a GitHub. Inténtalo de nuevo en un momento"
   },
   "FirstDeploy": {
     "title": "Primer despliegue",

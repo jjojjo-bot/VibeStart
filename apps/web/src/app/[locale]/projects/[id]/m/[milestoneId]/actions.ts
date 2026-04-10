@@ -36,8 +36,10 @@ import { createGitHubAdapter } from "@/lib/adapters/github/github-adapter";
 import {
   createSupabaseMgmtAdapter,
   createSupabaseProject,
+  fetchSupabaseAnonKey,
   getSupabaseProject,
   updateGoogleProvider,
+  updateSupabaseSiteConfig,
 } from "@/lib/adapters/supabase-mgmt/supabase-mgmt-adapter";
 import {
   createVercelProject,
@@ -48,6 +50,7 @@ import {
   type VercelUserMeta,
 } from "@/lib/adapters/vercel/vercel-adapter";
 import { pushFileToGitHub } from "@/lib/adapters/github/github-adapter";
+import { buildAuthUiHtml } from "@/lib/deploy/auth-ui-template";
 import { buildLandingHtml } from "@/lib/deploy/landing-template";
 import {
   OAUTH_STATE_COOKIE,
@@ -1161,4 +1164,235 @@ export async function enableGoogleProviderAction(
 
   revalidatePath(returnTo);
   redirect(`${returnTo}?google_provider_enabled=1`);
+}
+
+/**
+ * (마)-5 — 사용자 사이트에 Google 로그인 UI 설치.
+ *
+ * 순서:
+ *   1. 선행 리소스 확인 (github_repo, supabase_project, vercel_project)
+ *      + 선행 토큰 (github, supabase_mgmt)
+ *   2. Supabase anon key 조회 후 supabase_project metadata에 캐시
+ *   3. Supabase Auth의 site_url / uri_allow_list를 Vercel 배포 URL로 업데이트
+ *   4. buildAuthUiHtml로 로그인 버튼이 포함된 index.html 생성
+ *   5. pushFileToGitHub로 기존 index.html을 덮어쓰기 → Vercel 자동 재배포
+ *   6. supabase_project metadata에 authUiInstalled 플래그 기록
+ *   7. substep 완료 (자동으로 다음 verify substep (마)-6도 완료)
+ *
+ * idempotent: 같은 HTML로 다시 push하면 GitHub Contents API는 sha 기반
+ * 업데이트로 처리한다 (동일 내용이어도 새 커밋이 생길 수 있음). Supabase
+ * 설정 업데이트도 동일 값으로 호출해도 안전.
+ *
+ * 보안: anon key는 공개 키라 로그에 남겨도 무방하지만, 굳이 찍을 필요가
+ * 없어 메시지에서는 제외한다.
+ */
+export async function installAuthUiAction(
+  formData: FormData,
+): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("로그인이 필요합니다");
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const milestoneId = String(formData.get("milestoneId") ?? "");
+  const substepId = String(formData.get("substepId") ?? "");
+  const locale = resolveLocale(formData.get("locale"));
+
+  if (!projectId || !milestoneId || !substepId) {
+    throw new Error("필수 파라미터 누락");
+  }
+
+  const project = getDummyProject(projectId);
+  if (!project || project.userId !== user.id) {
+    throw new Error("프로젝트를 찾을 수 없습니다");
+  }
+
+  const returnTo = buildReturnTo(locale, projectId, milestoneId);
+
+  const catalog = createInMemoryMilestoneCatalog();
+  const milestone = catalog.getMilestone(project.track, milestoneId);
+  const allMilestones = catalog.listMilestones(project.track);
+
+  function completeSubstep(): void {
+    if (!milestone) return;
+    markSubstepCompleted({
+      projectId: project!.id,
+      milestoneId,
+      substepId,
+      totalSubsteps: milestone.substeps.length,
+      allMilestoneIds: allMilestones.map((m) => m.id),
+    });
+
+    // (마)-6: Auth UI가 설치된 직후 따라오는 verify substep을 자동 완료.
+    // ((라)-5 firstDeployAction 패턴과 동일)
+    const currentIdx = milestone.substeps.findIndex((s) => s.id === substepId);
+    const nextSubstep = milestone.substeps[currentIdx + 1];
+    if (nextSubstep && nextSubstep.kind === "verify") {
+      markSubstepCompleted({
+        projectId: project!.id,
+        milestoneId,
+        substepId: nextSubstep.id,
+        totalSubsteps: milestone.substeps.length,
+        allMilestoneIds: allMilestones.map((m) => m.id),
+      });
+    }
+  }
+
+  // 1) 선행 리소스 + 토큰 조회
+  const githubRepo = getProjectResourceByType(project.id, "github_repo");
+  if (!githubRepo) {
+    redirect(`${returnTo}?install_auth_ui_error=no_repo`);
+  }
+  const supabaseProjectResource = getProjectResourceByType(
+    project.id,
+    "supabase_project",
+  );
+  if (!supabaseProjectResource) {
+    redirect(`${returnTo}?install_auth_ui_error=no_supabase_project`);
+  }
+  const vercelProjectResource = getProjectResourceByType(
+    project.id,
+    "vercel_project",
+  );
+  if (!vercelProjectResource) {
+    redirect(`${returnTo}?install_auth_ui_error=no_vercel_project`);
+  }
+
+  const supabaseMeta = supabaseProjectResource.metadata as {
+    ref?: unknown;
+    apiUrl?: unknown;
+    anonKey?: unknown;
+    googleProviderEnabled?: unknown;
+  };
+  const supabaseRef =
+    typeof supabaseMeta.ref === "string" ? supabaseMeta.ref : null;
+  const supabaseApiUrl =
+    typeof supabaseMeta.apiUrl === "string" ? supabaseMeta.apiUrl : null;
+  if (!supabaseRef || !supabaseApiUrl) {
+    redirect(`${returnTo}?install_auth_ui_error=no_supabase_ref`);
+  }
+
+  // (마)-4가 먼저 돌았어야 하지만 엄격하게 강제하지는 않는다 — 사용자가
+  // 단계를 건너뛰었어도 HTML 자체는 작동할 수 있기 때문. 다만 경고는 로그에.
+  if (supabaseMeta.googleProviderEnabled !== true) {
+    console.warn("[installAuthUiAction] googleProviderEnabled flag missing", {
+      projectId: project.id,
+    });
+  }
+
+  const vercelUrl = vercelProjectResource.url;
+  if (!vercelUrl) {
+    redirect(`${returnTo}?install_auth_ui_error=no_vercel_url`);
+  }
+
+  const ghToken = await getOAuthAccessToken(user.id, "github");
+  if (!ghToken) {
+    redirect(`${returnTo}?install_auth_ui_error=no_github_token`);
+  }
+  const supabaseToken = await getOAuthAccessToken(user.id, "supabase_mgmt");
+  if (!supabaseToken) {
+    redirect(`${returnTo}?install_auth_ui_error=no_supabase_token`);
+  }
+
+  // externalId는 "owner/repo" 형태
+  const [owner, repoName] = githubRepo.externalId.split("/");
+  if (!owner || !repoName) {
+    redirect(`${returnTo}?install_auth_ui_error=invalid_repo`);
+  }
+
+  // 2) anon key 조회 (metadata에 이미 있으면 재사용)
+  let anonKey =
+    typeof supabaseMeta.anonKey === "string" && supabaseMeta.anonKey.length > 0
+      ? supabaseMeta.anonKey
+      : null;
+  if (!anonKey) {
+    try {
+      anonKey = await fetchSupabaseAnonKey(supabaseToken, supabaseRef);
+    } catch (err) {
+      console.error("[installAuthUiAction] fetchSupabaseAnonKey failed", {
+        userId: user.id,
+        projectId: project.id,
+        error: err instanceof Error ? err.message : String(err),
+      });
+      const code =
+        err instanceof Error
+          ? err.message.replace(/\s+/g, "_").slice(0, 120)
+          : "unknown";
+      redirect(
+        `${returnTo}?install_auth_ui_error=${encodeURIComponent(`fetch_key_failed:${code}`)}`,
+      );
+    }
+    // metadata에 캐시 (이후 재실행 시 API 호출 절약)
+    updateProjectResourceMetadata(project.id, "supabase_project", {
+      anonKey,
+    });
+  }
+
+  // 3) Supabase Auth site_url / redirect 허용 목록 업데이트
+  try {
+    await updateSupabaseSiteConfig(supabaseToken, supabaseRef, {
+      siteUrl: vercelUrl,
+      redirectUris: [
+        vercelUrl,
+        `${vercelUrl}/**`,
+        // 로컬 개발 환경에서도 같은 Supabase 프로젝트로 테스트할 수 있게.
+        "http://localhost:3000/**",
+      ],
+    });
+  } catch (err) {
+    console.error("[installAuthUiAction] updateSupabaseSiteConfig failed", {
+      userId: user.id,
+      projectId: project.id,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    const code =
+      err instanceof Error
+        ? err.message.replace(/\s+/g, "_").slice(0, 120)
+        : "unknown";
+    redirect(
+      `${returnTo}?install_auth_ui_error=${encodeURIComponent(`site_config_failed:${code}`)}`,
+    );
+  }
+
+  // 4) HTML 빌드
+  const html = buildAuthUiHtml({
+    projectName: project.name,
+    supabaseUrl: supabaseApiUrl,
+    supabaseAnonKey: anonKey,
+  });
+
+  // 5) GitHub에 index.html push (기존 (라)-4의 파일을 덮어쓰기)
+  try {
+    await pushFileToGitHub(
+      ghToken,
+      owner,
+      repoName,
+      "index.html",
+      html,
+      "feat: add Google sign-in via VibeStart",
+    );
+  } catch (err) {
+    console.error("[installAuthUiAction] pushFileToGitHub failed", {
+      userId: user.id,
+      projectId: project.id,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    const code =
+      err instanceof Error
+        ? err.message.replace(/\s+/g, "_").slice(0, 120)
+        : "unknown";
+    redirect(
+      `${returnTo}?install_auth_ui_error=${encodeURIComponent(`push_failed:${code}`)}`,
+    );
+  }
+
+  // 6) supabase_project metadata에 완료 플래그 기록
+  updateProjectResourceMetadata(project.id, "supabase_project", {
+    authUiInstalled: true,
+  });
+
+  // 7) substep 완료 + 다음 verify 자동 완료
+  completeSubstep();
+
+  revalidatePath(returnTo);
+  redirect(`${returnTo}?auth_ui_installed=1`);
 }

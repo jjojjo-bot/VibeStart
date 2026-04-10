@@ -33,13 +33,15 @@ export default function LandingPage() {
           </Link>
         </div>
 
-        {/* TEMP: Phase 2 dev 진입점. Phase 2 정식 오픈 전까지 개발 편의용. */}
-        <div className="mt-4">
+        {/* 보조 CTA — 환경 설치를 이미 끝낸 사용자가 사이트 만들기로 바로 진입.
+            메인의 신규 방문자 흐름은 Phase 1에 집중시키기 위해 작은 텍스트 링크로 둠. */}
+        <div className="mt-5 text-sm text-muted-foreground">
+          <span>{t("secondaryCta.prefix")} </span>
           <Link
             href="/dashboard"
-            className="text-xs text-muted-foreground/60 hover:text-muted-foreground underline underline-offset-4"
+            className="text-primary underline underline-offset-4 hover:text-primary/80"
           >
-            Phase 2 미리보기 →
+            {t("secondaryCta.link")}
           </Link>
         </div>
 
