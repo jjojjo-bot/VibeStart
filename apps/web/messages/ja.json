@@ -329,7 +329,10 @@
     "devTools": {
       "title": "開発ツールのインストール",
       "descriptionTemplate": "{names}をインストールします",
-      "detailedGuide": "複数のツールを一括でインストールします。少し時間がかかる場合があります。",
+      "detailedGuide": "基本ツールを一括でインストールします。途中でsudoパスワードを求められることがあります。",
+      "nodeTitle": "Node.js のインストール",
+      "nodeDescription": "最新の Node.js LTS をインストールします",
+      "nodeDetailedGuide": "Node.js は NodeSource リポジトリから最新の LTS バージョンでインストールされます。ネットワーク速度によっては1〜2分かかることがあります。",
       "whyNeeded": {
         "git": "Gitはコードの変更履歴を保存する「タイムマシン」です。",
         "nodejs": "Node.jsはウェブサイトを作るときに必要なJavaScript実行環境です。",

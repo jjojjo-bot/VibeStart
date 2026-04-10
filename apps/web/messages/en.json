@@ -329,7 +329,10 @@
     "devTools": {
       "title": "Install Development Tools",
       "descriptionTemplate": "Installing {names}",
-      "detailedGuide": "This installs multiple tools at once. It may take a few minutes.",
+      "detailedGuide": "Installs the basic tools in one step. You may be prompted for your sudo password.",
+      "nodeTitle": "Install Node.js",
+      "nodeDescription": "Install the latest LTS Node.js",
+      "nodeDetailedGuide": "Node.js is installed from the NodeSource repository at the latest LTS version. May take 1–2 minutes depending on your network.",
       "whyNeeded": {
         "git": "Git is a 'time machine' for your code — it saves every change you make.",
         "nodejs": "Node.js is the JavaScript engine needed to build websites.",

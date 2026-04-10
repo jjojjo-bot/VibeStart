@@ -329,7 +329,10 @@
     "devTools": {
       "title": "安装开发工具",
       "descriptionTemplate": "安装 {names}",
-      "detailedGuide": "一次性安装多个工具。可能需要一些时间。",
+      "detailedGuide": "一次性安装基础工具。过程中可能会要求输入 sudo 密码。",
+      "nodeTitle": "安装 Node.js",
+      "nodeDescription": "安装最新的 Node.js LTS 版本",
+      "nodeDetailedGuide": "Node.js 通过 NodeSource 仓库安装最新的 LTS 版本。根据网络速度可能需要 1-2 分钟。",
       "whyNeeded": {
         "git": "Git是保存代码变更历史的「时光机」。",
         "nodejs": "Node.js是制作网站时需要的JavaScript运行器。",

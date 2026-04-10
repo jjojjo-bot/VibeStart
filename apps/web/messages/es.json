@@ -329,7 +329,10 @@
     "devTools": {
       "title": "Instalar herramientas de desarrollo",
       "descriptionTemplate": "Instalamos {names}",
-      "detailedGuide": "Se instalan varias herramientas a la vez. Puede tomar un poco de tiempo.",
+      "detailedGuide": "Instala las herramientas básicas de una vez. Puede pedirte tu contraseña de sudo.",
+      "nodeTitle": "Instalar Node.js",
+      "nodeDescription": "Instalar la última versión LTS de Node.js",
+      "nodeDetailedGuide": "Node.js se instala desde el repositorio de NodeSource con la última versión LTS. Puede tardar 1–2 minutos según tu red.",
       "whyNeeded": {
         "git": "Git es una 'máquina del tiempo' que guarda el historial de cambios en tu código.",
         "nodejs": "Node.js es el motor de JavaScript que necesitas para crear sitios web.",

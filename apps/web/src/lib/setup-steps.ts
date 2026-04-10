@@ -116,49 +116,62 @@ function buildDevToolsWhy(goal: Goal, t: T): string {
   return parts.join(" ");
 }
 
-// ─── 개발 도구 통합 설치 (WSL) ───
+// ─── 개발 도구 설치 (WSL) ───
+//
+// 이전에는 한 단계에서 apt + nodesource + python을 모두 체인으로 돌렸으나
+// 두 가지 심각한 문제가 있었다:
+//
+//   1. 기본 bash는 pipefail이 off여서 `curl | sudo bash -` 에서 curl이 실패해도
+//      파이프라인이 0을 반환 → && 체인이 계속 진행 → 결국 nodesource 없이
+//      Ubuntu 기본 Node(18.x 등)가 조용히 설치되는 침묵 버그가 발생.
+//   2. 7+단계 체인이 중간에 실패하면 비전공자가 어느 줄에서 멈췄는지 찾지 못함.
+//
+// 수정 방향:
+//   - 두 단계로 분리 (기본 도구 / Node.js) — 독립 재시도 가능, 실패 지점 명확
+//   - 모든 스크립트 앞에 `set -o pipefail` — pipe 실패 전파
+//   - `DEBIAN_FRONTEND=noninteractive` — tzdata 등 대화상자 차단
+//   - 단계마다 echo 마커 — 실패 시 마지막 마커가 중단 지점
+//   - resultPreview는 구체 버전 번호 대신 `x.x.x` 형태 — stale 방지
 
-function wslDevToolsStep(goal: Goal, t: T): SetupStep {
-  const node = needsNode(goal);
+/** 여러 줄을 `&&`로 이어 붙여 fail-fast 체인 스크립트를 만든다. */
+function joinChain(lines: string[]): string {
+  return lines.join(" && ");
+}
+
+/** 기본 개발 도구 설치 (Git + Python/Java). Node.js는 별도 단계. */
+function wslBasicToolsStep(goal: Goal, t: T): SetupStep {
   const extra = extraRuntimeFor(goal);
 
-  const parts: string[] = [];
-  const names: string[] = [];
-  const results: string[] = [];
-
-  // Git (항상 포함)
-  parts.push("sudo apt update && sudo apt install -y git");
-  names.push("Git");
-  results.push("git version 2.43.0");
-
-  // Node.js
-  if (node) {
-    parts.push("curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt install -y nodejs");
-    names.push("Node.js");
-    results.push("v20.17.0");
-  }
-
-  // 추가 런타임
-  if (extra === "python") {
-    parts.push("sudo apt install -y python3 python3-pip python3-venv");
-    names.push("Python");
-    results.push("Python 3.12.3");
-  } else if (extra === "java") {
-    parts.push("sudo apt install -y openjdk-21-jdk");
-    names.push("Java");
-    results.push('openjdk version "21.0.3" 2024-04-16');
-  }
-
-  // 버전 확인
+  const pkgs: string[] = ["git"];
+  const names: string[] = ["Git"];
   const versionChecks: string[] = ["git --version"];
-  if (node) versionChecks.push("node --version");
-  if (extra === "python") versionChecks.push("python3 --version");
-  else if (extra === "java") versionChecks.push("java --version");
+  const resultLines: string[] = ["git version 2.x.x"];
 
-  const script = parts.join(" && ") + " && " + versionChecks.join(" && ");
+  if (extra === "python") {
+    pkgs.push("python3", "python3-pip", "python3-venv");
+    names.push("Python");
+    versionChecks.push("python3 --version");
+    resultLines.push("Python 3.x.x");
+  } else if (extra === "java") {
+    pkgs.push("openjdk-21-jdk");
+    names.push("Java");
+    versionChecks.push("java --version");
+    resultLines.push('openjdk version "21.x.x"');
+  }
+
+  const script = joinChain([
+    "set -o pipefail",
+    'echo "▶ (1/3) Updating package lists..."',
+    "sudo DEBIAN_FRONTEND=noninteractive apt-get update",
+    'echo "▶ (2/3) Installing tools..."',
+    `sudo DEBIAN_FRONTEND=noninteractive apt-get install -y ${pkgs.join(" ")}`,
+    'echo "▶ (3/3) Verifying versions..."',
+    ...versionChecks,
+    'echo "✅ Basic tools installed"',
+  ]);
 
   return {
-    id: "dev-tools",
+    id: "dev-tools-basic",
     title: t("devTools.title"),
     description: t("devTools.descriptionTemplate", { names: names.join(", ") }),
     whyNeeded: buildDevToolsWhy(goal, t),
@@ -166,10 +179,54 @@ function wslDevToolsStep(goal: Goal, t: T): SetupStep {
     environment: t("environments.linuxCmd"),
     detailedGuide: t("devTools.detailedGuide"),
     script,
-    resultPreview: results.join("\n"),
+    resultPreview: [
+      "▶ (3/3) Verifying versions...",
+      ...resultLines,
+      "✅ Basic tools installed",
+    ].join("\n"),
     troubleshooting: [
       { symptom: t("devTools.troubleshooting.wsl.0.symptom"), solution: t("devTools.troubleshooting.wsl.0.solution") },
       { symptom: t("devTools.troubleshooting.wsl.1.symptom"), solution: t("devTools.troubleshooting.wsl.1.solution") },
+      { symptom: t("devTools.troubleshooting.wsl.2.symptom"), solution: t("devTools.troubleshooting.wsl.2.solution") },
+    ],
+  };
+}
+
+/**
+ * Node.js 설치 (NodeSource setup_lts.x 스크립트 → apt install nodejs).
+ *
+ * ⚠️ `set -o pipefail`이 반드시 있어야 한다 — 없으면 curl 실패 시에도 `| sudo bash -`가
+ * 빈 stdin으로 0을 반환해서 `&&`가 계속 진행되고, 결국 nodesource 레포 없이 Ubuntu
+ * 기본 nodejs(대개 구버전)가 조용히 설치되는 침묵 버그가 생긴다.
+ */
+function wslNodejsStep(t: T): SetupStep {
+  const script = joinChain([
+    "set -o pipefail",
+    'echo "▶ (1/3) Adding NodeSource repository..."',
+    "curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -",
+    'echo "▶ (2/3) Installing Node.js..."',
+    "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs",
+    'echo "▶ (3/3) Verifying version..."',
+    "node --version",
+    'echo "✅ Node.js installed"',
+  ]);
+
+  return {
+    id: "dev-tools-nodejs",
+    title: t("devTools.nodeTitle"),
+    description: t("devTools.nodeDescription"),
+    whyNeeded: t("devTools.whyNeeded.nodejs"),
+    group: "toolInstall",
+    environment: t("environments.linuxCmd"),
+    detailedGuide: t("devTools.nodeDetailedGuide"),
+    script,
+    resultPreview: [
+      "▶ (3/3) Verifying version...",
+      "v24.x.x",
+      "✅ Node.js installed",
+    ].join("\n"),
+    troubleshooting: [
+      { symptom: t("devTools.troubleshooting.wsl.0.symptom"), solution: t("devTools.troubleshooting.wsl.0.solution") },
       { symptom: t("devTools.troubleshooting.wsl.2.symptom"), solution: t("devTools.troubleshooting.wsl.2.solution") },
       { symptom: t("devTools.troubleshooting.wsl.3.symptom"), solution: t("devTools.troubleshooting.wsl.3.solution") },
     ],
@@ -199,8 +256,34 @@ Successfully installed`,
 }
 
 // ─── Claude Code 통합 (WSL) ───
+//
+// ⚠️ WSL + NodeSource Node에서는 `npm install -g`가 EACCES로 즉시 실패한다.
+// NodeSource는 node/npm을 /usr/bin에 설치하고 npm prefix가 /usr이라
+// 글로벌 모듈이 /usr/lib/node_modules(root-owned)에 들어가기 때문이다.
+//
+// 해결: user prefix($HOME/.npm-global)로 전환 → sudo 없이 글로벌 설치 가능 +
+// PATH에 추가하면 이후 새 셸에서도 `claude` 바이너리 접근 가능.
+// grep -q ... || echo ... >> ~/.bashrc 로 idempotent하게 PATH 라인 추가.
 
 function wslClaudeStep(t: T): SetupStep {
+  // 주의: `(grep ... || echo ...)`는 괄호 서브셸로 묶어야 한다.
+  // 안 그러면 `set -o pipefail && A && B || C && D`의 우선순위가
+  // `(A && B) || (C && D)`로 해석돼 체인이 깨진다.
+  const script = joinChain([
+    "set -o pipefail",
+    'echo "▶ (1/4) Configuring npm user prefix..."',
+    'mkdir -p "$HOME/.npm-global"',
+    'npm config set prefix "$HOME/.npm-global"',
+    "(grep -q 'npm-global/bin' \"$HOME/.bashrc\" || echo 'export PATH=\"$HOME/.npm-global/bin:$PATH\"' >> \"$HOME/.bashrc\")",
+    'export PATH="$HOME/.npm-global/bin:$PATH"',
+    'echo "▶ (2/4) Installing Claude Code CLI..."',
+    "npm install -g @anthropic-ai/claude-code",
+    'echo "▶ (3/4) Installing VS Code extension..."',
+    "code --install-extension anthropic.claude-code",
+    'echo "▶ (4/4) Logging in..."',
+    "claude login",
+  ]);
+
   return {
     id: "ai-setup",
     title: t("aiSetup.title"),
@@ -209,9 +292,13 @@ function wslClaudeStep(t: T): SetupStep {
     group: "aiSetup",
     environment: t("environments.linuxCmd"),
     detailedGuide: t("aiSetup.detailedGuide"),
-    script: "npm install -g @anthropic-ai/claude-code && code --install-extension anthropic.claude-code && claude login",
-    resultPreview: `added 1 package in 3s
+    script,
+    resultPreview: `▶ (1/4) Configuring npm user prefix...
+▶ (2/4) Installing Claude Code CLI...
+added 1 package in 3s
+▶ (3/4) Installing VS Code extension...
 Extension 'anthropic.claude-code' was successfully installed.
+▶ (4/4) Logging in...
 Opening browser for authentication...
 ✓ Logged in as yourname@email.com`,
     troubleshooting: [
@@ -316,38 +403,64 @@ function brewStep(t: T): SetupStep {
 }
 
 // ─── 개발 도구 통합 설치 (macOS) ───
+//
+// macOS는 brew만 쓰면 파이프 체인 버그는 없지만, 다음 이슈를 해결해야 한다:
+//
+//   1. `brew install openjdk@21`이 keg-only라 PATH에 자동 연결되지 않는다.
+//      결과적으로 직후 `java --version`이 `command not found`로 실패 →
+//      체인이 중단되고 사용자는 원인을 알지 못한다.
+//      해결: Temurin cask (`brew install --cask temurin@21`)로 전환.
+//      Temurin은 /Library/Java/JavaVirtualMachines에 정식 설치되어
+//      system java_home이 자동 인식한다.
+//   2. resultPreview의 구체 버전 번호(예: `v20.17.0`)는 brew가 업그레이드되면
+//      금방 stale해진다. `v24.x.x` 같은 형태로 변경.
+//   3. 중간 실패 시 가시성 부족 — echo 마커로 완화.
 
 function macDevToolsStep(goal: Goal, t: T): SetupStep {
   const node = needsNode(goal);
   const extra = extraRuntimeFor(goal);
 
   const brewPkgs: string[] = ["git"];
+  const caskPkgs: string[] = [];
   const names: string[] = ["Git"];
-  const results: string[] = ["git version 2.45.2"];
   const versionChecks: string[] = ["git --version"];
+  const resultLines: string[] = ["git version 2.x.x"];
 
   if (node) {
     brewPkgs.push("node");
     names.push("Node.js");
-    results.push("v20.17.0");
     versionChecks.push("node --version");
+    resultLines.push("v24.x.x");
   }
-
-  const parts: string[] = [`brew install ${brewPkgs.join(" ")}`];
 
   if (extra === "python") {
-    parts.push("brew install python");
+    brewPkgs.push("python");
     names.push("Python");
-    results.push("Python 3.12.3");
     versionChecks.push("python3 --version");
+    resultLines.push("Python 3.x.x");
   } else if (extra === "java") {
-    parts.push("brew install openjdk@21");
+    // ⚠️ openjdk@21 (formula)는 keg-only → java가 PATH에 없어서 `java --version`이
+    // 즉시 실패한다. Temurin cask는 /Library/Java에 정식 설치되어 system java_home이
+    // 자동 인식한다. cask 설치 시 관리자 비밀번호를 한 번 물어본다.
+    caskPkgs.push("temurin@21");
     names.push("Java");
-    results.push('openjdk version "21.0.3" 2024-04-16');
     versionChecks.push("java --version");
+    resultLines.push('openjdk version "21.x.x"');
   }
 
-  const script = parts.join(" && ") + " && " + versionChecks.join(" && ");
+  const installCmds: string[] = [`brew install ${brewPkgs.join(" ")}`];
+  if (caskPkgs.length > 0) {
+    installCmds.push(`brew install --cask ${caskPkgs.join(" ")}`);
+  }
+
+  const script = joinChain([
+    "set -o pipefail",
+    'echo "▶ (1/2) Installing packages via Homebrew..."',
+    ...installCmds,
+    'echo "▶ (2/2) Verifying versions..."',
+    ...versionChecks,
+    'echo "✅ Dev tools installed"',
+  ]);
 
   return {
     id: "dev-tools",
@@ -358,7 +471,11 @@ function macDevToolsStep(goal: Goal, t: T): SetupStep {
     environment: t("environments.macTerminal"),
     detailedGuide: t("devTools.detailedGuide"),
     script,
-    resultPreview: results.join("\n"),
+    resultPreview: [
+      "▶ (2/2) Verifying versions...",
+      ...resultLines,
+      "✅ Dev tools installed",
+    ].join("\n"),
     troubleshooting: [
       { symptom: t("devTools.troubleshooting.macos.0.symptom"), solution: t("devTools.troubleshooting.macos.0.solution") },
       { symptom: t("devTools.troubleshooting.macos.1.symptom"), solution: t("devTools.troubleshooting.macos.1.solution") },
@@ -387,8 +504,22 @@ function macVscodeStep(t: T): SetupStep {
 }
 
 // ─── Claude Code 통합 (macOS) ───
+//
+// brew로 설치된 node는 /opt/homebrew/lib/node_modules(user-owned)에 글로벌
+// 모듈이 들어가므로 EACCES 이슈가 없다 — WSL처럼 npm prefix를 따로 만질
+// 필요 없음. 일관성을 위해 pipefail + echo 마커만 추가.
 
 function macClaudeStep(t: T): SetupStep {
+  const script = joinChain([
+    "set -o pipefail",
+    'echo "▶ (1/3) Installing Claude Code CLI..."',
+    "npm install -g @anthropic-ai/claude-code",
+    'echo "▶ (2/3) Installing VS Code extension..."',
+    "code --install-extension anthropic.claude-code",
+    'echo "▶ (3/3) Logging in..."',
+    "claude login",
+  ]);
+
   return {
     id: "ai-setup",
     title: t("aiSetup.title"),
@@ -397,9 +528,12 @@ function macClaudeStep(t: T): SetupStep {
     group: "aiSetup",
     environment: t("environments.macTerminal"),
     detailedGuide: t("aiSetup.detailedGuide"),
-    script: "npm install -g @anthropic-ai/claude-code && code --install-extension anthropic.claude-code && claude login",
-    resultPreview: `added 1 package in 3s
+    script,
+    resultPreview: `▶ (1/3) Installing Claude Code CLI...
+added 1 package in 3s
+▶ (2/3) Installing VS Code extension...
 Extension 'anthropic.claude-code' was successfully installed.
+▶ (3/3) Logging in...
 Opening browser for authentication...
 ✓ Logged in as yourname@email.com`,
     troubleshooting: [
@@ -705,8 +839,11 @@ export function getSetupSteps(
     steps.push(wslInstallStep(t));
     steps.push(wslOpenStep(t));
 
-    // 도구 설치
-    steps.push(wslDevToolsStep(goal, t));
+    // 도구 설치 — Basic(Git+Python/Java)과 Node.js를 분리 (실패 시 재시도 용이)
+    steps.push(wslBasicToolsStep(goal, t));
+    if (needsNode(goal)) {
+      steps.push(wslNodejsStep(t));
+    }
     steps.push(wslVscodeStep(t));
 
     // AI 설정

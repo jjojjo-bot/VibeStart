@@ -329,7 +329,10 @@
     "devTools": {
       "title": "개발 도구 설치",
       "descriptionTemplate": "{names}을 설치해요",
-      "detailedGuide": "여러 도구를 한번에 설치합니다. 시간이 조금 걸릴 수 있어요.",
+      "detailedGuide": "기본 도구를 한 번에 설치해요. 중간에 sudo 비밀번호를 물어볼 수 있어요.",
+      "nodeTitle": "Node.js 설치",
+      "nodeDescription": "최신 Node.js LTS를 설치해요",
+      "nodeDetailedGuide": "Node.js는 NodeSource 저장소를 통해 최신 LTS 버전으로 설치돼요. 네트워크 속도에 따라 1~2분 걸릴 수 있어요.",
       "whyNeeded": {
         "git": "Git은 코드의 변경 이력을 저장하는 '타임머신'이에요.",
         "nodejs": "Node.js는 웹사이트를 만들 때 필요한 자바스크립트 실행기예요.",
