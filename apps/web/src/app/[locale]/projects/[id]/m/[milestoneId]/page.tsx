@@ -344,6 +344,9 @@ export default async function MilestoneRunPage({
     vercelHelperLink: tConnections("vercelHelperLink"),
     vercelTokenPlaceholder: tConnections("vercelTokenPlaceholder"),
     vercelConnectButton: tConnections("vercelConnectButton"),
+    signupGuideGithub: tConnections("signupGuideGithub"),
+    signupGuideVercel: tConnections("signupGuideVercel"),
+    signupGuideSupabase: tConnections("signupGuideSupabase"),
   };
 
   const supabasePanelLabels = {

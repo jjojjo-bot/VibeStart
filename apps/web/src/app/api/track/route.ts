@@ -23,8 +23,11 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ error: "invalid type" }, { status: 400 });
   }
 
-  // Vercel이 자동으로 제공하는 IP 기반 국가코드
-  const countryCode = request.headers.get("x-vercel-ip-country") ?? undefined;
+  // Vercel이 자동으로 제공하는 IP 기반 국가코드.
+  // 없거나 "XX"이면 "unknown"으로 기록해 daily_stats와 합계를 맞춘다.
+  const rawCountry = request.headers.get("x-vercel-ip-country");
+  const countryCode =
+    rawCountry && rawCountry !== "XX" ? rawCountry : "unknown";
 
   // daily_stats 증가. 에러는 로그만 남기고 응답은 200 유지 —
   // 통계 기록 실패가 사용자 플로우(예: /complete 렌더)를 깨지 않도록.
@@ -40,8 +43,8 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     });
   }
 
-  // daily_country_stats 증가 (국가코드가 있을 때만)
-  if (countryCode && countryCode !== "XX") {
+  // daily_country_stats 증가 — 항상 호출 (unknown 포함, daily_stats와 합계 일치)
+  {
     const { error: countryErr } = await supabase.rpc(
       "increment_daily_country_stat",
       {

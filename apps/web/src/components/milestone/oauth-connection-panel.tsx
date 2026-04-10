@@ -48,6 +48,10 @@ export interface OAuthConnectionPanelLabels {
   vercelHelperLink: string;
   vercelTokenPlaceholder: string;
   vercelConnectButton: string;
+  /** Provider별 가입 가이드. 연결 안 된 상태에서만 표시. */
+  signupGuideGithub: string;
+  signupGuideVercel: string;
+  signupGuideSupabase: string;
 }
 
 export interface OAuthConnectionPanelProps {
@@ -198,6 +202,17 @@ export function OAuthConnectionPanel({
                   />
                   <input type="hidden" name="locale" value={locale} />
                   <p className="text-xs text-muted-foreground">
+                    {labels.signupGuideVercel}{" "}
+                    <a
+                      href="https://vercel.com/signup"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary underline underline-offset-2"
+                    >
+                      Vercel ↗
+                    </a>
+                  </p>
+                  <p className="text-xs text-muted-foreground">
                     {labels.vercelHelperText}{" "}
                     <a
                       href="https://vercel.com/account/tokens"
@@ -227,6 +242,34 @@ export function OAuthConnectionPanel({
                   </div>
                 </form>
               )}
+
+            {/* 가입 가이드 — 연결 안 된 provider에만 표시 */}
+            {!row.connected && row.supported && row.provider === "github" && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                {labels.signupGuideGithub}{" "}
+                <a
+                  href="https://github.com/signup"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline underline-offset-2"
+                >
+                  GitHub ↗
+                </a>
+              </p>
+            )}
+            {!row.connected && row.supported && row.provider === "supabase_mgmt" && (
+              <p className="mt-2 text-xs text-muted-foreground">
+                {labels.signupGuideSupabase}{" "}
+                <a
+                  href="https://supabase.com/dashboard"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-primary underline underline-offset-2"
+                >
+                  Supabase ↗
+                </a>
+              </p>
+            )}
           </li>
         ))}
       </ul>
