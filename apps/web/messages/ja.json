@@ -720,7 +720,11 @@
     "breadcrumbDashboard": "ダッシュボード",
     "myProjectsTitle": "マイプロジェクト",
     "createNewButton": "新しいプロジェクトを作成",
-    "emptyHint": "まだプロジェクトがありません。最初のプロジェクトでバイブコーディングを始めましょう!"
+    "emptyHint": "まだプロジェクトがありません。最初のプロジェクトでバイブコーディングを始めましょう!",
+    "deleteProject": "プロジェクトを削除",
+    "deleteWarning": "VibeStartからのみ削除されます。GitHubリポジトリ、Vercelデプロイ、Supabaseプロジェクトは各サイトで直接削除してください。",
+    "confirmDelete": "削除する",
+    "cancelDelete": "キャンセル"
   },
   "MilestoneRun": {
     "headerOutcome": "このステップが終わると",

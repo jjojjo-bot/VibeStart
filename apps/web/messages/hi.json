@@ -720,7 +720,11 @@
     "breadcrumbDashboard": "डैशबोर्ड",
     "myProjectsTitle": "मेरे प्रोजेक्ट",
     "createNewButton": "नया प्रोजेक्ट बनाएं",
-    "emptyHint": "आपने अभी तक कोई प्रोजेक्ट नहीं बनाया है। अपने पहले प्रोजेक्ट के साथ वाइब कोडिंग शुरू करें!"
+    "emptyHint": "आपने अभी तक कोई प्रोजेक्ट नहीं बनाया है। अपने पहले प्रोजेक्ट के साथ वाइब कोडिंग शुरू करें!",
+    "deleteProject": "प्रोजेक्ट हटाएँ",
+    "deleteWarning": "यह केवल VibeStart से हटाएगा। GitHub रिपॉजिटरी, Vercel डिप्लॉय, और Supabase प्रोजेक्ट को प्रत्येक सेवा पर अलग से साफ़ करें।",
+    "confirmDelete": "हटाने की पुष्टि",
+    "cancelDelete": "रद्द करें"
   },
   "MilestoneRun": {
     "headerOutcome": "जब आप यह पूरा कर लेंगे",

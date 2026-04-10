@@ -720,7 +720,11 @@
     "breadcrumbDashboard": "Dashboard",
     "myProjectsTitle": "My projects",
     "createNewButton": "Create new project",
-    "emptyHint": "You haven't created any project yet. Start vibe-coding with your first one!"
+    "emptyHint": "You haven't created any project yet. Start vibe-coding with your first one!",
+    "deleteProject": "Delete project",
+    "deleteWarning": "This only removes the project from VibeStart. Please clean up your GitHub repo, Vercel deployment, and Supabase project separately on each service.",
+    "confirmDelete": "Confirm delete",
+    "cancelDelete": "Cancel"
   },
   "MilestoneRun": {
     "headerOutcome": "When you finish this",

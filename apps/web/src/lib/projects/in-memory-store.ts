@@ -100,6 +100,20 @@ export function getDummyProject(id: string): Project | null {
   return getStore().projects.get(id) ?? null;
 }
 
+/**
+ * 프로젝트와 관련된 모든 데이터(마일스톤 상태, 서브스텝, 리소스)를 삭제한다.
+ * 소유권 검증은 호출자가 수행해야 한다.
+ */
+export function deleteDummyProject(id: string): boolean {
+  const store = getStore();
+  if (!store.projects.has(id)) return false;
+  store.projects.delete(id);
+  store.milestoneStates.delete(id);
+  store.completedSubsteps.delete(id);
+  store.resources.delete(id);
+  return true;
+}
+
 export function listDummyProjects(userId: string): Project[] {
   return Array.from(getStore().projects.values())
     .filter((p) => p.userId === userId)

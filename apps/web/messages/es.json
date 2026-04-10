@@ -720,7 +720,11 @@
     "breadcrumbDashboard": "Panel",
     "myProjectsTitle": "Mis proyectos",
     "createNewButton": "Crear nuevo proyecto",
-    "emptyHint": "Aún no has creado ningún proyecto. ¡Empieza a programar con tu primer proyecto!"
+    "emptyHint": "Aún no has creado ningún proyecto. ¡Empieza a programar con tu primer proyecto!",
+    "deleteProject": "Eliminar proyecto",
+    "deleteWarning": "Solo se elimina de VibeStart. Limpia el repositorio de GitHub, el despliegue de Vercel y el proyecto de Supabase por separado en cada servicio.",
+    "confirmDelete": "Confirmar",
+    "cancelDelete": "Cancelar"
   },
   "MilestoneRun": {
     "headerOutcome": "Cuando termines esto",

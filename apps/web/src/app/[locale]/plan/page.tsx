@@ -171,9 +171,17 @@ function PlanContent() {
           <Button className="h-12 w-full text-base">{t("ctaButton")}</Button>
         </Link>
 
-        <p className="mt-4 text-center text-sm text-muted-foreground/70">
-          {t("skipNote")}
-        </p>
+        <div className="mt-4 flex items-center justify-between">
+          <Link
+            href="/onboarding"
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
+            ← {tc("previous")}
+          </Link>
+          <p className="text-sm text-muted-foreground/70">
+            {t("skipNote")}
+          </p>
+        </div>
       </div>
     </main>
   );

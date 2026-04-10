@@ -720,7 +720,11 @@
     "breadcrumbDashboard": "仪表盘",
     "myProjectsTitle": "我的项目",
     "createNewButton": "创建新项目",
-    "emptyHint": "您还没有创建任何项目。用第一个项目开始氛围编程吧!"
+    "emptyHint": "您还没有创建任何项目。用第一个项目开始氛围编程吧!",
+    "deleteProject": "删除项目",
+    "deleteWarning": "仅从 VibeStart 中删除。GitHub 仓库、Vercel 部署、Supabase 项目需要在各自网站上单独清理。",
+    "confirmDelete": "确认删除",
+    "cancelDelete": "取消"
   },
   "MilestoneRun": {
     "headerOutcome": "完成这一步后",

@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { listDummyProjects } from "@/lib/projects/in-memory-store";
 
 import { signOutAction } from "../login/actions";
+import { DeleteProjectButton } from "./delete-project-button";
 
 interface DashboardPageProps {
   params: Promise<{ locale: string }>;
@@ -112,6 +113,7 @@ export default async function DashboardPage({
                         {project.createdAt.slice(0, 10)}
                       </p>
                     </div>
+                    <DeleteProjectButton projectId={project.id} />
                     <span className="text-sm text-muted-foreground">→</span>
                   </article>
                 </Link>
