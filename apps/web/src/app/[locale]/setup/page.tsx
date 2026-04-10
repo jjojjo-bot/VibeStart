@@ -1,5 +1,6 @@
 "use client";
-import { useState, useRef, useCallback, useEffect, Suspense } from "react";
+import { useState, useRef, useCallback, useEffect, Suspense, useMemo } from "react";
+import confetti from "canvas-confetti";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -98,6 +99,35 @@ function SetupContent() {
 
   const allDone = steps.every((s) => completed.has(s.id));
   const progressPercent = Math.round((completed.size / steps.length) * 100);
+
+  // 모든 단계 완료 시 폭죽 애니메이션
+  const hasFired = useRef(false);
+  useEffect(() => {
+    if (allDone && !hasFired.current) {
+      hasFired.current = true;
+      // 좌우에서 교차 발사
+      const end = Date.now() + 1500;
+      const frame = () => {
+        confetti({
+          particleCount: 3,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0, y: 0.6 },
+          colors: ["#7c3aed", "#22c55e", "#3b82f6", "#f59e0b", "#ef4444", "#fbbf24"],
+        });
+        confetti({
+          particleCount: 3,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1, y: 0.6 },
+          colors: ["#7c3aed", "#22c55e", "#3b82f6", "#f59e0b", "#ef4444", "#fbbf24"],
+        });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      };
+      frame();
+    }
+    if (!allDone) hasFired.current = false;
+  }, [allDone]);
 
   return (
     <main id="main-content" className="min-h-screen px-6 py-16">
@@ -318,7 +348,7 @@ function SetupContent() {
           <div className="mt-10 text-center">
             <Button
               size="lg"
-              className="h-12 px-8 text-base"
+              className="h-12 px-8 text-base animate-pulse"
               onClick={() => {
                 const params = new URLSearchParams({ os, goal, project: projectName });
                 router.push(`/complete?${params.toString()}`);

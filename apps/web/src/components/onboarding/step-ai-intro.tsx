@@ -41,13 +41,6 @@ export function StepAIIntro() {
             {t("aiIntro.features.terminal.description")}
           </p>
         </div>
-
-        <div className="rounded-xl border border-border/50 bg-card p-4">
-          <div className="mb-1 font-medium">{t("aiIntro.features.free.title")}</div>
-          <p className="text-sm text-muted-foreground">
-            {t("aiIntro.features.free.description")}
-          </p>
-        </div>
       </div>
     </div>
   );
