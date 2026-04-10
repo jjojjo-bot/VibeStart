@@ -48,6 +48,22 @@ export async function getSiteStats(): Promise<SiteStats> {
       .limit(3650),
   ]);
 
+  // Supabase 에러는 dailyResult.error에 담겨 내려오므로 null data만으로는
+  // 환경변수 누락 같은 문제를 감지할 수 없다. 에러가 있으면 로그로 남겨
+  // 브라우저 콘솔에서 원인 파악이 가능하게 한다.
+  if (dailyResult.error) {
+    console.error("[getSiteStats] daily_stats fetch failed", {
+      message: dailyResult.error.message,
+      code: dailyResult.error.code,
+    });
+  }
+  if (countryResult.error) {
+    console.error("[getSiteStats] daily_country_stats fetch failed", {
+      message: countryResult.error.message,
+      code: countryResult.error.code,
+    });
+  }
+
   const data = dailyResult.data;
   const countryData = countryResult.data;
 
