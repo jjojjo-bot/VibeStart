@@ -816,6 +816,24 @@
     "errorTooLong": "입력값이 너무 길어요. 값을 다시 확인해 주세요",
     "errorGeneric": "저장 실패: {code}"
   },
+  "EnableGoogleProvider": {
+    "title": "Supabase에 Google 로그인 켜기",
+    "description": "방금 발급받은 Google OAuth 키를 Supabase 프로젝트의 인증 설정에 자동으로 넣어 드려요. 한 번만 누르면 끝나요",
+    "ctaEnable": "Google 로그인 켜기",
+    "enabling": "활성화 중...",
+    "waitingSupabase": "먼저 위의 Supabase 프로젝트 생성을 끝내 주세요",
+    "waitingKeys": "먼저 위의 Google OAuth 키 발급을 끝내 주세요",
+    "enabledSuccess": "Google 로그인이 활성화됐어요",
+    "alreadyEnabled": "Google 로그인이 활성화돼 있어요",
+    "errorGeneric": "활성화 실패: {code}",
+    "errorNoSupabaseProject": "Supabase 프로젝트를 찾을 수 없어요. (마)-2 단계를 다시 실행해 주세요",
+    "errorNoGoogleKeys": "Google OAuth 키를 찾을 수 없어요. (마)-3 단계를 다시 실행해 주세요",
+    "errorNoToken": "Supabase 토큰을 찾을 수 없어요. Supabase 연결을 다시 시도해 주세요",
+    "errorInvalidToken": "Supabase 토큰이 만료됐어요. 다시 연결해 주세요",
+    "errorForbidden": "Supabase API 권한이 부족해요. OAuth 연결을 다시 시도해 주세요",
+    "errorProjectNotFound": "Supabase 프로젝트를 찾을 수 없어요. supabase.com 대시보드에서 프로젝트가 살아있는지 확인해 주세요",
+    "errorRateLimited": "Supabase API 호출 한도를 초과했어요. 잠시 후 다시 시도해 주세요"
+  },
   "FirstDeploy": {
     "title": "첫 배포",
     "description": "GitHub 저장소의 랜딩 페이지를 Vercel에 배포해요",

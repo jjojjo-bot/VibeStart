@@ -15,26 +15,29 @@
 - (라)-4 첫 배포 (`m1-s4-first-deploy`, GitHub repo에 index.html push → Vercel 프로젝트 생성 + git link → 자동 배포 → canonical URL 추출)
 - (라)-5 verify URL (`m1-s5-verify-url`, deploy 성공 시 다음 verify substep 자동 완료)
 
-### M2 Google Auth 트랙 — 1, 2, 3단계 완료
+### M2 Google Auth 트랙 — 1~4단계 완료
 
 - (마)-1 Supabase Management OAuth (`m2-s1-supabase-oauth`) ✅
 - (마)-2 Supabase 프로젝트 자동 생성 (`m2-s2-create-supabase-project`) ✅
 - (마)-3 Google OAuth 키 수집 (`m2-s3-google-oauth-keys`) ✅ — 신규 `user-action` kind. 3단계 가이드 UI (Console 링크 → redirect URI 복사 → client_id/secret 폼) + 저장된 키 마스킹 표시 + "수정하기"로 리셋 플로우. Supabase 프로젝트 ref에서 redirect URI 자동 계산. 실기기 브라우저 검증 완료 (2026-04-09, commit `1b49c65`).
+- (마)-4 Google provider 활성화 (`m2-s4-enable-google-provider`) ✅ — `auto` kind. `PATCH /v1/projects/{ref}/config/auth`로 `external_google_enabled` / `external_google_client_id` / `external_google_secret` 주입. 엔드포인트와 body 키는 Supabase OpenAPI spec(`UpdateAuthConfigBody`)에서 확정. 선행 3개(supabase_project / google_oauth_keys / supabase_mgmt 토큰) 모두 검증 후 호출. 성공 시 `supabase_project.metadata.googleProviderEnabled = true` 플래그 기록 (다른 단계에서 derive용). `EnableGoogleProviderPanel` (auto kind, 단일 버튼) UI. typecheck/lint 통과, 실기기 검증 미완료(다음 세션에서 Supabase 프로젝트 한도 정리 후 검증 필요).
 
-## 남은 작업 — M2 (마)-4 이후
+## 남은 작업 — M2 (마)-5 이후
 
 `packages/track-catalog/src/milestones/m2-google-auth.ts` 카탈로그 기준:
 
-- **(마)-4 `m2-s4-enable-google-provider`** (kind: `auto`) — Supabase Management API로 Google provider 활성화 + client_id/secret 주입. (마)-3의 `google_oauth_keys` 리소스 + (마)-2의 `supabase_project` ref + (마)-1의 supabase access_token 사용. 엔드포인트: `PATCH /v1/projects/{ref}/config/auth`로 추정되지만 Supabase docs에서 정확한 경로/body 키(`external_google_enabled`, `external_google_client_id`, `external_google_secret`) 재확인 필요. `supabase-mgmt-adapter.ts`에 `updateSupabaseAuthConfig(token, ref, config)` 헬퍼 추가 예상.
 - **(마)-5 `m2-s5-install-auth-ui`** (kind: `auto`) — GitHub repo에 auth UI 파일들 push (HTML + JS — Supabase JS SDK CDN으로 Google 로그인 버튼 + 콜백 처리). pushFileToGitHub 헬퍼 재사용. supabase_project metadata에서 apiUrl + anon key 필요 → (마)-2에서 anon key는 저장 안 됐으므로 (마)-5에서 추가 API 호출(`GET /v1/projects/{ref}/api-keys`) 필요.
 - **(마)-6 `m2-s6-verify-signup`** (kind: `verify`) — auto-complete 패턴 ((라)-5와 동일).
 
-### (마)-3에서 만들어진 재사용 가능 블록
+### (마)-3 / (마)-4에서 만들어진 재사용 가능 블록
 
 - `resourceType: 'google_oauth_keys'` — metadata에 `{ clientId, clientSecret }` (평문, Phase 2b Vault 이관 예정)
 - `OAuthProvider` 유니온에 `google` 추가됨. PROVIDER_LABEL / PROVIDER_EMOJI 모두 반영.
 - `removeProjectResourceByType()` in-memory-store 헬퍼 — (마)-4 이후 단계에서 리셋 필요 시 재사용 가능.
+- `updateProjectResourceMetadata()` in-memory-store 헬퍼 — 기존 리소스 metadata에 patch를 머지. (마)-4가 supabase_project에 `googleProviderEnabled` 플래그를 기록할 때 사용. (마)-5에서 anon key 저장 시에도 재사용 가능.
+- `updateGoogleProvider(token, ref, { clientId, clientSecret })` in `supabase-mgmt-adapter.ts` — `PATCH /v1/projects/{ref}/config/auth`. (마)-5에서 다른 auth config를 변경할 때 같은 패턴으로 헬퍼 추가하면 됨.
 - `GoogleOAuthKeysPanel` 패턴은 추후 Sentry PAT, Cloudflare API token 같은 user-action 서브스텝의 템플릿으로 재활용 가능.
+- `EnableGoogleProviderPanel` 패턴은 추후 모든 `auto` kind 단계 (3-state machine: needs-X / ready / done)의 템플릿.
 
 ## 다른 기기에서 작업 이어갈 때 필요한 것
 
@@ -60,28 +63,32 @@
 - 마이그레이션 절차: `supabase/migrations/phase2/MIGRATION_GUIDE_003.md`
 - Phase 2 셋업 가이드: `supabase/migrations/phase2/SETUP.md`
 
-## (마)-4 시작 시 알아야 할 것
+## (마)-4 검증 시 알아야 할 것
 
-1. **Supabase Management API 엔드포인트 불확실**. 공식 문서로 정확한 path/body 재확인 필요:
-   - 후보 1: `PATCH /v1/projects/{ref}/config/auth` — body에 `external_google_enabled`, `external_google_client_id`, `external_google_secret`
-   - 후보 2: 별도 `/v1/projects/{ref}/config/auth/providers/google` 형태일 수도 있음
-   - 어댑터 위치: `apps/web/src/lib/adapters/supabase-mgmt/supabase-mgmt-adapter.ts`에 `updateGoogleProvider(token, ref, { clientId, clientSecret })` 같은 헬퍼 추가
-2. **선행 조건 3개 모두 필요**:
-   - `getProjectResourceByType(projectId, 'supabase_project')` → metadata.ref + metadata (마)-1 토큰
-   - `getProjectResourceByType(projectId, 'google_oauth_keys')` → metadata.clientId + metadata.clientSecret
-   - `getOAuthAccessToken(userId, 'supabase_mgmt')`
-3. **(마)-4 패널은 auto kind** — `CreateSupabaseProjectPanel`과 패턴 동일. 상태: `needs-supabase` | `needs-keys` | `ready` | `enabled`. "활성화" 버튼 하나 + pending/success/error 토스트.
-4. **오류 케이스**: Supabase 토큰 만료, 프로젝트 INIT 중, 이미 활성화됨 (idempotent하게 처리), Google 키 형식 거부 (Supabase 쪽 검증).
-5. **서버 액션**: `enableGoogleProviderAction`. 서브스텝 완료 후 `result` 리소스는 별도 저장 안 하고 `supabase_project.metadata.googleProviderEnabled: true` 플래그로 기록할지 검토.
+1. **선행 조건**: Supabase 프로젝트 한도 정리(2-project free 한도) 후 (마)-2를 다시 실행해 새 프로젝트 ref 확보. 그 위에서 (마)-3으로 Google 키 저장 → (마)-4 활성화 버튼.
+2. **확인 포인트**: Supabase 대시보드 → Authentication → Providers → Google이 enabled로 바뀌고 client_id가 표시되는지.
+3. **idempotent 검증**: 같은 키로 (마)-4 버튼을 두 번 눌러도 200을 받고 에러가 안 떠야 함.
+4. **에러 케이스 확인 예정**: 만료된 토큰(`invalid_token`), 권한 부족(`forbidden`), 잘못된 ref(`project_not_found`).
+
+## (마)-5 시작 시 알아야 할 것
+
+1. **선행 조건**:
+   - `getProjectResourceByType(projectId, 'github_repo')` → push 대상
+   - `getProjectResourceByType(projectId, 'supabase_project')` → metadata.ref + apiUrl
+   - `getOAuthAccessToken(userId, 'github')` + `'supabase_mgmt'`
+2. **anon key 조회**: Supabase Management API `GET /v1/projects/{ref}/api-keys`로 anon key 받아 supabase_project metadata에 저장(`updateProjectResourceMetadata` 헬퍼 재사용). OpenAPI spec(`/tmp/supabase-openapi.json`에 다운로드 가능)에서 정확한 응답 schema 확인 필요.
+3. **파일 생성**: index.html (Google 로그인 버튼) + auth-callback.html. Supabase JS SDK는 CDN에서 로드. 두 파일 모두 `pushFileToGitHub` 헬퍼로 push.
+4. **landing-template.ts 패턴** 참고 — (라)-4에서 index.html 빌드한 헬퍼 위치.
+5. **Google Cloud Console redirect URI 추가**: 사용자가 (마)-3에서 redirect URI를 복사해 등록한 상태라 추가 작업 없음. 단, Vercel 배포 도메인이 추가되면 그 URL도 redirect로 등록해야 작동 — UI 안내 필요할 수 있음.
 
 ## 다음 작업 시작 명령어 (다른 기기)
 
 ```bash
-git pull                # 1b49c65 이상 포함 확인
+git pull                # (마)-4 commit 이상 포함 확인
 pnpm install            # root에서 — 새 deps는 없지만 workspace 링크 갱신
 pnpm dev:web
 ```
 
 별도 `.env.local` 셋업은 "환경 변수" 섹션 참조. Supabase 프로젝트 한도 이슈 먼저 해결.
 
-`.env.local` 셋업 후 dev 서버 띄우면 끝. (마)-3 작업 시작.
+`.env.local` 셋업 후 dev 서버 띄우면 끝. (마)-4 실기기 검증 + (마)-5 작업 시작.

@@ -816,6 +816,24 @@
     "errorTooLong": "La entrada es demasiado larga. Verifica los valores",
     "errorGeneric": "Error al guardar: {code}"
   },
+  "EnableGoogleProvider": {
+    "title": "Activar inicio de sesión con Google en Supabase",
+    "description": "Inyectaremos automáticamente las claves de Google OAuth que acabas de obtener en la configuración de autenticación de tu proyecto Supabase. Un solo clic basta",
+    "ctaEnable": "Activar inicio con Google",
+    "enabling": "Activando...",
+    "waitingSupabase": "Primero termina de crear el proyecto Supabase de arriba",
+    "waitingKeys": "Primero termina de obtener las claves de Google OAuth de arriba",
+    "enabledSuccess": "El inicio con Google está activado",
+    "alreadyEnabled": "El inicio con Google ya está activado",
+    "errorGeneric": "Activación fallida: {code}",
+    "errorNoSupabaseProject": "No se encontró el proyecto Supabase. Vuelve a ejecutar el paso (마)-2",
+    "errorNoGoogleKeys": "No se encontraron las claves de Google OAuth. Vuelve a ejecutar el paso (마)-3",
+    "errorNoToken": "No se encontró un token de Supabase. Vuelve a conectar Supabase",
+    "errorInvalidToken": "El token de Supabase expiró. Vuelve a conectarte",
+    "errorForbidden": "Permisos insuficientes en la API de Supabase. Vuelve a conectar OAuth",
+    "errorProjectNotFound": "No se encontró el proyecto Supabase. Verifica en el panel de supabase.com que el proyecto siga existiendo",
+    "errorRateLimited": "Se superó el límite de llamadas a la API de Supabase. Inténtalo de nuevo en un momento"
+  },
   "FirstDeploy": {
     "title": "Primer despliegue",
     "description": "Despliega una página de aterrizaje desde tu repositorio de GitHub en Vercel",

@@ -816,6 +816,24 @@
     "errorTooLong": "输入值过长。请检查数值",
     "errorGeneric": "保存失败:{code}"
   },
+  "EnableGoogleProvider": {
+    "title": "在 Supabase 上启用 Google 登录",
+    "description": "将刚获取的 Google OAuth 密钥自动注入到您的 Supabase 项目认证设置中。一键完成",
+    "ctaEnable": "启用 Google 登录",
+    "enabling": "启用中...",
+    "waitingSupabase": "请先完成上面的 Supabase 项目创建",
+    "waitingKeys": "请先完成上面的 Google OAuth 密钥获取",
+    "enabledSuccess": "Google 登录已启用",
+    "alreadyEnabled": "Google 登录已经启用",
+    "errorGeneric": "启用失败:{code}",
+    "errorNoSupabaseProject": "找不到 Supabase 项目。请重新运行 (마)-2 步骤",
+    "errorNoGoogleKeys": "找不到 Google OAuth 密钥。请重新运行 (마)-3 步骤",
+    "errorNoToken": "找不到 Supabase 令牌。请重新连接 Supabase",
+    "errorInvalidToken": "Supabase 令牌已过期。请重新连接",
+    "errorForbidden": "Supabase API 权限不足。请重新连接 OAuth",
+    "errorProjectNotFound": "找不到 Supabase 项目。请在 supabase.com 控制台确认项目仍然存在",
+    "errorRateLimited": "已超过 Supabase API 调用限制。请稍后重试"
+  },
   "FirstDeploy": {
     "title": "首次部署",
     "description": "将 GitHub 仓库中的落地页部署到 Vercel",

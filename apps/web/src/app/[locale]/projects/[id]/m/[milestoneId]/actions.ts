@@ -37,6 +37,7 @@ import {
   createSupabaseMgmtAdapter,
   createSupabaseProject,
   getSupabaseProject,
+  updateGoogleProvider,
 } from "@/lib/adapters/supabase-mgmt/supabase-mgmt-adapter";
 import {
   createVercelProject,
@@ -66,6 +67,7 @@ import {
   markSubstepCompleted,
   removeProjectResourceByType,
   unmarkSubstepCompleted,
+  updateProjectResourceMetadata,
 } from "@/lib/projects/in-memory-store";
 import { routing } from "@/i18n/routing";
 
@@ -1022,4 +1024,141 @@ export async function resetGoogleOAuthKeysAction(
 
   revalidatePath(returnTo);
   redirect(`${returnTo}?google_keys_reset=1`);
+}
+
+/**
+ * (마)-4 — Supabase에 Google OAuth provider 활성화.
+ *
+ * 1. 선행 조건 3개 검증
+ *    - supabase_project 리소스 (마)-2에서 생성됨, metadata.ref 필요
+ *    - google_oauth_keys 리소스 (마)-3에서 저장됨, clientId/clientSecret 필요
+ *    - supabase_mgmt access token (마)-1에서 발급됨
+ * 2. PATCH /v1/projects/{ref}/config/auth로 external_google_* 필드 업데이트
+ * 3. 성공 시 supabase_project.metadata.googleProviderEnabled = true 플래그 기록
+ * 4. substep 완료 마킹
+ *
+ * idempotent: 이미 활성화돼 있어도 동일한 PATCH를 다시 보내 200을 받는다.
+ * 사용자가 (마)-3에서 키를 바꾸고 (마)-4를 재실행하면 새 값으로 덮어쓰인다.
+ *
+ * 보안: client_secret은 로그에 절대 찍지 않는다.
+ */
+export async function enableGoogleProviderAction(
+  formData: FormData,
+): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("로그인이 필요합니다");
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const milestoneId = String(formData.get("milestoneId") ?? "");
+  const substepId = String(formData.get("substepId") ?? "");
+  const locale = resolveLocale(formData.get("locale"));
+
+  if (!projectId || !milestoneId || !substepId) {
+    throw new Error("필수 파라미터 누락");
+  }
+
+  const project = getDummyProject(projectId);
+  if (!project || project.userId !== user.id) {
+    throw new Error("프로젝트를 찾을 수 없습니다");
+  }
+
+  const returnTo = buildReturnTo(locale, projectId, milestoneId);
+
+  const catalog = createInMemoryMilestoneCatalog();
+  const milestone = catalog.getMilestone(project.track, milestoneId);
+  const allMilestones = catalog.listMilestones(project.track);
+
+  function completeSubstep(): void {
+    if (!milestone) return;
+    markSubstepCompleted({
+      projectId: project!.id,
+      milestoneId,
+      substepId,
+      totalSubsteps: milestone.substeps.length,
+      allMilestoneIds: allMilestones.map((m) => m.id),
+    });
+  }
+
+  // 1) 선행 리소스: Supabase 프로젝트
+  const supabaseProjectResource = getProjectResourceByType(
+    project.id,
+    "supabase_project",
+  );
+  if (!supabaseProjectResource) {
+    redirect(`${returnTo}?google_provider_error=no_supabase_project`);
+  }
+  const supabaseRefRaw = (
+    supabaseProjectResource.metadata as { ref?: unknown }
+  ).ref;
+  const supabaseRef =
+    typeof supabaseRefRaw === "string" && supabaseRefRaw.length > 0
+      ? supabaseRefRaw
+      : null;
+  if (!supabaseRef) {
+    redirect(`${returnTo}?google_provider_error=no_supabase_ref`);
+  }
+
+  // 2) 선행 리소스: Google OAuth 키
+  const googleKeysResource = getProjectResourceByType(
+    project.id,
+    "google_oauth_keys",
+  );
+  if (!googleKeysResource) {
+    redirect(`${returnTo}?google_provider_error=no_google_keys`);
+  }
+  const googleMeta = googleKeysResource.metadata as {
+    clientId?: unknown;
+    clientSecret?: unknown;
+  };
+  const clientId =
+    typeof googleMeta.clientId === "string" ? googleMeta.clientId : "";
+  const clientSecret =
+    typeof googleMeta.clientSecret === "string" ? googleMeta.clientSecret : "";
+  if (!clientId || !clientSecret) {
+    redirect(`${returnTo}?google_provider_error=invalid_google_keys`);
+  }
+
+  // 3) 선행 토큰: Supabase Management
+  const supabaseToken = await getOAuthAccessToken(user.id, "supabase_mgmt");
+  if (!supabaseToken) {
+    redirect(`${returnTo}?google_provider_error=no_token`);
+  }
+
+  // 4) Auth config 업데이트
+  let errCode: string | null = null;
+  try {
+    await updateGoogleProvider(supabaseToken, supabaseRef, {
+      clientId,
+      clientSecret,
+    });
+  } catch (err) {
+    // ⚠️ 의도적으로 client_secret은 로그에 포함하지 않는다.
+    console.error("[enableGoogleProviderAction] updateGoogleProvider failed", {
+      userId: user.id,
+      projectId: project.id,
+      ref: supabaseRef,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    errCode =
+      err instanceof Error
+        ? err.message.replace(/\s+/g, "_").slice(0, 120)
+        : "unknown";
+  }
+
+  if (errCode) {
+    redirect(
+      `${returnTo}?google_provider_error=${encodeURIComponent(errCode)}`,
+    );
+  }
+
+  // 5) supabase_project metadata에 플래그 기록 — (마)-5에서 이 플래그로
+  // (마)-4 완료 여부를 검증할 수 있다.
+  updateProjectResourceMetadata(project.id, "supabase_project", {
+    googleProviderEnabled: true,
+  });
+
+  completeSubstep();
+
+  revalidatePath(returnTo);
+  redirect(`${returnTo}?google_provider_enabled=1`);
 }

@@ -273,6 +273,31 @@ export function getProjectResourceByType(
 }
 
 /**
+ * 특정 resourceType의 첫 리소스 metadata에 patch를 머지한다.
+ * 존재했다면 갱신된 row, 없었다면 null.
+ *
+ * (마)-4: supabase_project metadata에 `googleProviderEnabled: true`를 기록할 때
+ * 사용. 새로운 키를 만들지 않고 in-place로 업데이트한다.
+ */
+export function updateProjectResourceMetadata(
+  projectId: string,
+  resourceType: ResourceType,
+  patch: Record<string, unknown>,
+): StoredProjectResource | null {
+  const list = getStore().resources.get(projectId);
+  if (!list) return null;
+  const idx = list.findIndex((r) => r.resourceType === resourceType);
+  if (idx === -1) return null;
+  const current = list[idx]!;
+  const updated: StoredProjectResource = {
+    ...current,
+    metadata: { ...current.metadata, ...patch },
+  };
+  list[idx] = updated;
+  return updated;
+}
+
+/**
  * 특정 resourceType의 첫 리소스를 삭제한다. 존재했다면 true, 없었다면 false.
  * (마)-3 사용자가 잘못 입력한 Google OAuth 키를 수정할 때 사용.
  */

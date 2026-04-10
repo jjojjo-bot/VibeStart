@@ -266,6 +266,63 @@ export async function createSupabaseProject(
   };
 }
 
+// ─────────────────────────────────────────────────────────────
+// (마)-4: Google OAuth provider 활성화
+// ─────────────────────────────────────────────────────────────
+
+export interface UpdateGoogleProviderInput {
+  /** Google Cloud Console에서 발급한 OAuth client ID */
+  clientId: string;
+  /** Google Cloud Console에서 발급한 OAuth client secret */
+  clientSecret: string;
+}
+
+/**
+ * Supabase 프로젝트의 Auth 설정에 Google OAuth provider를 활성화하고
+ * client_id/secret을 주입한다.
+ *
+ * 엔드포인트: PATCH /v1/projects/{ref}/config/auth
+ * Body 필드는 OpenAPI spec(`UpdateAuthConfigBody`)에서 확인:
+ *   - external_google_enabled: boolean
+ *   - external_google_client_id: string
+ *   - external_google_secret: string
+ *
+ * idempotent: 같은 키로 다시 호출해도 200을 반환한다 (Supabase가 동일 값을
+ * 그대로 덮어쓰는 동작). 호출자는 enabled 플래그가 이미 true여도 안전하게
+ * 재호출할 수 있다.
+ */
+export async function updateGoogleProvider(
+  accessToken: string,
+  projectRef: string,
+  input: UpdateGoogleProviderInput,
+): Promise<void> {
+  const url = `${PROJECTS_URL}/${encodeURIComponent(projectRef)}/config/auth`;
+  const res = await fetch(url, {
+    method: "PATCH",
+    headers: SUPABASE_HEADERS(accessToken),
+    body: JSON.stringify({
+      external_google_enabled: true,
+      external_google_client_id: input.clientId,
+      external_google_secret: input.clientSecret,
+    }),
+  });
+
+  if (res.status === 401) throw new Error("supabase:invalid_token");
+  if (res.status === 403) throw new Error("supabase:forbidden");
+  if (res.status === 404) throw new Error("supabase:project_not_found");
+  if (res.status === 429) throw new Error("supabase:rate_limited");
+  if (!res.ok) {
+    const text = await res.text();
+    // ⚠️ client_secret이 echo될 가능성이 있으므로 응답 body는 일부만 로그.
+    // 다만 Supabase가 보통 에러 메시지에 secret을 포함하지는 않는다.
+    console.error("[supabase-mgmt] updateGoogleProvider failed", {
+      status: res.status,
+      bodyPreview: text.slice(0, 200),
+    });
+    throw new Error(`supabase:auth_config_http_${res.status}`);
+  }
+}
+
 /**
  * 프로젝트 ref로 현재 상태를 조회한다. 폴링용.
  * 응답에 status 필드가 있으며 ACTIVE_HEALTHY가 "준비 완료" 상태.

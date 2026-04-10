@@ -816,6 +816,24 @@
     "errorTooLong": "Input is too long. Please double-check the values",
     "errorGeneric": "Save failed: {code}"
   },
+  "EnableGoogleProvider": {
+    "title": "Enable Google sign-in on Supabase",
+    "description": "Automatically inject the Google OAuth keys you just got into your Supabase project's auth settings. One click is all it takes",
+    "ctaEnable": "Enable Google sign-in",
+    "enabling": "Enabling...",
+    "waitingSupabase": "Finish creating the Supabase project above first",
+    "waitingKeys": "Finish getting the Google OAuth keys above first",
+    "enabledSuccess": "Google sign-in is enabled",
+    "alreadyEnabled": "Google sign-in is already enabled",
+    "errorGeneric": "Enable failed: {code}",
+    "errorNoSupabaseProject": "Supabase project not found. Please re-run step (마)-2",
+    "errorNoGoogleKeys": "Google OAuth keys not found. Please re-run step (마)-3",
+    "errorNoToken": "Couldn't find a Supabase token. Please reconnect Supabase",
+    "errorInvalidToken": "Supabase token expired. Please reconnect",
+    "errorForbidden": "Insufficient Supabase API permissions. Please reconnect OAuth",
+    "errorProjectNotFound": "Supabase project not found. Please confirm in supabase.com dashboard that the project still exists",
+    "errorRateLimited": "Supabase API rate limit exceeded. Please try again in a moment"
+  },
   "FirstDeploy": {
     "title": "First deploy",
     "description": "Deploy a landing page from your GitHub repository to Vercel",

@@ -816,6 +816,24 @@
     "errorTooLong": "入力値が長すぎます。値を再確認してください",
     "errorGeneric": "保存に失敗: {code}"
   },
+  "EnableGoogleProvider": {
+    "title": "SupabaseでGoogleログインを有効化",
+    "description": "発行したばかりのGoogle OAuthキーをSupabaseプロジェクトの認証設定に自動で投入します。ワンクリックで完了します",
+    "ctaEnable": "Googleログインを有効化",
+    "enabling": "有効化中...",
+    "waitingSupabase": "先に上のSupabaseプロジェクト作成を完了してください",
+    "waitingKeys": "先に上のGoogle OAuthキー発行を完了してください",
+    "enabledSuccess": "Googleログインが有効になりました",
+    "alreadyEnabled": "Googleログインは既に有効です",
+    "errorGeneric": "有効化に失敗: {code}",
+    "errorNoSupabaseProject": "Supabaseプロジェクトが見つかりません。(마)-2 ステップを再実行してください",
+    "errorNoGoogleKeys": "Google OAuthキーが見つかりません。(마)-3 ステップを再実行してください",
+    "errorNoToken": "Supabaseトークンが見つかりません。Supabase接続を再試行してください",
+    "errorInvalidToken": "Supabaseトークンの有効期限が切れました。再接続してください",
+    "errorForbidden": "Supabase APIの権限が不足しています。OAuth接続を再試行してください",
+    "errorProjectNotFound": "Supabaseプロジェクトが見つかりません。supabase.comダッシュボードでプロジェクトが存在するか確認してください",
+    "errorRateLimited": "Supabase APIの呼び出し制限を超えました。しばらくしてから再試行してください"
+  },
   "FirstDeploy": {
     "title": "初回デプロイ",
     "description": "GitHubリポジトリのランディングページをVercelにデプロイします",

@@ -24,6 +24,8 @@ import {
   DeployPanel,
   type DeployPanelState,
   type DisplaySubstep,
+  EnableGoogleProviderPanel,
+  type EnableGoogleProviderPanelState,
   ExtensionStatus,
   GoogleOAuthKeysPanel,
   type GoogleOAuthKeysPanelState,
@@ -128,6 +130,22 @@ function resolveGoogleKeysError(
   return t("errorGeneric", { code: raw });
 }
 
+function resolveGoogleProviderError(
+  raw: string,
+  t: (key: string, values?: Record<string, string | number>) => string,
+): string {
+  if (raw.includes("no_supabase_project") || raw.includes("no_supabase_ref"))
+    return t("errorNoSupabaseProject");
+  if (raw.includes("no_google_keys") || raw.includes("invalid_google_keys"))
+    return t("errorNoGoogleKeys");
+  if (raw.includes("no_token")) return t("errorNoToken");
+  if (raw.includes("invalid_token")) return t("errorInvalidToken");
+  if (raw.includes("forbidden")) return t("errorForbidden");
+  if (raw.includes("project_not_found")) return t("errorProjectNotFound");
+  if (raw.includes("rate_limited")) return t("errorRateLimited");
+  return t("errorGeneric", { code: raw });
+}
+
 export default async function MilestoneRunPage({
   params,
   searchParams,
@@ -176,6 +194,7 @@ export default async function MilestoneRunPage({
   const tDeploy = await getTranslations("FirstDeploy");
   const tCreateSupabase = await getTranslations("CreateSupabaseProject");
   const tGoogleKeys = await getTranslations("GoogleOAuthKeys");
+  const tEnableGoogle = await getTranslations("EnableGoogleProvider");
 
   // OAuth 연결 패널 데이터 — 이 마일스톤의 oauth kind 서브스텝을 모아
   // provider별 연결 상태를 조회한다. connectedLabel은 next-intl이 호출
@@ -714,6 +733,80 @@ export default async function MilestoneRunPage({
     }
   }
 
+  // M2 (마)-4: Google provider 활성화 패널 데이터.
+  const enableGoogleSubstep = milestone.substeps.find(
+    (s) => s.id === "m2-s4-enable-google-provider",
+  );
+  // supabase_project metadata.googleProviderEnabled 플래그로 (마)-4 완료 판정.
+  // (마)-2에서 만든 supabase_project 리소스 metadata에 (마)-4 액션이 기록.
+  const googleProviderAlreadyEnabled =
+    !!existingSupabaseProject &&
+    typeof existingSupabaseProject.metadata === "object" &&
+    existingSupabaseProject.metadata !== null &&
+    "googleProviderEnabled" in existingSupabaseProject.metadata &&
+    (existingSupabaseProject.metadata as { googleProviderEnabled?: unknown })
+      .googleProviderEnabled === true;
+
+  let enableGooglePanelData: {
+    state: EnableGoogleProviderPanelState;
+    labels: {
+      title: string;
+      description: string;
+      ctaEnable: string;
+      enabling: string;
+      waitingSupabase: string;
+      waitingKeys: string;
+      enabledSuccess: string | null;
+      alreadyEnabled: string;
+      errorMessage: string | null;
+    };
+  } | null = null;
+
+  if (enableGoogleSubstep) {
+    let providerState: EnableGoogleProviderPanelState;
+    if (googleProviderAlreadyEnabled) {
+      providerState = "enabled";
+    } else if (!existingSupabaseProject) {
+      providerState = "needs-supabase";
+    } else if (!existingGoogleKeys) {
+      providerState = "needs-keys";
+    } else {
+      providerState = "ready";
+    }
+
+    const googleProviderEnabledFlag = query.google_provider_enabled === "1";
+    const googleProviderErrorRaw =
+      typeof query.google_provider_error === "string"
+        ? query.google_provider_error
+        : null;
+
+    enableGooglePanelData = {
+      state: providerState,
+      labels: {
+        title: tEnableGoogle("title"),
+        description: tEnableGoogle("description"),
+        ctaEnable: tEnableGoogle("ctaEnable"),
+        enabling: tEnableGoogle("enabling"),
+        waitingSupabase: tEnableGoogle("waitingSupabase"),
+        waitingKeys: tEnableGoogle("waitingKeys"),
+        enabledSuccess: googleProviderEnabledFlag
+          ? tEnableGoogle("enabledSuccess")
+          : null,
+        alreadyEnabled: tEnableGoogle("alreadyEnabled"),
+        errorMessage: googleProviderErrorRaw
+          ? resolveGoogleProviderError(googleProviderErrorRaw, tEnableGoogle)
+          : null,
+      },
+    };
+  }
+
+  // googleProviderEnabled 플래그 시 m2-s4를 derive에 추가.
+  if (googleProviderAlreadyEnabled && enableGoogleSubstep) {
+    if (!initialCompletedSubsteps.includes(enableGoogleSubstep.id)) {
+      initialCompletedSubsteps.push(enableGoogleSubstep.id);
+    }
+  }
+
   // vercel_project 존재 시 m1-s4 + 다음 verify substep을 derive에 추가.
   if (existingVercelProject && deploySubstep) {
     if (!initialCompletedSubsteps.includes(deploySubstep.id)) {
@@ -879,6 +972,18 @@ export default async function MilestoneRunPage({
               externalUrl={googleKeysPanelData.externalUrl}
               savedClientIdMasked={googleKeysPanelData.savedClientIdMasked}
               labels={googleKeysPanelData.labels}
+            />
+          )}
+
+          {/* M2 (4) Supabase에 Google provider 활성화 — m2-s4 */}
+          {enableGooglePanelData && enableGoogleSubstep && (
+            <EnableGoogleProviderPanel
+              projectId={project.id}
+              milestoneId={milestone.id}
+              substepId={enableGoogleSubstep.id}
+              locale={locale}
+              state={enableGooglePanelData.state}
+              labels={enableGooglePanelData.labels}
             />
           )}
 

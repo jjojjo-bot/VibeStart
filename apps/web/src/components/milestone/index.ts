@@ -49,3 +49,9 @@ export {
   type GoogleOAuthKeysPanelLabels,
   type GoogleOAuthKeysPanelState,
 } from "./google-oauth-keys-panel";
+export {
+  EnableGoogleProviderPanel,
+  type EnableGoogleProviderPanelProps,
+  type EnableGoogleProviderPanelLabels,
+  type EnableGoogleProviderPanelState,
+} from "./enable-google-provider-panel";

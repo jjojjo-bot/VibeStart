@@ -816,6 +816,24 @@
     "errorTooLong": "इनपुट बहुत लंबा है। कृपया मानों की जाँच करें",
     "errorGeneric": "सहेजने में विफल: {code}"
   },
+  "EnableGoogleProvider": {
+    "title": "Supabase पर Google साइन-इन सक्षम करें",
+    "description": "अभी प्राप्त की गई Google OAuth keys को आपके Supabase प्रोजेक्ट की auth सेटिंग में स्वचालित रूप से डाल देंगे। एक क्लिक ही काफी है",
+    "ctaEnable": "Google साइन-इन सक्षम करें",
+    "enabling": "सक्षम किया जा रहा है...",
+    "waitingSupabase": "पहले ऊपर का Supabase प्रोजेक्ट बनाना पूरा करें",
+    "waitingKeys": "पहले ऊपर की Google OAuth keys प्राप्त करना पूरा करें",
+    "enabledSuccess": "Google साइन-इन सक्षम हो गया",
+    "alreadyEnabled": "Google साइन-इन पहले से सक्षम है",
+    "errorGeneric": "सक्षम करने में विफल: {code}",
+    "errorNoSupabaseProject": "Supabase प्रोजेक्ट नहीं मिला। कृपया (마)-2 चरण फिर से चलाएँ",
+    "errorNoGoogleKeys": "Google OAuth keys नहीं मिलीं। कृपया (마)-3 चरण फिर से चलाएँ",
+    "errorNoToken": "Supabase टोकन नहीं मिला। कृपया Supabase को फिर से कनेक्ट करें",
+    "errorInvalidToken": "Supabase टोकन समाप्त हो गया है। कृपया फिर से कनेक्ट करें",
+    "errorForbidden": "Supabase API अनुमतियाँ अपर्याप्त हैं। कृपया OAuth फिर से कनेक्ट करें",
+    "errorProjectNotFound": "Supabase प्रोजेक्ट नहीं मिला। कृपया supabase.com डैशबोर्ड में पुष्टि करें कि प्रोजेक्ट अभी भी मौजूद है",
+    "errorRateLimited": "Supabase API कॉल सीमा पार हो गई। कृपया कुछ समय बाद पुनः प्रयास करें"
+  },
   "FirstDeploy": {
     "title": "पहला डिप्लॉय",
     "description": "GitHub रिपॉजिटरी से लैंडिंग पेज को Vercel पर डिप्लॉय करें",
