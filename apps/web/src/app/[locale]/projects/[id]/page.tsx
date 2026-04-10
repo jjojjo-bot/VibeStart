@@ -10,7 +10,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 
-import { redirect } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/dal";
 import {
   ExtensionStatus,
@@ -69,6 +69,18 @@ export default async function ProjectTreePage({
       id="main-content"
       className="mx-auto max-w-3xl px-6 py-16"
     >
+      {/* 브레드크럼 */}
+      <nav className="mb-6 flex items-center gap-1.5 text-xs text-muted-foreground">
+        <Link
+          href="/dashboard"
+          className="hover:text-foreground"
+        >
+          {tProjects("breadcrumbDashboard")}
+        </Link>
+        <span>/</span>
+        <span className="text-foreground">{project.name}</span>
+      </nav>
+
       <header className="mb-10 flex flex-col gap-4">
         <div className="flex flex-wrap items-center gap-3">
           <TrackBadge track={track.id} color={track.colorToken} size="sm" />

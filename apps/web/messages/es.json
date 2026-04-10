@@ -717,6 +717,7 @@
     "milestoneIndex": "M{current}/{total}",
     "notFound": "Proyecto no encontrado",
     "backToTree": "Volver a los hitos",
+    "breadcrumbDashboard": "Panel",
     "myProjectsTitle": "Mis proyectos",
     "createNewButton": "Crear nuevo proyecto",
     "emptyHint": "Aún no has creado ningún proyecto. ¡Empieza a programar con tu primer proyecto!"
@@ -727,6 +728,7 @@
     "previewTitle": "Vista previa del resultado",
     "checkLabel": "Hecho",
     "completedAt": "Completado a las {time}",
+    "prevMilestoneCta": "Hito anterior",
     "nextMilestoneCta": "Siguiente hito →",
     "allDoneTitle": "Todos los hitos completados",
     "estimatedSeconds": "~{seconds}s",

@@ -989,15 +989,23 @@ export default async function MilestoneRunPage({
 
   return (
     <main id="main-content" className="mx-auto max-w-6xl px-6 py-12">
-      {/* 상단: 대시보드로 돌아가기 */}
-      <div className="mb-6">
+      {/* 브레드크럼: 대시보드 / 프로젝트명 / 마일스톤 제목 */}
+      <nav className="mb-6 flex items-center gap-1.5 text-xs text-muted-foreground">
+        <Link href="/dashboard" className="hover:text-foreground">
+          {tProjects("breadcrumbDashboard")}
+        </Link>
+        <span>/</span>
         <Link
           href={`/projects/${project.id}`}
-          className="text-sm text-muted-foreground hover:text-foreground"
+          className="hover:text-foreground"
         >
-          ← {tProjects("backToTree")}
+          {project.name}
         </Link>
-      </div>
+        <span>/</span>
+        <span className="truncate text-foreground">
+          {tMilestones(`${milestone.id}.title`)}
+        </span>
+      </nav>
 
       {/* 헤더 */}
       <header className="mb-10 flex flex-col gap-4">
@@ -1053,6 +1061,7 @@ export default async function MilestoneRunPage({
         <div className="min-w-0 md:flex-1">
           {/* M2 (1) Supabase 계정 연결 — m2-s1 */}
           {supabaseRows.length > 0 && (
+            <div id="panel-m2-s1-supabase-oauth" className="scroll-mt-8">
             <OAuthConnectionPanel
               rows={supabaseRows}
               projectId={project.id}
@@ -1060,107 +1069,124 @@ export default async function MilestoneRunPage({
               locale={locale}
               labels={supabasePanelLabels}
             />
+            </div>
           )}
 
           {/* M2 (2) Supabase 프로젝트 자동 생성 — m2-s2 */}
           {createSupabasePanelData && createSupabaseSubstep && (
-            <CreateSupabaseProjectPanel
-              projectId={project.id}
-              milestoneId={milestone.id}
-              substepId={createSupabaseSubstep.id}
-              locale={locale}
-              state={createSupabasePanelData.state}
-              dashboardUrl={createSupabasePanelData.dashboardUrl}
-              labels={createSupabasePanelData.labels}
-            />
+            <div id={`panel-${createSupabaseSubstep.id}`} className="scroll-mt-8">
+              <CreateSupabaseProjectPanel
+                projectId={project.id}
+                milestoneId={milestone.id}
+                substepId={createSupabaseSubstep.id}
+                locale={locale}
+                state={createSupabasePanelData.state}
+                dashboardUrl={createSupabasePanelData.dashboardUrl}
+                labels={createSupabasePanelData.labels}
+              />
+            </div>
           )}
 
           {/* M2 (3) Google OAuth 키 수집 — m2-s3 */}
           {googleKeysPanelData && googleKeysSubstep && (
-            <GoogleOAuthKeysPanel
-              projectId={project.id}
-              milestoneId={milestone.id}
-              substepId={googleKeysSubstep.id}
-              locale={locale}
-              state={googleKeysPanelData.state}
-              redirectUri={googleKeysPanelData.redirectUri}
-              externalUrl={googleKeysPanelData.externalUrl}
-              savedClientIdMasked={googleKeysPanelData.savedClientIdMasked}
-              labels={googleKeysPanelData.labels}
-            />
+            <div id={`panel-${googleKeysSubstep.id}`} className="scroll-mt-8">
+              <GoogleOAuthKeysPanel
+                projectId={project.id}
+                milestoneId={milestone.id}
+                substepId={googleKeysSubstep.id}
+                locale={locale}
+                state={googleKeysPanelData.state}
+                redirectUri={googleKeysPanelData.redirectUri}
+                externalUrl={googleKeysPanelData.externalUrl}
+                savedClientIdMasked={googleKeysPanelData.savedClientIdMasked}
+                labels={googleKeysPanelData.labels}
+              />
+            </div>
           )}
 
           {/* M2 (4) Supabase에 Google provider 활성화 — m2-s4 */}
           {enableGooglePanelData && enableGoogleSubstep && (
-            <EnableGoogleProviderPanel
-              projectId={project.id}
-              milestoneId={milestone.id}
-              substepId={enableGoogleSubstep.id}
-              locale={locale}
-              state={enableGooglePanelData.state}
-              labels={enableGooglePanelData.labels}
-            />
+            <div id={`panel-${enableGoogleSubstep.id}`} className="scroll-mt-8">
+              <EnableGoogleProviderPanel
+                projectId={project.id}
+                milestoneId={milestone.id}
+                substepId={enableGoogleSubstep.id}
+                locale={locale}
+                state={enableGooglePanelData.state}
+                labels={enableGooglePanelData.labels}
+              />
+            </div>
           )}
 
           {/* M2 (5) Auth UI 설치 — m2-s5 (+ m2-s6 verify 자동 완료) */}
           {installAuthUiPanelData && installAuthUiSubstep && (
-            <InstallAuthUiPanel
-              projectId={project.id}
-              milestoneId={milestone.id}
-              substepId={installAuthUiSubstep.id}
-              locale={locale}
-              state={installAuthUiPanelData.state}
-              deployedUrl={installAuthUiPanelData.deployedUrl}
-              labels={installAuthUiPanelData.labels}
-            />
+            <div id={`panel-${installAuthUiSubstep.id}`} className="scroll-mt-8">
+              <InstallAuthUiPanel
+                projectId={project.id}
+                milestoneId={milestone.id}
+                substepId={installAuthUiSubstep.id}
+                locale={locale}
+                state={installAuthUiPanelData.state}
+                deployedUrl={installAuthUiPanelData.deployedUrl}
+                labels={installAuthUiPanelData.labels}
+              />
+            </div>
           )}
 
           {/* M1 (1) GitHub 계정 연결 — m1-s1 */}
           {githubRows.length > 0 && (
-            <OAuthConnectionPanel
-              rows={githubRows}
-              projectId={project.id}
-              milestoneId={milestone.id}
-              locale={locale}
-              labels={githubPanelLabels}
-            />
+            <div id="panel-m1-s1-github-oauth" className="scroll-mt-8">
+              <OAuthConnectionPanel
+                rows={githubRows}
+                projectId={project.id}
+                milestoneId={milestone.id}
+                locale={locale}
+                labels={githubPanelLabels}
+              />
+            </div>
           )}
 
           {/* (2) GitHub 저장소 자동 생성 — m1-s2 */}
           {createRepoPanelData && createRepoSubstep && (
-            <CreateRepoPanel
-              projectId={project.id}
-              milestoneId={milestone.id}
-              substepId={createRepoSubstep.id}
-              locale={locale}
-              state={createRepoPanelData.state}
-              existingRepoUrl={createRepoPanelData.existingRepoUrl}
-              labels={createRepoPanelData.labels}
-            />
+            <div id={`panel-${createRepoSubstep.id}`} className="scroll-mt-8">
+              <CreateRepoPanel
+                projectId={project.id}
+                milestoneId={milestone.id}
+                substepId={createRepoSubstep.id}
+                locale={locale}
+                state={createRepoPanelData.state}
+                existingRepoUrl={createRepoPanelData.existingRepoUrl}
+                labels={createRepoPanelData.labels}
+              />
+            </div>
           )}
 
           {/* (3) Vercel 계정 연결 — m1-s3 */}
           {vercelRows.length > 0 && (
-            <OAuthConnectionPanel
-              rows={vercelRows}
-              projectId={project.id}
-              milestoneId={milestone.id}
-              locale={locale}
-              labels={vercelPanelLabels}
-            />
+            <div id="panel-m1-s3-vercel-oauth" className="scroll-mt-8">
+              <OAuthConnectionPanel
+                rows={vercelRows}
+                projectId={project.id}
+                milestoneId={milestone.id}
+                locale={locale}
+                labels={vercelPanelLabels}
+              />
+            </div>
           )}
 
           {/* (4) 첫 배포 — m1-s4 */}
           {deployPanelData && deploySubstep && (
-            <DeployPanel
-              projectId={project.id}
-              milestoneId={milestone.id}
-              substepId={deploySubstep.id}
-              locale={locale}
-              state={deployPanelData.state}
-              deployedUrl={deployPanelData.deployedUrl}
-              labels={deployPanelData.labels}
-            />
+            <div id={`panel-${deploySubstep.id}`} className="scroll-mt-8">
+              <DeployPanel
+                projectId={project.id}
+                milestoneId={milestone.id}
+                substepId={deploySubstep.id}
+                locale={locale}
+                state={deployPanelData.state}
+                deployedUrl={deployPanelData.deployedUrl}
+                labels={deployPanelData.labels}
+              />
+            </div>
           )}
 
           {/* 결과 미리보기 */}
@@ -1201,17 +1227,52 @@ export default async function MilestoneRunPage({
         </ul>
       </section>
 
-      {/* 다음 마일스톤 CTA (완료 상태일 때만) */}
-      {milestone.unlocks && currentState === "completed" && (
-        <div className="mt-10 flex justify-end">
-          <Link
-            href={`/projects/${project.id}/m/${milestone.unlocks}`}
-            className="no-underline"
-          >
-            <Button size="lg">{tRun("nextMilestoneCta")}</Button>
-          </Link>
-        </div>
-      )}
+      {/* 하단 네비게이션: 이전 마일스톤 / 대시보드 / 다음 마일스톤 */}
+      {(() => {
+        const currentIdx = allMilestones.findIndex(
+          (m) => m.id === milestone.id,
+        );
+        const prevMilestone =
+          currentIdx > 0 ? allMilestones[currentIdx - 1] : null;
+        const showNext =
+          milestone.unlocks && currentState === "completed";
+
+        return (
+          <div className="mt-10 flex items-center justify-between gap-4">
+            {/* 좌측: 이전 마일스톤 */}
+            <div>
+              {prevMilestone && (
+                <Link
+                  href={`/projects/${project.id}/m/${prevMilestone.id}`}
+                  className="text-sm text-muted-foreground hover:text-foreground"
+                >
+                  ← {tRun("prevMilestoneCta")}
+                </Link>
+              )}
+            </div>
+
+            {/* 중앙: 대시보드 */}
+            <Link
+              href="/dashboard"
+              className="text-sm text-muted-foreground hover:text-foreground"
+            >
+              {tProjects("breadcrumbDashboard")}
+            </Link>
+
+            {/* 우측: 다음 마일스톤 */}
+            <div>
+              {showNext && (
+                <Link
+                  href={`/projects/${project.id}/m/${milestone.unlocks}`}
+                  className="no-underline"
+                >
+                  <Button size="lg">{tRun("nextMilestoneCta")}</Button>
+                </Link>
+              )}
+            </div>
+          </div>
+        );
+      })()}
     </main>
   );
 }

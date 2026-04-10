@@ -717,6 +717,7 @@
     "milestoneIndex": "M{current}/{total}",
     "notFound": "Project not found",
     "backToTree": "Back to milestones",
+    "breadcrumbDashboard": "Dashboard",
     "myProjectsTitle": "My projects",
     "createNewButton": "Create new project",
     "emptyHint": "You haven't created any project yet. Start vibe-coding with your first one!"
@@ -727,6 +728,7 @@
     "previewTitle": "Result preview",
     "checkLabel": "Done",
     "completedAt": "Completed at {time}",
+    "prevMilestoneCta": "Previous milestone",
     "nextMilestoneCta": "Next milestone →",
     "allDoneTitle": "All milestones complete",
     "estimatedSeconds": "~{seconds}s",

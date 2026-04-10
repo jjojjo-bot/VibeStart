@@ -717,6 +717,7 @@
     "milestoneIndex": "M{current}/{total}",
     "notFound": "找不到项目",
     "backToTree": "返回里程碑列表",
+    "breadcrumbDashboard": "仪表盘",
     "myProjectsTitle": "我的项目",
     "createNewButton": "创建新项目",
     "emptyHint": "您还没有创建任何项目。用第一个项目开始氛围编程吧!"
@@ -727,6 +728,7 @@
     "previewTitle": "结果预览",
     "checkLabel": "完成",
     "completedAt": "{time} 完成",
+    "prevMilestoneCta": "上一个里程碑",
     "nextMilestoneCta": "下一个里程碑 →",
     "allDoneTitle": "所有里程碑已完成",
     "estimatedSeconds": "约 {seconds} 秒",

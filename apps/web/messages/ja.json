@@ -717,6 +717,7 @@
     "milestoneIndex": "M{current}/{total}",
     "notFound": "プロジェクトが見つかりません",
     "backToTree": "マイルストーン一覧に戻る",
+    "breadcrumbDashboard": "ダッシュボード",
     "myProjectsTitle": "マイプロジェクト",
     "createNewButton": "新しいプロジェクトを作成",
     "emptyHint": "まだプロジェクトがありません。最初のプロジェクトでバイブコーディングを始めましょう!"
@@ -727,6 +728,7 @@
     "previewTitle": "結果プレビュー",
     "checkLabel": "完了",
     "completedAt": "{time}に完了",
+    "prevMilestoneCta": "前のマイルストーン",
     "nextMilestoneCta": "次のマイルストーンへ →",
     "allDoneTitle": "すべてのマイルストーンを完了しました",
     "estimatedSeconds": "約{seconds}秒",

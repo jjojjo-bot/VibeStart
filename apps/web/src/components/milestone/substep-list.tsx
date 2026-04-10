@@ -85,6 +85,14 @@ export function SubstepList({
     });
   };
 
+  /** 사이드바 substep 클릭 → 해당 패널로 smooth scroll. */
+  const scrollToPanel = (stepId: string): void => {
+    const el = document.getElementById(`panel-${stepId}`);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <ol className="space-y-2">
       {substeps.map((step) => {
@@ -93,11 +101,20 @@ export function SubstepList({
           <li
             key={step.id}
             className={cn(
-              "flex items-start gap-3 rounded-md border border-border bg-card/50 p-3 transition-colors",
+              "flex cursor-pointer items-start gap-3 rounded-md border border-border bg-card/50 p-3 transition-colors hover:border-primary/30",
               isDone && "bg-primary/5 border-primary/30",
             )}
             data-kind={step.kind}
             data-done={isDone}
+            onClick={() => scrollToPanel(step.id)}
+            role="button"
+            tabIndex={0}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                scrollToPanel(step.id);
+              }
+            }}
           >
             <button
               type="button"

@@ -717,6 +717,7 @@
     "milestoneIndex": "M{current}/{total}",
     "notFound": "प्रोजेक्ट नहीं मिला",
     "backToTree": "माइलस्टोन सूची पर वापस",
+    "breadcrumbDashboard": "डैशबोर्ड",
     "myProjectsTitle": "मेरे प्रोजेक्ट",
     "createNewButton": "नया प्रोजेक्ट बनाएं",
     "emptyHint": "आपने अभी तक कोई प्रोजेक्ट नहीं बनाया है। अपने पहले प्रोजेक्ट के साथ वाइब कोडिंग शुरू करें!"
@@ -727,6 +728,7 @@
     "previewTitle": "परिणाम पूर्वावलोकन",
     "checkLabel": "पूर्ण",
     "completedAt": "{time} को पूर्ण",
+    "prevMilestoneCta": "पिछला माइलस्टोन",
     "nextMilestoneCta": "अगला माइलस्टोन →",
     "allDoneTitle": "सभी माइलस्टोन पूर्ण",
     "estimatedSeconds": "लगभग {seconds} सेकंड",
