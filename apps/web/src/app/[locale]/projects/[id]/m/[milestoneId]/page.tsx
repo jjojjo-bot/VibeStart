@@ -37,6 +37,7 @@ import {
   VibeCodingPanel,
 } from "@/components/milestone";
 import { MaybeCompletedSubstepsProvider } from "@/components/milestone/maybe-completed-provider";
+import { MilestoneCelebration } from "@/components/milestone/milestone-celebration";
 import {
   OAuthConnectionPanel,
   type OAuthConnectionRow,
@@ -1354,32 +1355,48 @@ export default async function MilestoneRunPage({
 
       <Separator className="my-10" />
 
-      {/* MCP 자동 설치 안내 */}
-      <section className="rounded-lg border border-border bg-card p-5">
-        <h2 className="mb-3 text-sm font-medium text-muted-foreground">
-          {tRun("mcpInstallTitle")}
-        </h2>
-        <ul className="space-y-2">
-          {milestone.mcpInstalls.map((mcp) => (
-            <li
-              key={mcp.name}
-              className="flex flex-wrap items-center gap-2 text-sm"
-            >
-              <span className="font-mono text-xs rounded bg-muted px-1.5 py-0.5">
-                {mcp.name}
-              </span>
-              <span className="text-muted-foreground">
-                {tMilestones(`${milestone.id}.mcp.${mcp.name}`)}
-              </span>
-              {mcp.slashCommands.length > 0 && (
-                <span className="ml-auto font-mono text-[10px] text-muted-foreground/80">
-                  {mcp.slashCommands.join(" · ")}
+      {/* MCP 자동 설치 안내 — 설치할 MCP가 있을 때만 표시 */}
+      {milestone.mcpInstalls.length > 0 && (
+        <section className="rounded-lg border border-border bg-card p-5">
+          <h2 className="mb-3 text-sm font-medium text-muted-foreground">
+            {tRun("mcpInstallTitle")}
+          </h2>
+          <ul className="space-y-2">
+            {milestone.mcpInstalls.map((mcp) => (
+              <li
+                key={mcp.name}
+                className="flex flex-wrap items-center gap-2 text-sm"
+              >
+                <span className="font-mono text-xs rounded bg-muted px-1.5 py-0.5">
+                  {mcp.name}
                 </span>
-              )}
-            </li>
-          ))}
-        </ul>
-      </section>
+                <span className="text-muted-foreground">
+                  {tMilestones(`${milestone.id}.mcp.${mcp.name}`)}
+                </span>
+                {mcp.slashCommands.length > 0 && (
+                  <span className="ml-auto font-mono text-[10px] text-muted-foreground/80">
+                    {mcp.slashCommands.join(" · ")}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* 마일스톤 완료 축하 */}
+      {currentState === "completed" && (
+        <MilestoneCelebration
+          completed
+          deployedUrl={vibeCodingData?.deployedUrl ?? null}
+          dashboardUrl={`/${locale}/projects/${project.id}`}
+          labels={{
+            title: tRun("celebrationTitle"),
+            description: tRun("celebrationDescription"),
+            ctaLabel: tRun("celebrationCta"),
+          }}
+        />
+      )}
 
       {/* 하단 네비게이션: 이전 마일스톤 / 대시보드 / 다음 마일스톤 */}
       {(() => {

@@ -744,7 +744,10 @@
     "verifyCta": "확인했어요",
     "mcpInstallTitle": "완료 시 자동 설치",
     "helpCta": "도움말 열기",
-    "retryCta": "다시 시도"
+    "retryCta": "다시 시도",
+    "celebrationTitle": "🎉 바이브코딩 루프 완성!",
+    "celebrationDescription": "AI에게 말하고, 코드가 바뀌고, 자동으로 배포되는 루프를 완성했어요. 이제 자유롭게 만들어보세요!",
+    "celebrationCta": "대시보드로 돌아가기"
   },
   "ExtensionStatus": {
     "connected": "VS Code 연결됨",

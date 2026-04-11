@@ -744,7 +744,10 @@
     "verifyCta": "確認しました",
     "mcpInstallTitle": "完了時に自動インストール",
     "helpCta": "ヘルプを開く",
-    "retryCta": "再試行"
+    "retryCta": "再試行",
+    "celebrationTitle": "🎉 バイブコーディングループ完成！",
+    "celebrationDescription": "AIに話しかけ、コードが変わり、自動でデプロイ。これからは自由に作りましょう！",
+    "celebrationCta": "ダッシュボードに戻る"
   },
   "ExtensionStatus": {
     "connected": "VS Code接続済み",

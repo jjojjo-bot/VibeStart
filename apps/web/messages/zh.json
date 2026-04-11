@@ -744,7 +744,10 @@
     "verifyCta": "已确认",
     "mcpInstallTitle": "完成时自动安装",
     "helpCta": "打开帮助",
-    "retryCta": "重试"
+    "retryCta": "重试",
+    "celebrationTitle": "🎉 Vibe Coding 循环完成！",
+    "celebrationDescription": "和 AI 对话、代码改变、自动部署的循环已经完成。现在自由地创造吧！",
+    "celebrationCta": "返回仪表盘"
   },
   "ExtensionStatus": {
     "connected": "VS Code 已连接",

@@ -744,7 +744,10 @@
     "verifyCta": "I verified it",
     "mcpInstallTitle": "Auto-installed on completion",
     "helpCta": "Open help",
-    "retryCta": "Retry"
+    "retryCta": "Retry",
+    "celebrationTitle": "🎉 Vibe Coding Loop Complete!",
+    "celebrationDescription": "You talked to AI, the code changed, and it deployed automatically. Now go build freely!",
+    "celebrationCta": "Back to Dashboard"
   },
   "ExtensionStatus": {
     "connected": "VS Code connected",

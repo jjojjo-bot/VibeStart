@@ -744,7 +744,10 @@
     "verifyCta": "मैंने सत्यापित किया",
     "mcpInstallTitle": "पूरा होने पर स्वचालित रूप से इंस्टॉल",
     "helpCta": "सहायता खोलें",
-    "retryCta": "पुनः प्रयास"
+    "retryCta": "पुनः प्रयास",
+    "celebrationTitle": "🎉 Vibe Coding लूप पूरा!",
+    "celebrationDescription": "AI से बात की, कोड बदला, और अपने आप deploy हो गया। अब जो चाहें बनाएँ!",
+    "celebrationCta": "डैशबोर्ड पर वापस जाएँ"
   },
   "ExtensionStatus": {
     "connected": "VS Code कनेक्टेड",
