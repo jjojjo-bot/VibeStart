@@ -9,15 +9,17 @@ import { m1Deploy } from '../milestones/m1-deploy';
 import { m2GoogleAuth } from '../milestones/m2-google-auth';
 import { m3VibeCoding } from '../milestones/m3-vibe-coding';
 
+export const SHARED_MILESTONE_IDS = [
+  'm1-deploy',
+  'm2-google-auth',
+  'm3-vibe-coding',
+];
+
 export const staticTrack: TrackDefinition = {
   id: 'static',
   nameKey: 'Tracks.static.name',
   taglineKey: 'Tracks.static.tagline',
-  milestoneIds: [
-    'm1-deploy',
-    'm2-google-auth',
-    'm3-vibe-coding',
-  ],
+  milestoneIds: SHARED_MILESTONE_IDS,
   enabled: true,
   colorToken: 'blue',
 };
