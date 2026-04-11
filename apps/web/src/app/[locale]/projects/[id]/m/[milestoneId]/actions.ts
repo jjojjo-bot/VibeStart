@@ -1571,4 +1571,6 @@ export async function toggleSubstepAction(
   } else {
     await unmarkSubstepCompleted(project.id, milestoneId, substepId);
   }
+
+  revalidatePath(`/projects/${projectId}/m/${milestoneId}`);
 }
