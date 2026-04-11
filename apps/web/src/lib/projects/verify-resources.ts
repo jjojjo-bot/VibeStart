@@ -88,20 +88,14 @@ async function verifyGitHubRepo(
 ): Promise<"valid" | "gone" | "skipped"> {
   try {
     const token = await getOAuthAccessToken(userId, "github");
-    console.log("[verifyGitHub] token exists:", !!token, "externalId:", resource.externalId);
     if (!token) return "skipped";
 
     const [owner, repoName] = resource.externalId.split("/");
-    if (!owner || !repoName) {
-      console.log("[verifyGitHub] invalid externalId format");
-      return "skipped";
-    }
+    if (!owner || !repoName) return "skipped";
 
     const repo = await fetchGitHubRepoIfExists(token, owner, repoName);
-    console.log("[verifyGitHub] repo exists:", !!repo);
     return repo ? "valid" : "gone";
-  } catch (err) {
-    console.error("[verifyGitHub] error:", err instanceof Error ? err.message : String(err));
+  } catch {
     return "skipped";
   }
 }
