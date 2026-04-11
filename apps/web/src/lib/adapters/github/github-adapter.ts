@@ -206,6 +206,34 @@ export function createGitHubAdapter(): VcsPort {
  * 파일이 이미 존재하면 422 → GET으로 기존 sha 조회 후 자동 재시도(업데이트).
  * 반환값에 sha를 담아서 이후 업데이트 시 호출자가 재사용할 수 있다.
  */
+
+/**
+ * GitHub Contents API로 파일 내용을 읽는다.
+ * 파일이 없으면 null 반환. base64 디코딩 후 utf-8 문자열 반환.
+ */
+export async function getFileFromGitHub(
+  accessToken: string,
+  owner: string,
+  repo: string,
+  path: string,
+): Promise<string | null> {
+  const url = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${path}`;
+  const res = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: "application/vnd.github+json",
+      "User-Agent": "VibeStart",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) throw new Error(`github:http_${res.status}`);
+  const data = (await res.json()) as { content: string; encoding: string };
+  if (data.encoding !== "base64") throw new Error("github:unexpected_encoding");
+  return Buffer.from(data.content, "base64").toString("utf-8");
+}
+
 export async function pushFileToGitHub(
   accessToken: string,
   owner: string,

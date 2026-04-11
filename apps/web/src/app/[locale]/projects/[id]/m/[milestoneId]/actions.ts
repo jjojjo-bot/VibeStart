@@ -49,8 +49,16 @@ import {
   triggerVercelDeployment,
   type VercelUserMeta,
 } from "@/lib/adapters/vercel/vercel-adapter";
-import { pushFileToGitHub } from "@/lib/adapters/github/github-adapter";
-import { buildAuthUiHtml } from "@/lib/deploy/auth-ui-template";
+import {
+  getFileFromGitHub,
+  pushFileToGitHub,
+} from "@/lib/adapters/github/github-adapter";
+import {
+  addSupabaseDependency,
+  buildAuthCallbackRoute,
+  buildPageTsx,
+  buildSupabaseClientFile,
+} from "@/lib/deploy/auth-ui-nextjs-template";
 import { buildLandingHtml } from "@/lib/deploy/landing-template";
 import {
   OAUTH_STATE_COOKIE,
@@ -1177,8 +1185,8 @@ export async function enableGoogleProviderAction(
  *      + 선행 토큰 (github, supabase_mgmt)
  *   2. Supabase anon key 조회 후 supabase_project metadata에 캐시
  *   3. Supabase Auth의 site_url / uri_allow_list를 Vercel 배포 URL로 업데이트
- *   4. buildAuthUiHtml로 로그인 버튼이 포함된 index.html 생성
- *   5. pushFileToGitHub로 기존 index.html을 덮어쓰기 → Vercel 자동 재배포
+ *   4. Next.js Auth 파일 빌드 (supabase client, page.tsx, callback route)
+ *   5. GitHub에 파일들 push + package.json에 의존성 추가 → Vercel 자동 재배포
  *   6. supabase_project metadata에 authUiInstalled 플래그 기록
  *   7. substep 완료 (자동으로 다음 verify substep (마)-6도 완료)
  *
@@ -1356,12 +1364,28 @@ export async function installAuthUiAction(
     );
   }
 
-  // 4) HTML 빌드
-  const html = buildAuthUiHtml({
+  // 4) Next.js Auth 파일 빌드
+  const templateInput = {
     projectName: project.name,
     supabaseUrl: supabaseApiUrl,
     supabaseAnonKey: anonKey,
-  });
+  };
+  const supabaseClientFile = buildSupabaseClientFile(templateInput);
+  const pageTsx = buildPageTsx(templateInput);
+  const authCallbackRoute = buildAuthCallbackRoute(templateInput);
+
+  // package.json에 @supabase/supabase-js 추가
+  let updatedPackageJson: string | null = null;
+  try {
+    const currentPkg = await getFileFromGitHub(ghToken, owner, repoName, "package.json");
+    if (currentPkg) {
+      updatedPackageJson = addSupabaseDependency(currentPkg);
+    }
+  } catch (err) {
+    console.warn("[installAuthUiAction] package.json read failed", {
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
 
   // 5) 이전 deployment ID 기록 — push 후 새 deployment와 구분용
   const vercelProjectId = vercelProjectResource.externalId;
@@ -1376,16 +1400,35 @@ export async function installAuthUiAction(
     }
   }
 
-  // 6) GitHub에 index.html push (기존 (라)-4의 파일을 덮어쓰기)
+  // 6) GitHub에 Next.js Auth 파일들 push
   try {
+    // 순서: supabase client → callback route → page.tsx → package.json
     await pushFileToGitHub(
-      ghToken,
-      owner,
-      repoName,
-      "index.html",
-      html,
-      "feat: add Google sign-in via VibeStart",
+      ghToken, owner, repoName,
+      "src/lib/supabase.ts",
+      supabaseClientFile,
+      "feat: add Supabase client via VibeStart",
     );
+    await pushFileToGitHub(
+      ghToken, owner, repoName,
+      "src/app/auth/callback/route.ts",
+      authCallbackRoute,
+      "feat: add OAuth callback route via VibeStart",
+    );
+    await pushFileToGitHub(
+      ghToken, owner, repoName,
+      "src/app/page.tsx",
+      pageTsx,
+      "feat: add Google sign-in page via VibeStart",
+    );
+    if (updatedPackageJson) {
+      await pushFileToGitHub(
+        ghToken, owner, repoName,
+        "package.json",
+        updatedPackageJson,
+        "feat: add @supabase/supabase-js dependency via VibeStart",
+      );
+    }
   } catch (err) {
     console.error("[installAuthUiAction] pushFileToGitHub failed", {
       userId: user.id,
