@@ -10,6 +10,8 @@
 import { redirect } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
+import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
+
 import { getCurrentUser } from "@/lib/auth/dal";
 import { createProject } from "@/lib/projects/project-store";
 
@@ -44,9 +46,10 @@ export async function createProjectAction(formData: FormData): Promise<void> {
     throw new Error("Invalid track selection");
   }
 
-  // Phase 2a에서는 정적 트랙만 활성화. 나머지는 UI에서 disabled지만,
-  // 서버에서도 이중 검증해 클라이언트 조작을 차단한다.
-  if (rawTrack !== "static") {
+  // 카탈로그에서 트랙 활성화 여부 확인
+  const catalog = createInMemoryMilestoneCatalog();
+  const trackDef = catalog.getTrack(rawTrack);
+  if (!trackDef || !trackDef.enabled) {
     throw new Error(`Track "${rawTrack}" is not yet available`);
   }
 
