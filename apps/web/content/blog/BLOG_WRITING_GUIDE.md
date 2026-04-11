@@ -39,12 +39,11 @@
 
 ## 2. 제목/부제목 규칙 (H2/H3)
 
-- H2/H3는 짧고 검색형(권장 20~35자), "명사(대상) + 상황(동사)" 구조 선호.
+- `##`(H2) / `###`(H3)는 짧고 검색형(권장 20~35자), "명사(대상) + 상황(동사)" 구조 선호.
 - 괄호는 필요한 경우 1회만.
 - 모든 H2/H3 제목 앞에 "내용과 어울리는 이모지 1개 + 공백"을 반드시 붙인다.
 - 제목/부제목에는 라벨형 단어를 쓰지 않는다(대표 금지 예: 요약, 간단, 복사용, 체크, 주의, EEAT).
 - 제목/부제목은 본문 주제·맥락과 무관한 단어 사용을 자제한다(라벨 느낌 금지).
-- 목차 항목에는 이모지 생략 가능(가독성 우선).
 
 ---
 
@@ -68,8 +67,8 @@
   3. 권위 있는 기관/학술/표준 문서(필요 시)
 - 가능하면 URL을 포함한다. 단, 확신이 없으면 URL을 생략하고 "문서명"만 적어도 된다.
 - 링크는 `https://`로 시작하는 실제 URL만 허용.
-- 참고 자료는 본문 HTML(F) 안에서 반드시 `<a href="...">` 형태의 '클릭 가능한 링크'로 출력한다.
-- URL이 있는 항목은 무조건 앵커 링크로 작성하고, URL이 불확실해 생략하는 경우에만 "문서명만 텍스트"로 남긴다.
+- 참고 자료는 마크다운 링크 `[문서명](URL)` 형식으로 작성한다.
+- URL이 불확실해 생략하는 경우에만 "문서명만 텍스트"로 남긴다.
 
 ---
 
@@ -84,133 +83,79 @@
 
 ---
 
-## 6. MDX 출력 (VibeStart 블로그) + 마크다운 형식
+## 6. MDX 출력 형식
 
-- 최종 출력은 MDX(frontmatter + 마크다운) 형식으로 `content/blog/{locale}/` 디렉토리에 저장.
-- 들여쓰기/줄바꿈 정돈.
-- 콜아웃은 3종만 사용(`.bx-note` / `.bx-tip` / `.bx-warn`), 톤 통일.
-- 목차/FAQ는 `<details><summary>` 접기/펼치기 적용.
-- JSON-LD는 `<script type="application/ld+json">` 1회만.
-- 간격 강제: 요약 박스↔목차 최소 18px, 문단↔부제목 충분히 띄움.
-- H2만 음영/테두리/그림자, H3는 무음영(배경/보더/그림자 금지).
-- H2, H3 시작 전에 항상 `<p data-ke-size="size16">&nbsp;</p>` 태그 한개를 사용한다.
+- 최종 출력은 MDX 파일로 `content/blog/{locale}/` 디렉토리에 저장한다.
+- ko(한국어)와 en(영어) 두 파일을 동시에 작성한다.
+- 파일명은 슬러그와 동일하게 영문 소문자+하이픈 (`my-post-title.mdx`).
 
-### 기본 CSS (필수 / 값 임의 축소 금지)
+### frontmatter 형식 (필수)
 
-```html
-<style>
-  .bx{padding:12px;border:1px solid #e6e6e6;border-radius:10px;background:#fafafa;line-height:1.7;margin:0 0 18px 0;}
-  .bx-title{font-weight:700;display:inline-block;margin-bottom:6px;}
-  .bx-note{background:#f7f9ff;border-color:#d7e1ff;}
-  .bx-warn{background:#fff8f6;border-color:#ffd7d2;}
-  .bx-tip{background:#f6fffb;border-color:#c9f1df;}
-  .muted{color:#666;}
-  details{border:1px solid #eee;border-radius:10px;padding:10px 12px;background:#fff;margin:18px 0;}
-  details>summary{cursor:pointer;font-weight:700;list-style:none;}
-  details>summary::-webkit-details-marker{display:none;}
-  details .content{margin-top:10px;}
-  p,ul,ol,pre{margin:0 0 14px 0;}
-
-  /* H2만 음영 */
-  h2{margin:28px 0 12px 0;padding:10px 12px;border-radius:12px;background:linear-gradient(180deg,#f7f9ff 0%,#fff 100%);border:1px solid #e7ecff;box-shadow:0 6px 16px rgba(0,0,0,.03);}
-
-  /* H3 무음영 */
-  h3{ margin:20px 0 10px 0; padding:0; border:0; background:none; box-shadow:none; font-weight:700; font-size: 20px !important; }
-
-  h2[id],h3[id],a[id]{scroll-margin-top:14px;}
-  h2:target{box-shadow:0 0 0 3px rgba(215,225,255,.6),0 10px 22px rgba(0,0,0,.05);}
-  pre{padding:12px;background:#0b1020;color:#e8e8e8;border-radius:10px;overflow:auto;line-height:1.6;}
-  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;}
-  .hr{border:none;border-top:1px solid #eee;margin:22px 0;}
-</style>
+```yaml
+---
+title: "제목"
+description: "메타 디스크립션 (150~160자)"
+date: "YYYY-MM-DD"
+tags: ["태그1", "태그2", ...]
+---
 ```
 
----
+### 본문 마크다운 규칙
 
-## 7. 목차 규칙 (1개 / H2만 / FAQ까지만)
-
-- 목차 id는 짧고 의미가 연상되게 구성:
-  - 예) `#sogae`, `#junbi`, `#jeolcha`, `#geurup`, `#webhook`, `#jeomgeom`, `#haegyeol`, `#unyoung`, `#faq`, `#chulcheo`
-- 목차는 1개만 출력:
-  ```html
-  <details><summary>목차</summary> ... </details>
-  ```
-- 목차에는 H2만 넣고 H3는 넣지 않는다.
-- 목차는 FAQ까지만 포함한다(면책조항/관련 글/참고자료/업데이트는 목차에서 제외).
-- "목차(간단)" 박스/문구는 절대 출력하지 않는다.
-
----
-
-## 8. FAQ(20개) + JSON-LD(1회) 규칙
-
-- FAQ 제목은 "FAQ" 고정, 아래 안내 1줄: "질문을 누르면 답변이 펼쳐집니다."
-- FAQ 형식 고정:
-  ```html
-  <details><summary>Qn…</summary><div class="content">A…</div></details>
-  ```
-- 5개씩 4묶음, 묶음 사이 `<hr class="hr" />`.
-- 묶음 앵커는 숫자 고정:
-  ```html
-  <a id="faq-1"></a> (1~5)
-  <hr class="hr" />
-  <a id="faq-2"></a> (6~10)
-  <hr class="hr" />
-  <a id="faq-3"></a> (11~15)
-  <hr class="hr" />
-  <a id="faq-4"></a> (16~20)
-  ```
-- 목차의 FAQ 하위 라벨은 주제 맞춤형 6~12자로 생성(고정 라벨 재사용 금지).
-- JSON-LD는 `<script type="application/ld+json">` 1회만 삽입.
-- JSON-LD `mainEntity`는 FAQ 20개 Q/A와 문구·순서가 1:1 동일(동기화 강제).
+- 순수 마크다운으로 작성한다. HTML 태그 사용 금지 (테이블은 마크다운 테이블 사용).
+- 제목은 `##`(H2)와 `###`(H3)만 사용. `#`(H1)은 frontmatter title이 대체하므로 본문에 쓰지 않는다.
+- 코드 블록은 ` ``` ` + 언어 지정 (```bash, ```typescript 등).
+- 강조 박스는 마크다운 인용(`>`)을 활용한다:
+  - 일반 안내: `> **안내**: 내용`
+  - 팁: `> 💡 **팁**: 내용`
+  - 경고: `> ⚠️ **주의**: 내용`
+- 링크는 마크다운 형식: `[텍스트](URL)`
+- 이미지가 필요한 경우: `![alt](경로)` (이미지 파일은 `public/blog/` 에 저장)
+- CSS, `<style>`, `<div class="...">`, `<p data-ke-size="...">` 같은 HTML/CSS 태그 사용하지 않는다.
+- `<details>`, `<summary>`, `<script>`, JSON-LD 같은 HTML 전용 요소 사용하지 않는다.
 
 ---
 
-## 9. 면책조항/마무리 (본문 HTML에 필수)
+## 7. FAQ 규칙
 
-- **면책조항**: FAQ 직전(환경/버전/서비스 변경 가능성 + 공식 문서 확인 권고).
-- 면책조항은 반드시 H3(`<h3>`)로 출력한다(H2 금지).
-- 면책조항에는 id를 부여하지 않는다(= 목차에 올라오지 않게 하기 위함).
+- FAQ 섹션은 `## ❓ 자주 묻는 질문` 제목 아래에 작성한다.
+- 각 질문은 **Q.** 접두사로 시작하는 굵은 텍스트, 답변은 바로 아래 일반 문단으로 작성한다:
+  ```markdown
+  **Q. 질문 내용?**
+
+  답변 내용.
+  ```
+- FAQ는 최소 8개 이상 작성한다 (주제에 따라 유동적).
+- 질문은 실제 독자가 궁금해할 만한 내용을 다양하게 포함한다.
+
+---
+
+## 8. 면책조항/마무리
+
+- **면책조항**: FAQ 직전에 배치(환경/버전/서비스 변경 가능성 + 공식 문서 확인 권고).
+- 면책조항은 `>`(인용) 블록 안에 작성한다.
 - **마무리**: 면책조항 바로 뒤, 본문 최하단(감사 뉘앙스 1~2문장, 과장 금지).
 
 ---
 
-## 10. 출력 포맷 (섹션 고정 / 혼동 방지)
+## 9. 출력 포맷
 
-- 응답은 아래 섹션만 출력한다(이 외 텍스트 금지).
-- HTML 외 텍스트는 A~E, G에만 출력한다.
-- 본문(F)은 HTML로 출력한다.
+- 블로그 글 작성 시 아래 두 가지를 출력한다:
+  1. **ko MDX 파일** — `content/blog/ko/{slug}.mdx` 에 저장할 전체 내용 (frontmatter + 마크다운 본문)
+  2. **en MDX 파일** — `content/blog/en/{slug}.mdx` 에 저장할 영문 번역본 (동일 구조)
+- 슬러그(파일명)는 영문 소문자+하이픈, 주제를 반영.
 
-### 사용 섹션 (고정)
+### 본문 필수 구성 (순서)
 
-| 섹션 | 내용 |
-|------|------|
-| **A** | 제목 후보 5개 |
-| **B** | 최종 제목 1개 |
-| **C** | 메타 디스크립션 2개(150~160자) |
-| **D** | 슬러그 1개(영문, 소문자+하이픈) |
-| **E** | 검색 스니펫 요약 3~5줄(라벨: "먼저 한눈에 보기") |
-| **F** | 본문(HTML) — 아래 구성 참고 |
-| **G** | 카테고리 1개 + 태그 10개(텍스트) |
-
-### 본문(F) 필수 구성
-
-1. CSS 포함
-2. 요약 박스 + 목차(`details`, H2+FAQ까지만)
-3. 문제 정의/독자 상황
-4. 핵심 요약(바로 실행 포인트)
-5. 단계별 실행 가이드
-6. 점검 목록(자연스러운 제목, 라벨형 단어 금지)
-7. 문제 해결(진단 순서)
-8. 대안/비교
-9. 운영 팁(일반적 사이트 운영 관점: 업데이트 습관/내부 링크/가독성 등)
-10. 면책조항(FAQ 직전)
-    - 반드시 `<h3>`로 출력
-    - id 금지(예: `<h3>📝 면책조항</h3>`)
-    - 콜아웃 박스(`.bx-note`)로 감싼다
-11. 마무리(감사)
-12. FAQ 20개 + JSON-LD 1회
-13. 관련 글(내부링크) 3~5개 — H3로 출력
-14. 참고 자료 2~4개 — 반드시 H3로 출력(주제별 변동)
+1. 문제 정의 / 독자 상황
+2. 핵심 요약 (바로 실행 포인트)
+3. 단계별 실행 가이드
+4. 점검 목록 (자연스러운 제목, 라벨형 단어 금지)
+5. 문제 해결 (진단 순서)
+6. 대안/비교
+7. 운영 팁
+8. 자주 묻는 질문 (FAQ)
+9. 관련 글 (내부링크) 3~5개
 
 ### 본문 내 출처 규칙
 
@@ -219,17 +164,14 @@
 
 ### 참고 자료 항목 형식
 
-```html
-<!-- URL이 있는 경우 -->
-<li><a href="https://..." target="_blank" rel="noopener">문서명</a></li>
-
-<!-- URL이 없는 경우(예외) -->
-<li>문서명(공식 문서/기관명)</li>
+```markdown
+- [문서명](https://...) — URL이 있는 경우
+- 문서명 (공식 문서/기관명) — URL이 없는 경우(예외)
 ```
 
 ---
 
-## 11. 분량/문장 가이드 (최소 3,000자 강제)
+## 10. 분량/문장 가이드 (최소 3,000자 강제)
 
 - 기본 글자수(공백 제외) 목표: **최소 3,000자 이상** 유지(강제).
 - 권장 범위: 3,000~5,000자. 주제가 크면 5,000자 이상도 허용.
@@ -261,20 +203,18 @@
 
 ---
 
-## 12. 최종 자가 점검 (필수)
+## 11. 최종 자가 점검 (필수)
 
 글 작성 완료 후 아래 항목을 반드시 확인한다.
 
-- [ ] H2만 음영, H3 무음영.
-- [ ] 목차 1개, H2만 + FAQ까지만 포함. "목차(간단)" 없음.
-- [ ] 제목/부제목 라벨형 단어 없음(요약/간단/복사용/체크/주의/EEAT 등).
+- [ ] frontmatter에 title, description, date, tags가 모두 있는가?
+- [ ] 본문에 `#`(H1)을 사용하지 않았는가? (`##` H2부터 시작)
 - [ ] 모든 H2/H3 앞에 이모지 1개 있음.
+- [ ] 제목/부제목 라벨형 단어 없음(요약/간단/복사용/체크/주의/EEAT 등).
 - [ ] 공백 제외 3,000자 이상.
-- [ ] FAQ 20개, 4묶음, `#faq-1`~`#faq-4`, JSON-LD 1회+1:1 동기화.
+- [ ] FAQ 8개 이상 작성.
 - [ ] 최종 출력 전체에서 `:contentReference`, `oaicite`, `{index=` 문자열이 0개인가?
 - [ ] 참고 자료는 주제별 변동이며 2~4개(가능하면 URL 포함).
-- [ ] 지정 섹션(A, B, C, D, E, F, G) 외 텍스트 없음.
-- [ ] 참고 자료의 URL이 있는 항목은 모두 `<a href="...">`로 링크가 걸려 클릭 가능한가?
-- [ ] 면책조항이 목차에 포함되지 않는다(H3 + id 없음).
-- [ ] 면책조항이 H2가 아닌 H3로 출력된다.
-- [ ] 문단 사이의 간격은 `<p data-ke-size="size16">&nbsp;</p>`를 사용한다.
+- [ ] 참고 자료 링크가 마크다운 형식 `[텍스트](URL)`로 작성되었는가?
+- [ ] HTML 태그(`<div>`, `<style>`, `<script>`, `<details>` 등)가 없는가?
+- [ ] ko, en 두 파일 모두 작성했는가?
