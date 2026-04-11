@@ -7,7 +7,7 @@ import type { OS, Goal } from "@/lib/onboarding";
 import { incrementCompletions } from "@/lib/stats";
 import { Suspense } from "react";
 import { useTranslations } from "next-intl";
-import { signInFromCompleteAction } from "../login/actions";
+import { signInFromCompleteAction, goToDashboardWithPhase1Action } from "../login/actions";
 
 function getInstalledTools(goal: Goal): string[] {
   const base = ["Git", "VS Code", "Claude Code"];
@@ -291,11 +291,14 @@ function CompleteContent() {
                 {t("phase2.loginButton")}
               </Button>
             </form>
-            <Link href="/dashboard">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto">
+            <form action={goToDashboardWithPhase1Action}>
+              <input type="hidden" name="os" value={os} />
+              <input type="hidden" name="goal" value={goal} />
+              <input type="hidden" name="project" value={projectName} />
+              <Button type="submit" variant="outline" size="lg" className="w-full sm:w-auto">
                 {t("phase2.dashboardButton")}
               </Button>
-            </Link>
+            </form>
           </div>
           <p className="mt-3 text-xs text-muted-foreground">
             {t("phase2.loginHint")}

@@ -79,6 +79,26 @@ export async function signInFromCompleteAction(
   redirect(url);
 }
 
+export async function goToDashboardWithPhase1Action(
+  formData: FormData,
+): Promise<void> {
+  const phase1Data = {
+    os: formData.get("os") ?? "windows",
+    goal: formData.get("goal") ?? "web-nextjs",
+    project: formData.get("project") ?? "my-first-app",
+  };
+
+  const jar = await cookies();
+  jar.set(PHASE1_DATA_COOKIE, JSON.stringify(phase1Data), {
+    httpOnly: true,
+    sameSite: "lax",
+    maxAge: 300,
+    path: "/",
+  });
+
+  redirect("/dashboard");
+}
+
 export async function signOutAction(): Promise<void> {
   const adapter = createSupabaseAuthAdapter();
   await adapter.signOut();
