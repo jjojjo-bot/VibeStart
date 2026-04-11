@@ -11,6 +11,7 @@ import { fetchGitHubRepoIfExists } from "@/lib/adapters/github/github-adapter";
 import { vercelProjectExists } from "@/lib/adapters/vercel/vercel-adapter";
 import { getOAuthAccessToken } from "@/lib/auth/oauth-connections";
 import {
+  getCompletedSubstepIds,
   getProjectResourceByType,
   removeProjectResourceByType,
   unmarkSubstepCompleted,
@@ -46,16 +47,35 @@ export async function verifyProjectResources(
 
   // 2) Vercel project 검증
   const vercelResource = await getProjectResourceByType(projectId, "vercel_project");
-  console.log("[verifyResources] vercel resource:", vercelResource?.externalId ?? "none");
   if (vercelResource) {
     const result = await verifyVercelProject(vercelResource, userId);
-    console.log("[verifyResources] vercel check result:", result);
     results.push({ resourceType: "vercel_project", status: result });
     if (result === "gone") {
       await removeProjectResourceByType(projectId, "vercel_project");
-      // 배포 관련 substep 완료 상태도 정리
       await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s4-first-deploy");
       await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s5-verify-url");
+    }
+  } else {
+    // 리소스가 없는데 배포 substep이 완료로 남아있으면 정리
+    const deploySubsteps = await getCompletedSubstepIds(projectId, "m1-deploy");
+    const hasOrphanedDeploy = deploySubsteps.includes("m1-s4-first-deploy") ||
+      deploySubsteps.includes("m1-s5-verify-url");
+    if (hasOrphanedDeploy) {
+      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s4-first-deploy");
+      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s5-verify-url");
+      results.push({ resourceType: "vercel_project", status: "gone" });
+    }
+  }
+
+  // 3) GitHub repo가 없는데 관련 substep이 완료로 남아있으면 정리
+  if (!githubResource) {
+    const repoSubsteps = await getCompletedSubstepIds(projectId, "m1-deploy");
+    if (repoSubsteps.includes("m1-s2-create-repo")) {
+      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s2-create-repo");
+      // github_repo가 이미 results에 없으면 추가
+      if (!results.find(r => r.resourceType === "github_repo")) {
+        results.push({ resourceType: "github_repo", status: "gone" });
+      }
     }
   }
 
