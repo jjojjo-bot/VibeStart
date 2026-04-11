@@ -854,6 +854,7 @@
     "waitingKeys": "Primero termina de obtener las claves de Google OAuth de arriba",
     "enabledSuccess": "El inicio con Google está activado",
     "alreadyEnabled": "El inicio con Google ya está activado",
+    "reEnableButton": "Reactivar",
     "errorGeneric": "Activación fallida: {code}",
     "errorNoSupabaseProject": "No se encontró el proyecto Supabase. Vuelve a ejecutar el paso (마)-2",
     "errorNoGoogleKeys": "No se encontraron las claves de Google OAuth. Vuelve a ejecutar el paso (마)-3",

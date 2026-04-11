@@ -854,6 +854,7 @@
     "waitingKeys": "先に上のGoogle OAuthキー発行を完了してください",
     "enabledSuccess": "Googleログインが有効になりました",
     "alreadyEnabled": "Googleログインは既に有効です",
+    "reEnableButton": "再有効化",
     "errorGeneric": "有効化に失敗: {code}",
     "errorNoSupabaseProject": "Supabaseプロジェクトが見つかりません。(마)-2 ステップを再実行してください",
     "errorNoGoogleKeys": "Google OAuthキーが見つかりません。(마)-3 ステップを再実行してください",

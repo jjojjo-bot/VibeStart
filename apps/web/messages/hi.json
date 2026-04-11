@@ -854,6 +854,7 @@
     "waitingKeys": "पहले ऊपर की Google OAuth keys प्राप्त करना पूरा करें",
     "enabledSuccess": "Google साइन-इन सक्षम हो गया",
     "alreadyEnabled": "Google साइन-इन पहले से सक्षम है",
+    "reEnableButton": "पुनः सक्षम करें",
     "errorGeneric": "सक्षम करने में विफल: {code}",
     "errorNoSupabaseProject": "Supabase प्रोजेक्ट नहीं मिला। कृपया (마)-2 चरण फिर से चलाएँ",
     "errorNoGoogleKeys": "Google OAuth keys नहीं मिलीं। कृपया (마)-3 चरण फिर से चलाएँ",

@@ -33,6 +33,8 @@ export interface EnableGoogleProviderPanelLabels {
   enabledSuccess: string | null;
   alreadyEnabled: string;
   errorMessage: string | null;
+  /** "다시 활성화" 버튼 레이블 */
+  reEnableButton: string;
 }
 
 export interface EnableGoogleProviderPanelProps {
@@ -124,9 +126,26 @@ export function EnableGoogleProviderPanel({
           </form>
         )}
         {state === "enabled" && (
-          <span aria-label="enabled" className="text-sm text-emerald-400">
-            ✓
-          </span>
+          <div className="flex items-center gap-2">
+            <span aria-label="enabled" className="text-sm text-emerald-400">
+              ✓
+            </span>
+            <form action={enableGoogleProviderAction}>
+              <input type="hidden" name="projectId" value={projectId} />
+              <input type="hidden" name="milestoneId" value={milestoneId} />
+              <input type="hidden" name="substepId" value={substepId} />
+              <input type="hidden" name="locale" value={locale} />
+              <PendingButton
+                type="submit"
+                size="sm"
+                variant="ghost"
+                pendingText={labels.enabling}
+                className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+              >
+                {labels.reEnableButton}
+              </PendingButton>
+            </form>
+          </div>
         )}
       </div>
     </section>

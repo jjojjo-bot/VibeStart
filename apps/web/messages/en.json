@@ -854,6 +854,7 @@
     "waitingKeys": "Finish getting the Google OAuth keys above first",
     "enabledSuccess": "Google sign-in is enabled",
     "alreadyEnabled": "Google sign-in is already enabled",
+    "reEnableButton": "Re-enable",
     "errorGeneric": "Enable failed: {code}",
     "errorNoSupabaseProject": "Supabase project not found. Please re-run step (마)-2",
     "errorNoGoogleKeys": "Google OAuth keys not found. Please re-run step (마)-3",

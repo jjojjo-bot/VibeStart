@@ -854,6 +854,7 @@
     "waitingKeys": "먼저 위의 Google OAuth 키 발급을 끝내 주세요",
     "enabledSuccess": "Google 로그인이 활성화됐어요",
     "alreadyEnabled": "Google 로그인이 활성화돼 있어요",
+    "reEnableButton": "다시 활성화",
     "errorGeneric": "활성화 실패: {code}",
     "errorNoSupabaseProject": "Supabase 프로젝트를 찾을 수 없어요. (마)-2 단계를 다시 실행해 주세요",
     "errorNoGoogleKeys": "Google OAuth 키를 찾을 수 없어요. (마)-3 단계를 다시 실행해 주세요",

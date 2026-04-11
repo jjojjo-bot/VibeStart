@@ -809,6 +809,7 @@ export default async function MilestoneRunPage({
       waitingKeys: string;
       enabledSuccess: string | null;
       alreadyEnabled: string;
+      reEnableButton: string;
       errorMessage: string | null;
     };
   } | null = null;
@@ -844,6 +845,7 @@ export default async function MilestoneRunPage({
           ? tEnableGoogle("enabledSuccess")
           : null,
         alreadyEnabled: tEnableGoogle("alreadyEnabled"),
+        reEnableButton: tEnableGoogle("reEnableButton"),
         errorMessage: googleProviderErrorRaw
           ? resolveGoogleProviderError(googleProviderErrorRaw, tEnableGoogle)
           : null,

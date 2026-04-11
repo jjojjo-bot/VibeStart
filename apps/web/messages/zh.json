@@ -854,6 +854,7 @@
     "waitingKeys": "请先完成上面的 Google OAuth 密钥获取",
     "enabledSuccess": "Google 登录已启用",
     "alreadyEnabled": "Google 登录已经启用",
+    "reEnableButton": "重新启用",
     "errorGeneric": "启用失败:{code}",
     "errorNoSupabaseProject": "找不到 Supabase 项目。请重新运行 (마)-2 步骤",
     "errorNoGoogleKeys": "找不到 Google OAuth 密钥。请重新运行 (마)-3 步骤",
