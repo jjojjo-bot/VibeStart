@@ -39,6 +39,7 @@ import {
   OAuthConnectionPanel,
   type OAuthConnectionRow,
 } from "@/components/milestone/oauth-connection-panel";
+import { GitPushPanel } from "@/components/milestone/git-push-panel";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { fetchGitHubRepoIfExists } from "@/lib/adapters/github/github-adapter";
@@ -219,6 +220,7 @@ export default async function MilestoneRunPage({
   const tProjects = await getTranslations("Projects");
   const tConnections = await getTranslations("Connections");
   const tCreateRepo = await getTranslations("CreateRepo");
+  const tGitPush = await getTranslations("GitPush");
   const tDeploy = await getTranslations("FirstDeploy");
   const tCreateSupabase = await getTranslations("CreateSupabaseProject");
   const tGoogleKeys = await getTranslations("GoogleOAuthKeys");
@@ -253,6 +255,10 @@ export default async function MilestoneRunPage({
       supported,
     });
   }
+
+  // GitPushPanel용 GitHub username 추출
+  const githubConn = await getOAuthConnection(user.id, "github");
+  const githubUsernameForPush = githubConn?.providerUsername ?? null;
 
   // OAuth 연결은 Supabase에 영구 저장되지만 substep 완료 상태는 (Phase 2a
   // 한정) in-memory store에만 있어서 dev 서버 재시작 시 사라진다. 사용자가
@@ -323,8 +329,8 @@ export default async function MilestoneRunPage({
     removedSubstepIds.add("m1-s2-create-repo");
   }
   if (removedResources.includes("vercel_project")) {
-    removedSubstepIds.add("m1-s4-first-deploy");
-    removedSubstepIds.add("m1-s5-verify-url");
+    removedSubstepIds.add("m1-s5-first-deploy");
+    removedSubstepIds.add("m1-s6-verify-url");
   }
 
   const initialCompletedSubsteps = Array.from(
@@ -458,9 +464,9 @@ export default async function MilestoneRunPage({
     };
   }
 
-  // DeployPanel — m1-s4-first-deploy. 선행: github_repo + vercel 연결.
+  // DeployPanel — m1-s5-first-deploy. 선행: github_repo + vercel 연결.
   const deploySubstep = milestone.substeps.find(
-    (s) => s.id === "m1-s4-first-deploy",
+    (s) => s.id === "m1-s5-first-deploy",
   );
   // verify에서 삭제된 리소스는 강제로 null 처리
   const existingVercelProject = removedResources.includes("vercel_project")
@@ -1199,9 +1205,35 @@ export default async function MilestoneRunPage({
             </div>
           )}
 
-          {/* (3) Vercel 계정 연결 — m1-s3 */}
+          {/* (3) 내 프로젝트를 GitHub에 올리기 — m1-s3 */}
+          {milestone.id === "m1-deploy" && (
+            <div id="panel-m1-s3-git-push" className="scroll-mt-8">
+              <GitPushPanel
+                projectName={project.slug}
+                githubUsername={githubUsernameForPush}
+                repoCreated={!!existingRepo}
+                completed={initialCompletedSubsteps.includes("m1-s3-git-push")}
+                labels={{
+                  title: tGitPush("title"),
+                  description: tGitPush("description"),
+                  copyButton: tGitPush("copyButton"),
+                  copiedButton: tGitPush("copiedButton"),
+                  doneButton: tGitPush("doneButton"),
+                  waitingRepo: tGitPush("waitingRepo"),
+                  completedMessage: tGitPush("completedMessage"),
+                }}
+                onComplete={async () => {
+                  "use server";
+                  const { toggleSubstepAction } = await import("./actions");
+                  return toggleSubstepAction(project.id, milestone.id, "m1-s3-git-push", true);
+                }}
+              />
+            </div>
+          )}
+
+          {/* (4) Vercel 계정 연결 — m1-s4 */}
           {vercelRows.length > 0 && (
-            <div id="panel-m1-s3-vercel-oauth" className="scroll-mt-8">
+            <div id="panel-m1-s4-vercel-oauth" className="scroll-mt-8">
               <OAuthConnectionPanel
                 rows={vercelRows}
                 projectId={project.id}
@@ -1212,7 +1244,7 @@ export default async function MilestoneRunPage({
             </div>
           )}
 
-          {/* (4) 첫 배포 — m1-s4 */}
+          {/* (5) 첫 배포 — m1-s5 */}
           {deployPanelData && deploySubstep && (
             <div id={`panel-${deploySubstep.id}`} className="scroll-mt-8">
               <DeployPanel

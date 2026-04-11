@@ -19,9 +19,7 @@ export {
 export { ALL_TRACKS, MILESTONES_BY_TRACK } from './tracks';
 export { staticTrack, staticMilestones } from './tracks/static';
 
-// 개별 마일스톤 re-export (고급 사용자가 import해서 쓰고 싶을 때)
+// 개별 마일스톤 re-export
 export { m1Deploy } from './milestones/m1-deploy';
 export { m2GoogleAuth } from './milestones/m2-google-auth';
-export { m3Analytics } from './milestones/m3-analytics';
-export { m4Sentry } from './milestones/m4-sentry';
-export { m5Domain } from './milestones/m5-domain';
+export { m3VibeCoding } from './milestones/m3-vibe-coding';

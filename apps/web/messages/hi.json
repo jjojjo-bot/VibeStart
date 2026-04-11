@@ -593,7 +593,9 @@
       "badge": "अगला कदम",
       "heading": "अब अपनी साइट को असली इंटरनेट पर डालें?",
       "description": "अपना कोड GitHub पर अपलोड करें और Vercel से डिप्लॉय करें — आपको एक असली URL मिलेगा जिसे दोस्तों के साथ शेयर कर सकते हैं। हम आपको कदम-दर-कदम गाइड करेंगे।",
-      "ctaButton": "मेरी साइट बनाना शुरू करें"
+      "loginButton": "Google से शुरू करें",
+      "dashboardButton": "मेरा पहले से अकाउंट है",
+      "loginHint": "Google से लॉगिन करें और आपका प्रोजेक्ट अपने आप जुड़ जाएगा।"
     },
     "backToHome": "होम पर वापस जाएँ"
   },
@@ -789,6 +791,15 @@
     "errorUnauthorized": "आपका GitHub टोकन समाप्त हो चुका है। कृपया अपना GitHub अकाउंट फिर से कनेक्ट करें।",
     "errorForbidden": "GitHub API की अनुमति नहीं है या कॉल सीमा पार हो गई है। कृपया कुछ देर बाद फिर से कोशिश करें।"
   },
+  "GitPush": {
+    "title": "अपना प्रोजेक्ट GitHub पर पुश करें",
+    "description": "नीचे दिए गए कमांड को टर्मिनल में पेस्ट करें, Phase 1 में बनाया गया प्रोजेक्ट GitHub पर अपलोड हो जाएगा",
+    "copyButton": "कॉपी",
+    "copiedButton": "कॉपी हो गया!",
+    "doneButton": "push कर दिया",
+    "waitingRepo": "पहले रिपॉजिटरी बनाएं",
+    "completedMessage": "प्रोजेक्ट GitHub पर अपलोड हो गया"
+  },
   "CreateSupabaseProject": {
     "title": "Supabase प्रोजेक्ट बनाएं",
     "description": "हम आपके Supabase अकाउंट में एक नया प्रोजेक्ट अपने आप बना देंगे (Seoul रीजन, Free प्लान)",
@@ -853,7 +864,7 @@
   },
   "InstallAuthUi": {
     "title": "साइट पर लॉगिन बटन जोड़ें",
-    "description": "हम आपकी साइट के index.html में Google साइन-इन बटन वाला पेज अपने आप इंस्टॉल करेंगे। Vercel जल्द ही फिर से डिप्लॉय करेगा",
+    "description": "हम आपके Next.js प्रोजेक्ट में Google साइन-इन बटन अपने आप जोड़ देंगे। Vercel जल्द ही फिर से डिप्लॉय करेगा",
     "ctaInstall": "लॉगिन बटन इंस्टॉल करें",
     "installing": "इंस्टॉल + डिप्लॉय हो रहा है... (अधिकतम ~60 सेकंड)",
     "waitingProvider": "पहले ऊपर Google provider को सक्षम करना पूरा करें",
@@ -899,9 +910,10 @@
       "substeps": {
         "m1-s1-github-oauth": "GitHub अकाउंट कनेक्ट करें",
         "m1-s2-create-repo": "रिपॉजिटरी स्वचालित रूप से बनाएं",
-        "m1-s3-vercel-oauth": "Vercel अकाउंट कनेक्ट करें",
-        "m1-s4-first-deploy": "पहला डिप्लॉयमेंट चलाएं",
-        "m1-s5-verify-url": "URL खुलने की पुष्टि करें"
+        "m1-s3-git-push": "अपना प्रोजेक्ट GitHub पर पुश करें",
+        "m1-s4-vercel-oauth": "Vercel अकाउंट कनेक्ट करें",
+        "m1-s5-first-deploy": "पहला डिप्लॉयमेंट चलाएं",
+        "m1-s6-verify-url": "URL खुलने की पुष्टि करें"
       },
       "mcp": {
         "github": "GitHub MCP — Claude Code से रिपॉजिटरी प्रबंधन",
@@ -924,52 +936,15 @@
         "supabase": "Supabase MCP — Claude Code से DB और उपयोगकर्ता प्रबंधन"
       }
     },
-    "m3-analytics": {
-      "title": "देखें कौन आपकी साइट पर आता है",
-      "outcome": "दैनिक आगंतुक संख्या ग्राफ के रूप में",
-      "short": "Vercel Analytics + GA4 स्वचालित सेटअप",
+    "m3-vibe-coding": {
+      "title": "AI से अपनी साइट बदलें",
+      "outcome": "AI से साइट में बदलाव करवाएं और ऑटो-डिप्लॉय पूरा करें",
+      "short": "Cursor/Claude Code से वाइब कोडिंग लूप पूरा करें",
       "substeps": {
-        "m3-s1-enable-vercel-analytics": "Vercel Web Analytics सक्षम करें",
-        "m3-s2-install-vercel-analytics-pkg": "@vercel/analytics इंस्टॉल + कंपोनेंट",
-        "m3-s3-create-ga4-property": "GA4 प्रॉपर्टी बनाएं (Google Analytics)",
-        "m3-s4-paste-measurement-id": "मेज़रमेंट ID पेस्ट करें और ऑटो-इन्सर्ट",
-        "m3-s5-verify-events": "1 रियलटाइम उपयोगकर्ता की पुष्टि"
-      },
-      "mcp": {
-        "vercel-analytics": "Vercel Analytics MCP — ट्रैफ़िक सारांश क्वेरी"
-      }
-    },
-    "m4-sentry": {
-      "title": "आप उपयोगकर्ताओं से पहले त्रुटियाँ जानते हैं",
-      "outcome": "उपयोगकर्ताओं द्वारा देखे जाने से पहले त्रुटियाँ पकड़ें",
-      "short": "Sentry स्वचालित सेटअप + त्रुटि विश्लेषण के लिए MCP",
-      "substeps": {
-        "m4-s1-sentry-oauth": "Sentry अकाउंट कनेक्ट करें",
-        "m4-s2-create-sentry-project": "Sentry प्रोजेक्ट स्वचालित रूप से बनाएं",
-        "m4-s3-set-dsn-env": "DSN एनवायरनमेंट वेरिएबल रजिस्टर",
-        "m4-s4-install-sentry-pkg": "@sentry/nextjs इंस्टॉल + कॉन्फ़िग फ़ाइलें",
-        "m4-s5-redeploy": "पुनः डिप्लॉय",
-        "m4-s6-verify-first-error": "एक टेस्ट त्रुटि सत्यापित करें"
-      },
-      "mcp": {
-        "sentry": "Sentry MCP — Claude Code में त्रुटियों का विश्लेषण"
-      }
-    },
-    "m5-domain": {
-      "title": "असली डोमेन जुड़ गया",
-      "outcome": "आपका चुना हुआ डोमेन vercel.app एड्रेस की जगह लेता है",
-      "short": "Cloudflare Registrar डोमेन कनेक्ट करें (~$10/वर्ष)",
-      "substeps": {
-        "m5-s1-search-domain": "डोमेन खोजें",
-        "m5-s2-user-purchase": "Cloudflare पर खरीदें",
-        "m5-s3-cloudflare-oauth": "Cloudflare अकाउंट कनेक्ट करें",
-        "m5-s4-apply-dns": "DNS रिकॉर्ड स्वचालित रूप से लागू करें",
-        "m5-s5-add-to-vercel": "Vercel में डोमेन जोड़ें",
-        "m5-s6-wait-ssl": "SSL प्रतीक्षा (5–30 मिनट)",
-        "m5-s7-verify-connected": "नया एड्रेस काम करने की पुष्टि"
-      },
-      "mcp": {
-        "cloudflare": "Cloudflare MCP — डोमेन स्थिति और रीडायरेक्ट प्रबंधन"
+        "m3-s1-open-editor": "AI एडिटर में प्रोजेक्ट खोलें",
+        "m3-s2-first-ai-edit": "AI से पहला बदलाव करवाएं",
+        "m3-s3-git-push": "अपने बदलाव push करें",
+        "m3-s4-verify-deploy": "ऑटो-डिप्लॉय का नतीजा जांचें"
       }
     }
   }

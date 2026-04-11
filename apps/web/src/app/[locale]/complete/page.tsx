@@ -7,6 +7,7 @@ import type { OS, Goal } from "@/lib/onboarding";
 import { incrementCompletions } from "@/lib/stats";
 import { Suspense } from "react";
 import { useTranslations } from "next-intl";
+import { signInFromCompleteAction } from "../login/actions";
 
 function getInstalledTools(goal: Goal): string[] {
   const base = ["Git", "VS Code", "Claude Code"];
@@ -270,7 +271,8 @@ function CompleteContent() {
         )}
 
         {/* Phase 2 진입 — Phase 1 끝낸 사용자가 자연스럽게 사이트 만들기로 넘어가는 진입점.
-            카피는 M1(배포) 결과물 중심으로, Phase 2의 더 넓은 범위(Auth/DB)는 일부러 강조하지 않는다. */}
+            Google 로그인하면 Phase 1 데이터(os, goal, project)를 자동으로 연결해
+            프로젝트를 생성하고 Phase 2 마일스톤 페이지로 바로 이동한다. */}
         <div className="mb-10 rounded-xl bg-primary/5 border border-primary/20 p-6">
           <div className="mb-2 text-sm text-primary font-medium">
             {t("phase2.badge")}
@@ -279,11 +281,25 @@ function CompleteContent() {
           <p className="mt-2 text-sm text-muted-foreground">
             {t("phase2.description")}
           </p>
-          <div className="mt-4">
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+            <form action={signInFromCompleteAction}>
+              <input type="hidden" name="locale" value="" />
+              <input type="hidden" name="os" value={os} />
+              <input type="hidden" name="goal" value={goal} />
+              <input type="hidden" name="project" value={projectName} />
+              <Button type="submit" size="lg" className="w-full sm:w-auto">
+                {t("phase2.loginButton")}
+              </Button>
+            </form>
             <Link href="/dashboard">
-              <Button size="lg">{t("phase2.ctaButton")}</Button>
+              <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                {t("phase2.dashboardButton")}
+              </Button>
             </Link>
           </div>
+          <p className="mt-3 text-xs text-muted-foreground">
+            {t("phase2.loginHint")}
+          </p>
         </div>
 
         {/* 다시 시작 */}

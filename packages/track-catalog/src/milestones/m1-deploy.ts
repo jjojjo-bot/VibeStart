@@ -1,8 +1,9 @@
 /**
  * M1 — 인터넷에 내 사이트가 뜬다.
  *
- * 첫 마일스톤. 모든 트랙의 공통 출발점. 완료 시 사용자는 친구에게 보낼 수
- * 있는 진짜 `*.vercel.app` URL을 가진다.
+ * 첫 마일스톤. Phase 1에서 만든 로컬 Next.js 프로젝트를 GitHub에 push하고
+ * Vercel로 배포한다. 완료 시 사용자는 친구에게 보낼 수 있는 진짜
+ * `*.vercel.app` URL을 가진다.
  */
 
 import type { MilestoneDefinition } from '@vibestart/shared-types';
@@ -32,23 +33,30 @@ export const m1Deploy: MilestoneDefinition = {
       estimatedSeconds: 10,
     },
     {
-      id: 'm1-s3-vercel-oauth',
+      id: 'm1-s3-git-push',
+      kind: 'copy-paste',
+      titleKey: 'Milestones.m1-deploy.substeps.m1-s3-git-push',
+      externalUrl: null,
+      estimatedSeconds: null,
+    },
+    {
+      id: 'm1-s4-vercel-oauth',
       kind: 'oauth',
-      titleKey: 'Milestones.m1-deploy.substeps.m1-s3-vercel-oauth',
+      titleKey: 'Milestones.m1-deploy.substeps.m1-s4-vercel-oauth',
       externalUrl: null,
       estimatedSeconds: 30,
     },
     {
-      id: 'm1-s4-first-deploy',
+      id: 'm1-s5-first-deploy',
       kind: 'auto',
-      titleKey: 'Milestones.m1-deploy.substeps.m1-s4-first-deploy',
+      titleKey: 'Milestones.m1-deploy.substeps.m1-s5-first-deploy',
       externalUrl: null,
       estimatedSeconds: 90,
     },
     {
-      id: 'm1-s5-verify-url',
+      id: 'm1-s6-verify-url',
       kind: 'verify',
-      titleKey: 'Milestones.m1-deploy.substeps.m1-s5-verify-url',
+      titleKey: 'Milestones.m1-deploy.substeps.m1-s6-verify-url',
       externalUrl: null,
       estimatedSeconds: null,
     },

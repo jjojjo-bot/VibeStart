@@ -593,7 +593,9 @@
       "badge": "Siguiente paso",
       "heading": "¿Listo para poner tu sitio en internet de verdad?",
       "description": "Sube tu código a GitHub y publícalo con Vercel: obtendrás una URL real que puedes compartir con tus amigos. Te guiamos paso a paso.",
-      "ctaButton": "Empezar a crear mi sitio"
+      "loginButton": "Empezar con Google",
+      "dashboardButton": "Ya tengo una cuenta",
+      "loginHint": "Inicia sesión con Google para vincular automáticamente el proyecto que acabas de crear."
     },
     "backToHome": "Volver al inicio"
   },
@@ -789,6 +791,15 @@
     "errorUnauthorized": "Tu token de GitHub ha expirado. Vuelve a conectar tu cuenta de GitHub.",
     "errorForbidden": "Faltan permisos de la API de GitHub o se ha superado el límite de llamadas. Vuelve a intentarlo más tarde."
   },
+  "GitPush": {
+    "title": "Subir tu proyecto a GitHub",
+    "description": "Pega los comandos en tu terminal para subir el proyecto que creaste en la Fase 1 a GitHub",
+    "copyButton": "Copiar",
+    "copiedButton": "Copiado!",
+    "doneButton": "Ya hice push",
+    "waitingRepo": "Primero crea un repositorio",
+    "completedMessage": "Tu proyecto está en GitHub"
+  },
   "CreateSupabaseProject": {
     "title": "Crear un proyecto de Supabase",
     "description": "Crearemos un nuevo proyecto en tu cuenta de Supabase (región Seoul, plan Free)",
@@ -853,7 +864,7 @@
   },
   "InstallAuthUi": {
     "title": "Añadir un botón de inicio de sesión a tu sitio",
-    "description": "Instalaremos automáticamente una página con un botón de inicio con Google en el index.html de tu sitio. Vercel volverá a desplegar en breve",
+    "description": "Agregaremos automáticamente un botón de inicio de sesión con Google a tu proyecto Next.js. Vercel volverá a desplegar en breve",
     "ctaInstall": "Instalar botón de inicio",
     "installing": "Instalando + desplegando... (hasta ~60s)",
     "waitingProvider": "Primero termina de activar el proveedor de Google de arriba",
@@ -899,9 +910,10 @@
       "substeps": {
         "m1-s1-github-oauth": "Conectar cuenta de GitHub",
         "m1-s2-create-repo": "Crear repositorio automáticamente",
-        "m1-s3-vercel-oauth": "Conectar cuenta de Vercel",
-        "m1-s4-first-deploy": "Ejecutar el primer despliegue",
-        "m1-s5-verify-url": "Confirmar que la URL abre"
+        "m1-s3-git-push": "Subir tu proyecto a GitHub",
+        "m1-s4-vercel-oauth": "Conectar cuenta de Vercel",
+        "m1-s5-first-deploy": "Ejecutar el primer despliegue",
+        "m1-s6-verify-url": "Confirmar que la URL abre"
       },
       "mcp": {
         "github": "GitHub MCP — gestiona repositorios desde Claude Code",
@@ -924,52 +936,15 @@
         "supabase": "Supabase MCP — gestiona DB y usuarios desde Claude Code"
       }
     },
-    "m3-analytics": {
-      "title": "Ver quién visita tu sitio",
-      "outcome": "Visitantes diarios en un gráfico",
-      "short": "Configuración automática de Vercel Analytics + GA4",
+    "m3-vibe-coding": {
+      "title": "Personaliza tu sitio con IA",
+      "outcome": "Pide a la IA que edite tu sitio y despliegue automáticamente",
+      "short": "Completa el ciclo de vibe coding con Cursor/Claude Code",
       "substeps": {
-        "m3-s1-enable-vercel-analytics": "Activar Vercel Web Analytics",
-        "m3-s2-install-vercel-analytics-pkg": "Instalar @vercel/analytics + componente",
-        "m3-s3-create-ga4-property": "Crear propiedad GA4 (Google Analytics)",
-        "m3-s4-paste-measurement-id": "Pegar ID de medición e insertar",
-        "m3-s5-verify-events": "Confirmar 1 usuario en tiempo real"
-      },
-      "mcp": {
-        "vercel-analytics": "Vercel Analytics MCP — consultas de resumen de tráfico"
-      }
-    },
-    "m4-sentry": {
-      "title": "Sabes de los errores antes que los usuarios",
-      "outcome": "Detectas errores antes de que los usuarios los noten",
-      "short": "Sentry automático + MCP para análisis de errores",
-      "substeps": {
-        "m4-s1-sentry-oauth": "Conectar cuenta de Sentry",
-        "m4-s2-create-sentry-project": "Crear proyecto Sentry automáticamente",
-        "m4-s3-set-dsn-env": "Registrar variable de entorno DSN",
-        "m4-s4-install-sentry-pkg": "Instalar @sentry/nextjs + archivos de config",
-        "m4-s5-redeploy": "Volver a desplegar",
-        "m4-s6-verify-first-error": "Verificar un error de prueba"
-      },
-      "mcp": {
-        "sentry": "Sentry MCP — resumir y analizar errores en Claude Code"
-      }
-    },
-    "m5-domain": {
-      "title": "Se conecta un dominio real",
-      "outcome": "Tu dominio reemplaza la dirección vercel.app",
-      "short": "Conecta un dominio Cloudflare Registrar (~$10/año)",
-      "substeps": {
-        "m5-s1-search-domain": "Buscar un dominio",
-        "m5-s2-user-purchase": "Comprar en Cloudflare",
-        "m5-s3-cloudflare-oauth": "Conectar cuenta de Cloudflare",
-        "m5-s4-apply-dns": "Aplicar registros DNS automáticamente",
-        "m5-s5-add-to-vercel": "Añadir dominio a Vercel",
-        "m5-s6-wait-ssl": "Esperar SSL (5–30 min)",
-        "m5-s7-verify-connected": "Verificar que la nueva dirección funciona"
-      },
-      "mcp": {
-        "cloudflare": "Cloudflare MCP — estado del dominio y redirecciones"
+        "m3-s1-open-editor": "Abre tu proyecto en un editor IA",
+        "m3-s2-first-ai-edit": "Pide a la IA que haga tu primera edición",
+        "m3-s3-git-push": "Sube tus cambios",
+        "m3-s4-verify-deploy": "Verifica el resultado del despliegue automático"
       }
     }
   }

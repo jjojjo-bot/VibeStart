@@ -17,7 +17,7 @@ export const m2GoogleAuth: MilestoneDefinition = {
   outcomeKey: 'Milestones.m2-google-auth.outcome',
   shortDescriptionKey: 'Milestones.m2-google-auth.short',
   previewKind: 'auth-form',
-  unlocks: 'm3-analytics',
+  unlocks: 'm3-vibe-coding',
   substeps: [
     {
       id: 'm2-s1-supabase-oauth',

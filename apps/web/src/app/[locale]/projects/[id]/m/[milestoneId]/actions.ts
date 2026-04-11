@@ -1487,3 +1487,42 @@ export async function installAuthUiAction(
     `${returnTo}?auth_ui_installed=${deployResult === "ready" ? "1" : "pending"}`,
   );
 }
+
+/**
+ * copy-paste / verify / user-action substep의 수동 완료/해제 토글.
+ *
+ * SubstepList 체크박스에서 호출한다. 체크 → markSubstepCompleted,
+ * 언체크 → unmarkSubstepCompleted.
+ */
+export async function toggleSubstepAction(
+  projectId: string,
+  milestoneId: string,
+  substepId: string,
+  checked: boolean,
+): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("로그인이 필요합니다");
+
+  const project = await getProject(projectId);
+  if (!project || project.userId !== user.id) {
+    throw new Error("프로젝트를 찾을 수 없습니다");
+  }
+
+  const catalog = createInMemoryMilestoneCatalog();
+  const milestone = catalog.getMilestone(project.track, milestoneId);
+  const allMilestones = catalog.listMilestones(project.track);
+
+  if (!milestone) return;
+
+  if (checked) {
+    await markSubstepCompleted({
+      projectId: project.id,
+      milestoneId,
+      substepId,
+      totalSubsteps: milestone.substeps.length,
+      allMilestoneIds: allMilestones.map((m) => m.id),
+    });
+  } else {
+    await unmarkSubstepCompleted(project.id, milestoneId, substepId);
+  }
+}

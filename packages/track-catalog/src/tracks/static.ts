@@ -7,9 +7,7 @@ import type { MilestoneDefinition, TrackDefinition } from '@vibestart/shared-typ
 
 import { m1Deploy } from '../milestones/m1-deploy';
 import { m2GoogleAuth } from '../milestones/m2-google-auth';
-import { m3Analytics } from '../milestones/m3-analytics';
-import { m4Sentry } from '../milestones/m4-sentry';
-import { m5Domain } from '../milestones/m5-domain';
+import { m3VibeCoding } from '../milestones/m3-vibe-coding';
 
 export const staticTrack: TrackDefinition = {
   id: 'static',
@@ -18,9 +16,7 @@ export const staticTrack: TrackDefinition = {
   milestoneIds: [
     'm1-deploy',
     'm2-google-auth',
-    'm3-analytics',
-    'm4-sentry',
-    'm5-domain',
+    'm3-vibe-coding',
   ],
   enabled: true,
   colorToken: 'blue',
@@ -29,7 +25,5 @@ export const staticTrack: TrackDefinition = {
 export const staticMilestones: ReadonlyArray<MilestoneDefinition> = [
   m1Deploy,
   m2GoogleAuth,
-  m3Analytics,
-  m4Sentry,
-  m5Domain,
+  m3VibeCoding,
 ];

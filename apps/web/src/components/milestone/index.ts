@@ -31,6 +31,7 @@ export {
   type CreateRepoPanelLabels,
   type CreateRepoPanelState,
 } from "./create-repo-panel";
+export { GitPushPanel, type GitPushPanelProps } from "./git-push-panel";
 export {
   DeployPanel,
   type DeployPanelProps,

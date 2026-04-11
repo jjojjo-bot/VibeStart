@@ -121,5 +121,17 @@ function PreviewBody({
           </div>
         </div>
       );
+    case "vibe-coding-diff":
+      return (
+        <div className="w-full max-w-[260px] space-y-1 font-mono text-[10px]">
+          <div className="rounded-md border border-border bg-background px-2 py-1.5">
+            <div className="text-red-400">- Welcome to Next.js</div>
+            <div className="text-emerald-400">+ 내가 만든 포트폴리오</div>
+          </div>
+          <p className="text-center text-xs text-muted-foreground">
+            AI → push → 자동 배포
+          </p>
+        </div>
+      );
   }
 }

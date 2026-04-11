@@ -142,9 +142,8 @@ export function createGitHubAdapter(): VcsPort {
       accessToken: string,
       opts: CreateRepoOptions,
     ): Promise<VcsRepo> {
-      // 빈 저장소 + auto_init README. (라)-2 결정사항: 외부 템플릿 복제나
-      // 초기 파일 push는 하지 않는다. Vercel 첫 배포는 사용자가 코드를
-      // push한 뒤 또는 후속 마일스톤에서 처리.
+      // 빈 저장소 생성 (auto_init=false). 사용자가 Phase 1에서 만든 로컬
+      // Next.js 프로젝트를 직접 push할 수 있도록 초기 커밋 없이 생성한다.
       const res = await fetch(REPOS_URL, {
         method: "POST",
         headers: {
@@ -158,7 +157,7 @@ export function createGitHubAdapter(): VcsPort {
           name: opts.name,
           description: opts.description,
           private: opts.isPrivate,
-          auto_init: true,
+          auto_init: false,
         }),
       });
 

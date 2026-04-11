@@ -2,9 +2,9 @@
 /**
  * @vibestart/track-catalog 구조 회귀 방지.
  *
- * Phase 2a 정적 트랙의 불변 조건:
+ * Phase 2b 정적 트랙의 불변 조건:
  *   - 4개 트랙 존재, 정적만 enabled
- *   - 정적 트랙에 정확히 5개 마일스톤이 M1→M2→M3→M4→M5 순서
+ *   - 정적 트랙에 정확히 3개 마일스톤이 M1→M2→M3 순서
  *   - unlocks 체인이 끊김 없이 이어짐 (마지막은 null)
  *   - substep titleKey의 "substeps" 세그먼트 뒤 부분에는 점(.) 없음
  *     → next-intl이 점을 네임스페이스 구분자로 해석하는 제약 회귀 방지
@@ -20,9 +20,7 @@ import {
 const EXPECTED_STATIC_ORDER = [
   "m1-deploy",
   "m2-google-auth",
-  "m3-analytics",
-  "m4-sentry",
-  "m5-domain",
+  "m3-vibe-coding",
 ] as const;
 
 describe("track catalog — static track", () => {
@@ -39,18 +37,18 @@ describe("track catalog — static track", () => {
     expect(byId.get("ecommerce")?.enabled).toBe(false);
   });
 
-  it("static track has exactly 5 milestones in the expected order", () => {
+  it("static track has exactly 3 milestones in the expected order", () => {
     const milestones = catalog.listMilestones("static");
-    expect(milestones).toHaveLength(5);
+    expect(milestones).toHaveLength(3);
     expect(milestones.map((m) => m.id)).toEqual(EXPECTED_STATIC_ORDER);
   });
 
-  it("order fields are 1..5 in sequence", () => {
+  it("order fields are 1..3 in sequence", () => {
     const orders = staticMilestones.map((m) => m.order);
-    expect(orders).toEqual([1, 2, 3, 4, 5]);
+    expect(orders).toEqual([1, 2, 3]);
   });
 
-  it("unlocks chain is unbroken and terminates at m5", () => {
+  it("unlocks chain is unbroken and terminates at m3", () => {
     const milestones = catalog.listMilestones("static");
     for (let i = 0; i < milestones.length - 1; i++) {
       const current = milestones[i]!;

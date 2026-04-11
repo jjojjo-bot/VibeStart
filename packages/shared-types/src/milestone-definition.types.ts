@@ -60,7 +60,8 @@ export type MilestonePreviewKind =
   | 'auth-form'
   | 'analytics-chart'
   | 'sentry-issue'
-  | 'domain-banner';
+  | 'domain-banner'
+  | 'vibe-coding-diff';
 
 /**
  * 마일스톤의 불변 정의 (카탈로그 항목).

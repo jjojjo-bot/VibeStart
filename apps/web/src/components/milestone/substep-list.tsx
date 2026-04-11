@@ -3,16 +3,11 @@
 /**
  * SubstepList — 마일스톤 상세 페이지의 서브스텝 리스트.
  *
- * Client Component. 체크박스 토글과 optimistic UI를 담당한다. Phase 2a는
- * 완료 반영이 클라이언트 useState로만 작동하며, 서버 저장은 후속 PR에서
- * Server Action으로 교체된다.
- *
- * Server Component에서 function props(예: 포맷터)를 넘길 수 없으므로,
- * 호출자가 미리 해석한 제목과 예상 시간 문자열을 DisplaySubstep에 담아
- * 전달해야 한다. 국제화 해석은 전부 서버에서 완료된다.
+ * Client Component. 체크박스는 읽기 전용 진행 표시이다. 완료 마킹은
+ * 오른쪽의 개별 패널(CreateRepoPanel, GitPushPanel 등)에서 처리한다.
  */
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState } from "react";
 import type { SubstepKind } from "@vibestart/shared-types";
 
 import { cn } from "@/lib/utils";
@@ -39,6 +34,8 @@ export interface SubstepListProps {
   substeps: ReadonlyArray<DisplaySubstep>;
   initialCompletedIds: ReadonlyArray<string>;
   labels: SubstepListLabels;
+  /** @deprecated 사용하지 않음 — 완료 처리는 개별 패널에서 */
+  onToggle?: (substepId: string, checked: boolean) => Promise<void>;
 }
 
 const KIND_ICON: Record<SubstepKind, string> = {
@@ -57,33 +54,12 @@ export function SubstepList({
   const [completed, setCompleted] = useState<ReadonlySet<string>>(
     () => new Set(initialCompletedIds),
   );
-  const [, startTransition] = useTransition();
 
-  // 서버 액션이 substep을 완료 처리하고 revalidate한 뒤 페이지가 다시
-  // 렌더되면 새 initialCompletedIds가 props로 들어온다. useState는 lazy
-  // 초기화라 props 변경을 알아채지 못하므로, 서버가 새 스냅샷을 줄 때마다
-  // 동기화한다. 사용자의 로컬 토글은 서버 스냅샷이 그것을 포함하지 않으면
-  // 다음 갱신 때 덮여쓰지지만, Phase 2a에서는 manual toggle이 임시 UX이므로
-  // 의도된 동작.
   const initialKey = initialCompletedIds.join("|");
   useEffect(() => {
     setCompleted(new Set(initialCompletedIds));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialKey]);
-
-  const toggle = (id: string): void => {
-    startTransition(() => {
-      setCompleted((prev) => {
-        const next = new Set(prev);
-        if (next.has(id)) {
-          next.delete(id);
-        } else {
-          next.add(id);
-        }
-        return next;
-      });
-    });
-  };
 
   /** 사이드바 substep 클릭 → 해당 패널로 smooth scroll. */
   const scrollToPanel = (stepId: string): void => {
@@ -116,20 +92,17 @@ export function SubstepList({
               }
             }}
           >
-            <button
-              type="button"
-              onClick={() => toggle(step.id)}
-              aria-label={labels.checkLabel}
-              aria-pressed={isDone}
+            {/* 읽기 전용 체크 표시 */}
+            <span
+              aria-label={isDone ? labels.checkLabel : ""}
               className={cn(
-                "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border border-border text-xs transition-colors",
+                "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border border-border text-xs",
                 isDone && "border-primary bg-primary text-primary-foreground",
               )}
             >
               {isDone ? "✓" : ""}
-            </button>
+            </span>
             <div className="min-w-0 flex-1">
-              {/* 1줄: emoji + title (전체 너비 사용) */}
               <div className="flex items-center gap-1.5 text-sm">
                 <span aria-hidden="true" className="text-base leading-none">
                   {KIND_ICON[step.kind]}
@@ -143,7 +116,6 @@ export function SubstepList({
                   {step.title}
                 </span>
               </div>
-              {/* 2줄: 메타 정보 (예상시간 + 보조 메시지) */}
               {(step.estimatedLabel ||
                 (step.kind === "auto" && !isDone) ||
                 (step.kind === "user-action" && !isDone) ||

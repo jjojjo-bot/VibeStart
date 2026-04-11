@@ -593,7 +593,9 @@
       "badge": "次のステップ",
       "heading": "本物のインターネットに自分のサイトを公開しませんか？",
       "description": "GitHubにコードをアップロードしてVercelでデプロイすると、友達に送れる本物のURLが手に入ります。手順を一つずつご案内します。",
-      "ctaButton": "自分のサイトを作り始める"
+      "loginButton": "Googleで始める",
+      "dashboardButton": "すでにアカウントがあります",
+      "loginHint": "Googleでログインすると、作成したプロジェクトが自動的にリンクされます。"
     },
     "backToHome": "トップに戻る"
   },
@@ -789,6 +791,15 @@
     "errorUnauthorized": "GitHubトークンの有効期限が切れました。GitHub接続をやり直してください。",
     "errorForbidden": "GitHub APIの権限不足、または呼び出し回数の上限に達しました。しばらくしてからもう一度お試しください。"
   },
+  "GitPush": {
+    "title": "プロジェクトをGitHubにプッシュ",
+    "description": "下のコマンドをターミナルに貼り付けると、Phase 1で作ったプロジェクトがGitHubにアップロードされます",
+    "copyButton": "コピー",
+    "copiedButton": "コピー済み!",
+    "doneButton": "pushしました",
+    "waitingRepo": "まずリポジトリを作成してください",
+    "completedMessage": "プロジェクトがGitHubにアップロードされました"
+  },
   "CreateSupabaseProject": {
     "title": "Supabaseプロジェクトを作成",
     "description": "あなたのSupabaseアカウントに新しいプロジェクトを自動で作成します（Seoulリージョン、Freeプラン）",
@@ -853,7 +864,7 @@
   },
   "InstallAuthUi": {
     "title": "サイトにログインボタンを追加",
-    "description": "あなたのサイトのindex.htmlに、Googleログインボタン付きのページを自動でインストールします。Vercelがまもなく再デプロイします",
+    "description": "あなたのNext.jsプロジェクトにGoogleログインボタンを自動で追加します。Vercelがまもなく再デプロイします",
     "ctaInstall": "ログインボタンをインストール",
     "installing": "インストール + デプロイ中... (最大〜60秒)",
     "waitingProvider": "先に上のGoogle providerの有効化を完了してください",
@@ -899,9 +910,10 @@
       "substeps": {
         "m1-s1-github-oauth": "GitHubアカウント接続",
         "m1-s2-create-repo": "リポジトリを自動作成",
-        "m1-s3-vercel-oauth": "Vercelアカウント接続",
-        "m1-s4-first-deploy": "初回デプロイを実行",
-        "m1-s5-verify-url": "URLが実際に開くか確認"
+        "m1-s3-git-push": "プロジェクトをGitHubにプッシュ",
+        "m1-s4-vercel-oauth": "Vercelアカウント接続",
+        "m1-s5-first-deploy": "初回デプロイを実行",
+        "m1-s6-verify-url": "URLが実際に開くか確認"
       },
       "mcp": {
         "github": "GitHub MCP — Claude Codeから自然言語でリポジトリ管理",
@@ -924,52 +936,15 @@
         "supabase": "Supabase MCP — Claude CodeからDB・ユーザー管理"
       }
     },
-    "m3-analytics": {
-      "title": "誰がサイトに来たかが分かる",
-      "outcome": "毎日の訪問者数をグラフで見られます",
-      "short": "Vercel Analytics + GA4の自動セットアップ",
+    "m3-vibe-coding": {
+      "title": "AIで自分のサイトをカスタマイズ",
+      "outcome": "AIに頼んでサイトを修正し、自動デプロイまで完了します",
+      "short": "Cursor/Claude Codeでバイブコーディングループを完成",
       "substeps": {
-        "m3-s1-enable-vercel-analytics": "Vercel Web Analyticsを有効化",
-        "m3-s2-install-vercel-analytics-pkg": "@vercel/analyticsインストール + コンポーネント挿入",
-        "m3-s3-create-ga4-property": "GA4プロパティ作成 (Google Analytics)",
-        "m3-s4-paste-measurement-id": "測定IDを貼り付けて自動挿入",
-        "m3-s5-verify-events": "リアルタイムユーザー1名を確認"
-      },
-      "mcp": {
-        "vercel-analytics": "Vercel Analytics MCP — トラフィック要約クエリ"
-      }
-    },
-    "m4-sentry": {
-      "title": "エラーが出てもあなたが先に気づく",
-      "outcome": "ユーザーより先にエラーを知ることができます",
-      "short": "Sentry自動設定 + MCPでエラー解析",
-      "substeps": {
-        "m4-s1-sentry-oauth": "Sentryアカウント接続",
-        "m4-s2-create-sentry-project": "Sentryプロジェクトを自動作成",
-        "m4-s3-set-dsn-env": "DSN環境変数を自動登録",
-        "m4-s4-install-sentry-pkg": "@sentry/nextjsインストール + 設定ファイル生成",
-        "m4-s5-redeploy": "再デプロイ",
-        "m4-s6-verify-first-error": "テストエラー1件を確認"
-      },
-      "mcp": {
-        "sentry": "Sentry MCP — Claude Codeでエラー要約・原因解析"
-      }
-    },
-    "m5-domain": {
-      "title": "本物のドメインが付く",
-      "outcome": "vercel.appの代わりにあなたの選んだ本物のアドレスになります",
-      "short": "Cloudflare Registrarでドメイン接続(約$10/年)",
-      "substeps": {
-        "m5-s1-search-domain": "ドメインを検索",
-        "m5-s2-user-purchase": "Cloudflareでドメイン購入",
-        "m5-s3-cloudflare-oauth": "Cloudflareアカウント接続",
-        "m5-s4-apply-dns": "DNSレコードを自動設定",
-        "m5-s5-add-to-vercel": "Vercelにドメイン追加",
-        "m5-s6-wait-ssl": "SSL発行待ち(5〜30分)",
-        "m5-s7-verify-connected": "新しいアドレスへの接続を確認"
-      },
-      "mcp": {
-        "cloudflare": "Cloudflare MCP — ドメイン状態確認・リダイレクト管理"
+        "m3-s1-open-editor": "AIエディターでプロジェクトを開く",
+        "m3-s2-first-ai-edit": "AIに最初の修正をお願いする",
+        "m3-s3-git-push": "変更をpushする",
+        "m3-s4-verify-deploy": "自動デプロイの結果を確認"
       }
     }
   }

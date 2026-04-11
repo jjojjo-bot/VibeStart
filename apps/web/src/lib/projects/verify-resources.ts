@@ -66,8 +66,8 @@ export async function verifyProjectResources(
     if (vercelResource) {
       await removeProjectResourceByType(projectId, "vercel_project");
     }
-    await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s4-first-deploy");
-    await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s5-verify-url");
+    await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s5-first-deploy");
+    await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s6-verify-url");
     if (!results.find((r) => r.resourceType === "vercel_project")) {
       results.push({ resourceType: "vercel_project", status: "gone" });
     }
@@ -81,8 +81,8 @@ export async function verifyProjectResources(
     const result = await verifyVercelProject(vercelResource, userId);
     if (result === "gone") {
       await removeProjectResourceByType(projectId, "vercel_project");
-      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s4-first-deploy");
-      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s5-verify-url");
+      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s5-first-deploy");
+      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s6-verify-url");
       results.push({ resourceType: "vercel_project", status: "gone" });
     } else {
       results.push({ resourceType: "vercel_project", status: result });
@@ -91,11 +91,11 @@ export async function verifyProjectResources(
     // 리소스 없음 — orphaned substep 확인
     const substeps = await getCompletedSubstepIds(projectId, "m1-deploy");
     const hasOrphanedDeploy =
-      substeps.includes("m1-s4-first-deploy") ||
-      substeps.includes("m1-s5-verify-url");
+      substeps.includes("m1-s5-first-deploy") ||
+      substeps.includes("m1-s6-verify-url");
     if (hasOrphanedDeploy) {
-      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s4-first-deploy");
-      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s5-verify-url");
+      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s5-first-deploy");
+      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s6-verify-url");
       results.push({ resourceType: "vercel_project", status: "gone" });
     }
   }
