@@ -36,6 +36,7 @@ import {
   TrackBadge,
   VibeCodingPanel,
 } from "@/components/milestone";
+import { MaybeCompletedSubstepsProvider } from "@/components/milestone/maybe-completed-provider";
 import {
   OAuthConnectionPanel,
   type OAuthConnectionRow,
@@ -1139,6 +1140,10 @@ export default async function MilestoneRunPage({
       {/* 사이드바(진행 단계, sticky) + 메인(액션 패널들) 2단 레이아웃.
           flex with align-items: flex-start — sticky가 안정적으로 동작하는
           가장 검증된 패턴. md 미만(768px)에서는 단일 컬럼 stack. */}
+      <MaybeCompletedSubstepsProvider
+        milestoneId={milestone.id}
+        initialIds={initialCompletedSubsteps}
+      >
       <div className="flex flex-col gap-8 md:flex-row md:items-start">
         <aside
           className="w-full md:shrink-0"
@@ -1345,6 +1350,7 @@ export default async function MilestoneRunPage({
           />
         </div>
       </div>
+      </MaybeCompletedSubstepsProvider>
 
       <Separator className="my-10" />
 

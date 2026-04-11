@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import type { SubstepKind } from "@vibestart/shared-types";
 
 import { cn } from "@/lib/utils";
+import { useOptionalCompletedSubsteps } from "./completed-substeps-context";
 
 export interface DisplaySubstep {
   id: string;
@@ -51,15 +52,19 @@ export function SubstepList({
   initialCompletedIds,
   labels,
 }: SubstepListProps): React.ReactNode {
-  const [completed, setCompleted] = useState<ReadonlySet<string>>(
+  const contextCompleted = useOptionalCompletedSubsteps();
+
+  const [localCompleted, setLocalCompleted] = useState<ReadonlySet<string>>(
     () => new Set(initialCompletedIds),
   );
 
   const initialKey = initialCompletedIds.join("|");
   useEffect(() => {
-    setCompleted(new Set(initialCompletedIds));
+    setLocalCompleted(new Set(initialCompletedIds));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialKey]);
+
+  const completed = contextCompleted ?? localCompleted;
 
   /** 사이드바 substep 클릭 → 해당 패널로 smooth scroll. */
   const scrollToPanel = (stepId: string): void => {

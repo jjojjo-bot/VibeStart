@@ -16,6 +16,7 @@ import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useCompletedSubsteps } from "./completed-substeps-context";
 
 export interface VibeCodingPanelLabels {
   title: string;
@@ -98,24 +99,18 @@ export function VibeCodingPanel({
   labels,
   onComplete,
 }: VibeCodingPanelProps): React.ReactNode {
-  const [completed, setCompleted] = useState<Set<string>>(
-    () => new Set(completedSteps),
-  );
+  const { completed, toggle } = useCompletedSubsteps();
   const [loading, setLoading] = useState<string | null>(null);
 
   const handleToggle = async (substepId: string, checked: boolean): Promise<void> => {
+    // 낙관적 업데이트: 즉시 UI 반영
+    toggle(substepId, checked);
     setLoading(substepId);
     try {
       await onComplete(substepId, checked);
-      if (checked) {
-        setCompleted((prev) => new Set([...prev, substepId]));
-      } else {
-        setCompleted((prev) => {
-          const next = new Set(prev);
-          next.delete(substepId);
-          return next;
-        });
-      }
+    } catch {
+      // 실패 시 롤백
+      toggle(substepId, !checked);
     } finally {
       setLoading(null);
     }
