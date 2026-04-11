@@ -89,10 +89,6 @@ export async function createProject(
 ): Promise<Project> {
   const supabase = await createAuthServerClient();
 
-  // 디버그: RLS auth.uid() 확인
-  const { data: authData } = await supabase.auth.getUser();
-  console.log("[createProject] auth.uid:", authData?.user?.id, "input.userId:", input.userId);
-
   const { data, error } = await supabase
     .from("projects")
     .insert({
@@ -106,7 +102,6 @@ export async function createProject(
     .single();
 
   if (error || !data) {
-    console.error("[createProject] INSERT failed:", error);
     throw new Error(`프로젝트 생성 실패: ${error?.message ?? "unknown"}`);
   }
   return rowToProject(data);

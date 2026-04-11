@@ -59,6 +59,7 @@ import {
   providerFromSubstepId,
   providerLabel,
 } from "@/lib/projects/substep-provider";
+import { verifyProjectResources } from "@/lib/projects/verify-resources";
 
 interface MilestoneRunPageProps {
   params: Promise<{ locale: string; id: string; milestoneId: string }>;
@@ -185,6 +186,12 @@ export default async function MilestoneRunPage({
   if (!project || project.userId !== user.id) {
     notFound();
   }
+
+  // 외부 리소스 존재 여부 검증 — 삭제된 리소스는 DB에서 자동 정리
+  const verificationResults = await verifyProjectResources(project.id, user.id);
+  const removedResources = verificationResults
+    .filter((r) => r.status === "gone")
+    .map((r) => r.resourceType);
 
   const catalog = createInMemoryMilestoneCatalog();
   const track = catalog.getTrack(project.track);
@@ -1031,6 +1038,22 @@ export default async function MilestoneRunPage({
           </p>
         </div>
       </header>
+
+      {/* 삭제된 외부 리소스 알림 */}
+      {removedResources.length > 0 && (
+        <div className="mb-6 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3">
+          <p className="text-sm font-medium text-amber-400">
+            🔄 외부 서비스 상태가 변경되었습니다
+          </p>
+          <p className="mt-1 text-xs text-amber-400/80">
+            {removedResources.map((r) =>
+              r === "github_repo" ? "GitHub 저장소" :
+              r === "vercel_project" ? "Vercel 프로젝트" : r
+            ).join(", ")}
+            {" "}가 삭제된 것을 감지했습니다. 해당 단계를 다시 진행해 주세요.
+          </p>
+        </div>
+      )}
 
       {/* 사이드바(진행 단계, sticky) + 메인(액션 패널들) 2단 레이아웃.
           flex with align-items: flex-start — sticky가 안정적으로 동작하는
