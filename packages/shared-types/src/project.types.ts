@@ -11,6 +11,14 @@ export type ProjectId = string;
 export type MilestoneId = string;
 
 export type ProjectTrack = 'static' | 'dynamic' | 'ai' | 'ecommerce';
+export type ProjectOs = 'macos' | 'windows';
+export type ProjectGoal =
+  | 'web-nextjs'
+  | 'web-python'
+  | 'web-java'
+  | 'mobile'
+  | 'data-ai'
+  | 'not-sure';
 
 export type MilestoneState =
   | 'locked'
@@ -24,6 +32,8 @@ export interface Project {
   name: string;
   slug: string;
   track: ProjectTrack;
+  os: ProjectOs | null;
+  goal: ProjectGoal | null;
   currentMilestone: number;
   createdAt: string;
   updatedAt: string;

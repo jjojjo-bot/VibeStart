@@ -1332,6 +1332,7 @@ export default async function MilestoneRunPage({
           {milestone.id === "m3-vibe-coding" && vibeCodingData && (
             <VibeCodingPanel
               projectName={project.slug}
+              os={project.os}
               deployedUrl={vibeCodingData.deployedUrl}
               completedSteps={initialCompletedSubsteps}
               labels={vibeCodingData.labels}

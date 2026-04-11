@@ -52,10 +52,17 @@ export default async function DashboardPage({
           ? phase1.project.trim()
           : "my-first-app";
 
+      const os = phase1.os === "macos" || phase1.os === "windows" ? phase1.os : null;
+      const goal = ["web-nextjs", "web-python", "web-java", "mobile", "data-ai", "not-sure"].includes(phase1.goal ?? "")
+        ? (phase1.goal as "web-nextjs" | "web-python" | "web-java" | "mobile" | "data-ai" | "not-sure")
+        : null;
+
       const project = await createProject({
         userId: user.id,
         track: "static",
         name: projectName,
+        os,
+        goal,
       });
 
       redirect({ href: `/projects/${project.id}`, locale });

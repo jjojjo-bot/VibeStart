@@ -86,6 +86,8 @@ export function createDummyProject(input: CreateProjectInput): Project {
     name: input.name,
     slug: toSlug(input.name),
     track: input.track,
+    os: null,
+    goal: null,
     currentMilestone: 1,
     createdAt: now,
     updatedAt: now,

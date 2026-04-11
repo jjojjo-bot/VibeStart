@@ -15,7 +15,9 @@ import type {
   MilestoneState,
   OAuthProvider,
   Project,
+  ProjectGoal,
   ProjectId,
+  ProjectOs,
   ProjectResource,
   ProjectTrack,
   ResourceType,
@@ -33,6 +35,8 @@ export interface CreateProjectInput {
   userId: string;
   track: ProjectTrack;
   name: string;
+  os?: ProjectOs | null;
+  goal?: ProjectGoal | null;
 }
 
 export interface AddProjectResourceInput {
@@ -62,6 +66,8 @@ function rowToProject(row: Record<string, unknown>): Project {
     name: row.name as string,
     slug: row.slug as string,
     track: row.track as ProjectTrack,
+    os: (row.os as ProjectOs) ?? null,
+    goal: (row.goal as ProjectGoal) ?? null,
     currentMilestone: row.current_milestone as number,
     createdAt: row.created_at as string,
     updatedAt: row.updated_at as string,
@@ -96,6 +102,8 @@ export async function createProject(
       name: input.name,
       slug: toSlug(input.name),
       track: input.track,
+      os: input.os ?? null,
+      goal: input.goal ?? null,
       current_milestone: 1,
     })
     .select()

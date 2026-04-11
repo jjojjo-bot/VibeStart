@@ -49,6 +49,7 @@ export interface VibeCodingPanelLabels {
 
 export interface VibeCodingPanelProps {
   projectName: string;
+  os: "macos" | "windows" | null;
   deployedUrl: string | null;
   completedSteps: ReadonlyArray<string>;
   labels: VibeCodingPanelLabels;
@@ -94,6 +95,7 @@ function CopyButton({
 
 export function VibeCodingPanel({
   projectName,
+  os,
   deployedUrl,
   completedSteps,
   labels,
@@ -122,8 +124,8 @@ export function VibeCodingPanel({
       title: labels.step1Title,
       desc: labels.step1Desc,
       commands: [
-        { label: "VS Code (macOS)", cmd: labels.step1VscodeMacCmd.replace("{project}", projectName) },
-        { label: "VS Code (Windows)", cmd: labels.step1VscodeWinCmd.replace("{project}", projectName) },
+        ...(os !== "windows" ? [{ label: os === "macos" ? "VS Code" : "VS Code (macOS)", cmd: labels.step1VscodeMacCmd.replace("{project}", projectName) }] : []),
+        ...(os !== "macos" ? [{ label: os === "windows" ? "VS Code" : "VS Code (Windows)", cmd: labels.step1VscodeWinCmd.replace("{project}", projectName) }] : []),
         { label: "Claude Code", cmd: labels.step1ClaudeCmd.replace("{project}", projectName) },
       ],
     },
