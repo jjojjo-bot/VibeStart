@@ -34,7 +34,7 @@ export interface VibeCodingPanelLabels {
   /** Step 3 */
   step3Title: string;
   step3Desc: string;
-  step3Cmd: string;
+  step3Prompt: string;
   /** Step 4 */
   step4Title: string;
   step4Desc: string;
@@ -137,7 +137,7 @@ export function VibeCodingPanel({
       id: "m3-s3-git-push",
       title: labels.step3Title,
       desc: labels.step3Desc,
-      command: labels.step3Cmd,
+      prompt: labels.step3Prompt,
     },
     {
       id: "m3-s4-verify-deploy",
@@ -207,20 +207,6 @@ export function VibeCodingPanel({
                 </div>
                 <CopyButton
                   text={step.prompt}
-                  copyLabel={labels.copyButton}
-                  copiedLabel={labels.copiedButton}
-                />
-              </div>
-            )}
-
-            {/* Step 3: git push 커맨드 */}
-            {"command" in step && step.command && (
-              <div className="flex items-center gap-2">
-                <code className="min-w-0 flex-1 rounded border border-border bg-muted px-2 py-1.5 font-mono text-xs">
-                  {step.command}
-                </code>
-                <CopyButton
-                  text={step.command}
                   copyLabel={labels.copyButton}
                   copiedLabel={labels.copiedButton}
                 />

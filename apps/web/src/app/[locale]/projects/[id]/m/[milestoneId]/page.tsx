@@ -991,7 +991,7 @@ export default async function MilestoneRunPage({
       step2Prompt: string;
       step3Title: string;
       step3Desc: string;
-      step3Cmd: string;
+      step3Prompt: string;
       step4Title: string;
       step4Desc: string;
       step4Cta: string;
@@ -1020,7 +1020,7 @@ export default async function MilestoneRunPage({
         step2Prompt: tVibeCoding("step2Prompt"),
         step3Title: tVibeCoding("step3Title"),
         step3Desc: tVibeCoding("step3Desc"),
-        step3Cmd: tVibeCoding("step3Cmd"),
+        step3Prompt: tVibeCoding("step3Prompt"),
         step4Title: tVibeCoding("step4Title"),
         step4Desc: tVibeCoding("step4Desc"),
         step4Cta: tVibeCoding("step4Cta"),
