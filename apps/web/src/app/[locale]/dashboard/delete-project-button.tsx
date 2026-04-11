@@ -15,14 +15,14 @@ export function DeleteProjectButton({
 
   if (confirming) {
     return (
-      <div
-        className="flex flex-col gap-2 rounded-lg border border-destructive/30 bg-destructive/5 p-3"
-        onClick={(e) => e.preventDefault()}
-      >
-        <p className="text-xs text-muted-foreground">
-          {t("deleteWarning")}
-        </p>
-        <div className="flex items-center gap-1.5">
+      <div className="relative">
+        <div
+          className="absolute right-0 top-1/2 z-20 -translate-y-1/2 flex items-center gap-2 rounded-lg border border-destructive/30 bg-background p-2 shadow-lg"
+          onClick={(e) => e.preventDefault()}
+        >
+          <p className="text-xs text-muted-foreground whitespace-nowrap">
+            {t("confirmDelete")}?
+          </p>
           <button
             type="button"
             onClick={async (e) => {
@@ -35,7 +35,7 @@ export function DeleteProjectButton({
               setConfirming(false);
             }}
             disabled={pending}
-            className="rounded px-2 py-1 text-xs text-destructive hover:bg-destructive/10 disabled:opacity-50"
+            className="rounded bg-destructive/10 px-2 py-1 text-xs text-destructive hover:bg-destructive/20 disabled:opacity-50 whitespace-nowrap"
           >
             {pending ? "..." : t("confirmDelete")}
           </button>
@@ -45,7 +45,7 @@ export function DeleteProjectButton({
               e.preventDefault();
               setConfirming(false);
             }}
-            className="rounded px-2 py-1 text-xs text-muted-foreground hover:bg-muted"
+            className="rounded px-2 py-1 text-xs text-muted-foreground hover:bg-muted whitespace-nowrap"
           >
             {t("cancelDelete")}
           </button>

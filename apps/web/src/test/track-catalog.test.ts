@@ -26,15 +26,15 @@ const EXPECTED_STATIC_ORDER = [
 describe("track catalog — static track", () => {
   const catalog = createInMemoryMilestoneCatalog();
 
-  it("exposes exactly 4 tracks with only static enabled", () => {
+  it("exposes exactly 4 tracks all enabled", () => {
     const tracks = catalog.listTracks();
     expect(tracks).toHaveLength(4);
 
     const byId = new Map(tracks.map((t) => [t.id, t]));
     expect(byId.get("static")?.enabled).toBe(true);
-    expect(byId.get("dynamic")?.enabled).toBe(false);
-    expect(byId.get("ai")?.enabled).toBe(false);
-    expect(byId.get("ecommerce")?.enabled).toBe(false);
+    expect(byId.get("dynamic")?.enabled).toBe(true);
+    expect(byId.get("ai")?.enabled).toBe(true);
+    expect(byId.get("ecommerce")?.enabled).toBe(true);
   });
 
   it("static track has exactly 3 milestones in the expected order", () => {
@@ -95,9 +95,10 @@ describe("track catalog — static track", () => {
     expect(catalog.getMilestone("static", "non-existent")).toBeNull();
   });
 
-  it("listMilestones returns empty array for disabled tracks", () => {
-    expect(catalog.listMilestones("dynamic")).toEqual([]);
-    expect(catalog.listMilestones("ai")).toEqual([]);
-    expect(catalog.listMilestones("ecommerce")).toEqual([]);
+  it("all tracks share the same milestones", () => {
+    const staticMs = catalog.listMilestones("static");
+    expect(catalog.listMilestones("dynamic")).toEqual(staticMs);
+    expect(catalog.listMilestones("ai")).toEqual(staticMs);
+    expect(catalog.listMilestones("ecommerce")).toEqual(staticMs);
   });
 });
