@@ -757,6 +757,7 @@
     "title": "Cuentas conectadas",
     "connectButton": "Conectar",
     "connecting": "Conectando...",
+    "reconnectButton": "Reconectar",
     "connectedAs": "Conectado como {username}",
     "comingSoon": "Próximamente",
     "successGithub": "Tu cuenta de GitHub está conectada",

@@ -757,6 +757,7 @@
     "title": "連携アカウント",
     "connectButton": "接続する",
     "connecting": "接続中…",
+    "reconnectButton": "再接続",
     "connectedAs": "{username} として接続済み",
     "comingSoon": "近日公開",
     "successGithub": "GitHubアカウントが接続されました",

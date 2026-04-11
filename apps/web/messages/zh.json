@@ -757,6 +757,7 @@
     "title": "连接管理",
     "connectButton": "连接",
     "connecting": "连接中…",
+    "reconnectButton": "重新连接",
     "connectedAs": "已连接 {username}",
     "comingSoon": "即将推出",
     "successGithub": "GitHub 账号已连接",

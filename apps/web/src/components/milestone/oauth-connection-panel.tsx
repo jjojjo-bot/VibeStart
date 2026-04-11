@@ -43,6 +43,8 @@ export interface OAuthConnectionPanelLabels {
   errorMessage: string | null;
   /** 버튼 pending 상태 텍스트 ("연결 중...") */
   connecting: string;
+  /** 재연결 버튼 텍스트 ("재연결") */
+  reconnectButton: string;
   /** Vercel PAT 입력 폼 라벨들. (라)-3에서 추가. */
   vercelHelperText: string;
   vercelHelperLink: string;
@@ -124,12 +126,31 @@ export function OAuthConnectionPanel({
                 )}
               </div>
               {row.connected ? (
-                <span
-                  aria-label="connected"
-                  className="text-sm text-emerald-400"
-                >
-                  ✓
-                </span>
+                <div className="flex items-center gap-2">
+                  <span
+                    aria-label="connected"
+                    className="text-sm text-emerald-400"
+                  >
+                    ✓
+                  </span>
+                  {row.supported && (row.provider === "github" || row.provider === "supabase_mgmt") && (
+                    <form action={row.provider === "github" ? connectGitHubAction : connectSupabaseAction}>
+                      <input type="hidden" name="projectId" value={projectId} />
+                      <input type="hidden" name="milestoneId" value={milestoneId} />
+                      <input type="hidden" name="substepId" value={row.substepId} />
+                      <input type="hidden" name="locale" value={locale} />
+                      <PendingButton
+                        type="submit"
+                        size="sm"
+                        variant="ghost"
+                        pendingText={labels.connecting}
+                        className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                      >
+                        {labels.reconnectButton}
+                      </PendingButton>
+                    </form>
+                  )}
+                </div>
               ) : !row.supported ? (
                 <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
                   {labels.comingSoon}

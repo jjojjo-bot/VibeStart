@@ -757,6 +757,7 @@
     "title": "कनेक्टेड अकाउंट",
     "connectButton": "कनेक्ट करें",
     "connecting": "कनेक्ट हो रहा है...",
+    "reconnectButton": "पुनः कनेक्ट करें",
     "connectedAs": "{username} के रूप में कनेक्टेड",
     "comingSoon": "जल्द आ रहा है",
     "successGithub": "आपका GitHub अकाउंट कनेक्ट हो गया",

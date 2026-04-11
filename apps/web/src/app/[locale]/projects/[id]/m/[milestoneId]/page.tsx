@@ -364,6 +364,7 @@ export default async function MilestoneRunPage({
   const baseConnectionLabels = {
     connectButton: tConnections("connectButton"),
     connecting: tConnections("connecting"),
+    reconnectButton: tConnections("reconnectButton"),
     comingSoon: tConnections("comingSoon"),
     vercelHelperText: tConnections("vercelHelperText"),
     vercelHelperLink: tConnections("vercelHelperLink"),
