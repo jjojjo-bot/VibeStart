@@ -970,6 +970,7 @@
     "copyButton": "कॉपी",
     "copiedButton": "कॉपी हो गया",
     "doneButton": "पूर्ण",
+    "undoButton": "पूर्ववत करें",
     "doneLabel": "हो गया!"
   }
 }

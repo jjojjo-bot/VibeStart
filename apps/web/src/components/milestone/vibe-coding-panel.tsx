@@ -42,6 +42,7 @@ export interface VibeCodingPanelLabels {
   copyButton: string;
   copiedButton: string;
   doneButton: string;
+  undoButton: string;
   doneLabel: string;
 }
 
@@ -50,7 +51,7 @@ export interface VibeCodingPanelProps {
   deployedUrl: string | null;
   completedSteps: ReadonlyArray<string>;
   labels: VibeCodingPanelLabels;
-  onComplete: (substepId: string) => Promise<void>;
+  onComplete: (substepId: string, checked: boolean) => Promise<void>;
 }
 
 function CopyButton({
@@ -102,11 +103,19 @@ export function VibeCodingPanel({
   );
   const [loading, setLoading] = useState<string | null>(null);
 
-  const handleDone = async (substepId: string): Promise<void> => {
+  const handleToggle = async (substepId: string, checked: boolean): Promise<void> => {
     setLoading(substepId);
     try {
-      await onComplete(substepId);
-      setCompleted((prev) => new Set([...prev, substepId]));
+      await onComplete(substepId, checked);
+      if (checked) {
+        setCompleted((prev) => new Set([...prev, substepId]));
+      } else {
+        setCompleted((prev) => {
+          const next = new Set(prev);
+          next.delete(substepId);
+          return next;
+        });
+      }
     } finally {
       setLoading(null);
     }
@@ -235,21 +244,24 @@ export function VibeCodingPanel({
               </a>
             )}
 
-            {/* 완료 버튼 */}
-            {!isDone && (
-              <div className="mt-4 flex justify-end">
-                <Button
-                  size="sm"
-                  onClick={() => handleDone(step.id)}
-                  disabled={loading === step.id}
-                >
-                  {loading === step.id ? "..." : labels.doneButton}
-                </Button>
-              </div>
-            )}
-            {isDone && (
-              <p className="mt-3 text-xs text-emerald-400">{labels.doneLabel}</p>
-            )}
+            {/* 완료/취소 버튼 */}
+            <div className="mt-4 flex items-center justify-end gap-2">
+              {isDone && (
+                <span className="text-xs text-emerald-400">{labels.doneLabel}</span>
+              )}
+              <Button
+                size="sm"
+                variant={isDone ? "outline" : "default"}
+                onClick={() => handleToggle(step.id, !isDone)}
+                disabled={loading === step.id}
+              >
+                {loading === step.id
+                  ? "..."
+                  : isDone
+                    ? labels.undoButton
+                    : labels.doneButton}
+              </Button>
+            </div>
           </div>
         );
       })}

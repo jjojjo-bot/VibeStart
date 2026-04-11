@@ -970,6 +970,7 @@
     "copyButton": "コピー",
     "copiedButton": "コピーしました",
     "doneButton": "完了",
+    "undoButton": "取消",
     "doneLabel": "完了しました！"
   }
 }

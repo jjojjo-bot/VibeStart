@@ -970,6 +970,7 @@
     "copyButton": "복사",
     "copiedButton": "복사됨",
     "doneButton": "완료",
+    "undoButton": "취소",
     "doneLabel": "완료했어요!"
   }
 }

@@ -970,6 +970,7 @@
     "copyButton": "Copy",
     "copiedButton": "Copied",
     "doneButton": "Done",
+    "undoButton": "Undo",
     "doneLabel": "Done!"
   }
 }

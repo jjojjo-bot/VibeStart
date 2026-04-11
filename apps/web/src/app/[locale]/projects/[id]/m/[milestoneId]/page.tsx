@@ -997,6 +997,7 @@ export default async function MilestoneRunPage({
       copyButton: string;
       copiedButton: string;
       doneButton: string;
+      undoButton: string;
       doneLabel: string;
     };
   } | null = null;
@@ -1025,6 +1026,7 @@ export default async function MilestoneRunPage({
         copyButton: tVibeCoding("copyButton"),
         copiedButton: tVibeCoding("copiedButton"),
         doneButton: tVibeCoding("doneButton"),
+        undoButton: tVibeCoding("undoButton"),
         doneLabel: tVibeCoding("doneLabel"),
       },
     };
@@ -1327,10 +1329,10 @@ export default async function MilestoneRunPage({
               deployedUrl={vibeCodingData.deployedUrl}
               completedSteps={initialCompletedSubsteps}
               labels={vibeCodingData.labels}
-              onComplete={async (substepId: string) => {
+              onComplete={async (substepId: string, checked: boolean) => {
                 "use server";
                 const { toggleSubstepAction } = await import("./actions");
-                return toggleSubstepAction(project.id, milestone.id, substepId, true);
+                return toggleSubstepAction(project.id, milestone.id, substepId, checked);
               }}
             />
           )}

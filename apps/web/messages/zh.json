@@ -970,6 +970,7 @@
     "copyButton": "复制",
     "copiedButton": "已复制",
     "doneButton": "完成",
+    "undoButton": "撤销",
     "doneLabel": "已完成！"
   }
 }
