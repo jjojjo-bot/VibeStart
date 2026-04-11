@@ -128,7 +128,7 @@ export async function createVercelProject(
     headers: VERCEL_HEADERS(accessToken),
     body: JSON.stringify({
       name: projectName,
-      framework: null,
+      framework: "nextjs",
       gitRepository: { type: "github", repo: gitRepo },
     }),
   });
