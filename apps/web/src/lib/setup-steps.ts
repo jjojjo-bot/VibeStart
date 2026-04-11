@@ -492,10 +492,11 @@ function macVscodeStep(t: T): SetupStep {
     whyNeeded: t("editor.whyNeeded"),
     group: "toolInstall",
     environment: t("environments.macTerminal"),
-    script: "brew install --cask visual-studio-code",
+    script: `brew install --cask visual-studio-code && sudo ln -sf "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" /usr/local/bin/code`,
     resultPreview: `==> Installing Cask visual-studio-code
 ==> Moving App 'Visual Studio Code.app' to '/Applications/Visual Studio Code.app'
-🍺  visual-studio-code was successfully installed!`,
+🍺  visual-studio-code was successfully installed!
+code command linked to /usr/local/bin/code`,
     troubleshooting: [
       { symptom: t("editor.troubleshooting.macos.0.symptom"), solution: t("editor.troubleshooting.macos.0.solution") },
       { symptom: t("editor.troubleshooting.macos.1.symptom"), solution: t("editor.troubleshooting.macos.1.solution") },
