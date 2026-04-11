@@ -1,0 +1,182 @@
+---
+title: "Getting Started with Vibe Coding Using Google AI Studio: Free AI Coding Guide"
+description: "A step-by-step guide to starting vibe coding with Google AI Studio. Generate code for free using Gemini models with just a Google account."
+date: "2026-04-11"
+tags: ["Google AI Studio", "Vibe Coding", "Gemini", "AI Coding", "Prompt Writing", "Free AI Tool", "Beginner Coding", "Google AI", "API Key", "Getting Started"]
+---
+
+## 🌐 What Is Google AI Studio?
+
+If you're interested in vibe coding but hesitant to pay for tools upfront, Google AI Studio is the perfect starting point. It's a free, web-based AI development environment powered by Google's Gemini models — no software installation required.
+
+Type "Create a login page in HTML" in natural language, and Gemini generates the code for you. You don't need to know programming syntax to get started.
+
+Key concepts:
+
+- **Gemini** — Google's large language model (LLM) that understands and generates text, images, and code.
+- **Prompt** — A natural language instruction you give to the AI describing what you want.
+- **Vibe Coding** — Building software by describing what you want in natural language instead of writing code manually.
+- **API Key** — An authentication key for calling Gemini models from external programs.
+- **Token** — The smallest unit the AI processes; usage limits are measured in tokens.
+
+## 🛠️ What You Need Before Starting
+
+You only need three things to use Google AI Studio. No payment method or software installation required.
+
+1. **Google Account** — Use your existing Gmail account or create one at [accounts.google.com](https://accounts.google.com).
+2. **Web Browser** — Chrome, Edge, or Firefox recommended. Chrome is the most stable.
+3. **Internet Connection** — Google AI Studio is a cloud service and requires network access.
+
+> **Ready check**: Visit [aistudio.google.com](https://aistudio.google.com), log in with your Google account. If you see the dashboard, you're ready to proceed.
+
+## 🚀 From Sign-Up to Your First Generated Code
+
+Follow these steps and you'll have your first AI-generated code in under 10 minutes.
+
+### 📌 Step 1 — Access and Log In
+
+Open [aistudio.google.com](https://aistudio.google.com) in your browser and sign in with your Google account. Accept the terms of service when prompted. If you see the "Create new prompt" button on the dashboard, you're in.
+
+### 📌 Step 2 — Create a New Prompt
+
+Click the "Create new prompt" button. On the right side, select **Gemini 2.5 Pro** from the model dropdown for the best code generation quality. When you see the blinking cursor in the input field, you're ready.
+
+### 📌 Step 3 — Generate Your First Code
+
+Start simple to build confidence. Paste this prompt and press Enter:
+
+```
+Create a webpage using HTML and CSS that displays "Hello, Vibe Coding!"
+centered on the screen in large text. Add a beautiful gradient background.
+```
+
+Gemini will generate HTML code within seconds. Copy the code, paste it into a text editor, save as `index.html`, and open it in your browser. If you see the gradient background with the text, congratulations — you've completed your first vibe coding session!
+
+### 📌 Step 4 — Get an API Key (Optional)
+
+To use Gemini from external editors like VS Code or Cursor, you'll need an API key. Click "Get API key" in the left sidebar, then "Create API key in new project." Copy the key immediately — it's shown only once.
+
+> ⚠️ **Security Warning**: Never commit your API key to public repositories. Store it in a `.env` file and add `.env` to your `.gitignore`.
+
+## ✍️ Writing Effective Prompts for Vibe Coding
+
+The quality of your prompts directly determines the quality of generated code.
+
+### 🎯 Three Rules for Great Prompts
+
+1. **Assign a role** — "You are a senior frontend developer" sets the expertise level of responses.
+2. **Be specific** — "Build a todo app with React, including add/delete/complete features" beats "make a webpage."
+3. **Specify output format** — "Output code only," "Add comments in Korean," "Separate by file" — these constraints produce usable results.
+
+### 📝 Practical Prompt Template
+
+```
+You are a senior full-stack developer.
+Build a simple blog using Next.js App Router.
+
+Requirements:
+- Main page: display list of posts
+- Post detail page: title, body, date
+- Include 3 dummy posts
+- Style with Tailwind CSS
+- Use TypeScript
+- Output code separated by file
+```
+
+## 💡 Practical Project Examples
+
+### 🏗️ Static Websites
+
+Portfolio sites, landing pages, and event pages can be completed with one or two prompts. Verify the generated code renders correctly in your browser.
+
+### 🔧 Debugging Existing Code
+
+Paste error-producing code into AI Studio with the error message. Gemini will identify the problem and provide a fix.
+
+### 📊 Data Processing Scripts
+
+Repetitive tasks like CSV sorting, JSON transformation, or data cleaning can all be handled through vibe coding prompts.
+
+## ✅ Verification Checklist
+
+- Dashboard loads normally after login
+- You can select Gemini 2.5 Pro from the model dropdown
+- Simple prompts generate code successfully
+- Generated HTML renders correctly in your browser
+- Code block copy button works
+- API key page is accessible (if needed)
+- Response time is reasonable (typically under 10 seconds)
+
+## 🔍 Troubleshooting Common Issues
+
+### 🚫 "Not available in your region"
+
+Google AI Studio works in most countries. If you're behind a corporate network or VPN, try disabling it. Check your Google account's country setting.
+
+### ⏱️ Response Gets Cut Off
+
+Long code requests may hit token limits. Type "continue" or "show the rest" to get the remaining output. You can also increase "Max output tokens" in the right panel.
+
+### ❌ Generated Code Doesn't Run
+
+Copy the full error message and paste it back with "Fix this error." Gemini will analyze the issue and provide corrected code.
+
+### 🔑 API Key Not Working
+
+Most API key issues are caused by extra whitespace during copy or the Generative Language API not being enabled. Verify in Google Cloud Console.
+
+## ⚖️ Comparison with Other AI Coding Tools
+
+| Feature | Google AI Studio | ChatGPT | Cursor | Claude Code |
+|---------|-----------------|---------|--------|-------------|
+| Price | Free (API has limits) | Free/Paid ($20/mo) | Free/Paid ($20/mo) | API-based |
+| Installation | None (web) | None (web) | Desktop app | CLI |
+| Code Execution | External required | Partial built-in | Built into editor | Terminal integration |
+| Beginner Friendliness | Very High | High | Medium | Low (terminal-based) |
+
+**Recommendations by situation:**
+
+- Zero coding experience, want to start free → **Google AI Studio**
+- Want AI integrated into your code editor → **Cursor**
+- Comfortable with terminal, want autonomous coding → **Claude Code**
+
+## 💎 Tips for Better Results
+
+- **Build a prompt library** — Save frequently used prompts organized by category.
+- **Use System Instructions** — Set project-wide rules once instead of repeating in every prompt.
+- **Try Structured Prompts** — Define input/output formats as tables for consistent code generation.
+- **Version control everything** — Always commit working code with Git before modifying prompts.
+
+## ❓ Frequently Asked Questions
+
+**Q. Is Google AI Studio really free?**
+
+Yes, the web interface is free. API calls have free tier limits; exceeding them incurs charges.
+
+**Q. What programming languages are supported?**
+
+Python, JavaScript, TypeScript, Java, C++, Go, Rust, HTML/CSS, and most major languages. Specify the language in your prompt.
+
+**Q. Can I write prompts in my native language?**
+
+Yes, Gemini understands multiple languages well. English prompts may get slightly faster responses.
+
+**Q. Can I attach images or screenshots?**
+
+Yes, Gemini is multimodal. Upload a design screenshot and ask "Implement this design in HTML/CSS."
+
+**Q. Can I deploy code created with AI Studio?**
+
+AI Studio generates code but doesn't host it. Deploy to Vercel, Netlify, or GitHub Pages separately.
+
+**Q. Which Gemini model should I choose?**
+
+Gemini 2.5 Pro for best code quality. Gemini 2.0 Flash for quick, simple tasks where speed matters more.
+
+**Q. Can generated code have security vulnerabilities?**
+
+Yes. Always review code handling user input, authentication, and database queries before deploying to production.
+
+**Q. Does it work offline?**
+
+No, Google AI Studio requires an internet connection. For offline AI coding, consider local models like Ollama.
