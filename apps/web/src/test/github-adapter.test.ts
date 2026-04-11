@@ -109,7 +109,7 @@ describe("createGitHubAdapter().createRepo", () => {
       name: "my-blog",
       description: "내 블로그",
       private: true,
-      auto_init: true,
+      auto_init: false,
     });
   });
 
