@@ -776,30 +776,33 @@ export async function createSupabaseProjectAction(
     redirect(`${returnTo}?supabase_project_error=no_connection`);
   }
 
-  // OAuth metadata에서 organizationId 추출 (saveOAuthConnection metadata 안에)
-  // getOAuthConnection은 메타를 반환하지 않으므로 별도 쿼리가 필요한데,
-  // (마)-1에서 organizationId를 직접 받기 위해 saveOAuthConnection에 metadata로
-  // 저장. 여기서는 organizationId 조회를 위한 getOAuthConnectionMetadata 같은
-  // 함수가 필요하지만, 임시로 oauth_connections를 직접 select하거나, 또는
-  // /v1/organizations를 다시 호출해 첫 조직을 사용한다.
-  // 단순화: /v1/organizations를 다시 호출.
+  // OAuth metadata에서 organizationId 추출 (saveOAuthConnection metadata 안에 저장됨)
   let organizationId: string | null = null;
-  try {
-    const orgsRes = await fetch("https://api.supabase.com/v1/organizations", {
-      headers: {
-        Authorization: `Bearer ${supabaseToken}`,
-        Accept: "application/json",
-        "User-Agent": "VibeStart",
-      },
-    });
-    if (orgsRes.ok) {
-      const orgs = (await orgsRes.json()) as Array<{ id?: string }>;
-      organizationId = orgs[0]?.id ?? null;
+
+  // 1) metadata에서 우선 추출
+  if (conn.metadata && typeof conn.metadata.organizationId === "string") {
+    organizationId = conn.metadata.organizationId;
+  }
+
+  // 2) metadata에 없으면 /v1/organizations API fallback
+  if (!organizationId) {
+    try {
+      const orgsRes = await fetch("https://api.supabase.com/v1/organizations", {
+        headers: {
+          Authorization: `Bearer ${supabaseToken}`,
+          Accept: "application/json",
+          "User-Agent": "VibeStart",
+        },
+      });
+      if (orgsRes.ok) {
+        const orgs = (await orgsRes.json()) as Array<{ id?: string }>;
+        organizationId = orgs[0]?.id ?? null;
+      }
+    } catch (err) {
+      console.error("[createSupabaseProjectAction] org fetch failed", {
+        error: err instanceof Error ? err.message : String(err),
+      });
     }
-  } catch (err) {
-    console.error("[createSupabaseProjectAction] org fetch failed", {
-      error: err instanceof Error ? err.message : String(err),
-    });
   }
 
   if (!organizationId) {

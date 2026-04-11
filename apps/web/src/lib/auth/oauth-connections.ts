@@ -19,6 +19,7 @@ export interface OAuthConnectionSummary {
   providerUsername: string | null;
   scope: string;
   createdAt: string;
+  metadata: Record<string, unknown> | null;
 }
 
 export interface SaveOAuthConnectionInput {
@@ -80,7 +81,7 @@ export async function getOAuthConnection(
   const { data, error } = await supabase
     .from("oauth_connections")
     .select(
-      "id, provider, provider_user_id, provider_username, scope, created_at",
+      "id, provider, provider_user_id, provider_username, scope, created_at, metadata",
     )
     .eq("user_id", userId)
     .eq("provider", provider)
@@ -95,6 +96,7 @@ export async function getOAuthConnection(
     providerUsername: data.provider_username,
     scope: data.scope,
     createdAt: data.created_at,
+    metadata: (data.metadata as Record<string, unknown>) ?? null,
   };
 }
 
