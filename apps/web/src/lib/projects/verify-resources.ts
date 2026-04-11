@@ -61,6 +61,7 @@ export async function verifyProjectResources(
   // GitHub repo가 삭제됐으면 관련 substep 모두 정리
   if (githubGone) {
     await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s2-create-repo");
+    await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s3-git-push");
     // repo가 없으면 배포도 무효 — Vercel 리소스와 배포 substep도 함께 정리
     const vercelResource = await getProjectResourceByType(projectId, "vercel_project");
     if (vercelResource) {
