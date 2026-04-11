@@ -7,13 +7,15 @@
  */
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { cookies } from "next/headers";
 import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 
 import { Link, redirect } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { TrackBadge } from "@/components/milestone";
 import { Button } from "@/components/ui/button";
-import { listProjects } from "@/lib/projects/project-store";
+import { listProjects, createProject } from "@/lib/projects/project-store";
+import { PHASE1_DATA_COOKIE } from "@/lib/auth/phase1-cookie";
 
 import { signOutAction } from "../login/actions";
 import { DeleteProjectButton } from "./delete-project-button";
@@ -32,6 +34,35 @@ export default async function DashboardPage({
   if (!user) {
     redirect({ href: "/login", locale });
     return null;
+  }
+
+  // Phase 1 쿠키가 있으면 프로젝트 자동 생성 후 해당 프로젝트로 이동
+  const jar = await cookies();
+  const phase1Raw = jar.get(PHASE1_DATA_COOKIE)?.value;
+  if (phase1Raw) {
+    jar.delete(PHASE1_DATA_COOKIE);
+    try {
+      const phase1 = JSON.parse(phase1Raw) as {
+        os?: string;
+        goal?: string;
+        project?: string;
+      };
+      const projectName =
+        typeof phase1.project === "string" && phase1.project.trim().length > 0
+          ? phase1.project.trim()
+          : "my-first-app";
+
+      const project = await createProject({
+        userId: user.id,
+        track: "static",
+        name: projectName,
+      });
+
+      redirect({ href: `/projects/${project.id}`, locale });
+      return null;
+    } catch {
+      // 파싱 실패 시 무시하고 대시보드 표시
+    }
   }
 
   const t = await getTranslations({ locale, namespace: "Dashboard" });
