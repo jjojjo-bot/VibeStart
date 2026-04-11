@@ -1370,8 +1370,8 @@ export default async function MilestoneRunPage({
 
       <Separator className="my-10" />
 
-      {/* MCP 자동 설치 안내 — 설치할 MCP가 있을 때만 표시 */}
-      {milestone.mcpInstalls.length > 0 && (
+      {/* MCP 자동 설치 안내 — 미구현, VS Code Extension 완성 후 활성화 */}
+      {false && milestone.mcpInstalls.length > 0 && (
         <section className="rounded-lg border border-border bg-card p-5">
           <h2 className="mb-3 text-sm font-medium text-muted-foreground">
             {tRun("mcpInstallTitle")}

@@ -17,12 +17,14 @@ export function DeleteProjectButton({
     return (
       <div className="relative">
         <div
-          className="absolute right-0 top-1/2 z-20 -translate-y-1/2 flex items-center gap-2 rounded-lg border border-destructive/30 bg-background p-2 shadow-lg"
+          className="absolute right-0 top-1/2 z-20 -translate-y-1/2 flex flex-col gap-2 rounded-lg border border-destructive/30 bg-background p-3 shadow-lg"
+          style={{ minWidth: "280px" }}
           onClick={(e) => e.preventDefault()}
         >
-          <p className="text-xs text-muted-foreground whitespace-nowrap">
-            {t("confirmDelete")}?
+          <p className="text-xs text-muted-foreground">
+            {t("deleteWarning")}
           </p>
+          <div className="flex items-center gap-1.5">
           <button
             type="button"
             onClick={async (e) => {
@@ -49,6 +51,7 @@ export function DeleteProjectButton({
           >
             {t("cancelDelete")}
           </button>
+          </div>
         </div>
       </div>
     );

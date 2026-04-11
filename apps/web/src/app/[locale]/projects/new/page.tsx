@@ -49,7 +49,7 @@ export default async function NewProjectPage({
       <nav className="mb-6">
         <Link
           href="/dashboard"
-          className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+          className="text-xs text-muted-foreground hover:text-foreground"
         >
           ← {tProjects("breadcrumbDashboard")}
         </Link>
