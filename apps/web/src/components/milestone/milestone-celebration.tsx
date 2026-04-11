@@ -4,13 +4,15 @@
  * MilestoneCelebration — 마일스톤 전체 완료 시 축하 화면.
  *
  * canvas-confetti로 폭죽 발사 + 축하 메시지 + CTA 버튼.
- * Phase 1 setup 페이지의 confetti 패턴 재사용.
+ * CompletedSubstepsContext가 있으면 낙관적 상태로 즉시 판단,
+ * 없으면 서버에서 전달한 completed prop 사용.
  */
 
 import { useEffect, useRef } from "react";
 import confetti from "canvas-confetti";
 
 import { Button } from "@/components/ui/button";
+import { useOptionalCompletedSubsteps } from "./completed-substeps-context";
 
 export interface MilestoneCelebrationLabels {
   title: string;
@@ -19,22 +21,34 @@ export interface MilestoneCelebrationLabels {
 }
 
 export interface MilestoneCelebrationProps {
+  /** 서버 렌더 시점의 완료 여부 (fallback) */
   completed: boolean;
+  /** 전체 substep ID 목록 — context 기반 즉시 판단에 사용 */
+  allSubstepIds: ReadonlyArray<string>;
   deployedUrl: string | null;
   dashboardUrl: string;
   labels: MilestoneCelebrationLabels;
 }
 
 export function MilestoneCelebration({
-  completed,
+  completed: serverCompleted,
+  allSubstepIds,
   deployedUrl,
   dashboardUrl,
   labels,
 }: MilestoneCelebrationProps): React.ReactNode {
+  const contextCompleted = useOptionalCompletedSubsteps();
+
+  // context가 있으면 클라이언트 즉시 판단, 없으면 서버 값 사용
+  const isCompleted = contextCompleted
+    ? allSubstepIds.length > 0 &&
+      allSubstepIds.every((id) => contextCompleted.has(id))
+    : serverCompleted;
+
   const hasFired = useRef(false);
 
   useEffect(() => {
-    if (completed && !hasFired.current) {
+    if (isCompleted && !hasFired.current) {
       hasFired.current = true;
       const end = Date.now() + 1500;
       const frame = (): void => {
@@ -70,10 +84,10 @@ export function MilestoneCelebration({
       };
       frame();
     }
-    if (!completed) hasFired.current = false;
-  }, [completed]);
+    if (!isCompleted) hasFired.current = false;
+  }, [isCompleted]);
 
-  if (!completed) return null;
+  if (!isCompleted) return null;
 
   return (
     <section className="mt-8 rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-8 text-center">

@@ -1351,6 +1351,18 @@ export default async function MilestoneRunPage({
           />
         </div>
       </div>
+      {/* 마일스톤 완료 축하 — Provider 안에서 context 기반 즉시 판단 */}
+      <MilestoneCelebration
+        completed={currentState === "completed"}
+        allSubstepIds={milestone.substeps.map((s) => s.id)}
+        deployedUrl={vibeCodingData?.deployedUrl ?? null}
+        dashboardUrl={`/${locale}/projects/${project.id}`}
+        labels={{
+          title: tRun("celebrationTitle"),
+          description: tRun("celebrationDescription"),
+          ctaLabel: tRun("celebrationCta"),
+        }}
+      />
       </MaybeCompletedSubstepsProvider>
 
       <Separator className="my-10" />
@@ -1382,20 +1394,6 @@ export default async function MilestoneRunPage({
             ))}
           </ul>
         </section>
-      )}
-
-      {/* 마일스톤 완료 축하 */}
-      {currentState === "completed" && (
-        <MilestoneCelebration
-          completed
-          deployedUrl={vibeCodingData?.deployedUrl ?? null}
-          dashboardUrl={`/${locale}/projects/${project.id}`}
-          labels={{
-            title: tRun("celebrationTitle"),
-            description: tRun("celebrationDescription"),
-            ctaLabel: tRun("celebrationCta"),
-          }}
-        />
       )}
 
       {/* 하단 네비게이션: 이전 마일스톤 / 대시보드 / 다음 마일스톤 */}
