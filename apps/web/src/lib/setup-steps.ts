@@ -753,7 +753,9 @@ function nextjsProjectStep(projectName: string, variant: "wsl" | "mac", isFronte
     group: "projectCreate",
     environment: env,
     detailedGuide: t("projectFrontend.detailedGuideTemplate", { path }),
-    script: `npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm`,
+    script: isFrontendOnly
+      ? `mkdir -p ~/${projectName} && npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm`
+      : `npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm`,
     resultPreview: `✔ Would you like to use TypeScript? … Yes
 ✔ Would you like to use ESLint? … Yes
 ✔ Would you like to use Tailwind CSS? … Yes
