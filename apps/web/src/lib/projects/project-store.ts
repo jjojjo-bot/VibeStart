@@ -254,12 +254,18 @@ export async function unmarkSubstepCompleted(
 ): Promise<void> {
   const supabase = await createAuthServerClient();
 
-  await supabase
+  const { error } = await supabase
     .from("completed_substeps")
     .delete()
     .eq("project_id", projectId)
     .eq("milestone_id", milestoneId)
     .eq("substep_id", substepId);
+
+  if (error) {
+    console.error("[unmarkSubstepCompleted] DELETE failed:", {
+      projectId, milestoneId, substepId, error: error.message,
+    });
+  }
 
   // 마일스톤이 completed 상태에서 substep을 해제하면
   // current_milestone을 되돌려야 할 수 있음 — 현재는 단순 삭제만.
