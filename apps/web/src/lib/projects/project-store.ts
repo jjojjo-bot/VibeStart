@@ -262,8 +262,31 @@ export async function unmarkSubstepCompleted(
     .eq("substep_id", substepId);
 
   // 마일스톤이 completed 상태에서 substep을 해제하면
-  // current_milestone을 되돌려야 할 수 있음 — 현재는 단순 삭제만.
-  // TODO: 필요 시 current_milestone 역전환 로직 추가
+  // current_milestone을 되돌려야 한다. 예: M1 완료 후 리소스 삭제 →
+  // current_milestone을 M1(=1)으로 되돌려야 "다음 마일스톤" 버튼이 사라짐.
+  const { data: project } = await supabase
+    .from("projects")
+    .select("current_milestone")
+    .eq("id", projectId)
+    .single();
+
+  if (project) {
+    // milestoneId에서 순서 추출 (m1-deploy → order 1, m2-google-auth → order 2)
+    // 해당 마일스톤의 1-based 순서보다 current_milestone이 높으면 되돌림
+    const milestoneOrder = getMilestoneOrder(milestoneId);
+    if (milestoneOrder !== null && project.current_milestone > milestoneOrder) {
+      await supabase
+        .from("projects")
+        .update({ current_milestone: milestoneOrder })
+        .eq("id", projectId);
+    }
+  }
+}
+
+/** milestoneId → 1-based order. 카탈로그 없이 ID 패턴으로 추출. */
+function getMilestoneOrder(milestoneId: MilestoneId): number | null {
+  const match = milestoneId.match(/^m(\d+)-/);
+  return match ? Number(match[1]) : null;
 }
 
 // ─── 프로젝트 리소스 ────────────────────────────────────
