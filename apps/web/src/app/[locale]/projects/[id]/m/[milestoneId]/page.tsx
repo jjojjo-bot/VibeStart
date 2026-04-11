@@ -270,8 +270,10 @@ export default async function MilestoneRunPage({
   const createRepoSubstep = milestone.substeps.find(
     (s) => s.id === "m1-s2-create-repo",
   );
-  let existingRepo = await getProjectResourceByType(project.id, "github_repo");
-  if (createRepoSubstep && !existingRepo) {
+  let existingRepo = removedResources.includes("github_repo")
+    ? null
+    : await getProjectResourceByType(project.id, "github_repo");
+  if (createRepoSubstep && !existingRepo && !removedResources.includes("github_repo")) {
     const githubRow = connectionRows.find((r) => r.provider === "github");
     if (githubRow?.connected) {
       try {
@@ -315,13 +317,23 @@ export default async function MilestoneRunPage({
     derivedCompletedFromResources.push(createRepoSubstep.id);
   }
 
+  // verify에서 삭제된 리소스 관련 substep은 완료 목록에서 제외
+  const removedSubstepIds = new Set<string>();
+  if (removedResources.includes("github_repo")) {
+    removedSubstepIds.add("m1-s2-create-repo");
+  }
+  if (removedResources.includes("vercel_project")) {
+    removedSubstepIds.add("m1-s4-first-deploy");
+    removedSubstepIds.add("m1-s5-verify-url");
+  }
+
   const initialCompletedSubsteps = Array.from(
     new Set([
       ...storedCompletedSubsteps,
       ...derivedCompletedFromOauth,
       ...derivedCompletedFromResources,
     ]),
-  );
+  ).filter((id) => !removedSubstepIds.has(id));
 
   // 성공/에러 토스트 메시지. github와 vercel 두 provider가 같은 패널을
   // 공유하므로 둘 다 처리. 동시 발생은 거의 없지만 vercel을 우선으로 표시.
@@ -450,10 +462,10 @@ export default async function MilestoneRunPage({
   const deploySubstep = milestone.substeps.find(
     (s) => s.id === "m1-s4-first-deploy",
   );
-  const existingVercelProject = await getProjectResourceByType(
-    project.id,
-    "vercel_project",
-  );
+  // verify에서 삭제된 리소스는 강제로 null 처리
+  const existingVercelProject = removedResources.includes("vercel_project")
+    ? null
+    : await getProjectResourceByType(project.id, "vercel_project");
   let deployPanelData: {
     state: DeployPanelState;
     deployedUrl: string | null;
