@@ -949,5 +949,27 @@
         "m3-s4-verify-deploy": "ऑटो-डिप्लॉय का नतीजा जांचें"
       }
     }
+  },
+  "VibeCoding": {
+    "title": "वाइब कोडिंग शुरू करें",
+    "description": "AI एडिटर में प्रोजेक्ट खोलें, प्राकृतिक भाषा में बदलाव का अनुरोध करें, फिर push करें — ऑटो-डिप्लॉय बाकी सब संभाल लेगा",
+    "step1Title": "VS Code + Claude Code में प्रोजेक्ट खोलें",
+    "step1Desc": "अपना प्रोजेक्ट खोलने के लिए टर्मिनल में नीचे दिए गए किसी एक कमांड को चलाएं",
+    "step1VscodeMacCmd": "open -a \"Visual Studio Code\" {project}",
+    "step1VscodeWinCmd": "code {project}",
+    "step1ClaudeCmd": "cd {project} && claude",
+    "step2Title": "AI से पहला बदलाव करवाएं",
+    "step2Desc": "Claude Code से नीचे दिए गए जैसा अनुरोध करके देखें। आप इसे अपनी मर्ज़ी से बदल सकते हैं!",
+    "step2Prompt": "मुख्य पेज का शीर्षक 'My First Site' में बदलो और बैकग्राउंड रंग नीला कर दो",
+    "step3Title": "अपने बदलाव push करें",
+    "step3Desc": "AI द्वारा बदलाव पूरा होने के बाद, GitHub पर अपलोड करने के लिए नीचे दिया गया कमांड चलाएं",
+    "step3Cmd": "git add -A && git commit -m \"first vibe coding\" && git push",
+    "step4Title": "ऑटो-डिप्लॉय का नतीजा जांचें",
+    "step4Desc": "push करने के बाद Vercel अपने आप डिप्लॉय कर देगा। 1-2 मिनट बाद अपनी साइट देखें",
+    "step4Cta": "मेरी साइट खोलें",
+    "copyButton": "कॉपी",
+    "copiedButton": "कॉपी हो गया",
+    "doneButton": "पूर्ण",
+    "doneLabel": "हो गया!"
   }
 }

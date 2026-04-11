@@ -34,6 +34,7 @@ import {
   ResultPreview,
   SubstepList,
   TrackBadge,
+  VibeCodingPanel,
 } from "@/components/milestone";
 import {
   OAuthConnectionPanel,
@@ -226,6 +227,7 @@ export default async function MilestoneRunPage({
   const tGoogleKeys = await getTranslations("GoogleOAuthKeys");
   const tEnableGoogle = await getTranslations("EnableGoogleProvider");
   const tInstallAuthUi = await getTranslations("InstallAuthUi");
+  const tVibeCoding = await getTranslations("VibeCoding");
 
   // OAuth 연결 패널 데이터 — 이 마일스톤의 oauth kind 서브스텝을 모아
   // provider별 연결 상태를 조회한다. connectedLabel은 next-intl이 호출
@@ -972,6 +974,62 @@ export default async function MilestoneRunPage({
     }
   }
 
+  // M3 바이브코딩 패널 데이터
+  let vibeCodingData: {
+    deployedUrl: string | null;
+    labels: {
+      title: string;
+      description: string;
+      step1Title: string;
+      step1Desc: string;
+      step1VscodeMacCmd: string;
+      step1VscodeWinCmd: string;
+      step1ClaudeCmd: string;
+      step2Title: string;
+      step2Desc: string;
+      step2Prompt: string;
+      step3Title: string;
+      step3Desc: string;
+      step3Cmd: string;
+      step4Title: string;
+      step4Desc: string;
+      step4Cta: string;
+      copyButton: string;
+      copiedButton: string;
+      doneButton: string;
+      doneLabel: string;
+    };
+  } | null = null;
+
+  if (milestone.id === "m3-vibe-coding") {
+    const vercelResource = await getProjectResourceByType(project.id, "vercel_project");
+    vibeCodingData = {
+      deployedUrl: vercelResource?.url ?? null,
+      labels: {
+        title: tVibeCoding("title"),
+        description: tVibeCoding("description"),
+        step1Title: tVibeCoding("step1Title"),
+        step1Desc: tVibeCoding("step1Desc"),
+        step1VscodeMacCmd: tVibeCoding("step1VscodeMacCmd"),
+        step1VscodeWinCmd: tVibeCoding("step1VscodeWinCmd"),
+        step1ClaudeCmd: tVibeCoding("step1ClaudeCmd"),
+        step2Title: tVibeCoding("step2Title"),
+        step2Desc: tVibeCoding("step2Desc"),
+        step2Prompt: tVibeCoding("step2Prompt"),
+        step3Title: tVibeCoding("step3Title"),
+        step3Desc: tVibeCoding("step3Desc"),
+        step3Cmd: tVibeCoding("step3Cmd"),
+        step4Title: tVibeCoding("step4Title"),
+        step4Desc: tVibeCoding("step4Desc"),
+        step4Cta: tVibeCoding("step4Cta"),
+        copyButton: tVibeCoding("copyButton"),
+        copiedButton: tVibeCoding("copiedButton"),
+        doneButton: tVibeCoding("doneButton"),
+        doneLabel: tVibeCoding("doneLabel"),
+      },
+    };
+  }
+
   // 모든 derive 결과를 store에 동기화 — OAuth/Resource derive로만 UI에 표시되던
   // substep을 retroactively store에 마킹해 milestoneState가 정상 전환되도록.
   // store가 이미 가진 substep은 markSubstepCompleted가 idempotent로 처리.
@@ -1260,6 +1318,21 @@ export default async function MilestoneRunPage({
                 labels={deployPanelData.labels}
               />
             </div>
+          )}
+
+          {/* M3 바이브코딩 패널 */}
+          {milestone.id === "m3-vibe-coding" && vibeCodingData && (
+            <VibeCodingPanel
+              projectName={project.slug}
+              deployedUrl={vibeCodingData.deployedUrl}
+              completedSteps={initialCompletedSubsteps}
+              labels={vibeCodingData.labels}
+              onComplete={async (substepId: string) => {
+                "use server";
+                const { toggleSubstepAction } = await import("./actions");
+                return toggleSubstepAction(project.id, milestone.id, substepId, true);
+              }}
+            />
           )}
 
           {/* 결과 미리보기 */}

@@ -949,5 +949,27 @@
         "m3-s4-verify-deploy": "Verifica el resultado del despliegue automático"
       }
     }
+  },
+  "VibeCoding": {
+    "title": "Iniciar Vibe Coding",
+    "description": "Abre tu proyecto en un editor IA, solicita cambios en lenguaje natural, haz push y el despliegue automático se encarga del resto",
+    "step1Title": "Abrir proyecto en VS Code + Claude Code",
+    "step1Desc": "Ejecuta uno de los siguientes comandos en tu terminal para abrir tu proyecto",
+    "step1VscodeMacCmd": "open -a \"Visual Studio Code\" {project}",
+    "step1VscodeWinCmd": "code {project}",
+    "step1ClaudeCmd": "cd {project} && claude",
+    "step2Title": "Pide a la IA tu primera edición",
+    "step2Desc": "Prueba pedirle a Claude Code algo como el siguiente ejemplo. ¡Puedes cambiarlo libremente!",
+    "step2Prompt": "Cambia el título de la página principal a 'Mi Primer Sitio' y pon el color de fondo azul",
+    "step3Title": "Sube tus cambios",
+    "step3Desc": "Cuando la IA termine de editar, ejecuta el siguiente comando para subir a GitHub",
+    "step3Cmd": "git add -A && git commit -m \"first vibe coding\" && git push",
+    "step4Title": "Verifica el despliegue automático",
+    "step4Desc": "Después de hacer push, Vercel despliega automáticamente. Revisa tu sitio en 1-2 minutos",
+    "step4Cta": "Abrir mi sitio",
+    "copyButton": "Copiar",
+    "copiedButton": "Copiado",
+    "doneButton": "Listo",
+    "doneLabel": "¡Listo!"
   }
 }

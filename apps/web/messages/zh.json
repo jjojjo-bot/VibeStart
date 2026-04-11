@@ -949,5 +949,27 @@
         "m3-s4-verify-deploy": "确认自动部署结果"
       }
     }
+  },
+  "VibeCoding": {
+    "title": "开始 Vibe Coding",
+    "description": "用AI编辑器打开项目，用自然语言请求修改，然后push — 自动部署搞定一切",
+    "step1Title": "用VS Code + Claude Code打开项目",
+    "step1Desc": "在终端中运行以下任一命令来打开你的项目",
+    "step1VscodeMacCmd": "open -a \"Visual Studio Code\" {project}",
+    "step1VscodeWinCmd": "code {project}",
+    "step1ClaudeCmd": "cd {project} && claude",
+    "step2Title": "向AI提出第一次修改请求",
+    "step2Desc": "尝试像下面这样向Claude Code提问。随意修改也没关系！",
+    "step2Prompt": "把主页标题改成「My First Site」，把背景色改成蓝色",
+    "step3Title": "推送你的更改",
+    "step3Desc": "AI修改完成后，在终端运行以下命令将代码推送到GitHub",
+    "step3Cmd": "git add -A && git commit -m \"first vibe coding\" && git push",
+    "step4Title": "查看自动部署结果",
+    "step4Desc": "push之后Vercel会自动部署你的网站。1-2分钟后查看你的网站吧",
+    "step4Cta": "打开我的网站",
+    "copyButton": "复制",
+    "copiedButton": "已复制",
+    "doneButton": "完成",
+    "doneLabel": "已完成！"
   }
 }

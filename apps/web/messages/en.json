@@ -949,5 +949,27 @@
         "m3-s4-verify-deploy": "Verify the auto-deploy result"
       }
     }
+  },
+  "VibeCoding": {
+    "title": "Start Vibe Coding",
+    "description": "Open your project in an AI editor, request changes in natural language, then push — auto-deploy takes care of the rest",
+    "step1Title": "Open Project in VS Code + Claude Code",
+    "step1Desc": "Run one of the commands below in your terminal to open your project",
+    "step1VscodeMacCmd": "open -a \"Visual Studio Code\" {project}",
+    "step1VscodeWinCmd": "code {project}",
+    "step1ClaudeCmd": "cd {project} && claude",
+    "step2Title": "Ask AI for Your First Edit",
+    "step2Desc": "Try asking Claude Code something like the prompt below. Feel free to change it!",
+    "step2Prompt": "Change the main page title to 'My First Site' and set the background color to blue",
+    "step3Title": "Push Your Changes",
+    "step3Desc": "Once the AI finishes editing, run the command below to push to GitHub",
+    "step3Cmd": "git add -A && git commit -m \"first vibe coding\" && git push",
+    "step4Title": "Check the Auto-Deploy Result",
+    "step4Desc": "After pushing, Vercel auto-deploys your site. Check it in 1–2 minutes",
+    "step4Cta": "Open My Site",
+    "copyButton": "Copy",
+    "copiedButton": "Copied",
+    "doneButton": "Done",
+    "doneLabel": "Done!"
   }
 }

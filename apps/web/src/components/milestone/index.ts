@@ -62,3 +62,8 @@ export {
   type InstallAuthUiPanelLabels,
   type InstallAuthUiPanelState,
 } from "./install-auth-ui-panel";
+export {
+  VibeCodingPanel,
+  type VibeCodingPanelProps,
+  type VibeCodingPanelLabels,
+} from "./vibe-coding-panel";

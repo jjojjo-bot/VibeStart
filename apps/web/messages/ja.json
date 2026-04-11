@@ -949,5 +949,27 @@
         "m3-s4-verify-deploy": "自動デプロイの結果を確認"
       }
     }
+  },
+  "VibeCoding": {
+    "title": "バイブコーディング開始",
+    "description": "AIエディターでプロジェクトを開き、自然言語で修正を依頼してpush → 自動デプロイまで完成します",
+    "step1Title": "VS Code + Claude Codeでプロジェクトを開く",
+    "step1Desc": "ターミナルで以下のコマンドのいずれかを実行して、プロジェクトを開いてください",
+    "step1VscodeMacCmd": "open -a \"Visual Studio Code\" {project}",
+    "step1VscodeWinCmd": "code {project}",
+    "step1ClaudeCmd": "cd {project} && claude",
+    "step2Title": "AIに最初の修正をお願いする",
+    "step2Desc": "Claude Codeに以下のようにお願いしてみましょう。自由に変えてもOKです！",
+    "step2Prompt": "メインページのタイトルを「My First Site」に変えて、背景色を青にしてください",
+    "step3Title": "変更をpushする",
+    "step3Desc": "AIが修正を完了したら、ターミナルで以下のコマンドを実行してGitHubにアップロードしてください",
+    "step3Cmd": "git add -A && git commit -m \"first vibe coding\" && git push",
+    "step4Title": "自動デプロイの結果を確認",
+    "step4Desc": "pushするとVercelが自動でデプロイします。1〜2分後にサイトを確認してみてください",
+    "step4Cta": "サイトを開く",
+    "copyButton": "コピー",
+    "copiedButton": "コピーしました",
+    "doneButton": "完了",
+    "doneLabel": "完了しました！"
   }
 }
