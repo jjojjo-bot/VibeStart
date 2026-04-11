@@ -108,8 +108,9 @@
   h3{margin:20px 0 10px 0;padding:0;border:0;background:none;box-shadow:none;font-weight:700;font-size:20px !important;}
   h2[id],h3[id],a[id]{scroll-margin-top:14px;}
   h2:target{box-shadow:0 0 0 3px rgba(215,225,255,.6),0 10px 22px rgba(0,0,0,.05);}
-  pre{padding:12px;background:#0b1020;color:#e8e8e8;border-radius:10px;overflow:auto;line-height:1.6;}
-  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;}
+  pre{padding:12px;background:#1e1e2e;color:#cdd6f4;border-radius:10px;overflow:auto;line-height:1.6;}
+  pre code{color:#cdd6f4;background:none;padding:0;}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;background:#f0f0f5;color:#333;padding:2px 6px;border-radius:4px;font-size:0.9em;}
   .hr{border:none;border-top:1px solid #eee;margin:22px 0;}
   .vibestart-cta{margin:32px 0;padding:20px;border-radius:14px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff;text-align:center;line-height:1.6;}
   .vibestart-cta a{color:#fff;text-decoration:underline;font-weight:700;}
@@ -199,6 +200,20 @@
 | **E** | Yoast 포커스 키워드 1개 |
 | **F** | 본문 (HTML) — 아래 구성 참고 |
 | **G** | 카테고리: 바이브코딩 / 태그 10개 |
+| **H** | 대표 이미지 생성 프롬프트 (AI 이미지 생성용) |
+
+### 대표 이미지(H) 생성 규칙
+
+- 매 글마다 AI 이미지 생성 도구(Midjourney, DALL-E, Gemini 등)에 바로 복붙할 수 있는 영문 프롬프트를 작성한다.
+- 스타일: **플랫 일러스트/미니멀 테크**, 텍스트 없음, 16:9 비율, 깔끔한 배경
+- 주제와 직접 연관된 시각적 요소를 포함 (예: Git → 분기 다이어그램, Node.js → 초록색 서버 아이콘)
+- 금지: 사람 얼굴, 실제 브랜드 로고 직접 표현, 글자/텍스트 삽입 요청
+- 프롬프트 형식:
+  ```
+  Flat minimal tech illustration, [주제 관련 시각 요소], clean gradient background,
+  no text, no logos, 16:9 aspect ratio, modern developer aesthetic, soft shadows
+  ```
+- 생성 후 WebP 포맷으로 변환, 100KB 이하로 압축, 파일명에 키워드 포함
 
 ### 본문(F) 필수 구성 순서
 
