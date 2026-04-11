@@ -46,8 +46,10 @@ export async function verifyProjectResources(
 
   // 2) Vercel project 검증
   const vercelResource = await getProjectResourceByType(projectId, "vercel_project");
+  console.log("[verifyResources] vercel resource:", vercelResource?.externalId ?? "none");
   if (vercelResource) {
     const result = await verifyVercelProject(vercelResource, userId);
+    console.log("[verifyResources] vercel check result:", result);
     results.push({ resourceType: "vercel_project", status: result });
     if (result === "gone") {
       await removeProjectResourceByType(projectId, "vercel_project");
@@ -85,11 +87,14 @@ async function verifyVercelProject(
 ): Promise<"valid" | "gone" | "skipped"> {
   try {
     const token = await getOAuthAccessToken(userId, "vercel");
+    console.log("[verifyVercel] token exists:", !!token, "externalId:", resource.externalId);
     if (!token) return "skipped";
 
     const exists = await vercelProjectExists(token, resource.externalId);
+    console.log("[verifyVercel] exists:", exists);
     return exists ? "valid" : "gone";
-  } catch {
+  } catch (err) {
+    console.error("[verifyVercel] error:", err instanceof Error ? err.message : String(err));
     return "skipped";
   }
 }
