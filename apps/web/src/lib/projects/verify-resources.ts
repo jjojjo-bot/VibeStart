@@ -88,15 +88,20 @@ async function verifyGitHubRepo(
 ): Promise<"valid" | "gone" | "skipped"> {
   try {
     const token = await getOAuthAccessToken(userId, "github");
+    console.log("[verifyGitHub] token exists:", !!token, "externalId:", resource.externalId);
     if (!token) return "skipped";
 
     const [owner, repoName] = resource.externalId.split("/");
-    if (!owner || !repoName) return "skipped";
+    if (!owner || !repoName) {
+      console.log("[verifyGitHub] invalid externalId format");
+      return "skipped";
+    }
 
     const repo = await fetchGitHubRepoIfExists(token, owner, repoName);
+    console.log("[verifyGitHub] repo exists:", !!repo);
     return repo ? "valid" : "gone";
-  } catch {
-    // API 호출 실패 시 안전하게 skipped 처리
+  } catch (err) {
+    console.error("[verifyGitHub] error:", err instanceof Error ? err.message : String(err));
     return "skipped";
   }
 }
