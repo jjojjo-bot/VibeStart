@@ -25,9 +25,9 @@ import {
   verifyOAuthState,
 } from "@/lib/auth/oauth-state";
 import {
-  getDummyProject,
+  getProject,
   markSubstepCompleted,
-} from "@/lib/projects/in-memory-store";
+} from "@/lib/projects/project-store";
 import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 
 function errorRedirect(url: URL, error: string): NextResponse {
@@ -79,7 +79,7 @@ export async function GET(request: NextRequest): Promise<Response> {
   }
 
   // 프로젝트 소유권 재검증
-  const project = getDummyProject(payload.projectId);
+  const project = await getProject(payload.projectId);
   if (!project || project.userId !== user.id) {
     return errorRedirect(returnTo, "project_not_found");
   }
@@ -104,7 +104,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     const allMilestones = catalog.listMilestones(project.track);
 
     if (milestone) {
-      markSubstepCompleted({
+      await markSubstepCompleted({
         projectId: project.id,
         milestoneId: payload.milestoneId,
         substepId: payload.substepId,

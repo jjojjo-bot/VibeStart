@@ -13,7 +13,7 @@ import { Link, redirect } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { TrackBadge } from "@/components/milestone";
 import { Button } from "@/components/ui/button";
-import { listDummyProjects } from "@/lib/projects/in-memory-store";
+import { listProjects } from "@/lib/projects/project-store";
 
 import { signOutAction } from "../login/actions";
 import { DeleteProjectButton } from "./delete-project-button";
@@ -40,7 +40,7 @@ export default async function DashboardPage({
     namespace: "Projects",
   });
 
-  const projects = listDummyProjects(user.id);
+  const projects = await listProjects(user.id);
   const catalog = createInMemoryMilestoneCatalog();
 
   return (

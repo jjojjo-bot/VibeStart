@@ -49,11 +49,11 @@ import {
 import {
   addProjectResource,
   getCompletedSubstepIds,
-  getDummyProject,
+  getProject,
   getProjectProgress,
   getProjectResourceByType,
   markSubstepCompleted,
-} from "@/lib/projects/in-memory-store";
+} from "@/lib/projects/project-store";
 import {
   SUPPORTED_PROVIDERS,
   providerFromSubstepId,
@@ -181,7 +181,7 @@ export default async function MilestoneRunPage({
     return null;
   }
 
-  const project = getDummyProject(id);
+  const project = await getProject(id);
   if (!project || project.userId !== user.id) {
     notFound();
   }
@@ -197,12 +197,12 @@ export default async function MilestoneRunPage({
   const total = allMilestones.length;
   const order = milestone.order;
 
-  const progress = getProjectProgress(
+  const progress = await getProjectProgress(
     project.id,
     allMilestones.map((m) => m.id),
   );
   let currentState = progress[milestone.id] ?? "locked";
-  const storedCompletedSubsteps = getCompletedSubstepIds(
+  const storedCompletedSubsteps = await getCompletedSubstepIds(
     project.id,
     milestone.id,
   );
@@ -263,7 +263,7 @@ export default async function MilestoneRunPage({
   const createRepoSubstep = milestone.substeps.find(
     (s) => s.id === "m1-s2-create-repo",
   );
-  let existingRepo = getProjectResourceByType(project.id, "github_repo");
+  let existingRepo = await getProjectResourceByType(project.id, "github_repo");
   if (createRepoSubstep && !existingRepo) {
     const githubRow = connectionRows.find((r) => r.provider === "github");
     if (githubRow?.connected) {
@@ -277,7 +277,7 @@ export default async function MilestoneRunPage({
             project.slug,
           );
           if (repo) {
-            existingRepo = addProjectResource({
+            existingRepo = await addProjectResource({
               projectId: project.id,
               provider: "github",
               resourceType: "github_repo",
@@ -443,7 +443,7 @@ export default async function MilestoneRunPage({
   const deploySubstep = milestone.substeps.find(
     (s) => s.id === "m1-s4-first-deploy",
   );
-  const existingVercelProject = getProjectResourceByType(
+  const existingVercelProject = await getProjectResourceByType(
     project.id,
     "vercel_project",
   );
@@ -522,7 +522,7 @@ export default async function MilestoneRunPage({
   const createSupabaseSubstep = milestone.substeps.find(
     (s) => s.id === "m2-s2-create-supabase-project",
   );
-  const existingSupabaseProject = getProjectResourceByType(
+  const existingSupabaseProject = await getProjectResourceByType(
     project.id,
     "supabase_project",
   );
@@ -608,7 +608,7 @@ export default async function MilestoneRunPage({
   const googleKeysSubstep = milestone.substeps.find(
     (s) => s.id === "m2-s3-google-oauth-keys",
   );
-  const existingGoogleKeys = getProjectResourceByType(
+  const existingGoogleKeys = await getProjectResourceByType(
     project.id,
     "google_oauth_keys",
   );
@@ -951,7 +951,7 @@ export default async function MilestoneRunPage({
   let storeChanged = false;
   for (const id of initialCompletedSubsteps) {
     if (!alreadyStored.has(id)) {
-      markSubstepCompleted({
+      await markSubstepCompleted({
         projectId: project.id,
         milestoneId: milestone.id,
         substepId: id,
@@ -962,7 +962,7 @@ export default async function MilestoneRunPage({
     }
   }
   if (storeChanged) {
-    const updatedProgress = getProjectProgress(
+    const updatedProgress = await getProjectProgress(
       project.id,
       allMilestones.map((m) => m.id),
     );

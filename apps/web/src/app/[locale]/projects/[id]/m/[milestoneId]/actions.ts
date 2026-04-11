@@ -65,13 +65,13 @@ import {
 } from "@/lib/auth/oauth-connections";
 import {
   addProjectResource,
-  getDummyProject,
+  getProject,
   getProjectResourceByType,
   markSubstepCompleted,
   removeProjectResourceByType,
   unmarkSubstepCompleted,
   updateProjectResourceMetadata,
-} from "@/lib/projects/in-memory-store";
+} from "@/lib/projects/project-store";
 import { routing } from "@/i18n/routing";
 
 function resolveLocale(raw: unknown): string {
@@ -108,7 +108,7 @@ export async function connectGitHubAction(formData: FormData): Promise<void> {
     throw new Error("필수 파라미터 누락");
   }
 
-  const project = getDummyProject(projectId);
+  const project = await getProject(projectId);
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
@@ -169,7 +169,7 @@ export async function connectSupabaseAction(
     throw new Error("필수 파라미터 누락");
   }
 
-  const project = getDummyProject(projectId);
+  const project = await getProject(projectId);
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
@@ -230,7 +230,7 @@ export async function createGitHubRepoAction(
     throw new Error("필수 파라미터 누락");
   }
 
-  const project = getDummyProject(projectId);
+  const project = await getProject(projectId);
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
@@ -243,9 +243,9 @@ export async function createGitHubRepoAction(
   const milestone = catalog.getMilestone(project.track, milestoneId);
   const allMilestones = catalog.listMilestones(project.track);
 
-  function completeSubstep(): void {
+  async function completeSubstep(): Promise<void> {
     if (!milestone) return;
-    markSubstepCompleted({
+    await markSubstepCompleted({
       projectId: project!.id,
       milestoneId,
       substepId,
@@ -256,9 +256,9 @@ export async function createGitHubRepoAction(
 
   // 1) idempotent guard — 이미 만들어진 저장소가 있으면 GitHub API를
   //    건너뛰고 substep만 완료 마킹.
-  const existing = getProjectResourceByType(project.id, "github_repo");
+  const existing = await getProjectResourceByType(project.id, "github_repo");
   if (existing) {
-    completeSubstep();
+    await completeSubstep();
     revalidatePath(returnTo);
     redirect(`${returnTo}?repo_created=already`);
   }
@@ -298,7 +298,7 @@ export async function createGitHubRepoAction(
   }
 
   // 4) 성공 — 리소스 저장 + substep 완료 마킹.
-  addProjectResource({
+  await addProjectResource({
     projectId: project.id,
     provider: "github",
     resourceType: "github_repo",
@@ -311,7 +311,7 @@ export async function createGitHubRepoAction(
       isPrivate: repo.isPrivate,
     },
   });
-  completeSubstep();
+  await completeSubstep();
 
   revalidatePath(returnTo);
   redirect(`${returnTo}?repo_created=1`);
@@ -345,7 +345,7 @@ export async function connectVercelAction(formData: FormData): Promise<void> {
     throw new Error("필수 파라미터 누락");
   }
 
-  const project = getDummyProject(projectId);
+  const project = await getProject(projectId);
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
@@ -398,7 +398,7 @@ export async function connectVercelAction(formData: FormData): Promise<void> {
   const milestone = catalog.getMilestone(project.track, milestoneId);
   const allMilestones = catalog.listMilestones(project.track);
   if (milestone) {
-    markSubstepCompleted({
+    await markSubstepCompleted({
       projectId: project.id,
       milestoneId,
       substepId,
@@ -434,7 +434,7 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
     throw new Error("필수 파라미터 누락");
   }
 
-  const project = getDummyProject(projectId);
+  const project = await getProject(projectId);
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
@@ -446,9 +446,9 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
   const milestone = catalog.getMilestone(project.track, milestoneId);
   const allMilestones = catalog.listMilestones(project.track);
 
-  function completeSubstep(): void {
+  async function completeSubstep(): Promise<void> {
     if (!milestone) return;
-    markSubstepCompleted({
+    await markSubstepCompleted({
       projectId: project!.id,
       milestoneId,
       substepId,
@@ -463,7 +463,7 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
     const currentIdx = milestone.substeps.findIndex((s) => s.id === substepId);
     const nextSubstep = milestone.substeps[currentIdx + 1];
     if (nextSubstep && nextSubstep.kind === "verify") {
-      markSubstepCompleted({
+      await markSubstepCompleted({
         projectId: project!.id,
         milestoneId,
         substepId: nextSubstep.id,
@@ -474,18 +474,18 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
   }
 
   // 1) Idempotent guard — 이미 vercel_project 리소스가 있으면 skip
-  const existingDeploy = getProjectResourceByType(
+  const existingDeploy = await getProjectResourceByType(
     project.id,
     "vercel_project",
   );
   if (existingDeploy) {
-    completeSubstep();
+    await completeSubstep();
     revalidatePath(returnTo);
     redirect(`${returnTo}?deploy_created=already`);
   }
 
   // 2) 선행 리소스 + 토큰 조회
-  const githubRepo = getProjectResourceByType(project.id, "github_repo");
+  const githubRepo = await getProjectResourceByType(project.id, "github_repo");
   if (!githubRepo) {
     redirect(`${returnTo}?deploy_error=no_repo`);
   }
@@ -686,7 +686,7 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
     redirect(`${returnTo}?deploy_error=no_url`);
   }
 
-  addProjectResource({
+  await addProjectResource({
     projectId: project.id,
     provider: "vercel",
     resourceType: "vercel_project",
@@ -700,7 +700,7 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
       readyState: finalState,
     },
   });
-  completeSubstep();
+  await completeSubstep();
 
   revalidatePath(returnTo);
   redirect(`${returnTo}?deploy_created=1`);
@@ -732,7 +732,7 @@ export async function createSupabaseProjectAction(
     throw new Error("필수 파라미터 누락");
   }
 
-  const project = getDummyProject(projectId);
+  const project = await getProject(projectId);
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
@@ -743,9 +743,9 @@ export async function createSupabaseProjectAction(
   const milestone = catalog.getMilestone(project.track, milestoneId);
   const allMilestones = catalog.listMilestones(project.track);
 
-  function completeSubstep(): void {
+  async function completeSubstep(): Promise<void> {
     if (!milestone) return;
-    markSubstepCompleted({
+    await markSubstepCompleted({
       projectId: project!.id,
       milestoneId,
       substepId,
@@ -755,12 +755,12 @@ export async function createSupabaseProjectAction(
   }
 
   // 1) Idempotent guard — 이미 supabase_project 리소스가 있으면 skip
-  const existingProject = getProjectResourceByType(
+  const existingProject = await getProjectResourceByType(
     project.id,
     "supabase_project",
   );
   if (existingProject) {
-    completeSubstep();
+    await completeSubstep();
     revalidatePath(returnTo);
     redirect(`${returnTo}?supabase_project_created=already`);
   }
@@ -877,7 +877,7 @@ export async function createSupabaseProjectAction(
   }
 
   // 6) 리소스 저장 (db_pass 포함 — 추후 (마)-4/5에서 필요)
-  addProjectResource({
+  await addProjectResource({
     projectId: project.id,
     provider: "supabase_mgmt",
     resourceType: "supabase_project",
@@ -892,7 +892,7 @@ export async function createSupabaseProjectAction(
       finalStatus,
     },
   });
-  completeSubstep();
+  await completeSubstep();
 
   revalidatePath(returnTo);
   redirect(`${returnTo}?supabase_project_created=1`);
@@ -925,7 +925,7 @@ export async function saveGoogleOAuthKeysAction(
     throw new Error("필수 파라미터 누락");
   }
 
-  const project = getDummyProject(projectId);
+  const project = await getProject(projectId);
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
@@ -936,9 +936,9 @@ export async function saveGoogleOAuthKeysAction(
   const milestone = catalog.getMilestone(project.track, milestoneId);
   const allMilestones = catalog.listMilestones(project.track);
 
-  function completeSubstep(): void {
+  async function completeSubstep(): Promise<void> {
     if (!milestone) return;
-    markSubstepCompleted({
+    await markSubstepCompleted({
       projectId: project!.id,
       milestoneId,
       substepId,
@@ -948,9 +948,9 @@ export async function saveGoogleOAuthKeysAction(
   }
 
   // Idempotent guard
-  const existing = getProjectResourceByType(project.id, "google_oauth_keys");
+  const existing = await getProjectResourceByType(project.id, "google_oauth_keys");
   if (existing) {
-    completeSubstep();
+    await completeSubstep();
     revalidatePath(returnTo);
     redirect(`${returnTo}?google_keys_saved=already`);
   }
@@ -974,7 +974,7 @@ export async function saveGoogleOAuthKeysAction(
   }
 
   // 저장 — externalId는 clientId를 쓴다 (동일 clientId 재저장 방지 idempotency)
-  addProjectResource({
+  await addProjectResource({
     projectId: project.id,
     provider: "google",
     resourceType: "google_oauth_keys",
@@ -985,7 +985,7 @@ export async function saveGoogleOAuthKeysAction(
       clientSecret, // ⚠️ 평문 저장 — Phase 2b Vault로 이관 예정
     },
   });
-  completeSubstep();
+  await completeSubstep();
 
   revalidatePath(returnTo);
   redirect(`${returnTo}?google_keys_saved=1`);
@@ -1015,15 +1015,15 @@ export async function resetGoogleOAuthKeysAction(
     throw new Error("필수 파라미터 누락");
   }
 
-  const project = getDummyProject(projectId);
+  const project = await getProject(projectId);
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
 
   const returnTo = buildReturnTo(locale, projectId, milestoneId);
 
-  removeProjectResourceByType(project.id, "google_oauth_keys");
-  unmarkSubstepCompleted(project.id, milestoneId, substepId);
+  await removeProjectResourceByType(project.id, "google_oauth_keys");
+  await unmarkSubstepCompleted(project.id, milestoneId, substepId);
 
   revalidatePath(returnTo);
   redirect(`${returnTo}?google_keys_reset=1`);
@@ -1060,7 +1060,7 @@ export async function enableGoogleProviderAction(
     throw new Error("필수 파라미터 누락");
   }
 
-  const project = getDummyProject(projectId);
+  const project = await getProject(projectId);
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
@@ -1071,9 +1071,9 @@ export async function enableGoogleProviderAction(
   const milestone = catalog.getMilestone(project.track, milestoneId);
   const allMilestones = catalog.listMilestones(project.track);
 
-  function completeSubstep(): void {
+  async function completeSubstep(): Promise<void> {
     if (!milestone) return;
-    markSubstepCompleted({
+    await markSubstepCompleted({
       projectId: project!.id,
       milestoneId,
       substepId,
@@ -1083,7 +1083,7 @@ export async function enableGoogleProviderAction(
   }
 
   // 1) 선행 리소스: Supabase 프로젝트
-  const supabaseProjectResource = getProjectResourceByType(
+  const supabaseProjectResource = await getProjectResourceByType(
     project.id,
     "supabase_project",
   );
@@ -1102,7 +1102,7 @@ export async function enableGoogleProviderAction(
   }
 
   // 2) 선행 리소스: Google OAuth 키
-  const googleKeysResource = getProjectResourceByType(
+  const googleKeysResource = await getProjectResourceByType(
     project.id,
     "google_oauth_keys",
   );
@@ -1156,11 +1156,11 @@ export async function enableGoogleProviderAction(
 
   // 5) supabase_project metadata에 플래그 기록 — (마)-5에서 이 플래그로
   // (마)-4 완료 여부를 검증할 수 있다.
-  updateProjectResourceMetadata(project.id, "supabase_project", {
+  await updateProjectResourceMetadata(project.id, "supabase_project", {
     googleProviderEnabled: true,
   });
 
-  completeSubstep();
+  await completeSubstep();
 
   revalidatePath(returnTo);
   redirect(`${returnTo}?google_provider_enabled=1`);
@@ -1201,7 +1201,7 @@ export async function installAuthUiAction(
     throw new Error("필수 파라미터 누락");
   }
 
-  const project = getDummyProject(projectId);
+  const project = await getProject(projectId);
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
@@ -1212,9 +1212,9 @@ export async function installAuthUiAction(
   const milestone = catalog.getMilestone(project.track, milestoneId);
   const allMilestones = catalog.listMilestones(project.track);
 
-  function completeSubstep(): void {
+  async function completeSubstep(): Promise<void> {
     if (!milestone) return;
-    markSubstepCompleted({
+    await markSubstepCompleted({
       projectId: project!.id,
       milestoneId,
       substepId,
@@ -1227,7 +1227,7 @@ export async function installAuthUiAction(
     const currentIdx = milestone.substeps.findIndex((s) => s.id === substepId);
     const nextSubstep = milestone.substeps[currentIdx + 1];
     if (nextSubstep && nextSubstep.kind === "verify") {
-      markSubstepCompleted({
+      await markSubstepCompleted({
         projectId: project!.id,
         milestoneId,
         substepId: nextSubstep.id,
@@ -1238,18 +1238,18 @@ export async function installAuthUiAction(
   }
 
   // 1) 선행 리소스 + 토큰 조회
-  const githubRepo = getProjectResourceByType(project.id, "github_repo");
+  const githubRepo = await getProjectResourceByType(project.id, "github_repo");
   if (!githubRepo) {
     redirect(`${returnTo}?install_auth_ui_error=no_repo`);
   }
-  const supabaseProjectResource = getProjectResourceByType(
+  const supabaseProjectResource = await getProjectResourceByType(
     project.id,
     "supabase_project",
   );
   if (!supabaseProjectResource) {
     redirect(`${returnTo}?install_auth_ui_error=no_supabase_project`);
   }
-  const vercelProjectResource = getProjectResourceByType(
+  const vercelProjectResource = await getProjectResourceByType(
     project.id,
     "vercel_project",
   );
@@ -1322,7 +1322,7 @@ export async function installAuthUiAction(
       );
     }
     // metadata에 캐시 (이후 재실행 시 API 호출 절약)
-    updateProjectResourceMetadata(project.id, "supabase_project", {
+    await updateProjectResourceMetadata(project.id, "supabase_project", {
       anonKey,
     });
   }
@@ -1476,10 +1476,10 @@ export async function installAuthUiAction(
   }
 
   // 8) 플래그 저장 + substep 완료 (READY 또는 timeout — 파일은 반드시 올라감)
-  updateProjectResourceMetadata(project.id, "supabase_project", {
+  await updateProjectResourceMetadata(project.id, "supabase_project", {
     authUiInstalled: true,
   });
-  completeSubstep();
+  await completeSubstep();
 
   revalidatePath(returnTo);
   // READY → 즉시 확인, pending → "배포 중" 안내

@@ -19,9 +19,9 @@ import {
   TrackBadge,
 } from "@/components/milestone";
 import {
-  getDummyProject,
+  getProject,
   getProjectProgress,
-} from "@/lib/projects/in-memory-store";
+} from "@/lib/projects/project-store";
 
 interface ProjectTreePageProps {
   params: Promise<{ locale: string; id: string }>;
@@ -39,7 +39,7 @@ export default async function ProjectTreePage({
     return null;
   }
 
-  const project = getDummyProject(id);
+  const project = await getProject(id);
   if (!project || project.userId !== user.id) {
     notFound();
   }
@@ -49,7 +49,7 @@ export default async function ProjectTreePage({
   if (!track) notFound();
 
   const milestones = catalog.listMilestones(project.track);
-  const progress = getProjectProgress(
+  const progress = await getProjectProgress(
     project.id,
     milestones.map((m) => m.id),
   );

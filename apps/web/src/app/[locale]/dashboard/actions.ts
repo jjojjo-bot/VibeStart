@@ -3,10 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { getCurrentUser } from "@/lib/auth/dal";
-import {
-  deleteDummyProject,
-  getDummyProject,
-} from "@/lib/projects/in-memory-store";
+import { deleteProject, getProject } from "@/lib/projects/project-store";
 
 export async function deleteProjectAction(formData: FormData): Promise<void> {
   const user = await getCurrentUser();
@@ -15,11 +12,11 @@ export async function deleteProjectAction(formData: FormData): Promise<void> {
   const projectId = String(formData.get("projectId") ?? "");
   if (!projectId) throw new Error("필수 파라미터 누락");
 
-  const project = getDummyProject(projectId);
+  const project = await getProject(projectId);
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
 
-  deleteDummyProject(projectId);
+  await deleteProject(projectId);
   revalidatePath("/dashboard");
 }

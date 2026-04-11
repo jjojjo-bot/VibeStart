@@ -11,7 +11,7 @@ import { redirect } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 
 import { getCurrentUser } from "@/lib/auth/dal";
-import { createDummyProject } from "@/lib/projects/in-memory-store";
+import { createProject } from "@/lib/projects/project-store";
 
 const VALID_TRACKS = ["static", "dynamic", "ai", "ecommerce"] as const;
 type ValidTrack = (typeof VALID_TRACKS)[number];
@@ -56,7 +56,7 @@ export async function createProjectAction(formData: FormData): Promise<void> {
       ? rawName.trim()
       : "my-portfolio";
 
-  const project = createDummyProject({
+  const project = await createProject({
     userId: user.id,
     track: rawTrack,
     name,
