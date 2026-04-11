@@ -148,7 +148,7 @@
 <div class="vibestart-cta">
   <strong>🚀 바이브코딩, 직접 해보고 싶다면?</strong><br />
   Git, Node.js, VS Code 설치부터 첫 배포까지 — 복사 붙여넣기만으로 끝.<br />
-  <a href="https://vibe-start-web.vercel.app" target="_blank" rel="noopener">VibeStart에서 무료로 시작하기 →</a>
+  <a href="https://vibe-start.com" target="_blank" rel="noopener">VibeStart에서 무료로 시작하기 →</a>
 </div>
 ```
 
@@ -229,7 +229,7 @@
 ## 11. 내부 링크 규칙
 
 - 관련 글 링크는 1daymillion.com 내의 다른 바이브코딩 글로 연결한다.
-- 아직 발행 전인 글은 VibeStart 블로그 링크(`https://vibe-start-web.vercel.app/blog/슬러그`)로 대체한다.
+- 아직 발행 전인 글은 VibeStart 블로그 링크(`https://vibe-start.com/blog/슬러그`)로 대체한다.
 - 글이 쌓이면 1daymillion.com 내부 링크로 교체한다.
 
 ---
