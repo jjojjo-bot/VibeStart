@@ -802,7 +802,9 @@
     "copiedButton": "कॉपी हो गया!",
     "doneButton": "push कर दिया",
     "waitingRepo": "पहले रिपॉजिटरी बनाएं",
-    "completedMessage": "प्रोजेक्ट GitHub पर अपलोड हो गया"
+    "completedMessage": "प्रोजेक्ट GitHub पर अपलोड हो गया",
+    "folderMovedHint": "प्रोजेक्ट फ़ोल्डर कहीं और ले गए? Claude Code से कहें",
+    "folderMovedPrompt": "इस प्रोजेक्ट को GitHub पर अपलोड करो"
   },
   "CreateSupabaseProject": {
     "title": "Supabase प्रोजेक्ट बनाएं",

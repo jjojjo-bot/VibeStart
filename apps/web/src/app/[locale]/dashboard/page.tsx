@@ -84,14 +84,14 @@ export default async function DashboardPage({
   return (
     <main id="main-content" className="mx-auto max-w-4xl px-6 py-16">
       <header className="mb-10">
-        <div className="flex items-end justify-between">
-          <div>
-            <h1 className="text-3xl font-bold">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div className="min-w-0">
+            <h1 className="truncate text-3xl font-bold">
               {t("welcome", { name: user.displayName })}
             </h1>
-            <p className="mt-1 text-sm text-muted-foreground">{user.email}</p>
+            <p className="mt-1 truncate text-sm text-muted-foreground">{user.email}</p>
           </div>
-          <form action={signOutAction}>
+          <form action={signOutAction} className="shrink-0">
             <button
               type="submit"
               className="rounded-md border border-border px-3 py-1.5 text-xs text-muted-foreground hover:bg-accent hover:text-foreground"

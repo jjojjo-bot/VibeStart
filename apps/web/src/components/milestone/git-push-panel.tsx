@@ -25,6 +25,8 @@ export interface GitPushPanelProps {
     doneButton: string;
     waitingRepo: string;
     completedMessage: string;
+    folderMovedHint: string;
+    folderMovedPrompt: string;
   };
   /** 완료 마킹 서버 액션 */
   onComplete?: () => Promise<void>;
@@ -116,6 +118,30 @@ git push -u origin main`;
             >
               {copied ? labels.copiedButton : labels.copyButton}
             </Button>
+          </div>
+
+          {/* 폴더 이동 힌트 */}
+          <div className="mt-3 rounded-md border border-border bg-background/40 p-3">
+            <p className="text-xs text-muted-foreground">
+              💡 {labels.folderMovedHint}
+            </p>
+            <div className="mt-2 flex items-start gap-2">
+              <code className="min-w-0 flex-1 rounded border border-border bg-muted px-2 py-1.5 font-mono text-xs italic text-muted-foreground">
+                &ldquo;{labels.folderMovedPrompt}&rdquo;
+              </code>
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={async () => {
+                  try {
+                    await navigator.clipboard.writeText(labels.folderMovedPrompt);
+                  } catch { /* ignore */ }
+                }}
+                className="shrink-0 text-xs"
+              >
+                {labels.copyButton}
+              </Button>
+            </div>
           </div>
 
           {completed ? (

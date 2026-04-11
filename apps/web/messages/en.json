@@ -802,7 +802,9 @@
     "copiedButton": "Copied!",
     "doneButton": "I pushed it",
     "waitingRepo": "Create a repository first",
-    "completedMessage": "Your project is on GitHub"
+    "completedMessage": "Your project is on GitHub",
+    "folderMovedHint": "Moved your project folder? Ask Claude Code instead",
+    "folderMovedPrompt": "Push this project to GitHub"
   },
   "CreateSupabaseProject": {
     "title": "Create a Supabase project",

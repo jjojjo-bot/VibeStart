@@ -11,7 +11,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 import type { TrackDefinition } from "@vibestart/shared-types";
 
-import { redirect } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { TrackBadge } from "@/components/milestone";
 import { Button } from "@/components/ui/button";
@@ -46,6 +46,14 @@ export default async function NewProjectPage({
       id="main-content"
       className="mx-auto max-w-4xl px-6 py-16"
     >
+      <nav className="mb-6">
+        <Link
+          href="/dashboard"
+          className="text-xs text-muted-foreground underline underline-offset-2 hover:text-foreground"
+        >
+          ← {tProjects("breadcrumbDashboard")}
+        </Link>
+      </nav>
       <header className="mb-10 text-center">
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
           {tProjects("newTitle")}

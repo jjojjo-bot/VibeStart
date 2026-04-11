@@ -802,7 +802,9 @@
     "copiedButton": "복사됨!",
     "doneButton": "push 완료했어요",
     "waitingRepo": "먼저 저장소를 만들어 주세요",
-    "completedMessage": "GitHub에 프로젝트가 올라갔어요"
+    "completedMessage": "GitHub에 프로젝트가 올라갔어요",
+    "folderMovedHint": "프로젝트 폴더를 다른 곳으로 옮겼나요? Claude Code에게 요청해 보세요",
+    "folderMovedPrompt": "이 프로젝트를 GitHub에 올려줘"
   },
   "CreateSupabaseProject": {
     "title": "Supabase 프로젝트 만들기",

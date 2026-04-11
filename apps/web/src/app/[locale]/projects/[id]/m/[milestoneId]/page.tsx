@@ -1083,14 +1083,14 @@ export default async function MilestoneRunPage({
   return (
     <main id="main-content" className="mx-auto max-w-6xl px-6 py-12">
       {/* 브레드크럼: 대시보드 / 프로젝트명 / 마일스톤 제목 */}
-      <nav className="mb-6 flex items-center gap-1.5 text-xs text-muted-foreground">
-        <Link href="/dashboard" className="hover:text-foreground">
+      <nav className="relative z-10 mb-6 flex items-center gap-1.5 text-xs text-muted-foreground">
+        <Link href="/dashboard" className="underline underline-offset-2 hover:text-foreground">
           {tProjects("breadcrumbDashboard")}
         </Link>
         <span>/</span>
         <Link
           href={`/projects/${project.id}`}
-          className="hover:text-foreground"
+          className="underline underline-offset-2 hover:text-foreground"
         >
           {project.name}
         </Link>
@@ -1290,6 +1290,8 @@ export default async function MilestoneRunPage({
                   doneButton: tGitPush("doneButton"),
                   waitingRepo: tGitPush("waitingRepo"),
                   completedMessage: tGitPush("completedMessage"),
+                  folderMovedHint: tGitPush("folderMovedHint"),
+                  folderMovedPrompt: tGitPush("folderMovedPrompt"),
                 }}
                 onComplete={async () => {
                   "use server";

@@ -802,7 +802,9 @@
     "copiedButton": "已复制!",
     "doneButton": "我已经 push 了",
     "waitingRepo": "请先创建仓库",
-    "completedMessage": "项目已上传到 GitHub"
+    "completedMessage": "项目已上传到 GitHub",
+    "folderMovedHint": "移动了项目文件夹？试试让 Claude Code 帮你",
+    "folderMovedPrompt": "把这个项目上传到 GitHub"
   },
   "CreateSupabaseProject": {
     "title": "创建 Supabase 项目",
