@@ -42,7 +42,7 @@ export async function generateMetadata({
     verification: {
       google: "KRpn29rCSZ7cSBZ-Q_al_8GqvENUm2q3aqiXthtQN8U",
       other: {
-        "naver-site-verification": "466c1c6c89a57616f9fcf3839c4848d47b6e9fef",
+        "naver-site-verification": "efcb55e9bb398a742f5c66fb09bcf0c4fd8cc6e1",
       },
     },
     title: {
