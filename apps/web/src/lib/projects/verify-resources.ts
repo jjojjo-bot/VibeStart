@@ -8,11 +8,12 @@
 import "server-only";
 
 import { fetchGitHubRepoIfExists } from "@/lib/adapters/github/github-adapter";
-import { getLatestDeployment } from "@/lib/adapters/vercel/vercel-adapter";
+import { vercelProjectExists } from "@/lib/adapters/vercel/vercel-adapter";
 import { getOAuthAccessToken } from "@/lib/auth/oauth-connections";
 import {
   getProjectResourceByType,
   removeProjectResourceByType,
+  unmarkSubstepCompleted,
   type StoredProjectResource,
 } from "@/lib/projects/project-store";
 
@@ -38,6 +39,8 @@ export async function verifyProjectResources(
     results.push({ resourceType: "github_repo", status: result });
     if (result === "gone") {
       await removeProjectResourceByType(projectId, "github_repo");
+      // 관련 substep 완료 상태도 정리
+      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s2-create-repo");
     }
   }
 
@@ -48,6 +51,9 @@ export async function verifyProjectResources(
     results.push({ resourceType: "vercel_project", status: result });
     if (result === "gone") {
       await removeProjectResourceByType(projectId, "vercel_project");
+      // 배포 관련 substep 완료 상태도 정리
+      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s4-first-deploy");
+      await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s5-verify-url");
     }
   }
 
@@ -81,15 +87,9 @@ async function verifyVercelProject(
     const token = await getOAuthAccessToken(userId, "vercel");
     if (!token) return "skipped";
 
-    const deployment = await getLatestDeployment(token, resource.externalId);
-    // deployment가 null이어도 프로젝트 자체는 존재할 수 있음
-    // 404 에러가 발생하면 gone으로 처리
-    return deployment !== null ? "valid" : "gone";
-  } catch (err) {
-    // 404 = 프로젝트 삭제됨
-    if (err instanceof Error && err.message.includes("404")) {
-      return "gone";
-    }
+    const exists = await vercelProjectExists(token, resource.externalId);
+    return exists ? "valid" : "gone";
+  } catch {
     return "skipped";
   }
 }

@@ -169,6 +169,22 @@ export async function createVercelProject(
   throw new Error(`vercel:http_${res.status}`);
 }
 
+/**
+ * Vercel 프로젝트가 존재하는지 확인한다. 삭제됐으면 false.
+ */
+export async function vercelProjectExists(
+  accessToken: string,
+  projectId: string,
+): Promise<boolean> {
+  const res = await fetch(
+    `${VERCEL_API_BASE}/v9/projects/${encodeURIComponent(projectId)}`,
+    { method: "GET", headers: VERCEL_HEADERS(accessToken) },
+  );
+  if (res.status === 404) return false;
+  if (!res.ok) throw new Error(`vercel:http_${res.status}`);
+  return true;
+}
+
 /** Vercel 배포 조회 결과. */
 export interface VercelDeploymentResult {
   id: string;
