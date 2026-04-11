@@ -772,8 +772,11 @@ Success! Created ${path}
   };
 }
 
-function firstRunStep(projectName: string, goal: Goal, env: string, t: T): SetupStep {
+function firstRunStep(projectName: string, goal: Goal, variant: "wsl" | "mac", env: string, t: T): SetupStep {
   const hasFeBe = goal === "web-python" || goal === "web-java";
+  const openCmd = variant === "mac"
+    ? `open -a "Visual Studio Code" ~/${projectName}`
+    : `code ~/${projectName}`;
 
   return {
     id: "first-run",
@@ -784,7 +787,7 @@ function firstRunStep(projectName: string, goal: Goal, env: string, t: T): Setup
     detailedGuide: hasFeBe
       ? t("firstRun.detailedGuide.withBackend")
       : t("firstRun.detailedGuide.simple"),
-    script: `code ~/${projectName}`,
+    script: openCmd,
   };
 }
 
@@ -822,7 +825,7 @@ function appendProjectSteps(
   steps.push(architectureStep(goal, projectName, env, t));
 
   // 첫 실행
-  steps.push(firstRunStep(projectName, goal, env, t));
+  steps.push(firstRunStep(projectName, goal, variant, env, t));
 }
 
 // ─── 메인 ───
