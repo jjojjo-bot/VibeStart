@@ -62,11 +62,20 @@ export async function generateMetadata({
       siteName: "VibeStart",
       locale: LOCALE_MAP[locale] ?? "ko_KR",
       type: "website",
+      images: [
+        {
+          url: `${siteUrl}/${locale}/opengraph-image`,
+          width: 1200,
+          height: 630,
+          alt: "VibeStart — 바이브코딩, 여기서 시작하세요",
+        },
+      ],
     },
     twitter: {
       card: "summary_large_image",
       title: t("twitter.title"),
       description: t("twitter.description"),
+      images: [`${siteUrl}/${locale}/opengraph-image`],
     },
     robots: {
       index: true,
