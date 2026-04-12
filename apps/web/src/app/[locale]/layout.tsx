@@ -64,7 +64,7 @@ export async function generateMetadata({
       type: "website",
       images: [
         {
-          url: `${siteUrl}/${locale}/opengraph-image`,
+          url: `${siteUrl}/en/opengraph-image`,
           width: 1200,
           height: 630,
           alt: "VibeStart — 바이브코딩, 여기서 시작하세요",
@@ -75,7 +75,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: t("twitter.title"),
       description: t("twitter.description"),
-      images: [`${siteUrl}/${locale}/opengraph-image`],
+      images: [`${siteUrl}/en/opengraph-image`],
     },
     robots: {
       index: true,
