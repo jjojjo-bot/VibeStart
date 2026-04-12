@@ -122,15 +122,20 @@ export async function createVercelProject(
   accessToken: string,
   projectName: string,
   gitRepo: string,
+  rootDirectory?: string,
 ): Promise<VercelProjectResult> {
+  const body: Record<string, unknown> = {
+    name: projectName,
+    framework: "nextjs",
+    gitRepository: { type: "github", repo: gitRepo },
+  };
+  if (rootDirectory) {
+    body.rootDirectory = rootDirectory;
+  }
   const res = await fetch(`${VERCEL_API_BASE}/v10/projects`, {
     method: "POST",
     headers: VERCEL_HEADERS(accessToken),
-    body: JSON.stringify({
-      name: projectName,
-      framework: "nextjs",
-      gitRepository: { type: "github", repo: gitRepo },
-    }),
+    body: JSON.stringify(body),
   });
 
   if (res.ok) {

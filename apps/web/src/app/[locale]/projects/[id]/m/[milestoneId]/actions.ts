@@ -544,12 +544,20 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
   }
 
   // 4) Vercel 프로젝트 생성 + GitHub repo 연결
+  // goal에 따라 rootDirectory 결정: frontend/backend 분리 구조인 트랙은
+  // Vercel이 frontend/ 폴더를 빌드 루트로 사용해야 한다.
+  const GOALS_WITH_FRONTEND_DIR = new Set(["web-python", "web-java"]);
+  const rootDirectory = project.goal && GOALS_WITH_FRONTEND_DIR.has(project.goal)
+    ? "frontend"
+    : undefined;
+
   let vercelProject: { id: string; name: string } | null = null;
   try {
     vercelProject = await createVercelProject(
       vercelToken,
       project.slug,
       gitRepoFullName,
+      rootDirectory,
     );
   } catch (err) {
     console.error("[firstDeployAction] createVercelProject failed", {
