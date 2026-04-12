@@ -293,6 +293,99 @@ export async function pushFileToGitHub(
 }
 
 /**
+ * 여러 파일을 **단일 커밋**으로 push한다.
+ *
+ * GitHub Git Trees API를 사용해 blob → tree → commit → ref update 순으로
+ * 처리하므로 파일이 몇 개든 커밋 1개, Vercel 배포 트리거 1회.
+ */
+export async function pushFilesToGitHub(
+  accessToken: string,
+  owner: string,
+  repo: string,
+  files: Array<{ path: string; content: string }>,
+  commitMessage: string,
+): Promise<{ commitSha: string }> {
+  const headers: Record<string, string> = {
+    Authorization: `Bearer ${accessToken}`,
+    Accept: "application/vnd.github+json",
+    "Content-Type": "application/json",
+    "User-Agent": "VibeStart",
+    "X-GitHub-Api-Version": "2022-11-28",
+  };
+  const apiBase = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`;
+
+  // 1) 현재 HEAD의 commit SHA + tree SHA 가져오기
+  const refRes = await fetch(`${apiBase}/git/ref/heads/main`, {
+    method: "GET",
+    headers,
+  });
+  if (!refRes.ok) throw new Error(`github:ref_http_${refRes.status}`);
+  const refData = (await refRes.json()) as { object: { sha: string } };
+  const headCommitSha = refData.object.sha;
+
+  const commitRes = await fetch(`${apiBase}/git/commits/${headCommitSha}`, {
+    method: "GET",
+    headers,
+  });
+  if (!commitRes.ok) throw new Error(`github:commit_http_${commitRes.status}`);
+  const commitData = (await commitRes.json()) as { tree: { sha: string } };
+  const baseTreeSha = commitData.tree.sha;
+
+  // 2) 각 파일의 blob 생성
+  const treeItems: Array<{ path: string; mode: string; type: string; sha: string }> = [];
+  for (const file of files) {
+    const blobRes = await fetch(`${apiBase}/git/blobs`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        content: file.content,
+        encoding: "utf-8",
+      }),
+    });
+    if (!blobRes.ok) throw new Error(`github:blob_http_${blobRes.status}`);
+    const blobData = (await blobRes.json()) as { sha: string };
+    treeItems.push({
+      path: file.path,
+      mode: "100644",
+      type: "blob",
+      sha: blobData.sha,
+    });
+  }
+
+  // 3) 새 tree 생성 (base_tree를 지정해 기존 파일 유지)
+  const treeRes = await fetch(`${apiBase}/git/trees`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ base_tree: baseTreeSha, tree: treeItems }),
+  });
+  if (!treeRes.ok) throw new Error(`github:tree_http_${treeRes.status}`);
+  const treeData = (await treeRes.json()) as { sha: string };
+
+  // 4) 커밋 생성
+  const newCommitRes = await fetch(`${apiBase}/git/commits`, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      message: commitMessage,
+      tree: treeData.sha,
+      parents: [headCommitSha],
+    }),
+  });
+  if (!newCommitRes.ok) throw new Error(`github:newcommit_http_${newCommitRes.status}`);
+  const newCommitData = (await newCommitRes.json()) as { sha: string };
+
+  // 5) refs/heads/main 업데이트
+  const updateRefRes = await fetch(`${apiBase}/git/refs/heads/main`, {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify({ sha: newCommitData.sha }),
+  });
+  if (!updateRefRes.ok) throw new Error(`github:updateref_http_${updateRefRes.status}`);
+
+  return { commitSha: newCommitData.sha };
+}
+
+/**
  * 특정 owner/name 저장소가 존재하는지 확인하고, 있으면 VcsRepo로 매핑해
  * 반환한다. 없으면 null. (라)-2 idempotent recovery 용도 — Phase 2a의
  * in-memory project_resources가 dev 재시작으로 비워졌을 때 GitHub.com에는

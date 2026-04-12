@@ -52,6 +52,7 @@ import {
 import {
   getFileFromGitHub,
   pushFileToGitHub,
+  pushFilesToGitHub,
 } from "@/lib/adapters/github/github-adapter";
 import {
   addSupabaseDependency,
@@ -1422,33 +1423,23 @@ export async function installAuthUiAction(
     : "";
 
   try {
-    // 순서: supabase client → callback route → page.tsx → package.json
-    await pushFileToGitHub(
-      ghToken, owner, repoName,
-      `${pathPrefix}src/lib/supabase.ts`,
-      supabaseClientFile,
-      "feat: add Supabase client via VibeStart",
-    );
-    await pushFileToGitHub(
-      ghToken, owner, repoName,
-      `${pathPrefix}src/app/auth/callback/route.ts`,
-      authCallbackRoute,
-      "feat: add OAuth callback route via VibeStart",
-    );
-    await pushFileToGitHub(
-      ghToken, owner, repoName,
-      `${pathPrefix}src/app/page.tsx`,
-      pageTsx,
-      "feat: add Google sign-in page via VibeStart",
-    );
+    // 모든 Auth UI 파일을 한 커밋으로 push (Vercel 배포 1회만 트리거)
+    const filesToPush: Array<{ path: string; content: string }> = [
+      { path: `${pathPrefix}src/lib/supabase.ts`, content: supabaseClientFile },
+      { path: `${pathPrefix}src/app/auth/callback/route.ts`, content: authCallbackRoute },
+      { path: `${pathPrefix}src/app/page.tsx`, content: pageTsx },
+    ];
     if (updatedPackageJson) {
-      await pushFileToGitHub(
-        ghToken, owner, repoName,
-        `${pathPrefix}package.json`,
-        updatedPackageJson,
-        "feat: add @supabase/supabase-js dependency via VibeStart",
-      );
+      filesToPush.push({
+        path: `${pathPrefix}package.json`,
+        content: updatedPackageJson,
+      });
     }
+    await pushFilesToGitHub(
+      ghToken, owner, repoName,
+      filesToPush,
+      "feat: add Google sign-in with Supabase Auth via VibeStart",
+    );
   } catch (err) {
     console.error("[installAuthUiAction] pushFileToGitHub failed", {
       userId: user.id,
