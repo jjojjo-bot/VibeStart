@@ -1,0 +1,327 @@
+---
+title: "Deploy Your Vibe-Coded App to Vercel for Free: Complete Beginner Guide (2026)"
+description: "A step-by-step guide to deploying your vibe-coded Next.js app to Vercel for free. Covers GitHub push, Vercel connection, environment variables, and custom domains — beginners can follow along easily."
+date: "2026-04-18"
+tags: ["vibe coding deploy", "Vercel deploy", "vibe coding", "Vercel free", "Next.js deploy", "GitHub deploy", "web app deploy", "Vercel custom domain", "beginner deploy", "vibe coding Vercel"]
+---
+
+## 🌍 If You Only Build It, Nobody Can See It
+
+If you've built an app with vibe coding, you're halfway there. But an app that only runs on `localhost:3000` is visible only to you. For others to access it, you need to "deploy" it to the internet. The word "deploy" might sound intimidating, but with Vercel, a few clicks get you a URL that anyone worldwide can visit.
+
+Vercel is a hosting platform run by the company that created Next.js. It has the best compatibility with Next.js projects, and its free plan (Hobby) is more than sufficient for personal projects. This guide covers the entire process — from pushing code to GitHub, deploying on Vercel, setting environment variables, to connecting a custom domain.
+
+## 📋 Pre-Deployment Checklist
+
+Verify the following items before starting deployment. Missing even one will cause errors during the process.
+
+### 💻 Required Prerequisites
+
+| Item | How to Verify | Notes |
+|------|--------------|-------|
+| Node.js 18+ | `node --version` | Upgrade if below 18 |
+| Git | `git --version` | Confirm version number appears |
+| GitHub account | Log in at [github.com](https://github.com) | Free account is sufficient |
+| Vercel account | Sign up at [vercel.com](https://vercel.com) | Signing up with GitHub is recommended |
+| Deployable project | `npm run build` succeeds | Build errors will cause deployment failure |
+
+### 📌 Test the Build First
+
+Always verify that the build succeeds locally before deploying. Navigate to your project folder in the terminal and run:
+
+```bash
+npm run build
+```
+
+A successful build creates a `.next` folder and displays a message similar to "Compiled successfully" in the terminal. If build errors occur, read the error messages, fix them, and try again. Vercel goes through the same build process, so if it fails locally, it will definitely fail on Vercel too.
+
+> 💡 **Tip**: If a build error occurs, paste the error message into Cursor's chat and ask "fix this error" — most issues get resolved quickly this way.
+
+## 📤 Pushing Code to GitHub
+
+Vercel works by connecting to a GitHub repository. If your code isn't on GitHub yet, follow these steps.
+
+### 📌 Create a GitHub Repository
+
+1. Log in to [github.com](https://github.com).
+2. Click the `+` button in the top right and select "New repository."
+3. Enter your project name (e.g., `my-app`) as the Repository name.
+4. Choose Public or Private. Private repositories work fine with Vercel deployment.
+5. Click "Create repository."
+
+### 📌 Push Local Code to GitHub
+
+After creating the repository, GitHub displays the commands to run. Navigate to your project folder in the terminal and execute these commands in order:
+
+```bash
+git init
+git add .
+git commit -m "feat: prepare initial version for deployment"
+git branch -M main
+git remote add origin https://github.com/username/my-app.git
+git push -u origin main
+```
+
+When `git push` succeeds, refresh the GitHub repository page and your files should appear. This confirms the push was successful.
+
+### 📌 Verify .gitignore
+
+Check that your `.gitignore` file includes these entries. Projects created with `create-next-app` include them by default.
+
+```
+node_modules/
+.next/
+.env.local
+.env
+```
+
+If `node_modules` or `.env` files get uploaded to GitHub, it creates security issues or unnecessarily bloats the repository. Add any missing entries to `.gitignore` and commit again.
+
+> ⚠️ **Warning**: If your `.env` file contains API keys or passwords, never push it to GitHub. Once secret information is uploaded, it remains in the history and is difficult to remove.
+
+## 🚀 Deploying the Project to Vercel
+
+### 📌 Create a Vercel Account
+
+1. Visit [vercel.com](https://vercel.com).
+2. Click "Sign Up."
+3. Select "Continue with GitHub" to sign up with your GitHub account.
+
+Signing up with GitHub automatically sets up repository connections, making it the most convenient option. Email signup requires connecting GitHub separately later.
+
+### 📌 Add a New Project
+
+1. From the Vercel dashboard, click "Add New..." → "Project."
+2. In the "Import Git Repository" screen, find the repository you just pushed.
+3. If the repository isn't visible, click "Adjust GitHub App Permissions" to grant Vercel access to that repository.
+4. Select the repository and click "Import."
+
+### 📌 Verify Build Settings
+
+Vercel analyzes your project and auto-fills the configuration. For Next.js projects, settings typically look like this:
+
+| Setting | Default Value |
+|---------|--------------|
+| Framework Preset | Next.js |
+| Build Command | `next build` or `npm run build` |
+| Output Directory | `.next` |
+| Install Command | `npm install` |
+
+Leave the default settings as they are. If you use pnpm, change the Install Command to `pnpm install` and Build Command to `pnpm build`.
+
+### 📌 Click Deploy
+
+Click the "Deploy" button and Vercel will fetch your code, build it, and deploy. Progress is shown in real-time logs. It typically completes in 1-3 minutes, and upon success, a congratulations screen appears with your deployment URL.
+
+The deployed URL follows the format `https://project-name.vercel.app`. Open this URL in your browser to confirm it's accessible. If the page displays correctly, deployment is successful.
+
+## ⚙️ Setting Environment Variables
+
+If your app uses environment variables like API keys or database URLs, you need to configure them on Vercel too. This is the process of registering values from your local `.env.local` file in Vercel.
+
+### 📌 How to Add Environment Variables
+
+1. Select your project from the Vercel dashboard.
+2. Go to the "Settings" tab.
+3. Click "Environment Variables" in the left menu.
+4. Enter the variable name in Key (e.g., `NEXT_PUBLIC_API_KEY`) and its value in Value.
+5. Select which environments to apply it to (Production, Preview, Development).
+6. Click "Save."
+
+### 📌 When Environment Variables Take Effect
+
+After adding or modifying environment variables, you need to redeploy. Go to the "Deployments" tab in the Vercel dashboard, click the three-dot menu on the most recent deployment, and select "Redeploy."
+
+| Variable Prefix | Accessible From |
+|----------------|----------------|
+| `NEXT_PUBLIC_` | Browser + Server |
+| No prefix | Server only (API Routes, Server Components) |
+
+Variables without the `NEXT_PUBLIC_` prefix are not accessible from the browser. Store values that shouldn't be exposed (like API keys) without the prefix and use them only in server-side code.
+
+> ⚠️ **Warning**: Variables with the `NEXT_PUBLIC_` prefix are included in browser code, so anyone can see them if you store secret keys with this prefix. Always store sensitive information without the prefix.
+
+## 🔄 Automatic Deployments and Preview Deployments
+
+One of Vercel's most convenient features is automatic deployment. Just push code to GitHub and Vercel handles building and deploying automatically.
+
+### 📌 Production Deployment (main branch)
+
+Pushing code to the `main` branch automatically deploys to the production environment.
+
+```bash
+git add .
+git commit -m "fix: correct typo"
+git push origin main
+```
+
+Changes reflect on the production URL within 1-3 minutes after pushing.
+
+### 📌 Preview Deployment (other branches)
+
+Pushing to a non-`main` branch or creating a Pull Request makes Vercel generate a separate preview URL. You can check changes at this URL before merging to `main`.
+
+```bash
+git checkout -b feature/new-section
+# make code changes
+git add .
+git commit -m "feat: add new section"
+git push origin feature/new-section
+```
+
+Preview deployments are especially useful for team workflows, but even solo developers can use them to verify changes before they go live in production.
+
+## 🌐 Connecting a Custom Domain
+
+Instead of the `my-app.vercel.app` address, you can connect your own domain (e.g., `myportfolio.com`).
+
+### 📌 Purchasing a Domain
+
+If you don't have a domain yet, you can purchase one from these services:
+
+| Service | Features | Price Range (Annual) |
+|---------|----------|---------------------|
+| Namecheap | International, affordable | $8-15 |
+| GoDaddy | International, well-known | $10-20 |
+| Cloudflare Registrar | At-cost pricing, DNS integration | $8-12 |
+
+A `.com` domain is the safest choice but often already registered. Consider alternatives like `.dev`, `.io`, or `.site`.
+
+### 📌 Add Domain in Vercel
+
+1. From the Vercel dashboard, select your project → "Settings" → "Domains."
+2. Enter your purchased domain (e.g., `myportfolio.com`) and click "Add."
+3. Vercel displays DNS configuration instructions.
+
+### 📌 DNS Configuration
+
+In the DNS management page of your domain registrar, add the records Vercel provides:
+
+```
+Type: A
+Name: @
+Value: 76.76.21.21
+
+Type: CNAME
+Name: www
+Value: cname.vercel-dns.com
+```
+
+DNS propagation can take up to 48 hours, but most changes reflect within 30 minutes to 2 hours. When the status changes to "Valid Configuration" on Vercel's Domains page, it's complete. Vercel automatically issues SSL certificates, so no separate setup is needed.
+
+## ✅ Post-Deployment Checklist
+
+After deployment, verify each item below.
+
+- [ ] The deployment URL (`*.vercel.app`) is accessible
+- [ ] All pages load correctly
+- [ ] API integrations work properly (check environment variables)
+- [ ] Layout looks correct on mobile devices
+- [ ] Images load without breaking
+- [ ] HTTPS is applied if a custom domain is configured
+- [ ] No errors in the console (browser F12 → Console tab)
+
+## 🔍 Common Deployment Failure Issues
+
+### 🚫 Build Errors Causing Deployment Failure
+
+This is the most common cause. Click on the failed deployment in the "Deployments" tab of the Vercel dashboard to view build logs. Here are solutions by error type:
+
+| Error Type | Cause | Solution |
+|-----------|-------|---------|
+| Module not found | Package not installed | `npm install` then push again |
+| Type error | TypeScript type issue | Check with `npm run build` locally, then fix |
+| ESLint error | Lint rule violation | Check with `npm run lint`, then fix |
+| Out of memory | Build memory exceeded | Remove unnecessary dependencies or optimize build |
+
+### 🚫 Missing Environment Variables
+
+If things work locally but error after deployment, environment variables likely aren't registered in Vercel. Compare each variable in your `.env.local` file against Vercel Settings → Environment Variables.
+
+### 🚫 Images Not Displaying
+
+If images in the `public/` folder don't appear after deployment, check the file path capitalization. Local systems (Windows/macOS) are case-insensitive, but Vercel's server (Linux) is case-sensitive. `Profile.jpg` and `profile.jpg` are treated as different files.
+
+### 🚫 404 Errors
+
+If using Next.js App Router, verify that page files are in the correct location. You need `app/about/page.tsx` for the `/about` route to work. If the filename isn't `page.tsx`, it won't be recognized as a page.
+
+## 📊 Vercel Free Plan Limitations
+
+The Vercel Hobby (free) plan covers a lot, but has limits. For personal projects or portfolios, the free plan is sufficient, but growing services may need a paid plan.
+
+| Feature | Hobby (Free) | Pro ($20/month) |
+|---------|-------------|----------------|
+| Bandwidth | 100GB/month | 1TB/month |
+| Build Time | 6,000 min/month | 24,000 min/month |
+| Serverless Function Execution | 100GB-hours/month | 1,000GB-hours/month |
+| Team Members | 1 | Unlimited |
+| Custom Domains | Yes | Yes |
+| SSL | Automatic | Automatic |
+
+## 💡 Post-Deployment Operation Tips
+
+### 📌 Use Vercel Analytics
+
+Activate the "Analytics" tab in the Vercel dashboard to monitor visitor count, page performance, and Core Web Vitals. Basic analytics features are available on the free plan.
+
+### 📌 Set Up Build Notifications
+
+Vercel sends email notifications on build success/failure. You can also connect notifications to Slack or other services in the dashboard under "Settings" → "Notifications."
+
+### 📌 Rollback
+
+If issues are found after deployment, you can instantly revert to a previous version. In the "Deployments" tab, find a previous working deployment and click "Promote to Production" from its three-dot menu. This is much faster than fixing code and redeploying.
+
+## ❓ Frequently Asked Questions
+
+**Q. Can I run a commercial service on Vercel's free plan?**
+
+The Vercel Hobby plan is intended for non-commercial personal projects. For commercial use, you need the Pro plan or higher. Portfolios and learning projects are fine on the free plan.
+
+**Q. Can I deploy React or Vue projects (not just Next.js) to Vercel?**
+
+Yes. Vercel supports various frameworks beyond Next.js, including React (CRA), Vue, Nuxt, Svelte, and Astro. Just select the correct Framework Preset when importing your project.
+
+**Q. Can I change the domain after deployment?**
+
+The default `*.vercel.app` domain changes when you rename the project. Custom domains can be added or removed at any time in Settings → Domains.
+
+**Q. Can I use GitLab or Bitbucket instead of GitHub?**
+
+Vercel supports all three Git providers: GitHub, GitLab, and Bitbucket. You can connect your preferred provider during signup or in Settings → Git.
+
+**Q. What happens if I misconfigure environment variables?**
+
+Missing or incorrect environment variables may cause build errors or runtime issues where features don't work despite a successful build. Compare each variable in your `.env.local` file against what's registered in Vercel one by one.
+
+**Q. Are there free deployment alternatives to Vercel?**
+
+Netlify, Cloudflare Pages, GitHub Pages, and Railway are options. For static sites, GitHub Pages is simplest. If you use Next.js server features (API Routes, SSR), Vercel or Netlify are more suitable.
+
+**Q. How can I make deployments faster?**
+
+Remove unnecessary packages and optimize images to reduce build time. Using the `next/image` component automatically optimizes images. Vercel also manages build caching automatically, so second deployments onward are faster than the first.
+
+**Q. Is HTTPS automatically applied after deployment?**
+
+Vercel automatically issues and applies SSL certificates for all deployments. Even with custom domains, HTTPS is set up automatically — no separate SSL certificate purchase or configuration needed.
+
+> ⚠️ **Disclaimer**: This article was written as of April 2026. Vercel's pricing, free plan limitations, and interface may change. Check Vercel's official documentation and pricing page for the latest information.
+
+If you've completed deployment following this guide, consider connecting a custom domain or checking visitor stats with Vercel Analytics as your next step. If deployment felt difficult, it's only because it was your first time — from the second time on, it's just a `git push`.
+
+## 🔗 Related Articles
+
+- [Build a Portfolio Site in 1 Hour with Vibe Coding](/blog/vibe-coding-portfolio-site-one-hour)
+- [Complete Dev Environment Setup Guide for Vibe Coding](/blog/vibe-coding-dev-environment-setup-guide)
+- [Why You Need Git for Vibe Coding + 5-Minute Install Guide](/blog/vibe-coding-git-install)
+- [From Node.js Installation to Vibe Coding in 3 Steps](/blog/nodejs-install-vibe-coding)
+- [How to Install Cursor and Create Your First Project](/blog/cursor-install-first-project)
+
+## 📑 References
+
+- [Vercel Official Docs — Deployments](https://vercel.com/docs/deployments/overview)
+- [Vercel Official Docs — Environment Variables](https://vercel.com/docs/projects/environment-variables)
+- [Vercel Official Docs — Custom Domains](https://vercel.com/docs/projects/domains)
+- [Next.js Official Docs — Deploying](https://nextjs.org/docs/app/building-your-application/deploying)

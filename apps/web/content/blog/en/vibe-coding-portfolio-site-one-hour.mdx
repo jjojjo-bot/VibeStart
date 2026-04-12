@@ -1,0 +1,295 @@
+---
+title: "Build a Portfolio Site in 1 Hour with Vibe Coding (2026 Practical Guide)"
+description: "A step-by-step guide to building a portfolio site in under 1 hour using AI coding tools. Includes prompt examples, section structure, and Vercel deployment — even beginners can follow along."
+date: "2026-04-17"
+tags: ["vibe coding portfolio", "vibe coding", "portfolio site", "AI coding", "Cursor portfolio", "beginner portfolio", "Next.js portfolio", "Vercel deploy", "AI prompts", "developer portfolio"]
+---
+
+## 🎯 Need a Portfolio but Don't Know How to Code?
+
+Job hunting, freelancing, showcasing side projects — there are many reasons to have a portfolio site. But if you've never learned web development, "build your own portfolio site" can feel overwhelming. Template services cost money or limit design freedom, and WordPress setup is complex.
+
+Vibe coding solves this problem. By telling AI in plain language "build me a portfolio like this," you can create a polished portfolio site without writing code yourself. This guide walks you through building a portfolio with Cursor and Next.js and deploying it to Vercel — all within 1 hour.
+
+## 📋 Prerequisites Before You Start
+
+Make sure the following are ready before you begin. If even one item is missing, you'll get stuck midway.
+
+- **Node.js 18+**: Run `node --version` in terminal and confirm `v18` or higher
+- **Git**: Run `git --version` and confirm a version number appears
+- **Cursor or VS Code**: An editor with AI coding capabilities installed
+- **GitHub account**: Required for Vercel deployment
+- **Portfolio content**: About yourself, 2-3 project descriptions, contact info
+
+If your development environment isn't set up yet, visit [VibeStart onboarding](/onboarding) to install tools for your operating system first. With everything ready, you can complete this guide well within 1 hour.
+
+## 🏗️ Planning Your Portfolio Sections
+
+Deciding which sections to include before prompting AI significantly improves the final result. If you just say "make me a portfolio," AI generates a generic template that may not fit your situation.
+
+### 📌 Recommended Section List
+
+| Section | Content | Required |
+|---------|---------|----------|
+| Hero (Banner) | Name, one-liner, profile image | Yes |
+| About | Background, interests, key strengths | Yes |
+| Projects | Project name, description, tech stack, links | Yes |
+| Skills | Tools/languages as icons or list | Optional |
+| Contact | Email, GitHub, LinkedIn links | Yes |
+| Footer | Copyright notice, social links | Optional |
+
+Include at least 2 projects in the Projects section. Having only 1 makes your experience look thin, while more than 5 becomes hard to maintain. Adding screenshots or demo links to each project greatly boosts credibility.
+
+## ⏱️ 1-Hour Timeline
+
+Here's the full process broken down by time. Keep these allocations in mind to finish within 1 hour.
+
+| Time | Step | Task |
+|------|------|------|
+| 0-5 min | Project setup | Initialize Next.js project |
+| 5-15 min | Hero + About | Main banner and intro section |
+| 15-30 min | Projects | Project card section |
+| 30-40 min | Skills + Contact | Tech stack and contact info |
+| 40-50 min | Polish styling | Colors, fonts, responsive tweaks |
+| 50-60 min | Deploy | GitHub push + Vercel deployment |
+
+## 🚀 Step 1: Create Next.js Project (0-5 min)
+
+Open your terminal, navigate to where you want the project, and run:
+
+```bash
+npx create-next-app@latest my-portfolio --typescript --app --tailwind --eslint
+cd my-portfolio
+```
+
+We include Tailwind CSS because when AI generates styling code with Tailwind classes, you don't need separate CSS files — making the design process much faster. Once installation completes, run `npm run dev` and confirm the default page loads at `http://localhost:3000`.
+
+## 🎨 Step 2: Hero and About Sections (5-15 min)
+
+Open the project folder in Cursor and press `Cmd+L` (Windows: `Ctrl+L`) to open the chat. Enter this prompt:
+
+```
+Transform app/page.tsx into a portfolio main page.
+
+Hero section:
+- Name: John Doe
+- Tagline: "Web developer building with AI"
+- Background: gradient (dark navy → purple)
+- CTA button: "View Projects" (scrolls to Projects section)
+
+About section:
+- Brief self-introduction (3-4 lines)
+- 3 interest areas displayed as cards with icons
+
+Style with Tailwind CSS and make it responsive.
+```
+
+Review the diff when AI generates the code, then accept it. Check the result in your browser and update the text with your own information. If you don't like the colors or layout, make follow-up requests like "make the background lighter" or "increase spacing between cards."
+
+> 💡 **Tip**: Including specific color codes (e.g., `#1a1a2e`) or font names in your prompt helps you reach your desired design faster.
+
+## 🗂️ Step 3: Projects Section (15-30 min)
+
+This is the most important section in your portfolio. Provide specific project details so AI produces accurate results.
+
+```
+Add a Projects section. Display as cards, each containing:
+project name, description, tech tags, GitHub link, and demo link button.
+
+Project 1:
+- Name: Todo App
+- Description: Real-time todo management app built with React and Firebase
+- Tech: React, Firebase, Tailwind CSS
+- GitHub: https://github.com/username/todo-app
+- Demo: https://todo-app.vercel.app
+
+Project 2:
+- Name: Weather Dashboard
+- Description: Weather info dashboard using OpenWeather API
+- Tech: Next.js, TypeScript, Chart.js
+- GitHub: https://github.com/username/weather-dashboard
+
+Add hover effects to cards. Responsive: 1 column on mobile, 2 columns on desktop.
+```
+
+Managing project data in a separate array rather than hardcoding makes future additions and edits easier. You can also ask AI to "extract project data into a separate file."
+
+## 🛠️ Step 4: Skills and Contact Sections (30-40 min)
+
+```
+Add a Skills section. Display tech stack as a grid with icons.
+Organize by category:
+- Frontend: HTML, CSS, JavaScript, React, Next.js
+- Tools: Git, VS Code, Cursor, Figma
+- AI: ChatGPT, Claude, Cursor AI
+
+Also add a Contact section:
+- Email: hello@example.com
+- GitHub: https://github.com/username
+- LinkedIn: https://linkedin.com/in/username
+- Message: "Feel free to reach out for collaborations or inquiries"
+```
+
+If you want icons in the Skills section, install the `react-icons` package. Run `npm install react-icons` in the terminal, then ask AI to "use react-icons for the tech stack icons."
+
+## ✨ Step 5: Polish the Design (40-50 min)
+
+With the basic structure complete, it's time to refine the overall design.
+
+### 🎨 Unify Colors and Typography
+
+```
+Unify the color theme across the entire page.
+- Primary: #6366f1 (indigo)
+- Background: #0f172a (dark)
+- Text: #e2e8f0 (light gray)
+- Accent: #a78bfa (purple)
+Apply 'Inter' font from Google Fonts.
+```
+
+### 📱 Check Responsiveness
+
+Open browser DevTools (F12) and switch to mobile screen sizes to verify layouts don't break. If something breaks, tell AI specifically: "The Projects cards overlap on mobile, please fix."
+
+### 🌀 Add Animations
+
+```
+Add a fade-in-from-below animation to each section when scrolling.
+Use framer-motion with a 0.3s delay for each section.
+```
+
+Excessive animations can look unprofessional. Simple fade-in effects are the safest choice.
+
+## 🌐 Step 6: Deploy to Vercel (50-60 min)
+
+Once your portfolio is complete, deploy it so anyone in the world can see it.
+
+### 📌 Push Code to GitHub
+
+```bash
+git init
+git add .
+git commit -m "feat: initial portfolio site"
+git remote add origin https://github.com/username/my-portfolio.git
+git branch -M main
+git push -u origin main
+```
+
+### 📌 Connect to Vercel
+
+1. Go to [vercel.com](https://vercel.com) and log in with your GitHub account.
+2. Click "Add New Project."
+3. Select the `my-portfolio` repository you just pushed.
+4. Confirm the Framework Preset auto-detects as "Next.js."
+5. Click "Deploy" — deployment completes in 1-2 minutes.
+
+Once deployed, a URL like `https://my-portfolio-xxxx.vercel.app` is generated. Open this URL in your browser to confirm it's accessible.
+
+> ⚠️ **Note**: Even private GitHub repositories can be deployed on Vercel. Just grant Vercel access to the repository when authorizing GitHub permissions.
+
+## ✅ Post-Completion Checklist
+
+After deployment, verify each item below.
+
+- [ ] All sections display correctly
+- [ ] Project links (GitHub, demo) work properly
+- [ ] Layout doesn't break on mobile screens
+- [ ] Images load correctly (if any)
+- [ ] Contact email link works
+- [ ] Page loads within 3 seconds
+- [ ] No typos or placeholder text ("Lorem ipsum") remain
+
+## 🔍 Common Mistakes and How to Avoid Them
+
+### 🚫 Accepting AI-Generated Code Without Review
+
+Accepting code without checking the diff can overwrite parts that were working fine. This is especially common when AI replaces the entire `page.tsx` — previous sections may disappear. Always review changes and use `Cmd+Z` to undo if something goes wrong.
+
+### 🚫 Leaving Placeholder Content for Later
+
+Many people deploy with dummy data thinking "I'll fill it in later." Having "Lorem ipsum" or "Enter project description here" on your portfolio leaves a bad impression. Always replace all text with real content before deploying.
+
+### 🚫 Checking Responsiveness Only at the End
+
+If you only check on desktop and then visit on mobile after deployment, you'll often find completely broken layouts. Build the habit of checking mobile sizes in DevTools as you build each section.
+
+## 🔄 Ways to Improve Your Portfolio Further
+
+### 📌 Connect a Custom Domain
+
+In the Vercel dashboard, go to Settings → Domains to connect your own domain. Purchase a domain from services like Namecheap or GoDaddy, then add the CNAME record Vercel provides in your DNS settings. Having a personal domain significantly boosts professionalism.
+
+### 📌 Dark Mode / Light Mode Toggle
+
+```
+Add a dark/light mode toggle button at the top right of the page.
+Use the next-themes package with system preference as default.
+```
+
+### 📌 Add a Blog Section
+
+Adding a blog to your portfolio lets you share your learning journey or project retrospectives. Using Next.js's MDX feature allows you to write posts in Markdown, making maintenance easy.
+
+### 📌 SEO Optimization
+
+```
+Add meta tags and Open Graph tags.
+- Title: John Doe | Web Development Portfolio
+- Description: Portfolio of John Doe, a web developer building with AI.
+- OG Image: /og-image.png
+```
+
+For your portfolio link to display properly on search engines and social media, you need meta tag configuration. Next.js's `metadata` object makes this straightforward.
+
+## ❓ Frequently Asked Questions
+
+**Q. Can I really build this in 1 hour with zero coding knowledge?**
+
+Yes, if your development environment (Node.js, Git, Cursor) is already installed. Including environment setup, expect 1.5-2 hours. Using the prompts provided in this guide will help you save time.
+
+**Q. Can I use a framework other than Next.js?**
+
+Absolutely. AI can generate code for React, Vue, Svelte, or any framework. However, Next.js offers the smoothest deployment integration with Vercel and supports Static Site Generation (SSG), making it ideal for portfolio sites.
+
+**Q. Is Cursor's free plan enough?**
+
+For building a single portfolio, the free plan's AI request quota is sufficient. However, extensive design revisions can consume requests quickly, so writing detailed prompts in one go is more efficient.
+
+**Q. How do I add images to my portfolio?**
+
+Place project screenshots or profile photos in the `public/` folder. For example, save as `public/profile.jpg` and reference it as `/profile.jpg` in code. For image optimization, use Next.js's `Image` component.
+
+**Q. How do I make changes after deployment?**
+
+Edit your code, then run `git add .`, `git commit`, and `git push`. Vercel automatically redeploys. No separate deploy command needed — just push to GitHub. Changes typically reflect within 1-2 minutes.
+
+**Q. Does a portfolio site cost anything?**
+
+Using Next.js, Cursor's free plan, and Vercel's free plan costs nothing. If you want a custom domain, that's about $10-15/year, but you can keep using the `.vercel.app` URL for free.
+
+**Q. I have no design sense — is that okay?**
+
+Ask AI to "make it minimal and modern" for clean results. If you're unsure about color combinations, pick a palette from [coolors.co](https://coolors.co) and pass the color codes to AI.
+
+**Q. What's the advantage over template sites like Wix?**
+
+Template services like Wix or Squarespace limit design freedom and charge monthly subscriptions. Building with vibe coding lets you customize everything, and Vercel's free hosting eliminates maintenance costs. Plus, "I built this portfolio with code" is itself an impressive talking point.
+
+> ⚠️ **Disclaimer**: This article was written as of April 2026. The interfaces and features of Next.js, Cursor, and Vercel may change with updates. Check each service's official documentation for the latest information.
+
+If you've completed your portfolio following this guide, consider connecting a custom domain or adding a blog section as your next step. Your first portfolio doesn't need to be perfect — deploying first and improving incrementally is the most effective approach.
+
+## 🔗 Related Articles
+
+- [Complete Dev Environment Setup Guide for Vibe Coding](/blog/vibe-coding-dev-environment-setup-guide)
+- [How to Install Cursor and Create Your First Project](/blog/cursor-install-first-project)
+- [Tips for Writing Better AI Coding Prompts](/blog/ai-coding-prompt-writing-tips)
+- [Deploy Your Vibe-Coded App to Vercel for Free](/blog/vibe-coding-vercel-free-deploy)
+- [From Node.js Installation to Vibe Coding in 3 Steps](/blog/nodejs-install-vibe-coding)
+
+## 📑 References
+
+- [Next.js Official Docs — Getting Started](https://nextjs.org/docs/getting-started)
+- [Vercel Official Docs — Deployments](https://vercel.com/docs/deployments/overview)
+- [Tailwind CSS Official Docs](https://tailwindcss.com/docs)
+- [Cursor Official Docs](https://docs.cursor.com/)

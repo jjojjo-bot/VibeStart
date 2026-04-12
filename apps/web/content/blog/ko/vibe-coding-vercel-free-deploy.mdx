@@ -1,0 +1,327 @@
+---
+title: "바이브코딩으로 만든 앱 Vercel에 무료 배포하기: 완전 초보 가이드 (2026)"
+description: "바이브코딩으로 만든 Next.js 앱을 Vercel에 무료로 배포하는 방법을 단계별로 안내합니다. GitHub 푸시, Vercel 연결, 환경 변수 설정, 커스텀 도메인까지 비전공자도 따라할 수 있습니다."
+date: "2026-04-18"
+tags: ["바이브코딩 배포 방법", "Vercel 배포", "바이브코딩", "Vercel 무료", "Next.js 배포", "GitHub 배포", "웹앱 배포", "Vercel 커스텀 도메인", "비전공자 배포", "바이브코딩 Vercel"]
+---
+
+## 🌍 만들기만 하고 끝내면 아무도 볼 수 없다
+
+바이브코딩으로 앱을 만들었다면 절반은 성공입니다. 하지만 `localhost:3000`에서만 동작하는 앱은 나만 볼 수 있습니다. 다른 사람이 접속할 수 있으려면 인터넷에 "배포"해야 합니다. 배포라는 단어가 어렵게 느껴질 수 있지만, Vercel을 사용하면 클릭 몇 번으로 전 세계 누구나 접속할 수 있는 URL을 얻을 수 있습니다.
+
+Vercel은 Next.js를 만든 회사에서 운영하는 호스팅 플랫폼입니다. Next.js 프로젝트와의 호환성이 가장 좋고, 무료 플랜(Hobby)으로도 개인 프로젝트를 운영하기에 충분합니다. 이 글은 GitHub에 코드를 올리는 것부터 Vercel 배포, 환경 변수, 커스텀 도메인 연결까지 전체 과정을 안내합니다.
+
+## 📋 배포 전 확인 사항
+
+배포를 시작하기 전에 아래 항목을 확인하세요. 하나라도 빠지면 배포 과정에서 에러가 발생합니다.
+
+### 💻 필수 준비물
+
+| 항목 | 확인 방법 | 비고 |
+|------|----------|------|
+| Node.js 18+ | `node --version` | 18 미만이면 업그레이드 필요 |
+| Git | `git --version` | 버전 번호 출력 확인 |
+| GitHub 계정 | [github.com](https://github.com) 로그인 | 무료 계정으로 충분 |
+| Vercel 계정 | [vercel.com](https://vercel.com) 가입 | GitHub로 가입 권장 |
+| 배포할 프로젝트 | `npm run build` 성공 | 빌드 에러가 있으면 배포 실패 |
+
+### 📌 빌드 테스트 먼저 하기
+
+배포 전에 로컬에서 빌드가 성공하는지 반드시 확인하세요. 터미널에서 프로젝트 폴더로 이동한 뒤 다음 명령어를 실행합니다.
+
+```bash
+npm run build
+```
+
+빌드가 성공하면 `.next` 폴더가 생성되고 터미널에 "Compiled successfully"와 유사한 메시지가 표시됩니다. 빌드 에러가 발생하면 에러 메시지를 읽고 수정한 뒤 다시 시도하세요. Vercel도 동일한 빌드 과정을 거치기 때문에 로컬에서 실패하면 Vercel에서도 반드시 실패합니다.
+
+> 💡 **팁**: 빌드 에러가 발생하면 에러 메시지를 Cursor 채팅에 붙여넣고 "이 에러 해결해줘"라고 요청하면 대부분 빠르게 해결됩니다.
+
+## 📤 GitHub에 코드 올리기
+
+Vercel은 GitHub 저장소와 연결해서 동작합니다. 코드가 아직 GitHub에 올라가 있지 않다면 아래 절차를 따르세요.
+
+### 📌 GitHub 저장소 생성
+
+1. [github.com](https://github.com)에 로그인합니다.
+2. 오른쪽 상단의 `+` 버튼을 클릭하고 "New repository"를 선택합니다.
+3. Repository name에 프로젝트 이름(예: `my-app`)을 입력합니다.
+4. Public 또는 Private을 선택합니다. Private으로 설정해도 Vercel 배포에 문제없습니다.
+5. "Create repository"를 클릭합니다.
+
+### 📌 로컬 코드를 GitHub에 푸시
+
+저장소를 만들면 GitHub이 안내하는 명령어가 표시됩니다. 터미널에서 프로젝트 폴더로 이동한 뒤 아래 명령어를 순서대로 실행합니다.
+
+```bash
+git init
+git add .
+git commit -m "feat: 초기 버전 배포 준비"
+git branch -M main
+git remote add origin https://github.com/사용자이름/my-app.git
+git push -u origin main
+```
+
+`git push`가 성공하면 GitHub 저장소 페이지를 새로고침했을 때 파일들이 표시됩니다. 이것이 정상 완료 신호입니다.
+
+### 📌 .gitignore 확인
+
+`.gitignore` 파일에 아래 항목이 포함되어 있는지 확인하세요. `create-next-app`으로 프로젝트를 생성했다면 기본적으로 포함되어 있습니다.
+
+```
+node_modules/
+.next/
+.env.local
+.env
+```
+
+`node_modules` 폴더나 `.env` 파일이 GitHub에 올라가면 보안 문제가 생기거나 저장소 용량이 불필요하게 커집니다. `.gitignore`에 빠진 항목이 있다면 추가한 뒤 다시 커밋하세요.
+
+> ⚠️ **주의**: `.env` 파일에 API 키나 비밀번호가 포함되어 있다면 절대 GitHub에 올리지 마세요. 한 번 올라간 비밀 정보는 히스토리에 남아 삭제가 까다롭습니다.
+
+## 🚀 Vercel에 프로젝트 배포하기
+
+### 📌 Vercel 계정 생성
+
+1. [vercel.com](https://vercel.com)에 접속합니다.
+2. "Sign Up"을 클릭합니다.
+3. "Continue with GitHub"를 선택해 GitHub 계정으로 가입합니다.
+
+GitHub 계정으로 가입하면 저장소 연결이 자동으로 설정되므로 가장 간편합니다. 이메일로 가입하면 나중에 GitHub 연결을 별도로 해야 합니다.
+
+### 📌 새 프로젝트 추가
+
+1. Vercel 대시보드에서 "Add New..." → "Project"를 클릭합니다.
+2. "Import Git Repository" 화면에서 방금 올린 저장소를 찾습니다.
+3. 저장소가 보이지 않으면 "Adjust GitHub App Permissions"를 클릭해 Vercel이 해당 저장소에 접근할 수 있도록 권한을 부여합니다.
+4. 저장소를 선택하고 "Import"를 클릭합니다.
+
+### 📌 빌드 설정 확인
+
+Vercel이 프로젝트를 분석한 뒤 자동으로 설정을 채워줍니다. Next.js 프로젝트라면 대부분 아래와 같이 설정됩니다.
+
+| 항목 | 기본값 |
+|------|--------|
+| Framework Preset | Next.js |
+| Build Command | `next build` 또는 `npm run build` |
+| Output Directory | `.next` |
+| Install Command | `npm install` |
+
+기본 설정 그대로 두면 됩니다. pnpm을 사용하는 프로젝트라면 Install Command를 `pnpm install`로, Build Command를 `pnpm build`로 변경하세요.
+
+### 📌 Deploy 클릭
+
+"Deploy" 버튼을 클릭하면 Vercel이 코드를 가져와서 빌드하고 배포합니다. 진행 상황이 실시간 로그로 표시됩니다. 보통 1~3분 안에 완료되며, 성공하면 축하 화면과 함께 배포 URL이 표시됩니다.
+
+배포된 URL은 `https://프로젝트이름.vercel.app` 형태입니다. 이 주소를 브라우저에서 열어 실제로 접속되는지 확인하세요. 화면이 정상적으로 표시되면 배포 성공입니다.
+
+## ⚙️ 환경 변수 설정
+
+앱에서 API 키, 데이터베이스 URL 등 환경 변수를 사용한다면 Vercel에도 동일하게 설정해야 합니다. 로컬에서 `.env.local` 파일에 넣어둔 값들을 Vercel에 등록하는 과정입니다.
+
+### 📌 환경 변수 추가 방법
+
+1. Vercel 대시보드에서 프로젝트를 선택합니다.
+2. "Settings" 탭으로 이동합니다.
+3. 왼쪽 메뉴에서 "Environment Variables"를 클릭합니다.
+4. Key에 변수 이름(예: `NEXT_PUBLIC_API_KEY`), Value에 값을 입력합니다.
+5. Environment(Production, Preview, Development) 중 적용할 환경을 선택합니다.
+6. "Save"를 클릭합니다.
+
+### 📌 환경 변수 적용 시점
+
+환경 변수를 추가하거나 수정한 뒤에는 재배포가 필요합니다. Vercel 대시보드에서 "Deployments" 탭으로 이동한 뒤 가장 최근 배포의 오른쪽 점 3개 메뉴에서 "Redeploy"를 클릭하세요.
+
+| 변수 접두사 | 접근 가능 위치 |
+|------------|--------------|
+| `NEXT_PUBLIC_` | 브라우저 + 서버 |
+| 접두사 없음 | 서버만 (API Routes, Server Components) |
+
+`NEXT_PUBLIC_` 접두사가 없는 변수는 브라우저에서 접근할 수 없습니다. API 키처럼 노출되면 안 되는 값은 접두사 없이 저장하고, 서버 측 코드에서만 사용하세요.
+
+> ⚠️ **주의**: `NEXT_PUBLIC_` 접두사가 붙은 변수는 브라우저 코드에 포함되므로, 비밀 키를 이 접두사와 함께 저장하면 누구나 볼 수 있습니다. 비밀 정보는 반드시 접두사 없이 저장하세요.
+
+## 🔄 자동 배포와 프리뷰 배포
+
+Vercel의 가장 편리한 기능 중 하나는 자동 배포입니다. GitHub에 코드를 푸시하기만 하면 Vercel이 알아서 빌드하고 배포합니다.
+
+### 📌 프로덕션 배포 (main 브랜치)
+
+`main` 브랜치에 코드를 푸시하면 프로덕션 환경에 자동 배포됩니다.
+
+```bash
+git add .
+git commit -m "fix: 오타 수정"
+git push origin main
+```
+
+푸시 후 1~3분이면 변경 사항이 프로덕션 URL에 반영됩니다.
+
+### 📌 프리뷰 배포 (다른 브랜치)
+
+`main`이 아닌 브랜치에 푸시하거나 Pull Request를 생성하면, Vercel이 별도의 프리뷰 URL을 생성합니다. 이 URL로 변경 사항을 미리 확인한 뒤 `main`에 머지할 수 있습니다.
+
+```bash
+git checkout -b feature/new-section
+# 코드 수정
+git add .
+git commit -m "feat: 새 섹션 추가"
+git push origin feature/new-section
+```
+
+프리뷰 배포는 팀으로 작업할 때 특히 유용하지만, 혼자 작업할 때도 프로덕션에 바로 반영하기 전에 미리 확인하는 용도로 활용할 수 있습니다.
+
+## 🌐 커스텀 도메인 연결
+
+`my-app.vercel.app` 주소 대신 자신만의 도메인(예: `myportfolio.com`)을 연결할 수 있습니다.
+
+### 📌 도메인 구매
+
+아직 도메인이 없다면 아래 서비스에서 구매할 수 있습니다.
+
+| 서비스 | 특징 | 가격대 (연간) |
+|--------|------|-------------|
+| Namecheap | 해외, 저렴한 가격 | $8~15 |
+| 가비아 | 국내, 한국어 지원 | 1~2만 원 |
+| Cloudflare Registrar | 원가 수준 판매, DNS 통합 | $8~12 |
+
+`.com` 도메인이 가장 무난하지만 이미 등록된 경우가 많습니다. `.dev`, `.io`, `.site` 같은 대안도 고려해보세요.
+
+### 📌 Vercel에 도메인 추가
+
+1. Vercel 대시보드에서 프로젝트 선택 → "Settings" → "Domains"로 이동합니다.
+2. 구매한 도메인(예: `myportfolio.com`)을 입력하고 "Add"를 클릭합니다.
+3. Vercel이 DNS 설정 안내를 표시합니다.
+
+### 📌 DNS 설정
+
+도메인을 구매한 서비스의 DNS 관리 페이지에서 Vercel이 안내하는 레코드를 추가합니다.
+
+```
+타입: A
+이름: @
+값: 76.76.21.21
+
+타입: CNAME
+이름: www
+값: cname.vercel-dns.com
+```
+
+DNS 변경은 전파에 최대 48시간이 걸릴 수 있지만, 대부분 30분~2시간 내에 반영됩니다. Vercel 대시보드의 Domains 페이지에서 상태가 "Valid Configuration"으로 변하면 완료입니다. SSL 인증서는 Vercel이 자동으로 발급하므로 별도 설정이 필요 없습니다.
+
+## ✅ 배포 완료 후 점검 목록
+
+배포가 끝났다면 아래 항목을 확인하세요.
+
+- [ ] 배포 URL(`*.vercel.app`)에 접속이 되는가
+- [ ] 모든 페이지가 정상적으로 로딩되는가
+- [ ] API 연동이 있다면 정상 동작하는가 (환경 변수 확인)
+- [ ] 모바일에서도 레이아웃이 정상인가
+- [ ] 이미지가 깨지지 않고 로딩되는가
+- [ ] 커스텀 도메인을 설정했다면 HTTPS가 적용되었는가
+- [ ] 콘솔에 에러가 없는가 (브라우저 F12 → Console 탭)
+
+## 🔍 배포 실패 시 자주 발생하는 문제
+
+### 🚫 빌드 에러로 배포 실패
+
+가장 흔한 원인입니다. Vercel 대시보드의 "Deployments" 탭에서 실패한 배포를 클릭하면 빌드 로그를 확인할 수 있습니다. 주요 원인별 해결 방법은 다음과 같습니다.
+
+| 에러 유형 | 원인 | 해결 방법 |
+|----------|------|----------|
+| Module not found | 패키지 미설치 | `npm install` 후 재푸시 |
+| Type error | TypeScript 타입 오류 | 로컬에서 `npm run build`로 에러 확인 후 수정 |
+| ESLint error | 린트 규칙 위반 | `npm run lint`로 확인 후 수정 |
+| Out of memory | 빌드 메모리 초과 | 불필요한 의존성 제거 또는 빌드 최적화 |
+
+### 🚫 환경 변수 누락
+
+로컬에서는 잘 되는데 배포 후 에러가 발생한다면 환경 변수가 Vercel에 등록되지 않았을 가능성이 높습니다. `.env.local`에 있는 모든 변수가 Vercel Settings → Environment Variables에도 등록되어 있는지 확인하세요.
+
+### 🚫 이미지가 표시되지 않음
+
+`public/` 폴더에 이미지를 넣었는데 배포 후 표시되지 않는다면, 파일 경로의 대소문자를 확인하세요. 로컬(Windows/macOS)에서는 대소문자를 구분하지 않지만, Vercel 서버(Linux)에서는 대소문자를 정확히 구분합니다. `Profile.jpg`와 `profile.jpg`는 다른 파일로 취급됩니다.
+
+### 🚫 404 에러가 발생
+
+Next.js의 App Router를 사용하는 경우, 페이지 파일 위치가 올바른지 확인하세요. `app/about/page.tsx`가 있어야 `/about` 경로가 동작합니다. 파일명이 `page.tsx`가 아니라 다른 이름이면 페이지로 인식되지 않습니다.
+
+## 📊 Vercel 무료 플랜 제한 사항
+
+Vercel Hobby(무료) 플랜으로도 많은 것을 할 수 있지만 제한이 있습니다. 개인 프로젝트나 포트폴리오 수준이라면 무료 플랜으로 충분하지만, 서비스가 성장하면 유료 플랜을 고려해야 합니다.
+
+| 항목 | Hobby (무료) | Pro ($20/월) |
+|------|-------------|-------------|
+| 대역폭 | 100GB/월 | 1TB/월 |
+| 빌드 시간 | 6,000분/월 | 24,000분/월 |
+| 서버리스 함수 실행 | 100GB-시간/월 | 1,000GB-시간/월 |
+| 팀 멤버 | 1명 | 무제한 |
+| 커스텀 도메인 | 가능 | 가능 |
+| SSL | 자동 | 자동 |
+
+## 💡 배포 후 운영 팁
+
+### 📌 Vercel Analytics 활용
+
+Vercel 대시보드에서 "Analytics" 탭을 활성화하면 방문자 수, 페이지 성능, Core Web Vitals 등을 확인할 수 있습니다. 무료 플랜에서도 기본 분석 기능을 사용할 수 있습니다.
+
+### 📌 빌드 알림 설정
+
+Vercel은 빌드 성공/실패 시 이메일 알림을 보냅니다. 대시보드의 "Settings" → "Notifications"에서 Slack이나 다른 서비스로 알림을 연결할 수도 있습니다.
+
+### 📌 롤백
+
+배포 후 문제가 발견되면 이전 버전으로 즉시 돌아갈 수 있습니다. "Deployments" 탭에서 정상 작동하던 이전 배포를 찾고, 오른쪽 점 3개 메뉴에서 "Promote to Production"을 클릭하면 됩니다. 코드를 수정하고 다시 배포하는 것보다 훨씬 빠릅니다.
+
+## ❓ 자주 묻는 질문
+
+**Q. Vercel 무료 플랜으로 상용 서비스를 운영해도 되나요?**
+
+Vercel Hobby 플랜은 비상업적 개인 프로젝트를 위한 플랜입니다. 상업적 용도로 사용하려면 Pro 플랜 이상을 사용해야 합니다. 포트폴리오나 학습용 프로젝트는 무료 플랜으로 충분합니다.
+
+**Q. Next.js가 아닌 React, Vue 프로젝트도 Vercel에 배포할 수 있나요?**
+
+가능합니다. Vercel은 Next.js 외에도 React(CRA), Vue, Nuxt, Svelte, Astro 등 다양한 프레임워크를 지원합니다. 프로젝트를 Import할 때 Framework Preset을 올바르게 선택하면 됩니다.
+
+**Q. 배포 후 도메인을 변경할 수 있나요?**
+
+기본 `*.vercel.app` 도메인은 프로젝트 이름을 변경하면 바뀝니다. 커스텀 도메인은 Settings → Domains에서 언제든 추가하거나 제거할 수 있습니다.
+
+**Q. GitHub가 아닌 GitLab이나 Bitbucket도 사용할 수 있나요?**
+
+Vercel은 GitHub, GitLab, Bitbucket 세 가지 Git 제공자를 모두 지원합니다. 회원가입 시 또는 Settings → Git에서 원하는 제공자를 연결할 수 있습니다.
+
+**Q. 환경 변수를 잘못 설정하면 어떻게 되나요?**
+
+환경 변수가 누락되거나 값이 잘못되면 빌드 시 에러가 발생하거나, 빌드는 되지만 런타임에서 기능이 동작하지 않을 수 있습니다. 로컬의 `.env.local` 파일과 Vercel의 환경 변수가 동일한지 하나씩 대조해보세요.
+
+**Q. Vercel 외에 무료 배포 대안이 있나요?**
+
+Netlify, Cloudflare Pages, GitHub Pages, Railway 등이 있습니다. 정적 사이트라면 GitHub Pages가 가장 간단하고, Next.js 서버 기능(API Routes, SSR)을 사용한다면 Vercel이나 Netlify가 적합합니다.
+
+**Q. 배포 속도를 더 빠르게 하려면 어떻게 하나요?**
+
+불필요한 패키지를 제거하고, 이미지를 최적화하면 빌드 시간이 줄어듭니다. `next/image` 컴포넌트를 사용하면 이미지가 자동으로 최적화됩니다. 빌드 캐시도 Vercel이 자동으로 관리하므로, 두 번째 배포부터는 첫 배포보다 빠릅니다.
+
+**Q. 배포 후 HTTPS가 자동으로 적용되나요?**
+
+Vercel은 모든 배포에 SSL 인증서를 자동으로 발급하고 적용합니다. 커스텀 도메인을 연결해도 HTTPS가 자동으로 설정되므로 별도의 SSL 인증서 구매나 설정이 필요 없습니다.
+
+> ⚠️ **면책조항**: 이 글은 2026년 4월 기준으로 작성되었습니다. Vercel의 가격 정책, 무료 플랜 제한, 인터페이스는 변경될 수 있습니다. 최신 정보는 Vercel 공식 문서와 가격 페이지를 확인하세요.
+
+이 가이드를 따라 배포를 완료하셨다면, 이제 커스텀 도메인을 연결하거나 Vercel Analytics로 방문자 현황을 확인해보세요. 배포가 어렵게 느껴졌다면 처음이라 그런 것이고, 두 번째부터는 `git push` 한 번으로 끝납니다.
+
+## 🔗 관련 글
+
+- [바이브코딩으로 포트폴리오 사이트 1시간 만에 만들기](/blog/vibe-coding-portfolio-site-one-hour)
+- [바이브코딩 시작 전 개발환경 세팅 완벽 가이드](/blog/vibe-coding-dev-environment-setup-guide)
+- [바이브코딩에 Git이 필요한 이유 + 5분 설치 가이드](/blog/vibe-coding-git-install)
+- [Node.js 설치부터 바이브코딩 시작까지 3단계](/blog/nodejs-install-vibe-coding)
+- [Cursor 설치 방법과 첫 프로젝트 만들기](/blog/cursor-install-first-project)
+
+## 📑 참고 자료
+
+- [Vercel 공식 문서 — Deployments](https://vercel.com/docs/deployments/overview)
+- [Vercel 공식 문서 — Environment Variables](https://vercel.com/docs/projects/environment-variables)
+- [Vercel 공식 문서 — Custom Domains](https://vercel.com/docs/projects/domains)
+- [Next.js 공식 문서 — Deploying](https://nextjs.org/docs/app/building-your-application/deploying)

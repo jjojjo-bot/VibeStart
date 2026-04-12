@@ -1,0 +1,275 @@
+---
+title: "Create a Next.js Project with Vibe Coding: Done in 10 Minutes, Even for Non-Developers"
+description: "A step-by-step guide to creating a Next.js project from scratch using AI tools like Cursor and Claude Code. From running npx create-next-app to customizing your first page, explained for complete beginners."
+date: "2026-04-16"
+tags: ["vibe coding Next.js project", "Next.js getting started", "create-next-app", "vibe coding project", "non-developer Next.js", "AI coding project", "Cursor Next.js", "Claude Code project", "build web app", "Next.js beginner"]
+---
+
+## 🎯 Can you really build a website just by talking to AI?
+
+Yes. Vibe coding is a method where you describe what you want in natural language and AI generates the code. To actually run that code, you need a project — a structured framework. Next.js is a React-based web framework where a single command creates the entire scaffolding: file structure, dev server, routing, and more.
+
+This article walks you through creating a Next.js project for the first time, assuming your development environment is already set up. The goal is to generate a project in the terminal, start the dev server, and customize the first page with AI. Each step is explained so that anyone with zero coding experience can follow along.
+
+## 📋 What to verify before you start
+
+The following tools must be installed before creating a Next.js project. If any one of them is missing, the project creation command will not run.
+
+| Tool | Verification command | Expected output |
+|------|---------------------|-----------------|
+| Node.js | `node --version` | v20.x.x or higher |
+| npm | `npm --version` | 10.x.x or higher |
+| Git | `git --version` | git version 2.x.x |
+| Editor | Launch VS Code or Cursor | Editor screen appears |
+
+Run each command in the terminal — if version numbers appear, you are ready. If anything is missing, refer to the [dev environment setup guide](/blog/vibe-coding-dev-environment-setup-guide) first.
+
+> 💡 **Tip**: npm is installed automatically with Node.js. If `node --version` works but `npm --version` does not, try reinstalling Node.js.
+
+## 🚀 Step-by-step guide to creating a Next.js project
+
+### 📁 Step 1: Navigate to the folder where you want to create the project
+
+First, decide where the project files will be stored. A common practice is to create a working folder inside your Documents directory.
+
+```bash
+# Windows (PowerShell)
+cd C:\Users\YourUsername\Documents
+mkdir projects
+cd projects
+
+# macOS (Terminal)
+cd ~/Documents
+mkdir projects
+cd projects
+```
+
+A `projects` folder is created and you are now inside it. Your Next.js project will be created in this folder.
+
+### ⚡ Step 2: Run create-next-app
+
+Use the official Next.js tool `create-next-app` to generate the project. Enter the following command in the terminal.
+
+```bash
+npx create-next-app@latest my-first-app
+```
+
+`my-first-app` is the project name — you can change it to whatever you like. Several questions will appear after running the command.
+
+```
+Would you like to use TypeScript? → Yes
+Would you like to use ESLint? → Yes
+Would you like to use Tailwind CSS? → Yes
+Would you like your code inside a `src/` directory? → No
+Would you like to use App Router? → Yes
+Would you like to use Turbopack for next dev? → Yes
+Would you like to customize the import alias? → No
+```
+
+For beginners in vibe coding, following the choices above is recommended. TypeScript helps AI generate more accurate code, and App Router is the latest routing approach in Next.js. Tailwind CSS lets you apply styles quickly through class names, making it convenient when working with AI.
+
+After running the command, file downloads and installation will proceed. It may take 1–3 minutes depending on your network speed. When you see a "Success!" message in the terminal, the project is ready.
+
+### 📂 Step 3: Navigate into the project folder
+
+Move into the newly created project folder.
+
+```bash
+cd my-first-app
+```
+
+### 🖥️ Step 4: Open the project in your editor
+
+Open the project in VS Code or Cursor.
+
+```bash
+# VS Code
+code .
+
+# Cursor
+cursor .
+```
+
+When the editor opens, you should see files and folders like `app/`, `public/`, and `package.json` in the left explorer. This is the basic structure of a Next.js project.
+
+### 🌐 Step 5: Start the development server
+
+Open the editor's built-in terminal (`` Ctrl+` `` or Menu → Terminal → New Terminal) and enter the following command.
+
+```bash
+npm run dev
+```
+
+The terminal will display output similar to this:
+
+```
+▲ Next.js (turbo)
+- Local: http://localhost:3000
+```
+
+Open `http://localhost:3000` in your browser and you will see the default Next.js welcome page. If this page appears, your project is running correctly.
+
+## 🎨 Customizing your first page with AI
+
+### 🤖 Requesting changes in Cursor
+
+Open the `app/page.tsx` file in the editor. This is the main page displayed when you visit the root URL in the browser. Open the chat with `Ctrl+L` (macOS: `Cmd+L`) and make a request like this:
+
+```
+Modify this page.tsx file.
+Turn it into a simple self-introduction page.
+- Center aligned
+- Name: "John Doe"
+- One-line intro: "Building my first website with vibe coding"
+- Display 3 favorite things as a list
+```
+
+After AI modifies the code, check `localhost:3000` in the browser. The page will have changed to show the self-introduction content. While the dev server is running, the browser refreshes automatically every time you save a file.
+
+### 💻 Requesting changes in Claude Code
+
+If you use Claude Code, navigate into the project folder in the terminal and launch Claude Code.
+
+```bash
+cd my-first-app
+claude
+```
+
+Once Claude Code is running, make a request like this:
+
+```
+Change app/page.tsx to a simple self-introduction page.
+Include the name "John Doe", a one-line intro, and 3 favorite things.
+```
+
+Claude Code will modify the file directly. After the edit is done, run `npm run dev` in a separate terminal to see the result.
+
+## 📁 Understanding the Next.js project structure
+
+Knowing what the key files and folders do helps you give more accurate instructions to AI.
+
+| File/Folder | Role |
+|-------------|------|
+| `app/page.tsx` | Main page (displayed when visiting `/` in the browser) |
+| `app/layout.tsx` | Common layout for all pages (header, footer, etc.) |
+| `app/globals.css` | Global stylesheet |
+| `public/` | Static files like images and icons |
+| `package.json` | Project info and list of installed packages |
+| `next.config.ts` | Next.js configuration file |
+| `tailwind.config.ts` | Tailwind CSS configuration file |
+
+To add a new page, create a new folder with a `page.tsx` file inside the `app/` directory. For example, creating `app/about/page.tsx` makes the page accessible at `/about` in the browser. This is Next.js App Router's file-based routing.
+
+## ✅ Project creation completion checklist
+
+| Item | How to verify | Normal signal |
+|------|--------------|---------------|
+| Project folder created | Check with `ls` or `dir` | `my-first-app` folder exists |
+| Dependencies installed | `node_modules` folder exists | Contains many files |
+| Dev server running | `npm run dev` | Shows `localhost:3000` |
+| Browser check | Visit `http://localhost:3000` | Page displays normally |
+| AI changes reflected | Save file and check browser | Changes appear |
+
+## ⚠️ Common mistakes and how to fix them
+
+### 🚫 "npx: command not found" error
+
+Node.js is either not installed or not registered in PATH. Check `node --version` first. If no version appears, follow the [Node.js installation guide](/blog/nodejs-install-vibe-coding) and restart the terminal.
+
+### 🚫 Network error during project creation
+
+`create-next-app` downloads packages from the internet. An unstable network can cause failures midway. Switch to a stable Wi-Fi connection or try again after a while. If blocked by a company or school network, try using a mobile hotspot.
+
+### 🚫 "Cannot access localhost:3000"
+
+Check the terminal to see if the dev server is running. The `npm run dev` command must be active. If another program is using port 3000, the terminal will show a different port number (e.g., `localhost:3001`). Visit the displayed address instead.
+
+### 🚫 Changes not reflected in browser after editing a file
+
+Make sure you saved the file (`Ctrl+S` or `Cmd+S`). If saving does not help, try a hard refresh in the browser (`Ctrl+Shift+R` or `Cmd+Shift+R`). If it still does not work, stop the dev server (`Ctrl+C`) in the terminal and run `npm run dev` again.
+
+## 🔄 Workflow comparison by AI tool
+
+| Item | Cursor | Claude Code |
+|------|--------|-------------|
+| Project creation | `npx create-next-app` in built-in terminal | `npx create-next-app` in regular terminal |
+| Code edit requests | `Ctrl+L` chat or `Ctrl+K` inline edit | Conversational requests in terminal |
+| File references | Reference with `@filename` | Auto-detects files in project folder |
+| Live preview | Instant feedback inside the editor | Requires `npm run dev` in separate terminal |
+| Best for | Visual editor preference, beginners | Terminal-based workflow, multi-file edits |
+
+For beginners, starting with Cursor is more intuitive because you can use AI chat, code editing, and the terminal all in one screen. Claude Code is a great option once you become comfortable with the terminal.
+
+## 💡 Things to try after creating your project
+
+If your first project is up and running, try these next steps.
+
+1. **Add a new page** — Create `app/about/page.tsx` to add a self-introduction page at the `/about` route. Just ask AI "create an about page."
+2. **Change styles** — Request things like "change the background to blue" or "make the font bigger" to get a feel for how Tailwind CSS works.
+3. **Add navigation** — Ask AI to create a menu that links the main page and the about page. This helps you understand the role of `layout.tsx`.
+4. **Save to GitHub** — Commit your project with Git and push to GitHub. Ask AI "show me how to upload this project to GitHub" for step-by-step instructions.
+
+The core of vibe coding is getting comfortable with the cycle of "request → check result → next request" by trying small changes one at a time.
+
+> ⚠️ **Note**: This article is written based on Next.js 15 as of April 2026. Command options and project structure may vary with different Next.js versions, so check the official Next.js documentation if issues arise.
+
+## ❓ Frequently asked questions
+
+**Q. What is Next.js? Is it different from React?**
+
+Next.js is a web framework built on top of React. React is a library for building UI components, and Next.js adds features like routing, server rendering, and build optimization on top of it. In vibe coding, starting with Next.js is convenient because a single command sets up everything you need.
+
+**Q. I don't know TypeScript — is it okay to select Yes?**
+
+Yes, it is fine. TypeScript adds type information to JavaScript. Since AI generates TypeScript code more accurately, using TypeScript is actually advantageous for vibe coding. You do not need to know the syntax — AI handles the writing.
+
+**Q. What is Tailwind CSS? Do I have to use it?**
+
+Tailwind CSS is a CSS framework that applies styles through predefined class names. It looks like `className="text-xl font-bold text-blue-500"`. When you ask AI for style changes, Tailwind CSS helps it produce fast and consistent code. It is not mandatory, but it is convenient for vibe coding.
+
+**Q. Can I use any name for the project?**
+
+Use only lowercase letters, numbers, and hyphens (-). Avoid Korean characters or spaces. Since it becomes a folder name, keep it short and recognizable.
+
+**Q. What happens if I close the terminal running npm run dev?**
+
+The development server shuts down. You will no longer be able to access `localhost:3000` in the browser. To see it again, run `npm run dev` from the project folder.
+
+**Q. I want to show my page to someone else.**
+
+`localhost` is an address that only works on your own computer. To share it with others, you need a deployment service like Vercel. Upload your code to GitHub, connect it to Vercel, and you can get a free public URL.
+
+**Q. How do I delete the project and start over?**
+
+Delete the entire project folder. You can do this in the file explorer or in the terminal with `rm -rf my-first-app` (macOS) or right-click → Delete (Windows). Then run `npx create-next-app@latest` again to create a new project.
+
+**Q. Can I use pnpm or yarn instead?**
+
+Yes, you can freely choose your package manager. `create-next-app` will auto-detect it, or you can add `--use-pnpm` or `--use-yarn` flags. If you are a beginner, npm is the simplest option.
+
+**Q. What if the code AI generated has errors?**
+
+Pass the error message directly to AI. Request "I'm getting this error — please fix it," and AI will analyze the cause and suggest a fix. One of the best parts of vibe coding is that you can resolve errors together with AI.
+
+**Q. Can I turn this project into a real production service?**
+
+Yes, you can. However, running a production service requires additional work like domain setup, database connections, and security configurations. It is recommended to first get comfortable with vibe coding on simple projects, then expand step by step.
+
+## ⚡ From environment setup to project creation in one go
+
+If your development environment is not set up yet, visit [VibeStart](/onboarding) and select your operating system. It guides you through installing Git, Node.js, and VS Code step by step, then takes you straight to the point where you can create a project.
+
+## 🔗 Related articles
+
+- [The first wall in vibe coding for non-developers is environment setup](/blog/vibe-coding-first-wall-environment-setup)
+- [How to install Cursor and create your first project](/blog/cursor-install-first-project)
+- [From Node.js installation to vibe coding in 3 steps](/blog/nodejs-install-vibe-coding)
+- [VS Code setup guide for vibe coding](/blog/vibe-coding-vscode-settings)
+- [Complete guide to dev environment setup before vibe coding](/blog/vibe-coding-dev-environment-setup-guide)
+
+## 📑 References
+
+- [Next.js official documentation — Getting Started: Installation](https://nextjs.org/docs/getting-started/installation)
+- [Next.js official documentation — App Router](https://nextjs.org/docs/app)
+- [Tailwind CSS official documentation](https://tailwindcss.com/docs)
+- [Cursor official documentation](https://docs.cursor.com/)
