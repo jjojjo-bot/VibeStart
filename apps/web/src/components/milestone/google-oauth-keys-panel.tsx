@@ -38,6 +38,7 @@ export interface GoogleOAuthKeysPanelLabels {
   waitingSupabase: string;
   step1Label: string;
   externalLinkCta: string;
+  step1Details?: string[];
   step2Label: string;
   redirectUriLabel: string;
   redirectUriHelp: string;
@@ -152,7 +153,7 @@ export function GoogleOAuthKeysPanel({
 
       {state === "ready" && (
         <div className="space-y-4">
-          {/* Step 1: Google Cloud Console 열기 */}
+          {/* Step 1: Google Cloud Console 열기 + 상세 안내 */}
           <div className="rounded-md border border-border bg-background/40 p-3">
             <p className="mb-2 text-xs font-medium text-foreground">
               <span className="text-muted-foreground">1.</span>{" "}
@@ -162,10 +163,25 @@ export function GoogleOAuthKeysPanel({
               href={externalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-sm text-primary underline underline-offset-2"
+              className="mb-3 inline-flex items-center gap-1.5 text-sm text-primary underline underline-offset-2"
             >
               {labels.externalLinkCta} ↗
             </a>
+            {labels.step1Details && labels.step1Details.length > 0 && (
+              <ol className="mt-2 space-y-1.5 border-t border-border/50 pt-2">
+                {labels.step1Details.map((detail, i) => (
+                  <li
+                    key={i}
+                    className="flex gap-2 text-xs text-muted-foreground"
+                  >
+                    <span className="shrink-0 text-primary/60">
+                      {String.fromCharCode(9312 + i)}
+                    </span>
+                    <span>{detail}</span>
+                  </li>
+                ))}
+              </ol>
+            )}
           </div>
 
           {/* Step 2: Redirect URI 복사 */}

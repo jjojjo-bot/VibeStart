@@ -670,6 +670,7 @@ export default async function MilestoneRunPage({
       waitingSupabase: string;
       step1Label: string;
       externalLinkCta: string;
+      step1Details?: string[];
       step2Label: string;
       redirectUriLabel: string;
       redirectUriHelp: string;
@@ -750,6 +751,14 @@ export default async function MilestoneRunPage({
         waitingSupabase: tGoogleKeys("waitingSupabase"),
         step1Label: tGoogleKeys("step1Label"),
         externalLinkCta: tGoogleKeys("externalLinkCta"),
+        step1Details: [
+          tGoogleKeys("step1Detail1"),
+          tGoogleKeys("step1Detail2"),
+          tGoogleKeys("step1Detail3"),
+          tGoogleKeys("step1Detail4"),
+          tGoogleKeys("step1Detail5"),
+          tGoogleKeys("step1Detail6"),
+        ],
         step2Label: tGoogleKeys("step2Label"),
         redirectUriLabel: tGoogleKeys("redirectUriLabel"),
         redirectUriHelp: tGoogleKeys("redirectUriHelp"),

@@ -1383,9 +1383,15 @@ export async function installAuthUiAction(
   const authCallbackRoute = buildAuthCallbackRoute(templateInput);
 
   // package.json에 @supabase/supabase-js 추가
+  // goal에 따라 package.json 경로 결정 (frontend/ 구조 대응)
+  const GOALS_WITH_FRONTEND_PKG = new Set(["web-python", "web-java"]);
+  const pkgPath = project.goal && GOALS_WITH_FRONTEND_PKG.has(project.goal)
+    ? "frontend/package.json"
+    : "package.json";
+
   let updatedPackageJson: string | null = null;
   try {
-    const currentPkg = await getFileFromGitHub(ghToken, owner, repoName, "package.json");
+    const currentPkg = await getFileFromGitHub(ghToken, owner, repoName, pkgPath);
     if (currentPkg) {
       updatedPackageJson = addSupabaseDependency(currentPkg);
     }
@@ -1409,30 +1415,36 @@ export async function installAuthUiAction(
   }
 
   // 6) GitHub에 Next.js Auth 파일들 push
+  // goal에 따라 파일 경로 prefix 결정 (frontend/backend 분리 구조 대응)
+  const GOALS_WITH_FRONTEND_DIR_M2 = new Set(["web-python", "web-java"]);
+  const pathPrefix = project.goal && GOALS_WITH_FRONTEND_DIR_M2.has(project.goal)
+    ? "frontend/"
+    : "";
+
   try {
     // 순서: supabase client → callback route → page.tsx → package.json
     await pushFileToGitHub(
       ghToken, owner, repoName,
-      "src/lib/supabase.ts",
+      `${pathPrefix}src/lib/supabase.ts`,
       supabaseClientFile,
       "feat: add Supabase client via VibeStart",
     );
     await pushFileToGitHub(
       ghToken, owner, repoName,
-      "src/app/auth/callback/route.ts",
+      `${pathPrefix}src/app/auth/callback/route.ts`,
       authCallbackRoute,
       "feat: add OAuth callback route via VibeStart",
     );
     await pushFileToGitHub(
       ghToken, owner, repoName,
-      "src/app/page.tsx",
+      `${pathPrefix}src/app/page.tsx`,
       pageTsx,
       "feat: add Google sign-in page via VibeStart",
     );
     if (updatedPackageJson) {
       await pushFileToGitHub(
         ghToken, owner, repoName,
-        "package.json",
+        `${pathPrefix}package.json`,
         updatedPackageJson,
         "feat: add @supabase/supabase-js dependency via VibeStart",
       );
