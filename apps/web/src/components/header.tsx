@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "./language-switcher";
@@ -14,7 +15,8 @@ export function Header() {
         Skip to content
       </a>
       <div className="flex items-center gap-6">
-        <Link href="/" className="text-lg font-bold tracking-tight text-foreground hover:text-primary transition-colors">
+        <Link href="/" className="flex items-center gap-2 text-lg font-bold tracking-tight text-foreground hover:text-primary transition-colors">
+          <Image src="/logo.svg" alt="VibeStart" width={32} height={32} />
           VibeStart
         </Link>
         <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">

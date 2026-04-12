@@ -47,6 +47,6 @@ export const config = {
   // 이 경로들은 세션 쿠키를 자체 처리하며 Server Component로 렌더되지 않는
   // Route Handler이므로 next-intl을 태울 필요가 없다.
   matcher: [
-    "/((?!api|auth|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|opengraph-image).*)",
+    "/((?!api|auth|_next/static|_next/image|favicon.ico|icon.svg|logo.svg|sitemap.xml|robots.txt|opengraph-image|.*\\.svg$|.*\\.png$|.*\\.ico$|.*\\.webp$).*)",
   ],
 };
