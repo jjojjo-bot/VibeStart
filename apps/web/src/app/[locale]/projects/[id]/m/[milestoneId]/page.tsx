@@ -541,7 +541,7 @@ export default async function MilestoneRunPage({
         deployingMessage:
           deployCreatedFlag === "timeout" ? tDeploy("errorTimeout") : null,
         openSite: tDeploy("openSite"),
-        errorMessage: deployErrorRaw
+        errorMessage: deployErrorRaw && deployState !== "deployed"
           ? resolveDeployError(deployErrorRaw, tDeploy)
           : null,
       },
