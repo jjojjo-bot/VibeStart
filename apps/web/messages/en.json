@@ -79,6 +79,96 @@
       "legendStarted": "Users Started",
       "legendCompleted": "Users Completed"
     },
+    "promise": {
+      "free": "Completely free",
+      "time": "Done in 10 min",
+      "noExp": "No coding experience needed"
+    },
+    "demo": {
+      "cmd1": "git --version",
+      "out1": "git version 2.44.0",
+      "cmd2": "node --version",
+      "out2": "v22.12.0",
+      "cmd3": "npx create-next-app@latest my-site",
+      "out3": "✔ Success! Created my-site",
+      "caption": "Copy-paste the commands VibeStart provides — that's all it takes"
+    },
+    "howItWorks": "How does it work?",
+    "compare": {
+      "title": "DIY vs VibeStart",
+      "before": {
+        "label": "On your own...",
+        "1": "Search \"install Git\" → every blog says something different",
+        "2": "No idea which Node.js version to install",
+        "3": "No idea what PATH environment variable means",
+        "4": "When errors happen, no idea where you got stuck"
+      },
+      "after": {
+        "label": "With VibeStart",
+        "1": "OS-specific commands appear instantly",
+        "2": "Automatically recommends the latest LTS version",
+        "3": "One copy-paste sets up PATH",
+        "4": "Step-by-step progress — you know exactly where you are"
+      }
+    },
+    "phase2": {
+      "title": "What comes after setup?",
+      "subtitle": "Once installation is done, we guide you through these too",
+      "deploy": {
+        "emoji": "🚀",
+        "title": "Deploy your site",
+        "desc": "Go live with GitHub + Vercel"
+      },
+      "auth": {
+        "emoji": "🔐",
+        "title": "Login feature",
+        "desc": "Add Google sign-in button"
+      },
+      "vibe": {
+        "emoji": "🤖",
+        "title": "Vibe coding",
+        "desc": "Edit your site by talking to AI"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "1": {
+        "q": "What is vibe coding?",
+        "a": "Instead of writing code yourself, you ask AI in natural language and it generates the program. For example, say 'make a login page' and AI creates the code."
+      },
+      "2": {
+        "q": "Can I do this with zero coding experience?",
+        "a": "Yes, VibeStart is built for people with no coding experience at all. Just copy and paste commands into the terminal. Each step explains why you're doing it."
+      },
+      "3": {
+        "q": "What are Git, Node.js, and VS Code? Why do I need them?",
+        "a": "Git tracks code changes, Node.js runs web apps, and VS Code is a code editor. AI coding tools like Cursor and Claude Code run on top of these three, so they need to be installed first."
+      },
+      "4": {
+        "q": "Does it support both Windows and macOS?",
+        "a": "Yes, select your OS and you'll get commands tailored for your environment. Windows uses PowerShell, macOS uses Terminal."
+      },
+      "5": {
+        "q": "Is it really free?",
+        "a": "Yes, VibeStart's setup guide is completely free. All the tools installed (Git, Node.js, VS Code) are also free. No payment or sign-up required to start."
+      },
+      "6": {
+        "q": "How long does it take?",
+        "a": "Depends on internet speed, but typically 10-15 minutes to install all tools and create your first project."
+      },
+      "7": {
+        "q": "What if I get an error during setup?",
+        "a": "Each step is independent, so you can see exactly where you got stuck. Paste the error message into an AI tool (ChatGPT, Claude, etc.) and it will usually tell you how to fix it. Our blog also has troubleshooting guides."
+      },
+      "8": {
+        "q": "What do I do after environment setup?",
+        "a": "VibeStart Phase 2 guides you through pushing code to GitHub, deploying to Vercel, and adding Google login — all step by step. You can also try the vibe coding loop: edit your site by talking to AI."
+      }
+    },
+    "bottomCta": {
+      "title": "Start right now",
+      "desc": "Nothing to install. Start right in your browser."
+    },
     "reassurance": "No coding experience? No problem. Just follow along at your own pace.",
     "chartMonth": "Mon {month}",
     "chartPeriod": {

@@ -79,6 +79,96 @@
       "legendStarted": "Usuarios que iniciaron",
       "legendCompleted": "Usuarios que completaron"
     },
+    "promise": {
+      "free": "Totalmente gratis",
+      "time": "Listo en 10 min",
+      "noExp": "Sin experiencia necesaria"
+    },
+    "demo": {
+      "cmd1": "git --version",
+      "out1": "git version 2.44.0",
+      "cmd2": "node --version",
+      "out2": "v22.12.0",
+      "cmd3": "npx create-next-app@latest my-site",
+      "out3": "✔ Success! Created my-site",
+      "caption": "Solo copia y pega los comandos que VibeStart te da"
+    },
+    "howItWorks": "¿Cómo funciona?",
+    "compare": {
+      "title": "Solo vs VibeStart",
+      "before": {
+        "label": "Por tu cuenta...",
+        "1": "Buscas \"instalar Git\" → cada blog dice algo diferente",
+        "2": "No sabes qué versión de Node.js instalar",
+        "3": "No sabes qué es la variable de entorno PATH",
+        "4": "Cuando hay errores, no sabes dónde te quedaste"
+      },
+      "after": {
+        "label": "Con VibeStart",
+        "1": "Comandos específicos para tu OS al instante",
+        "2": "Recomienda automáticamente la última versión LTS",
+        "3": "Un solo copy-paste configura el PATH",
+        "4": "Progreso paso a paso — sabes exactamente dónde estás"
+      }
+    },
+    "phase2": {
+      "title": "¿Qué viene después?",
+      "subtitle": "Una vez instalado, también te guiamos con esto",
+      "deploy": {
+        "emoji": "🚀",
+        "title": "Despliega tu sitio",
+        "desc": "Publica con GitHub + Vercel"
+      },
+      "auth": {
+        "emoji": "🔐",
+        "title": "Función de login",
+        "desc": "Añade botón de Google sign-in"
+      },
+      "vibe": {
+        "emoji": "🤖",
+        "title": "Vibe coding",
+        "desc": "Edita tu sitio hablando con IA"
+      }
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "1": {
+        "q": "¿Qué es vibe coding?",
+        "a": "En vez de escribir código tú mismo, le pides a la IA en lenguaje natural y ella genera el programa. Por ejemplo, dices 'hazme una página de login' y la IA crea el código."
+      },
+      "2": {
+        "q": "¿Puedo hacerlo sin experiencia en programación?",
+        "a": "Sí, VibeStart está hecho para personas sin ninguna experiencia. Solo copia y pega comandos en la terminal. Cada paso explica por qué lo estás haciendo."
+      },
+      "3": {
+        "q": "¿Qué son Git, Node.js y VS Code? ¿Por qué los necesito?",
+        "a": "Git gestiona los cambios del código, Node.js ejecuta aplicaciones web y VS Code es un editor de código. Las herramientas de IA como Cursor y Claude Code funcionan sobre estos tres, así que hay que instalarlos primero."
+      },
+      "4": {
+        "q": "¿Es compatible con Windows y macOS?",
+        "a": "Sí, selecciona tu sistema operativo y obtendrás comandos adaptados. Windows usa PowerShell, macOS usa Terminal."
+      },
+      "5": {
+        "q": "¿Es realmente gratis?",
+        "a": "Sí, la guía de configuración de VibeStart es completamente gratuita. Las herramientas instaladas (Git, Node.js, VS Code) también son gratuitas. Sin pagos ni registro."
+      },
+      "6": {
+        "q": "¿Cuánto tiempo toma?",
+        "a": "Depende de la velocidad de internet, pero normalmente 10-15 minutos para instalar todo y crear tu primer proyecto."
+      },
+      "7": {
+        "q": "¿Qué pasa si me da un error durante la instalación?",
+        "a": "Cada paso es independiente, así que puedes ver exactamente dónde te quedaste. Pega el mensaje de error en una herramienta de IA (ChatGPT, Claude, etc.) y normalmente te dirá cómo solucionarlo."
+      },
+      "8": {
+        "q": "¿Qué hago después de la configuración?",
+        "a": "VibeStart Phase 2 te guía para subir código a GitHub, desplegar en Vercel y añadir login con Google — todo paso a paso. También puedes probar el ciclo de vibe coding: editar tu sitio hablando con IA."
+      }
+    },
+    "bottomCta": {
+      "title": "Empieza ahora mismo",
+      "desc": "No hay nada que instalar. Empieza directo en tu navegador."
+    },
     "reassurance": "No importa si no tienes experiencia en programación. Solo sigue los pasos poco a poco.",
     "chartMonth": "Mes {month}",
     "chartPeriod": {

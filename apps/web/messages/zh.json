@@ -79,6 +79,96 @@
       "legendStarted": "已开始的用户",
       "legendCompleted": "已完成的用户"
     },
+    "promise": {
+      "free": "完全免费",
+      "time": "10分钟搞定",
+      "noExp": "无需编程经验"
+    },
+    "demo": {
+      "cmd1": "git --version",
+      "out1": "git version 2.44.0",
+      "cmd2": "node --version",
+      "out2": "v22.12.0",
+      "cmd3": "npx create-next-app@latest my-site",
+      "out3": "✔ Success! Created my-site",
+      "caption": "复制粘贴 VibeStart 提供的命令就行了"
+    },
+    "howItWorks": "怎么操作？",
+    "compare": {
+      "title": "自己动手 vs VibeStart",
+      "before": {
+        "label": "自己搞的话...",
+        "1": "搜索「安装 Git」→ 每个博客说法不一样",
+        "2": "不知道该装哪个版本的 Node.js",
+        "3": "不知道什么是环境变量 PATH",
+        "4": "报错了不知道卡在哪里"
+      },
+      "after": {
+        "label": "用 VibeStart",
+        "1": "根据操作系统直接显示命令",
+        "2": "自动推荐经过验证的最新 LTS 版本",
+        "3": "复制一次就完成 PATH 设置",
+        "4": "分步骤进行，清楚知道卡在哪里"
+      }
+    },
+    "phase2": {
+      "title": "安装完之后呢？",
+      "subtitle": "安装完成后，我们还会引导你完成这些",
+      "deploy": {
+        "emoji": "🚀",
+        "title": "部署网站",
+        "desc": "通过 GitHub + Vercel 发布到互联网"
+      },
+      "auth": {
+        "emoji": "🔐",
+        "title": "登录功能",
+        "desc": "添加 Google 登录按钮"
+      },
+      "vibe": {
+        "emoji": "🤖",
+        "title": "Vibe Coding",
+        "desc": "对 AI 说话来修改网站"
+      }
+    },
+    "faq": {
+      "title": "常见问题",
+      "1": {
+        "q": "什么是 Vibe Coding？",
+        "a": "不用自己写代码，而是用自然语言告诉 AI 来生成程序。比如说「做一个登录页面」，AI 就会生成代码。"
+      },
+      "2": {
+        "q": "完全零基础也能做吗？",
+        "a": "可以，VibeStart 就是为没有编程经验的人设计的。只需要把命令复制粘贴到终端，每一步都会说明为什么要这样做。"
+      },
+      "3": {
+        "q": "Git、Node.js、VS Code 是什么？为什么需要？",
+        "a": "Git 管理代码变更，Node.js 运行网页应用，VS Code 是代码编辑器。Cursor、Claude Code 等 AI 工具都在这三个之上运行，所以需要先安装。"
+      },
+      "4": {
+        "q": "支持 Windows 和 macOS 吗？",
+        "a": "支持，选择你的操作系统后会显示对应的命令。Windows 用 PowerShell，macOS 用 Terminal。"
+      },
+      "5": {
+        "q": "真的免费吗？",
+        "a": "是的，VibeStart 的环境设置指南完全免费。安装的工具（Git、Node.js、VS Code）也都是免费的，无需付费或注册即可开始。"
+      },
+      "6": {
+        "q": "需要多长时间？",
+        "a": "取决于网速，一般 10-15 分钟就能完成所有工具安装和第一个项目创建。"
+      },
+      "7": {
+        "q": "安装过程中出错怎么办？",
+        "a": "每一步都是独立的，所以能立刻知道卡在哪里。把错误信息贴到 AI 工具（ChatGPT、Claude 等）里，基本都能告诉你怎么解决。博客也有常见错误解决指南。"
+      },
+      "8": {
+        "q": "环境设置完之后做什么？",
+        "a": "VibeStart Phase 2 会引导你把代码推到 GitHub、部署到 Vercel、添加 Google 登录——全部分步骤指导。还可以体验对 AI 说话来修改网站的 Vibe Coding 循环。"
+      }
+    },
+    "bottomCta": {
+      "title": "现在就开始吧",
+      "desc": "无需安装任何东西，浏览器直接开始。"
+    },
     "reassurance": "完全没有编程经验也没关系。慢慢跟着做就行。",
     "chartMonth": "{month}月",
     "chartPeriod": {
