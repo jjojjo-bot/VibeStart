@@ -57,16 +57,23 @@ export default async function DashboardPage({
         ? (phase1.goal as "web-nextjs" | "web-python" | "web-java" | "mobile" | "data-ai" | "not-sure")
         : null;
 
-      const project = await createProject({
-        userId: user.id,
-        track: "static",
-        name: projectName,
-        os,
-        goal,
-      });
+      // data-ai/mobile은 Phase 2 마일스톤(Vercel 배포/Auth UI)이 맞지 않아
+      // 프로젝트 자동 생성을 건너뛴다. 대시보드에서 수동 생성은 가능.
+      const PHASE2_UNSUPPORTED_GOALS = new Set(["data-ai", "mobile"]);
+      if (goal && PHASE2_UNSUPPORTED_GOALS.has(goal)) {
+        // 쿠키는 이미 삭제됨 — 대시보드를 그대로 표시
+      } else {
+        const project = await createProject({
+          userId: user.id,
+          track: "static",
+          name: projectName,
+          os,
+          goal,
+        });
 
-      redirect({ href: `/projects/${project.id}`, locale });
-      return null;
+        redirect({ href: `/projects/${project.id}`, locale });
+        return null;
+      }
     } catch {
       // 파싱 실패 시 무시하고 대시보드 표시
     }

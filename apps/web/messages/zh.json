@@ -595,7 +595,9 @@
       "description": "把代码上传到 GitHub 并用 Vercel 部署，你就能得到一个可以分享给朋友的真实网址。我们会一步步带你完成。",
       "loginButton": "用Google开始",
       "dashboardButton": "我已经有账号了",
-      "loginHint": "登录Google后，你刚创建的项目会自动关联。"
+      "loginHint": "登录Google后，你刚创建的项目会自动关联。",
+      "comingSoonHeading": "Phase 2 适用于 Web 项目",
+      "comingSoonDescription": "部署和登录功能支持 Web 项目（Next.js）。移动端和数据分析轨道的 Phase 2 即将推出。"
     },
     "backToHome": "返回首页"
   },

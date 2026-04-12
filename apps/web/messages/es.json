@@ -595,7 +595,9 @@
       "description": "Sube tu código a GitHub y publícalo con Vercel: obtendrás una URL real que puedes compartir con tus amigos. Te guiamos paso a paso.",
       "loginButton": "Empezar con Google",
       "dashboardButton": "Ya tengo una cuenta",
-      "loginHint": "Inicia sesión con Google para vincular automáticamente el proyecto que acabas de crear."
+      "loginHint": "Inicia sesión con Google para vincular automáticamente el proyecto que acabas de crear.",
+      "comingSoonHeading": "Phase 2 está disponible para proyectos web",
+      "comingSoonDescription": "Las funciones de despliegue e inicio de sesión son compatibles con proyectos web (Next.js). Phase 2 para las pistas de móvil y análisis de datos estará disponible pronto."
     },
     "backToHome": "Volver al inicio"
   },

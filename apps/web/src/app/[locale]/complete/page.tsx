@@ -270,9 +270,8 @@ function CompleteContent() {
           </div>
         )}
 
-        {/* Phase 2 진입 — Phase 1 끝낸 사용자가 자연스럽게 사이트 만들기로 넘어가는 진입점.
-            Google 로그인하면 Phase 1 데이터(os, goal, project)를 자동으로 연결해
-            프로젝트를 생성하고 Phase 2 마일스톤 페이지로 바로 이동한다. */}
+        {/* Phase 2 진입 — web 트랙만 지원. data-ai/mobile은 Phase 2 마일스톤이 아직 없으므로 안내만. */}
+        {goal !== "data-ai" && goal !== "mobile" ? (
         <div className="mb-10 rounded-xl bg-primary/5 border border-primary/20 p-6">
           <div className="mb-2 text-sm text-primary font-medium">
             {t("phase2.badge")}
@@ -304,6 +303,14 @@ function CompleteContent() {
             {t("phase2.loginHint")}
           </p>
         </div>
+        ) : (
+        <div className="mb-10 rounded-xl bg-muted/50 border border-border p-6">
+          <h3 className="font-semibold">{t("phase2.comingSoonHeading")}</h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {t("phase2.comingSoonDescription")}
+          </p>
+        </div>
+        )}
 
         {/* 다시 시작 */}
         <div className="text-center">

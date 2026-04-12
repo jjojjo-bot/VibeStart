@@ -595,7 +595,9 @@
       "description": "GitHub에 코드를 올리고 Vercel로 배포하면, 친구한테 보낼 수 있는 진짜 인터넷 주소가 생겨요. 단계별로 안내해드릴게요.",
       "loginButton": "Google로 시작하기",
       "dashboardButton": "이미 계정이 있어요",
-      "loginHint": "Google 로그인하면 방금 만든 프로젝트가 자동으로 연결됩니다."
+      "loginHint": "Google 로그인하면 방금 만든 프로젝트가 자동으로 연결됩니다.",
+      "comingSoonHeading": "Phase 2는 웹 프로젝트에서 사용할 수 있어요",
+      "comingSoonDescription": "배포와 로그인 기능은 웹 프로젝트(Next.js)에서 지원됩니다. 모바일·데이터 분석 트랙의 Phase 2는 곧 제공될 예정이에요."
     },
     "backToHome": "처음으로 돌아가기"
   },

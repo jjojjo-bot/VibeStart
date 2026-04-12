@@ -595,7 +595,9 @@
       "description": "GitHubにコードをアップロードしてVercelでデプロイすると、友達に送れる本物のURLが手に入ります。手順を一つずつご案内します。",
       "loginButton": "Googleで始める",
       "dashboardButton": "すでにアカウントがあります",
-      "loginHint": "Googleでログインすると、作成したプロジェクトが自動的にリンクされます。"
+      "loginHint": "Googleでログインすると、作成したプロジェクトが自動的にリンクされます。",
+      "comingSoonHeading": "Phase 2はWebプロジェクトで利用できます",
+      "comingSoonDescription": "デプロイとログイン機能はWebプロジェクト（Next.js）で対応しています。モバイル・データ分析トラックのPhase 2は近日提供予定です。"
     },
     "backToHome": "トップに戻る"
   },

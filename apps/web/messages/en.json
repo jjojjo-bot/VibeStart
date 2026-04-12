@@ -595,7 +595,9 @@
       "description": "Push your code to GitHub and deploy with Vercel — you'll get a real URL you can share with friends. We'll walk you through it step by step.",
       "loginButton": "Start with Google",
       "dashboardButton": "I already have an account",
-      "loginHint": "Sign in with Google to automatically link the project you just created."
+      "loginHint": "Sign in with Google to automatically link the project you just created.",
+      "comingSoonHeading": "Phase 2 is available for web projects",
+      "comingSoonDescription": "Deployment and login features are supported for web projects (Next.js). Phase 2 for mobile and data analysis tracks is coming soon."
     },
     "backToHome": "Back to Home"
   },
