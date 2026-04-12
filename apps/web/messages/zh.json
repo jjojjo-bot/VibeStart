@@ -925,7 +925,9 @@
       "mcp": {
         "github": "GitHub MCP — 在 Claude Code 中用自然语言管理仓库",
         "vercel": "Vercel MCP — 查看部署状态和日志"
-      }
+      },
+      "celebrationTitle": "🚀 我的网站上线了！",
+      "celebrationDescription": "已将代码推送到 GitHub 并通过 Vercel 完成部署。现在任何人都可以访问你的网站！"
     },
     "m2-google-auth": {
       "title": "朋友可以在你的网站注册",
@@ -941,7 +943,9 @@
       },
       "mcp": {
         "supabase": "Supabase MCP — 在 Claude Code 中管理 DB 和用户"
-      }
+      },
+      "celebrationTitle": "🔐 登录功能完成！",
+      "celebrationDescription": "你的网站现在支持 Google 账号注册了。把链接发给朋友让他们试试吧！"
     },
     "m3-vibe-coding": {
       "title": "用AI定制你的网站",
@@ -952,7 +956,9 @@
         "m3-s2-first-ai-edit": "让AI做第一次修改",
         "m3-s3-git-push": "推送你的更改",
         "m3-s4-verify-deploy": "确认自动部署结果"
-      }
+      },
+      "celebrationTitle": "🎉 Vibe Coding 循环完成！",
+      "celebrationDescription": "对AI说话、代码改变、自动部署——循环已完成。现在自由地创作吧！"
     }
   },
   "VibeCoding": {

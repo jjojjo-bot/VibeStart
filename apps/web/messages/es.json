@@ -925,7 +925,9 @@
       "mcp": {
         "github": "GitHub MCP — gestiona repositorios desde Claude Code",
         "vercel": "Vercel MCP — estado de despliegue y logs"
-      }
+      },
+      "celebrationTitle": "🚀 ¡Mi sitio está en internet!",
+      "celebrationDescription": "Subiste el código a GitHub y desplegaste con Vercel. ¡Cualquiera puede visitar tu sitio ahora!"
     },
     "m2-google-auth": {
       "title": "Los amigos pueden registrarse en tu sitio",
@@ -941,7 +943,9 @@
       },
       "mcp": {
         "supabase": "Supabase MCP — gestiona DB y usuarios desde Claude Code"
-      }
+      },
+      "celebrationTitle": "🔐 ¡Función de login completada!",
+      "celebrationDescription": "Tu sitio ahora tiene registro con Google. ¡Envía el enlace a un amigo para que se registre!"
     },
     "m3-vibe-coding": {
       "title": "Personaliza tu sitio con IA",
@@ -952,7 +956,9 @@
         "m3-s2-first-ai-edit": "Pide a la IA que haga tu primera edición",
         "m3-s3-git-push": "Sube tus cambios",
         "m3-s4-verify-deploy": "Verifica el resultado del despliegue automático"
-      }
+      },
+      "celebrationTitle": "🎉 ¡Bucle de vibe coding completado!",
+      "celebrationDescription": "Habla con la IA, el código cambia, se despliega automáticamente. ¡El bucle está completo!"
     }
   },
   "VibeCoding": {

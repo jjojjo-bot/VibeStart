@@ -1361,8 +1361,12 @@ export default async function MilestoneRunPage({
         deployedUrl={vibeCodingData?.deployedUrl ?? null}
         dashboardUrl={`/${locale}/projects/${project.id}`}
         labels={{
-          title: tRun("celebrationTitle"),
-          description: tRun("celebrationDescription"),
+          title: tMilestones.has(`${milestone.id}.celebrationTitle`)
+            ? tMilestones(`${milestone.id}.celebrationTitle`)
+            : tRun("celebrationTitle"),
+          description: tMilestones.has(`${milestone.id}.celebrationDescription`)
+            ? tMilestones(`${milestone.id}.celebrationDescription`)
+            : tRun("celebrationDescription"),
           ctaLabel: tRun("celebrationCta"),
         }}
       />

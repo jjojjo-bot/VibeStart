@@ -925,7 +925,9 @@
       "mcp": {
         "github": "GitHub MCP — Claude Code에서 자연어로 저장소 관리",
         "vercel": "Vercel MCP — 배포 상태/로그 조회"
-      }
+      },
+      "celebrationTitle": "🚀 내 사이트가 인터넷에 떴어요!",
+      "celebrationDescription": "GitHub에 코드를 올리고 Vercel로 배포까지 완료했어요. 이제 누구나 내 사이트에 접속할 수 있습니다!"
     },
     "m2-google-auth": {
       "title": "친구가 내 사이트에 가입한다",
@@ -941,7 +943,9 @@
       },
       "mcp": {
         "supabase": "Supabase MCP — Claude Code에서 자연어로 DB·사용자 관리"
-      }
+      },
+      "celebrationTitle": "🔐 로그인 기능 완성!",
+      "celebrationDescription": "Google 계정으로 가입할 수 있는 사이트가 됐어요. 친구에게 링크를 보내서 가입해보라고 해보세요!"
     },
     "m3-vibe-coding": {
       "title": "AI로 내 사이트를 바꿔본다",
@@ -952,7 +956,9 @@
         "m3-s2-first-ai-edit": "AI에게 첫 수정 요청하기",
         "m3-s3-git-push": "변경사항 push하기",
         "m3-s4-verify-deploy": "자동 배포 결과 확인"
-      }
+      },
+      "celebrationTitle": "🎉 바이브코딩 루프 완성!",
+      "celebrationDescription": "AI에게 말하고, 코드가 바뀌고, 자동으로 배포되는 루프를 완성했어요. 이제 자유롭게 만들어보세요!"
     }
   },
   "VibeCoding": {

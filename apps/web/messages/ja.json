@@ -925,7 +925,9 @@
       "mcp": {
         "github": "GitHub MCP — Claude Codeから自然言語でリポジトリ管理",
         "vercel": "Vercel MCP — デプロイ状況とログを確認"
-      }
+      },
+      "celebrationTitle": "🚀 サイトがインターネットに公開されました！",
+      "celebrationDescription": "GitHubにコードをプッシュし、Vercelでデプロイが完了しました。誰でもあなたのサイトにアクセスできます！"
     },
     "m2-google-auth": {
       "title": "友達があなたのサイトに登録できる",
@@ -941,7 +943,9 @@
       },
       "mcp": {
         "supabase": "Supabase MCP — Claude CodeからDB・ユーザー管理"
-      }
+      },
+      "celebrationTitle": "🔐 ログイン機能が完成しました！",
+      "celebrationDescription": "Googleアカウントでサインアップできるサイトになりました。友達にリンクを送って登録してもらいましょう！"
     },
     "m3-vibe-coding": {
       "title": "AIで自分のサイトをカスタマイズ",
@@ -952,7 +956,9 @@
         "m3-s2-first-ai-edit": "AIに最初の修正をお願いする",
         "m3-s3-git-push": "変更をpushする",
         "m3-s4-verify-deploy": "自動デプロイの結果を確認"
-      }
+      },
+      "celebrationTitle": "🎉 バイブコーディング ループ完成！",
+      "celebrationDescription": "AIに話しかけ、コードが変わり、自動デプロイ。ループが完成しました。自由に作りましょう！"
     }
   },
   "VibeCoding": {

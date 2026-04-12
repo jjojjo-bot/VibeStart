@@ -925,7 +925,9 @@
       "mcp": {
         "github": "GitHub MCP — Claude Code से रिपॉजिटरी प्रबंधन",
         "vercel": "Vercel MCP — डिप्लॉय स्टेटस और लॉग"
-      }
+      },
+      "celebrationTitle": "🚀 मेरी साइट इंटरनेट पर लाइव है!",
+      "celebrationDescription": "आपने GitHub पर कोड पुश किया और Vercel से डिप्लॉय किया। अब कोई भी आपकी साइट पर जा सकता है!"
     },
     "m2-google-auth": {
       "title": "दोस्त आपकी साइट पर साइन अप कर सकते हैं",
@@ -941,7 +943,9 @@
       },
       "mcp": {
         "supabase": "Supabase MCP — Claude Code से DB और उपयोगकर्ता प्रबंधन"
-      }
+      },
+      "celebrationTitle": "🔐 लॉगिन फीचर पूरा हो गया!",
+      "celebrationDescription": "आपकी साइट पर अब Google साइन-अप है। दोस्तों को लिंक भेजें और साइन अप करवाएं!"
     },
     "m3-vibe-coding": {
       "title": "AI से अपनी साइट बदलें",
@@ -952,7 +956,9 @@
         "m3-s2-first-ai-edit": "AI से पहला बदलाव करवाएं",
         "m3-s3-git-push": "अपने बदलाव push करें",
         "m3-s4-verify-deploy": "ऑटो-डिप्लॉय का नतीजा जांचें"
-      }
+      },
+      "celebrationTitle": "🎉 वाइब कोडिंग लूप पूरा!",
+      "celebrationDescription": "AI से बात करो, कोड बदले, ऑटो-डिप्लॉय — लूप पूरा हो गया। अब आज़ादी से बनाओ!"
     }
   },
   "VibeCoding": {
