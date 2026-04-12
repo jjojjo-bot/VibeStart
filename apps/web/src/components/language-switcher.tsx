@@ -61,7 +61,7 @@ export function LanguageSwitcher() {
       <button
         onClick={() => setOpen((v) => !v)}
         className="flex items-center gap-2 rounded-lg border border-border/50 bg-card px-2 py-1.5 text-sm text-foreground outline-none hover:bg-accent transition-colors"
-        aria-label="Select language"
+        aria-label={`${current.label} — Select language`}
         aria-expanded={open}
         aria-haspopup="listbox"
       >

@@ -90,7 +90,7 @@ export default function LandingPage() {
             <div className="text-emerald-400">{t("demo.out3")}</div>
           </div>
         </div>
-        <p className="mt-3 text-center text-xs text-muted-foreground/60">
+        <p className="mt-3 text-center text-xs text-muted-foreground">
           {t("demo.caption")}
         </p>
       </section>
@@ -222,7 +222,7 @@ export default function LandingPage() {
             </Button>
           </Link>
         </div>
-        <p className="mt-16 text-sm text-muted-foreground/70">
+        <p className="mt-16 text-sm text-muted-foreground">
           {t("reassurance")}
         </p>
       </section>
