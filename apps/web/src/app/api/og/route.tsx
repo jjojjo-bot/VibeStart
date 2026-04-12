@@ -1,18 +1,14 @@
 import { ImageResponse } from "next/og";
 
-export const alt = "VibeStart — 바이브코딩, 여기서 시작하세요";
-export const size = {
-  width: 1200,
-  height: 630,
-};
-export const contentType = "image/png";
+export const runtime = "edge";
 
-export default function Image() {
+export async function GET(): Promise<ImageResponse> {
   return new ImageResponse(
     (
       <div
         style={{
-          background: "linear-gradient(135deg, #1a1025 0%, #2d1b69 50%, #1a1025 100%)",
+          background:
+            "linear-gradient(135deg, #1a1025 0%, #2d1b69 50%, #1a1025 100%)",
           width: "100%",
           height: "100%",
           display: "flex",
@@ -88,7 +84,13 @@ export default function Image() {
               >
                 {step.num}
               </div>
-              <span style={{ color: "#e2e0e8", fontSize: 22, fontWeight: 500 }}>
+              <span
+                style={{
+                  color: "#e2e0e8",
+                  fontSize: 22,
+                  fontWeight: 500,
+                }}
+              >
                 {step.text}
               </span>
             </div>
@@ -96,6 +98,6 @@ export default function Image() {
         </div>
       </div>
     ),
-    { ...size }
+    { width: 1200, height: 630 },
   );
 }
