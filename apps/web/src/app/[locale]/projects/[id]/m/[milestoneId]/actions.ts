@@ -513,45 +513,73 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
     redirect(`${returnTo}?deploy_error=invalid_repo`);
   }
 
-  // 3) GitHub repo에 Next.js 최소 프로젝트 파일 세트 push
-  // Vercel framework=nextjs가 next 의존성을 요구하므로 단일 index.html로는
-  // 빌드가 실패한다. create-next-app 축소판(package.json + tsconfig +
-  // src/app/{layout,page}.tsx)을 한 커밋으로 push해 Vercel이 바로 빌드할 수
-  // 있는 상태로 만든다. M2 Auth UI 설치 단계에서 page.tsx를 덮어쓰기 때문에
-  // src/app 경로 구조는 그대로 이어진다.
+  // 3) 저장소가 비어 있으면(= m1-s3 git push를 건너뛴 경우) 최소 Next.js
+  // 프로젝트 세트를 fallback으로 push한다. 정상적으로 Phase 1 프로젝트를
+  // push했으면 package.json에 `next`가 이미 있으므로 건드리지 않는다.
   //
   // goal에 따라 경로 prefix 결정: frontend/backend 분리 트랙은 frontend/ 아래
-  // 에 Next.js 앱을 배치하고 Vercel rootDirectory도 frontend로 맞춘다.
+  // 에 Next.js 앱이 위치하고 Vercel rootDirectory도 frontend로 맞춘다.
   const GOALS_WITH_FRONTEND_DIR = new Set(["web-python", "web-java"]);
   const useFrontendDir =
     project.goal !== null && GOALS_WITH_FRONTEND_DIR.has(project.goal);
   const pathPrefix = useFrontendDir ? "frontend/" : "";
   const rootDirectory = useFrontendDir ? "frontend" : undefined;
 
-  let errCode: string | null = null;
+  // 사용자가 m1-s3에서 이미 Next.js 프로젝트를 push했는지 확인.
+  // package.json이 있고 `next` 의존성이 들어있으면 정상 — 그대로 둔다.
+  let existingPkgJson: string | null = null;
   try {
-    const templateFiles = buildNextJsLandingFiles({ projectName: project.name });
-    const filesToPush = templateFiles.map((f) => ({
-      path: `${pathPrefix}${f.path}`,
-      content: f.content,
-    }));
-    await pushFilesToGitHub(
+    existingPkgJson = await getFileFromGitHub(
       ghToken,
       owner,
       repoName,
-      filesToPush,
-      "feat: scaffold Next.js landing via VibeStart",
+      `${pathPrefix}package.json`,
     );
   } catch (err) {
-    console.error("[firstDeployAction] pushFilesToGitHub failed", {
-      userId: user.id,
-      projectId: project.id,
+    console.warn("[firstDeployAction] package.json read failed", {
       error: err instanceof Error ? err.message : String(err),
     });
-    errCode =
-      err instanceof Error
-        ? err.message.replace(/\s+/g, "_").slice(0, 120)
-        : "unknown";
+  }
+  const hasUserNextProject =
+    existingPkgJson !== null && /"next"\s*:/.test(existingPkgJson);
+
+  let errCode: string | null = null;
+  if (!hasUserNextProject) {
+    console.log("[firstDeployAction] no user Next.js project found, pushing fallback template", {
+      projectId: project.id,
+      pathPrefix,
+    });
+    try {
+      const templateFiles = buildNextJsLandingFiles({
+        projectName: project.name,
+      });
+      const filesToPush = templateFiles.map((f) => ({
+        path: `${pathPrefix}${f.path}`,
+        content: f.content,
+      }));
+      await pushFilesToGitHub(
+        ghToken,
+        owner,
+        repoName,
+        filesToPush,
+        "feat: scaffold Next.js landing via VibeStart",
+      );
+    } catch (err) {
+      console.error("[firstDeployAction] pushFilesToGitHub failed", {
+        userId: user.id,
+        projectId: project.id,
+        error: err instanceof Error ? err.message : String(err),
+      });
+      errCode =
+        err instanceof Error
+          ? err.message.replace(/\s+/g, "_").slice(0, 120)
+          : "unknown";
+    }
+  } else {
+    console.log("[firstDeployAction] user Next.js project detected, skipping template push", {
+      projectId: project.id,
+      pathPrefix,
+    });
   }
 
   if (errCode) {
