@@ -928,12 +928,12 @@
     "waitingSupabase": "Primero termina de crear el proyecto de Supabase arriba",
     "step1Label": "Crea un cliente OAuth en Google Cloud Console",
     "externalLinkCta": "Abrir Google Cloud Console",
-    "step1Detail1": "Haz clic en el enlace de arriba para abrir Google Cloud Console",
-    "step1Detail2": "Si es tu primera vez, acepta los términos — se creará un proyecto automáticamente",
-    "step1Detail3": "Menú izquierdo: 'Credenciales' → arriba '+ CREAR CREDENCIALES' → 'ID de cliente OAuth'",
-    "step1Detail4": "Si aparece 'Configurar pantalla de consentimiento' → selecciona 'Externo' → escribe cualquier nombre → Guardar",
-    "step1Detail5": "Tipo de aplicación: selecciona 'Aplicación web'",
-    "step1Detail6": "Nombre: escribe cualquier cosa (ej: 'My App Login')",
+    "step1Detail1": "Haz clic en el botón de arriba para abrir Google Cloud Console e inicia sesión con tu cuenta de Google",
+    "step1Detail2": "Haz clic en el selector de proyectos arriba a la izquierda → \"Nuevo proyecto\" → escribe un nombre (ej: \"my-site\") → \"Crear\". Aunque ya tengas proyectos, te recomendamos crear uno específico para este sitio",
+    "step1Detail3": "Menú izquierdo \"APIs y servicios\" → \"Pantalla de consentimiento de OAuth\" → selecciona \"Externo\" → ingresa el nombre de la app y tu correo → \"Guardar y continuar\"",
+    "step1Detail4": "Menú izquierdo \"Credenciales\" → arriba \"+ CREAR CREDENCIALES\" → \"ID de cliente de OAuth\"",
+    "step1Detail5": "Tipo de aplicación: selecciona \"Aplicación web\"",
+    "step1Detail6": "Nombre: escribe cualquier cosa (ej: \"My App Login\")",
     "step2Label": "Pega la dirección de abajo en 'URIs de redirección autorizados'",
     "redirectUriLabel": "Authorized redirect URI",
     "redirectUriHelp": "Pulsa '+ Agregar URI' y pega la dirección exactamente. Si hay un solo carácter diferente, el login no funcionará",
@@ -954,7 +954,8 @@
     "resetSuccess": "Claves guardadas eliminadas. Vuelve a ingresarlas",
     "errorEmpty": "Ingresa tanto el Client ID como el Client Secret",
     "errorTooLong": "La entrada es demasiado larga. Verifica los valores",
-    "errorGeneric": "Error al guardar: {code}"
+    "errorGeneric": "Error al guardar: {code}",
+    "step1Detail7": "Copia el redirect URI del paso 2 a continuación y pégalo en \"URIs de redireccionamiento autorizados\", luego haz clic en \"Crear\""
   },
   "EnableGoogleProvider": {
     "title": "Activar inicio de sesión con Google en Supabase",

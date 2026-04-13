@@ -788,6 +788,7 @@ export default async function MilestoneRunPage({
           tGoogleKeys("step1Detail4"),
           tGoogleKeys("step1Detail5"),
           tGoogleKeys("step1Detail6"),
+          tGoogleKeys("step1Detail7"),
         ],
         step2Label: tGoogleKeys("step2Label"),
         redirectUriLabel: tGoogleKeys("redirectUriLabel"),

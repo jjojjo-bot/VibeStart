@@ -928,12 +928,12 @@
     "waitingSupabase": "请先完成上方的 Supabase 项目创建",
     "step1Label": "在 Google Cloud Console 创建 OAuth 客户端",
     "externalLinkCta": "打开 Google Cloud Console",
-    "step1Detail1": "点击上方链接打开 Google Cloud Console",
-    "step1Detail2": "首次使用需同意条款，项目会自动创建",
-    "step1Detail3": "左侧菜单：「凭据」→ 顶部「+ 创建凭据」→「OAuth 客户端 ID」",
-    "step1Detail4": "如果提示「需要配置同意屏幕」→ 选择「外部」→ 输入任意应用名称 → 保存",
-    "step1Detail5": "应用类型：选择「Web 应用」",
-    "step1Detail6": "名称：随便输入（例如「My App Login」）",
+    "step1Detail1": "点击上方按钮打开 Google Cloud Console,使用你的 Google 账号登录",
+    "step1Detail2": "左上角项目选择器 →「新建项目」→ 输入名称(例:「my-site」)→「创建」。即使已有项目,也建议为本站点新建一个专用项目",
+    "step1Detail3": "左侧菜单「API 和服务」→「OAuth 同意屏幕」→ 用户类型选「外部」→ 填写应用名称和你的邮箱 →「保存并继续」",
+    "step1Detail4": "左侧菜单「凭据」→ 顶部「+ 创建凭据」→ 选择「OAuth 客户端 ID」",
+    "step1Detail5": "应用类型:选择「Web 应用程序」",
+    "step1Detail6": "名称:随便输入(例:「My App Login」)",
     "step2Label": "将下方地址粘贴到「已获授权的重定向 URI」中",
     "redirectUriLabel": "Authorized redirect URI",
     "redirectUriHelp": "点击「+ 添加 URI」按钮，将下方地址原样粘贴。差一个字符登录都不会成功",
@@ -954,7 +954,8 @@
     "resetSuccess": "已清除保存的密钥。请重新输入",
     "errorEmpty": "请输入 Client ID 和 Client Secret",
     "errorTooLong": "输入值过长。请检查数值",
-    "errorGeneric": "保存失败:{code}"
+    "errorGeneric": "保存失败:{code}",
+    "step1Detail7": "复制下面第 2 步的 redirect URI,粘贴到「已获授权的重定向 URI」栏,然后点击「创建」"
   },
   "EnableGoogleProvider": {
     "title": "在 Supabase 上启用 Google 登录",

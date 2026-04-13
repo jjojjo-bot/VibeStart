@@ -928,12 +928,12 @@
     "waitingSupabase": "まず上のSupabaseプロジェクト作成を完了してください",
     "step1Label": "Google Cloud ConsoleでOAuthクライアントを作成",
     "externalLinkCta": "Google Cloud Consoleを開く",
-    "step1Detail1": "上のリンクをクリックするとGoogle Cloud Consoleが開きます",
-    "step1Detail2": "初めての場合は利用規約に同意すると、プロジェクトが自動作成されます",
-    "step1Detail3": "左メニュー：「認証情報」→ 上部「+ 認証情報を作成」→「OAuthクライアントID」を選択",
-    "step1Detail4": "「同意画面の設定が必要」と表示されたら →「外部」を選択 → アプリ名を入力 → 保存",
-    "step1Detail5": "アプリケーションの種類：「ウェブアプリケーション」を選択",
-    "step1Detail6": "名前：何でもOK（例：「My App Login」）",
+    "step1Detail1": "ボタンを押してGoogle Cloud Consoleを開き、ご自身のGoogleアカウントでログインします",
+    "step1Detail2": "左上のプロジェクト選択メニュー →「新しいプロジェクト」→ 名前を入力(例:「my-site」)→「作成」。既存プロジェクトがあってもサイト専用に新しく作ることを推奨",
+    "step1Detail3": "左メニュー「APIとサービス」→「OAuth同意画面」→ ユーザータイプ「外部」→ アプリ名とご自身のメールを入力 →「保存して次へ」",
+    "step1Detail4": "左メニュー「認証情報」→ 上部「+ 認証情報を作成」→「OAuthクライアントID」を選択",
+    "step1Detail5": "アプリケーションの種類:「ウェブアプリケーション」を選択",
+    "step1Detail6": "名前:何でもOK(例:「My App Login」)",
     "step2Label": "「承認済みのリダイレクトURI」に下のアドレスを貼り付けてください",
     "redirectUriLabel": "Authorized redirect URI",
     "redirectUriHelp": "「+ URIを追加」ボタンを押して下のアドレスをそのまま貼り付けてください。1文字でも違うとログインできません",
@@ -954,7 +954,8 @@
     "resetSuccess": "保存されたキーを削除しました。もう一度入力してください",
     "errorEmpty": "Client IDとClient Secretの両方を入力してください",
     "errorTooLong": "入力値が長すぎます。値を再確認してください",
-    "errorGeneric": "保存に失敗: {code}"
+    "errorGeneric": "保存に失敗: {code}",
+    "step1Detail7": "下の2番目のステップのredirect URIをコピーして「承認済みのリダイレクトURI」欄に貼り付けてから「作成」をクリック"
   },
   "EnableGoogleProvider": {
     "title": "SupabaseでGoogleログインを有効化",

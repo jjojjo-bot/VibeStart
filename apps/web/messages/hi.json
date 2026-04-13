@@ -928,12 +928,12 @@
     "waitingSupabase": "पहले ऊपर Supabase प्रोजेक्ट बनाना पूरा करें",
     "step1Label": "Google Cloud Console में OAuth क्लाइंट बनाएं",
     "externalLinkCta": "Google Cloud Console खोलें",
-    "step1Detail1": "ऊपर दिए गए लिंक पर क्लिक करके Google Cloud Console खोलें",
-    "step1Detail2": "पहली बार है तो शर्तें स्वीकार करें — प्रोजेक्ट अपने आप बन जाएगा",
-    "step1Detail3": "बाएं मेनू: 'Credentials' → ऊपर '+ CREATE CREDENTIALS' → 'OAuth client ID' चुनें",
-    "step1Detail4": "अगर 'Configure consent screen' दिखे → 'External' चुनें → कोई भी ऐप नाम डालें → Save",
-    "step1Detail5": "Application type: 'Web application' चुनें",
-    "step1Detail6": "Name: कुछ भी डालें (जैसे 'My App Login')",
+    "step1Detail1": "ऊपर दिए बटन पर क्लिक करके Google Cloud Console खोलें और अपने Google अकाउंट से साइन इन करें",
+    "step1Detail2": "ऊपर बाईं ओर प्रोजेक्ट सेलेक्टर → \"New Project\" → नाम डालें (जैसे \"my-site\") → \"Create\"। पहले से प्रोजेक्ट हैं तब भी इस साइट के लिए नया बनाना सुझाव है",
+    "step1Detail3": "बायां मेनू \"APIs & Services\" → \"OAuth consent screen\" → यूज़र टाइप \"External\" चुनें → ऐप नाम और अपना ईमेल डालें → \"Save and Continue\"",
+    "step1Detail4": "बायां मेनू \"Credentials\" → ऊपर \"+ CREATE CREDENTIALS\" → \"OAuth client ID\" चुनें",
+    "step1Detail5": "Application type: \"Web application\" चुनें",
+    "step1Detail6": "Name: कुछ भी डालें (जैसे \"My App Login\")",
     "step2Label": "नीचे का पता 'Authorized redirect URIs' में पेस्ट करें",
     "redirectUriLabel": "Authorized redirect URI",
     "redirectUriHelp": "'+ ADD URI' बटन दबाएं और नीचे का पता हूबहू पेस्ट करें। एक अक्षर भी अलग हुआ तो लॉगिन काम नहीं करेगा",
@@ -954,7 +954,8 @@
     "resetSuccess": "सहेजी गई कुंजियाँ हटा दी गईं। कृपया फिर से दर्ज करें",
     "errorEmpty": "कृपया Client ID और Client Secret दोनों दर्ज करें",
     "errorTooLong": "इनपुट बहुत लंबा है। कृपया मानों की जाँच करें",
-    "errorGeneric": "सहेजने में विफल: {code}"
+    "errorGeneric": "सहेजने में विफल: {code}",
+    "step1Detail7": "नीचे चरण 2 का redirect URI कॉपी करें और \"Authorized redirect URIs\" में पेस्ट करें, फिर \"Create\" क्लिक करें"
   },
   "EnableGoogleProvider": {
     "title": "Supabase पर Google साइन-इन सक्षम करें",
