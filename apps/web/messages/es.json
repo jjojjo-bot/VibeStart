@@ -344,7 +344,7 @@
     "progressLabel": "Progreso",
     "progressAriaLabel": "Progreso de instalación",
     "resultPreviewLabel": "Ejemplo del resultado",
-    "claudeMdGuide": "Copia el siguiente contenido y guárdalo como archivo <code>CLAUDE.md</code> en la raíz del proyecto.",
+    "claudeMdGuide": "El archivo <code>CLAUDE.md</code> se crea automáticamente en la raíz del proyecto con el comando de arriba. Ábrelo en VS Code si quieres personalizarlo. A continuación se muestra el contenido del archivo.",
     "whyNeededToggle": {
       "open": "▾ Cerrar",
       "closed": "▸ ¿Qué es esto?"

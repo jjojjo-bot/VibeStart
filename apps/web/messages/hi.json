@@ -344,7 +344,7 @@
     "progressLabel": "प्रगति",
     "progressAriaLabel": "इंस्टॉलेशन प्रगति",
     "resultPreviewLabel": "चलाने के बाद का उदाहरण",
-    "claudeMdGuide": "नीचे का कंटेंट कॉपी करके प्रोजेक्ट रूट में <code>CLAUDE.md</code> फाइल के रूप में सेव करें।",
+    "claudeMdGuide": "<code>CLAUDE.md</code> फाइल ऊपर दिए कमांड से प्रोजेक्ट रूट में अपने आप बन जाती है। यदि आप इसे बदलना चाहें, तो VS Code में खोलकर संपादित कर सकते हैं। नीचे इसका कंटेंट दिया है।",
     "whyNeededToggle": {
       "open": "▾ बंद करें",
       "closed": "▸ यह क्या है?"

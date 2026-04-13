@@ -344,7 +344,7 @@
     "progressLabel": "진행률",
     "progressAriaLabel": "설치 진행률",
     "resultPreviewLabel": "실행 결과 예시",
-    "claudeMdGuide": "아래 내용을 복사해서 프로젝트 루트에 <code>CLAUDE.md</code> 파일로 저장해주세요.",
+    "claudeMdGuide": "<code>CLAUDE.md</code> 파일은 위 명령어로 프로젝트 루트에 자동 생성됩니다. 원하면 VS Code에서 열어 수정할 수 있어요. 아래는 파일에 들어가는 내용입니다.",
     "whyNeededToggle": {
       "open": "▾ 닫기",
       "closed": "▸ 이게 뭔가요?"

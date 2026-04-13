@@ -344,7 +344,7 @@
     "progressLabel": "進捗",
     "progressAriaLabel": "インストール進捗",
     "resultPreviewLabel": "実行結果の例",
-    "claudeMdGuide": "以下の内容をコピーして、プロジェクトルートに<code>CLAUDE.md</code>ファイルとして保存してください。",
+    "claudeMdGuide": "<code>CLAUDE.md</code>ファイルは上のコマンドでプロジェクトルートに自動生成されます。編集したい場合は VS Code で開いてください。以下はファイルの中身です。",
     "whyNeededToggle": {
       "open": "▾ 閉じる",
       "closed": "▸ これは何ですか？"

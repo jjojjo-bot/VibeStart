@@ -675,6 +675,23 @@ const CLAUDE_MD_DATA_AI = `# Project Structure Rules
 3. Use type hints on all functions
 4. File names: snake_case`;
 
+/**
+ * 주어진 폴더 생성 명령 뒤에 `cd <projectRoot> && cat > CLAUDE.md << 'EOF' ...`
+ * heredoc을 붙여 폴더 스캐폴딩과 CLAUDE.md 자동 생성을 한 스크립트로 묶는다.
+ *
+ * heredoc 구분자는 single-quote(`'EOF'`)로 감싸 내부 `$`, 백틱, 변수 전개를
+ * 모두 비활성화한다. CLAUDE_MD_* 상수 본문은 순수 마크다운이므로 안전하게
+ * 리터럴로 기록된다. 구분자 이름은 본문과 충돌하지 않는 고유 값 사용.
+ *
+ * 비전공자는 파일을 "새로 만드는" 심리적 부담이 크기 때문에 미리 파일이
+ * 존재하도록 만들어 두고, 필요하면 VS Code에서 열어 편집하게 유도한다.
+ */
+function withClaudeMd(mkdirChain: string, projectRoot: string, content: string): string {
+  return `${mkdirChain} && cd ${projectRoot} && cat > CLAUDE.md << 'VIBESTART_CLAUDE_MD_EOF'
+${content}
+VIBESTART_CLAUDE_MD_EOF`;
+}
+
 function architectureStep(goal: Goal, projectName: string, env: string, t: T): SetupStep {
   const home = `~/${projectName}`;
   const descKey = goal === "data-ai" ? "architecture.description.dataAi" : "architecture.description.default";
@@ -689,7 +706,11 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         group: "projectCreate",
         environment: env,
         detailedGuide: t("architecture.detailedGuide"),
-        script: `cd ${home} && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui`,
+        script: withClaudeMd(
+          `cd ${home} && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui`,
+          home,
+          CLAUDE_MD_NEXTJS,
+        ),
         claudeMdContent: CLAUDE_MD_NEXTJS,
       };
     case "web-python":
@@ -700,7 +721,11 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         group: "projectCreate",
         environment: env,
         detailedGuide: t("architecture.detailedGuide"),
-        script: `cd ${home}/frontend && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui && cd ${home}/backend && mkdir -p domain/models domain/services ports/inbound ports/outbound adapters/inbound/api adapters/outbound/persistence`,
+        script: withClaudeMd(
+          `cd ${home}/frontend && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui && cd ${home}/backend && mkdir -p domain/models domain/services ports/inbound ports/outbound adapters/inbound/api adapters/outbound/persistence`,
+          home,
+          CLAUDE_MD_WEB_PYTHON,
+        ),
         claudeMdContent: CLAUDE_MD_WEB_PYTHON,
       };
     case "web-java":
@@ -711,7 +736,11 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         group: "projectCreate",
         environment: env,
         detailedGuide: t("architecture.detailedGuide"),
-        script: `cd ${home}/frontend && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui && cd ${home}/backend && mkdir -p src/main/java/com/example/app/domain/model src/main/java/com/example/app/domain/service src/main/java/com/example/app/port/in src/main/java/com/example/app/port/out src/main/java/com/example/app/adapter/in/web src/main/java/com/example/app/adapter/out/persistence`,
+        script: withClaudeMd(
+          `cd ${home}/frontend && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui && cd ${home}/backend && mkdir -p src/main/java/com/example/app/domain/model src/main/java/com/example/app/domain/service src/main/java/com/example/app/port/in src/main/java/com/example/app/port/out src/main/java/com/example/app/adapter/in/web src/main/java/com/example/app/adapter/out/persistence`,
+          home,
+          CLAUDE_MD_WEB_JAVA,
+        ),
         claudeMdContent: CLAUDE_MD_WEB_JAVA,
       };
     case "mobile":
@@ -722,7 +751,11 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         group: "projectCreate",
         environment: env,
         detailedGuide: t("architecture.detailedGuide"),
-        script: `cd ${home} && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui/screens src/adapters/ui/components`,
+        script: withClaudeMd(
+          `cd ${home} && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui/screens src/adapters/ui/components`,
+          home,
+          CLAUDE_MD_EXPO,
+        ),
         claudeMdContent: CLAUDE_MD_EXPO,
       };
     case "data-ai":
@@ -733,7 +766,11 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         group: "projectCreate",
         environment: env,
         detailedGuide: t("architecture.detailedGuide"),
-        script: `cd ${home} && mkdir -p data notebooks src/loaders src/analyzers src/visualizers`,
+        script: withClaudeMd(
+          `cd ${home} && mkdir -p data notebooks src/loaders src/analyzers src/visualizers`,
+          home,
+          CLAUDE_MD_DATA_AI,
+        ),
         claudeMdContent: CLAUDE_MD_DATA_AI,
       };
   }

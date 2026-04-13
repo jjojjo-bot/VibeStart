@@ -344,7 +344,7 @@
     "progressLabel": "进度",
     "progressAriaLabel": "安装进度",
     "resultPreviewLabel": "运行结果示例",
-    "claudeMdGuide": "请复制以下内容，保存为项目根目录下的 <code>CLAUDE.md</code> 文件。",
+    "claudeMdGuide": "上面的命令会自动在项目根目录生成 <code>CLAUDE.md</code> 文件。如需修改，可在 VS Code 中打开该文件。以下是文件内容。",
     "whyNeededToggle": {
       "open": "▾ 收起",
       "closed": "▸ 这是什么？"

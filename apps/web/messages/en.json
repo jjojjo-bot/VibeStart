@@ -344,7 +344,7 @@
     "progressLabel": "Progress",
     "progressAriaLabel": "Setup progress",
     "resultPreviewLabel": "Expected output",
-    "claudeMdGuide": "Copy the content below and save it as a <code>CLAUDE.md</code> file in your project root.",
+    "claudeMdGuide": "The <code>CLAUDE.md</code> file is automatically created in your project root by the command above. Open it in VS Code if you want to customize it. Below is what's inside the file.",
     "whyNeededToggle": {
       "open": "▾ Close",
       "closed": "▸ What is this?"
