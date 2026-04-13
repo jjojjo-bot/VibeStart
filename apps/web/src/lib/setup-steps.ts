@@ -334,7 +334,7 @@ function javaBackendProjectStep(projectName: string, env: string, t: T): SetupSt
     group: "projectCreate",
     environment: env,
     detailedGuide: t("projectBackendJava.detailedGuideTemplate", { projectName }),
-    script: `mkdir -p ~/${projectName} && cd ~/${projectName} && curl -s "https://start.spring.io/starter.zip?type=gradle-project&language=java&bootVersion=3.4.4&javaVersion=17&packaging=jar&baseDir=backend&groupId=com.example&artifactId=backend&name=backend&packageName=com.example.app&dependencies=web,lombok,devtools,validation,data-jpa,sqlserver" -o backend.zip && unzip backend.zip && rm backend.zip && mv backend/src/main/resources/application.properties backend/src/main/resources/application.yml`,
+    script: `mkdir -p ~/${projectName} && cd ~/${projectName} && curl -fsSL "https://start.spring.io/starter.zip?type=gradle-project&language=java&bootVersion=3.5.13&javaVersion=17&packaging=jar&baseDir=backend&groupId=com.example&artifactId=backend&name=backend&packageName=com.example.app&dependencies=web,lombok,devtools,validation,data-jpa,sqlserver" -o backend.zip && unzip backend.zip && rm backend.zip && mv backend/src/main/resources/application.properties backend/src/main/resources/application.yml`,
   };
 }
 
