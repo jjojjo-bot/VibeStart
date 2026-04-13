@@ -71,6 +71,7 @@ import {
   createVercelProject,
   getDeployment,
   getLatestDeployment,
+  getVercelProjectProductionUrl,
 } from "@/lib/adapters/vercel/vercel-adapter";
 
 interface FetchCall {
@@ -236,5 +237,104 @@ describe("getDeployment", () => {
 
     const result = await getDeployment("token", "dpl_1");
     expect(result.readyState).toBe("BUILDING");
+  });
+});
+
+// ── getVercelProjectProductionUrl (alias 선택 로직) ──────────
+
+describe("getVercelProjectProductionUrl", () => {
+  it("automaticAliases가 비어있어도 collision-avoidance canonical을 선택한다", async () => {
+    // 실제 production 버그 재현: automaticAliases 비어 있고 alias 배열의
+    // 첫 원소가 team auto alias(`{slug}-{teamSlug}`) — 이전 구현은 첫
+    // 항목을 canonical로 잘못 선택했다.
+    stubFetch(
+      new Response(
+        JSON.stringify({
+          name: "python-test",
+          targets: {
+            production: {
+              alias: [
+                "python-test-feams.vercel.app",
+                "python-test-xi-eight.vercel.app",
+              ],
+              automaticAliases: [],
+            },
+          },
+          latestDeployments: [],
+        }),
+        { status: 200 },
+      ),
+    );
+
+    const url = await getVercelProjectProductionUrl("token", "prj_123");
+    expect(url).toBe("python-test-xi-eight.vercel.app");
+  });
+
+  it("exact match `{slug}.vercel.app`이 있으면 최우선 선택", async () => {
+    stubFetch(
+      new Response(
+        JSON.stringify({
+          name: "my-blog",
+          targets: {
+            production: {
+              alias: [
+                "my-blog-git-main-feams.vercel.app",
+                "my-blog-feams.vercel.app",
+                "my-blog.vercel.app",
+              ],
+              automaticAliases: [],
+            },
+          },
+          latestDeployments: [],
+        }),
+        { status: 200 },
+      ),
+    );
+
+    const url = await getVercelProjectProductionUrl("token", "prj_123");
+    expect(url).toBe("my-blog.vercel.app");
+  });
+
+  it("-git- 브랜치 alias와 deployment 해시 alias는 제외", async () => {
+    stubFetch(
+      new Response(
+        JSON.stringify({
+          name: "my-blog",
+          targets: {
+            production: {
+              alias: [
+                "my-blog-git-main-feams.vercel.app",
+                "my-blog-abc1234-feams.vercel.app",
+                "my-blog-ancient-sunset.vercel.app",
+              ],
+              automaticAliases: [],
+            },
+          },
+          latestDeployments: [],
+        }),
+        { status: 200 },
+      ),
+    );
+
+    const url = await getVercelProjectProductionUrl("token", "prj_123");
+    expect(url).toBe("my-blog-ancient-sunset.vercel.app");
+  });
+
+  it("production alias가 비어있으면 latestDeployment alias를 fallback으로", async () => {
+    stubFetch(
+      new Response(
+        JSON.stringify({
+          name: "my-blog",
+          targets: { production: { alias: [], automaticAliases: [] } },
+          latestDeployments: [
+            { alias: ["my-blog.vercel.app"] },
+          ],
+        }),
+        { status: 200 },
+      ),
+    );
+
+    const url = await getVercelProjectProductionUrl("token", "prj_123");
+    expect(url).toBe("my-blog.vercel.app");
   });
 });

@@ -259,16 +259,52 @@ export async function getDeployment(
 }
 
 /**
- * 프로젝트의 production 영역 alias 목록을 조회한다.
+ * 프로젝트의 production 영역에서 사용자에게 보여줄 canonical URL을 선택한다.
  *
- * Vercel은 (1) deployment-specific alias (`{name}-{hash}-{user}.vercel.app`,
- * 해당 deployment만 가리킴) 와 (2) project production alias (`{name}.vercel
- * .app`, latest production deployment를 가리킴) 두 종류를 가진다. 사용자에게
- * 보여줄 안정적인 URL은 후자.
+ * Vercel은 하나의 production deployment에 여러 alias를 붙인다
  *
- * Vercel API의 project 응답에서 `targets.production.alias[]`를 우선 사용,
- * 없으면 top-level `alias[]`에서 PRODUCTION 타겟을 찾는다.
+ *   - `{slug}.vercel.app` (exact, 충돌이 없으면)
+ *   - `{slug}-{adj}-{noun}.vercel.app` (subdomain 충돌 시 collision-avoidance canonical, 예: `python-test-xi-eight.vercel.app`)
+ *   - `{slug}-{teamSlug}.vercel.app` (team auto alias, 예: `python-test-feams.vercel.app`)
+ *   - `{slug}-git-{branch}-{teamSlug}.vercel.app` (branch auto alias)
+ *   - `{slug}-{hash}-{teamSlug}.vercel.app` (deployment-specific)
+ *
+ * 이전 구현은 `automaticAliases`가 채워져 있으면 잘 동작했지만, 실제로 그
+ * 필드가 비어 있는 프로젝트가 있어 `alias[]`의 첫 항목(팀 auto)을 잘못
+ * canonical로 고르는 경우가 있었다. 이번 구현은 naming 패턴 기반 스코어링
+ * 으로 바꿔 API 필드 유무와 무관하게 작동한다.
  */
+function scoreVercelAlias(alias: string, projectSlug: string): number {
+  // HIGH score = more canonical.
+  if (!alias.endsWith(".vercel.app")) return -Infinity;
+  const domain = alias.slice(0, -".vercel.app".length);
+
+  // exact match (예: `my-app.vercel.app`)
+  if (domain === projectSlug) return 1000;
+
+  if (!domain.startsWith(`${projectSlug}-`)) return -Infinity;
+  const suffix = domain.slice(projectSlug.length + 1);
+
+  // branch alias: `{slug}-git-{branch}-...` — 사용자에게 보여주면 안 됨
+  if (suffix.startsWith("git-") || suffix.includes("-git-")) return -500;
+
+  const parts = suffix.split("-");
+  // deployment-specific alias: 7자+ "글자와 숫자가 섞인" 해시가 포함됨.
+  // 단순히 `^[a-z0-9]{7,}$` 로만 검사하면 `ancient`(7자 영문자) 같은
+  // 영단어도 false positive로 걸리므로, 반드시 숫자가 하나 이상 포함된
+  // 경우에만 해시로 판단한다.
+  const hasHash = parts.some(
+    (p) => p.length >= 7 && /[a-z]/i.test(p) && /[0-9]/.test(p),
+  );
+  if (hasHash) return -300;
+
+  // collision-avoidance canonical: `{slug}-{adj}-{noun}` (2 parts) — 우선
+  if (parts.length >= 2) return 500;
+
+  // team auto alias: `{slug}-{teamSlug}` (1 part) — 차선
+  return 100;
+}
+
 export async function getVercelProjectProductionUrl(
   accessToken: string,
   projectIdOrName: string,
@@ -283,6 +319,7 @@ export async function getVercelProjectProductionUrl(
   }
 
   const data = (await res.json()) as Record<string, unknown>;
+  const projectSlug = typeof data.name === "string" ? data.name : "";
   const targets = data.targets as
     | {
         production?: {
@@ -295,53 +332,41 @@ export async function getVercelProjectProductionUrl(
     | Array<{ alias?: string[] }>
     | undefined;
 
-  // 디버그: alias 배열을 풀어서 로깅 (Node가 [Array]로 축약하지 않도록)
-  console.log("[getVercelProjectProductionUrl] alias detail", {
-    targetsProductionAlias: targets?.production?.alias,
-    targetsProductionAutomaticAliases: targets?.production?.automaticAliases,
-    latestDeploymentAlias: latest?.[0]?.alias,
-  });
-
-  // Vercel은 production deployment에 여러 alias를 붙인다:
-  //   - {name}.vercel.app (canonical, 다른 사람이 쓰면 Vercel이 다른 걸 배정)
-  //   - {name}-{adj}-{noun}.vercel.app (subdomain 충돌 시 Vercel이 자동 배정한 canonical)
-  //   - {name}-{teamSlug}.vercel.app (team auto alias)
-  //   - {name}-git-{branch}-{teamSlug}.vercel.app (branch auto alias)
-  //
-  // 사용자가 Vercel 대시보드에서 "Domains" 섹션에 보는 canonical URL은
-  // automaticAliases에 포함되지 **않은** alias이다. automaticAliases는
-  // team/branch에 자동 부착되는 보조 alias 모음.
-  //
-  // 알고리즘: alias 중 automaticAliases에 없는 것을 우선 선택.
-  // 없으면 fallback으로 가장 짧은 alias 사용.
   const allAliases = targets?.production?.alias ?? [];
-  const automaticSet = new Set(
-    targets?.production?.automaticAliases ?? [],
-  );
+  const automaticSet = new Set(targets?.production?.automaticAliases ?? []);
+  const deploymentAliases = latest?.[0]?.alias ?? [];
 
-  const canonical = allAliases.find((a) => !automaticSet.has(a));
-  if (canonical) {
-    console.log("[getVercelProjectProductionUrl] selected canonical", {
-      chosen: canonical,
-      automaticSkipped: [...automaticSet],
-    });
-    return canonical;
-  }
-
-  // Fallback: alias 또는 latestDeployment alias 중 가장 짧은 것
-  const fallbackPool = [
-    ...allAliases,
-    ...(latest?.[0]?.alias ?? []),
-  ];
-  if (fallbackPool.length === 0) return null;
-  const sorted = Array.from(new Set(fallbackPool)).sort(
-    (a, b) => a.length - b.length,
-  );
-  console.log("[getVercelProjectProductionUrl] selected fallback (shortest)", {
-    chosen: sorted[0],
-    pool: sorted,
+  console.log("[getVercelProjectProductionUrl] alias detail", {
+    projectSlug,
+    targetsProductionAlias: allAliases,
+    targetsProductionAutomaticAliases: [...automaticSet],
+    latestDeploymentAlias: deploymentAliases,
   });
-  return sorted[0]!;
+
+  // 후보 풀: production alias 우선, 비어있으면 latest deployment alias 사용.
+  const pool = allAliases.length > 0 ? allAliases : deploymentAliases;
+  if (pool.length === 0) return null;
+
+  // automaticAliases에 명시된 건 확실히 자동 alias라 제외. 단, 모두 제외돼
+  // 후보가 사라지면 그냥 전체 풀을 사용.
+  const filtered = pool.filter((a) => !automaticSet.has(a));
+  const candidates = filtered.length > 0 ? filtered : pool;
+
+  // naming 패턴 기반 스코어링으로 canonical 선택.
+  // tie-break은 URL 길이 짧은 순.
+  const scored = candidates
+    .map((a) => ({ alias: a, score: scoreVercelAlias(a, projectSlug) }))
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.alias.length - b.alias.length;
+    });
+
+  const chosen = scored[0]?.alias ?? null;
+  console.log("[getVercelProjectProductionUrl] selected", {
+    chosen,
+    ranking: scored,
+  });
+  return chosen;
 }
 
 /**
