@@ -51,7 +51,6 @@ import {
 } from "@/lib/adapters/vercel/vercel-adapter";
 import {
   getFileFromGitHub,
-  pushFileToGitHub,
   pushFilesToGitHub,
 } from "@/lib/adapters/github/github-adapter";
 import {
@@ -60,7 +59,7 @@ import {
   buildPageTsx,
   buildSupabaseClientFile,
 } from "@/lib/deploy/auth-ui-nextjs-template";
-import { buildLandingHtml } from "@/lib/deploy/landing-template";
+import { buildNextJsLandingFiles } from "@/lib/deploy/nextjs-landing-template";
 import {
   OAUTH_STATE_COOKIE,
   OAUTH_STATE_TTL_SECONDS,
@@ -514,20 +513,37 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
     redirect(`${returnTo}?deploy_error=invalid_repo`);
   }
 
-  // 3) GitHub repo에 index.html push
+  // 3) GitHub repo에 Next.js 최소 프로젝트 파일 세트 push
+  // Vercel framework=nextjs가 next 의존성을 요구하므로 단일 index.html로는
+  // 빌드가 실패한다. create-next-app 축소판(package.json + tsconfig +
+  // src/app/{layout,page}.tsx)을 한 커밋으로 push해 Vercel이 바로 빌드할 수
+  // 있는 상태로 만든다. M2 Auth UI 설치 단계에서 page.tsx를 덮어쓰기 때문에
+  // src/app 경로 구조는 그대로 이어진다.
+  //
+  // goal에 따라 경로 prefix 결정: frontend/backend 분리 트랙은 frontend/ 아래
+  // 에 Next.js 앱을 배치하고 Vercel rootDirectory도 frontend로 맞춘다.
+  const GOALS_WITH_FRONTEND_DIR = new Set(["web-python", "web-java"]);
+  const useFrontendDir =
+    project.goal !== null && GOALS_WITH_FRONTEND_DIR.has(project.goal);
+  const pathPrefix = useFrontendDir ? "frontend/" : "";
+  const rootDirectory = useFrontendDir ? "frontend" : undefined;
+
   let errCode: string | null = null;
   try {
-    const html = buildLandingHtml(project.name);
-    await pushFileToGitHub(
+    const templateFiles = buildNextJsLandingFiles({ projectName: project.name });
+    const filesToPush = templateFiles.map((f) => ({
+      path: `${pathPrefix}${f.path}`,
+      content: f.content,
+    }));
+    await pushFilesToGitHub(
       ghToken,
       owner,
       repoName,
-      "index.html",
-      html,
-      "feat: add landing page via VibeStart",
+      filesToPush,
+      "feat: scaffold Next.js landing via VibeStart",
     );
   } catch (err) {
-    console.error("[firstDeployAction] pushFileToGitHub failed", {
+    console.error("[firstDeployAction] pushFilesToGitHub failed", {
       userId: user.id,
       projectId: project.id,
       error: err instanceof Error ? err.message : String(err),
@@ -545,12 +561,6 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
   }
 
   // 4) Vercel 프로젝트 생성 + GitHub repo 연결
-  // goal에 따라 rootDirectory 결정: frontend/backend 분리 구조인 트랙은
-  // Vercel이 frontend/ 폴더를 빌드 루트로 사용해야 한다.
-  const GOALS_WITH_FRONTEND_DIR = new Set(["web-python", "web-java"]);
-  const rootDirectory = project.goal && GOALS_WITH_FRONTEND_DIR.has(project.goal)
-    ? "frontend"
-    : undefined;
 
   let vercelProject: { id: string; name: string } | null = null;
   try {
@@ -1441,7 +1451,7 @@ export async function installAuthUiAction(
       "feat: add Google sign-in with Supabase Auth via VibeStart",
     );
   } catch (err) {
-    console.error("[installAuthUiAction] pushFileToGitHub failed", {
+    console.error("[installAuthUiAction] pushFilesToGitHub failed", {
       userId: user.id,
       projectId: project.id,
       error: err instanceof Error ? err.message : String(err),

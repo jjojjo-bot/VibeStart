@@ -297,6 +297,10 @@ export async function pushFileToGitHub(
  *
  * GitHub Git Trees API를 사용해 blob → tree → commit → ref update 순으로
  * 처리하므로 파일이 몇 개든 커밋 1개, Vercel 배포 트리거 1회.
+ *
+ * `main` 브랜치가 없는 **빈 저장소**(auto_init=false로 만든 직후)도 지원한다.
+ * 이 경우 base_tree/parents 없이 초기 커밋을 만들고 refs/heads/main을 신규
+ * 생성한다. (라)-4 첫 배포가 이 케이스에 해당.
  */
 export async function pushFilesToGitHub(
   accessToken: string,
@@ -314,22 +318,31 @@ export async function pushFilesToGitHub(
   };
   const apiBase = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`;
 
-  // 1) 현재 HEAD의 commit SHA + tree SHA 가져오기
+  // 1) 현재 HEAD의 commit SHA + tree SHA 가져오기 (빈 저장소면 404/409)
   const refRes = await fetch(`${apiBase}/git/ref/heads/main`, {
     method: "GET",
     headers,
   });
-  if (!refRes.ok) throw new Error(`github:ref_http_${refRes.status}`);
-  const refData = (await refRes.json()) as { object: { sha: string } };
-  const headCommitSha = refData.object.sha;
 
-  const commitRes = await fetch(`${apiBase}/git/commits/${headCommitSha}`, {
-    method: "GET",
-    headers,
-  });
-  if (!commitRes.ok) throw new Error(`github:commit_http_${commitRes.status}`);
-  const commitData = (await commitRes.json()) as { tree: { sha: string } };
-  const baseTreeSha = commitData.tree.sha;
+  let headCommitSha: string | null = null;
+  let baseTreeSha: string | null = null;
+
+  if (refRes.status === 404 || refRes.status === 409) {
+    // 빈 저장소 — 초기 커밋 플로우로 진행
+  } else if (!refRes.ok) {
+    throw new Error(`github:ref_http_${refRes.status}`);
+  } else {
+    const refData = (await refRes.json()) as { object: { sha: string } };
+    headCommitSha = refData.object.sha;
+
+    const commitRes = await fetch(`${apiBase}/git/commits/${headCommitSha}`, {
+      method: "GET",
+      headers,
+    });
+    if (!commitRes.ok) throw new Error(`github:commit_http_${commitRes.status}`);
+    const commitData = (await commitRes.json()) as { tree: { sha: string } };
+    baseTreeSha = commitData.tree.sha;
+  }
 
   // 2) 각 파일의 blob 생성
   const treeItems: Array<{ path: string; mode: string; type: string; sha: string }> = [];
@@ -352,35 +365,49 @@ export async function pushFilesToGitHub(
     });
   }
 
-  // 3) 새 tree 생성 (base_tree를 지정해 기존 파일 유지)
+  // 3) 새 tree 생성 (빈 저장소면 base_tree 생략)
+  const treeBody: Record<string, unknown> = { tree: treeItems };
+  if (baseTreeSha) treeBody.base_tree = baseTreeSha;
   const treeRes = await fetch(`${apiBase}/git/trees`, {
     method: "POST",
     headers,
-    body: JSON.stringify({ base_tree: baseTreeSha, tree: treeItems }),
+    body: JSON.stringify(treeBody),
   });
   if (!treeRes.ok) throw new Error(`github:tree_http_${treeRes.status}`);
   const treeData = (await treeRes.json()) as { sha: string };
 
-  // 4) 커밋 생성
+  // 4) 커밋 생성 (빈 저장소면 parents 빈 배열)
   const newCommitRes = await fetch(`${apiBase}/git/commits`, {
     method: "POST",
     headers,
     body: JSON.stringify({
       message: commitMessage,
       tree: treeData.sha,
-      parents: [headCommitSha],
+      parents: headCommitSha ? [headCommitSha] : [],
     }),
   });
   if (!newCommitRes.ok) throw new Error(`github:newcommit_http_${newCommitRes.status}`);
   const newCommitData = (await newCommitRes.json()) as { sha: string };
 
-  // 5) refs/heads/main 업데이트
-  const updateRefRes = await fetch(`${apiBase}/git/refs/heads/main`, {
-    method: "PATCH",
-    headers,
-    body: JSON.stringify({ sha: newCommitData.sha }),
-  });
-  if (!updateRefRes.ok) throw new Error(`github:updateref_http_${updateRefRes.status}`);
+  // 5) refs/heads/main 업데이트 (빈 저장소면 POST로 신규 생성)
+  if (headCommitSha) {
+    const updateRefRes = await fetch(`${apiBase}/git/refs/heads/main`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ sha: newCommitData.sha }),
+    });
+    if (!updateRefRes.ok) throw new Error(`github:updateref_http_${updateRefRes.status}`);
+  } else {
+    const createRefRes = await fetch(`${apiBase}/git/refs`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        ref: "refs/heads/main",
+        sha: newCommitData.sha,
+      }),
+    });
+    if (!createRefRes.ok) throw new Error(`github:createref_http_${createRefRes.status}`);
+  }
 
   return { commitSha: newCommitData.sha };
 }

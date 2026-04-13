@@ -2,7 +2,7 @@
 /**
  * (라)-4 배포 관련 함수 단위 테스트.
  *
- * - buildLandingHtml: 순수 함수, fetch mock 불필요
+ * - buildNextJsLandingFiles: 순수 함수, fetch mock 불필요
  * - pushFileToGitHub: global.fetch mock
  * - createVercelProject: global.fetch mock
  * - getLatestDeployment / getDeployment: global.fetch mock
@@ -10,23 +10,37 @@
 
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-// ── buildLandingHtml ─────────────────────────────────────────
-import { buildLandingHtml } from "@/lib/deploy/landing-template";
+// ── buildNextJsLandingFiles ──────────────────────────────────
+import { buildNextJsLandingFiles } from "@/lib/deploy/nextjs-landing-template";
 
-describe("buildLandingHtml", () => {
-  it("프로젝트 이름과 기본 HTML 구조를 포함한다", () => {
-    const html = buildLandingHtml("My Blog");
-    expect(html).toContain("<!DOCTYPE html>");
-    expect(html).toContain("<title>My Blog</title>");
-    expect(html).toContain("My Blog");
-    expect(html).toContain("cdn.tailwindcss.com");
-    expect(html).toContain("VibeStart");
+describe("buildNextJsLandingFiles", () => {
+  it("Vercel이 요구하는 package.json과 src/app 파일을 포함한다", () => {
+    const files = buildNextJsLandingFiles({ projectName: "My Blog" });
+    const byPath = new Map(files.map((f) => [f.path, f.content]));
+
+    expect(byPath.has("package.json")).toBe(true);
+    expect(byPath.has("tsconfig.json")).toBe(true);
+    expect(byPath.has("src/app/layout.tsx")).toBe(true);
+    expect(byPath.has("src/app/page.tsx")).toBe(true);
+
+    const pkg = JSON.parse(byPath.get("package.json")!);
+    expect(pkg.dependencies.next).toBeDefined();
+    expect(pkg.dependencies.react).toBeDefined();
+    expect(pkg.dependencies["react-dom"]).toBeDefined();
+
+    const page = byPath.get("src/app/page.tsx")!;
+    expect(page).toContain('"My Blog"');
   });
 
-  it("HTML 특수문자를 이스케이프한다", () => {
-    const html = buildLandingHtml('<script>alert("xss")</script>');
-    expect(html).not.toContain("<script>alert");
-    expect(html).toContain("&lt;script&gt;");
+  it("프로젝트 이름에 들어간 따옴표/백슬래시를 JS 문자열 리터럴로 안전하게 임베드한다", () => {
+    const files = buildNextJsLandingFiles({
+      projectName: 'My "Blog" \\ test',
+    });
+    const page = files.find((f) => f.path === "src/app/page.tsx")!;
+    // JSON.stringify로 이스케이프돼야 함
+    expect(page.content).toContain('"My \\"Blog\\" \\\\ test"');
+    // raw 따옴표가 JSX를 깨뜨리지 않아야 함
+    expect(page.content).not.toContain('"My "Blog"');
   });
 });
 
