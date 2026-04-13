@@ -22,6 +22,7 @@ import { PHASE1_DATA_COOKIE } from "@/lib/auth/phase1-cookie";
 import { cn } from "@/lib/utils";
 
 import { createProjectAction } from "./actions";
+import { trackProjectCreate } from "@/lib/ga";
 
 interface NewProjectPageProps {
   params: Promise<{ locale: string }>;
@@ -99,7 +100,10 @@ export default async function NewProjectPage({
         </div>
       )}
 
-      <form action={createProjectAction} className="space-y-8">
+      <form action={createProjectAction} onSubmit={(e) => {
+        const fd = new FormData(e.currentTarget);
+        trackProjectCreate(fd.get("track") as string ?? "unknown");
+      }} className="space-y-8">
         <input type="hidden" name="locale" value={locale} />
 
         <div className="grid gap-4 sm:grid-cols-2">

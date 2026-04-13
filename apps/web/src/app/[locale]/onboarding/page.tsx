@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { incrementVisitors } from "@/lib/stats";
+import { trackOnboardingStart, trackOnboardingComplete } from "@/lib/ga";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { StepOS } from "@/components/onboarding/step-os";
@@ -52,8 +53,13 @@ export default function OnboardingPage() {
 
   function handleNext() {
     if (step < totalSteps - 1) {
+      // OS 선택 완료 시 (step 0 → 1)
+      if (step === 0 && data.os) {
+        trackOnboardingStart(data.os);
+      }
       setStep(step + 1);
     } else {
+      trackOnboardingComplete(data.os!, data.goal!);
       const params = new URLSearchParams({
         os: data.os!,
         goal: data.goal!,

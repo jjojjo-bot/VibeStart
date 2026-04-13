@@ -5,6 +5,7 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import type { OS, Goal } from "@/lib/onboarding";
 import { incrementCompletions } from "@/lib/stats";
+import { trackPhase2Login } from "@/lib/ga";
 import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 import { signInFromCompleteAction, goToDashboardWithPhase1Action } from "../login/actions";
@@ -281,7 +282,7 @@ function CompleteContent() {
             {t("phase2.description")}
           </p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
-            <form action={signInFromCompleteAction}>
+            <form action={signInFromCompleteAction} onSubmit={() => trackPhase2Login()}>
               <input type="hidden" name="locale" value="" />
               <input type="hidden" name="os" value={os} />
               <input type="hidden" name="goal" value={goal} />

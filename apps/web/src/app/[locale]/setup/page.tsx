@@ -12,6 +12,7 @@ import {
   type Goal,
 } from "@/lib/onboarding";
 import { useTranslations } from "next-intl";
+import { trackSetupStart, trackSetupComplete } from "@/lib/ga";
 
 const GROUP_ORDER: SetupGroup[] = ["envPrep", "toolInstall", "aiSetup", "projectCreate"];
 function SetupContent() {
@@ -52,7 +53,8 @@ function SetupContent() {
       }
     } catch { /* 무시 */ }
     setHydrated(true);
-  }, [storageKey]);
+    trackSetupStart(os, goal);
+  }, [storageKey, os, goal]);
 
   // 완료 상태 변경 시 저장 (hydration 완료 후에만)
   useEffect(() => {
@@ -350,6 +352,7 @@ function SetupContent() {
               size="lg"
               className="h-12 px-8 text-base animate-pulse"
               onClick={() => {
+                trackSetupComplete(os, goal);
                 const params = new URLSearchParams({ os, goal, project: projectName });
                 router.push(`/complete?${params.toString()}`);
               }}
