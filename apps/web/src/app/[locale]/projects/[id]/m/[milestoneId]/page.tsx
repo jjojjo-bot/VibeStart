@@ -10,7 +10,7 @@
  * (함수 props는 직렬화 불가).
  */
 
-import { notFound } from "next/navigation";
+import { notFound, redirect as redirectRaw } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 
@@ -191,11 +191,41 @@ export default async function MilestoneRunPage({
     notFound();
   }
 
-  // 외부 리소스 존재 여부 검증 — 삭제된 리소스는 DB에서 자동 정리
+  // 외부 리소스 존재 여부 검증 — 삭제된 리소스는 DB에서 자동 정리.
+  //
+  // Cleanup이 발생했는데 URL에 ?resources_cleaned 플래그가 없으면, 같은 경로
+  // 로 redirect해 새 render tree에서 데이터를 다시 읽는다. Next.js 16의
+  // Request Memoization은 render tree 생명주기 동안 동일 URL GET 응답을
+  // 재사용하는데, cleanup 이전에 verifyProjectResources 내부에서 이미 읽힌
+  // `project_resources` GET 결과가 cleanup 후 page가 재조회할 때 stale하게
+  // 돌아오는 문제가 있어 `cache: 'no-store'`만으로는 회피되지 않았다.
+  // redirect는 요청을 새로 만들어 render tree가 완전히 초기화되므로 가장
+  // 확실한 해법.
+  //
+  // 2차 render는 query.resources_cleaned를 읽어 "삭제됨" 배너만 유지하고
+  // verifyProjectResources는 cleanup이 이미 반영된 DB 상태를 확인하므로
+  // 더 이상 redirect하지 않아 무한 루프가 없다.
   const verificationResults = await verifyProjectResources(project.id, user.id);
-  const removedResources = verificationResults
+  const freshlyRemoved = verificationResults
     .filter((r) => r.status === "gone")
     .map((r) => r.resourceType);
+
+  const alreadyCleanedRaw = query.resources_cleaned;
+  if (freshlyRemoved.length > 0 && typeof alreadyCleanedRaw !== "string") {
+    const cleanedParam = encodeURIComponent(freshlyRemoved.join(","));
+    const prefix = locale === "ko" ? "" : `/${locale}`;
+    redirectRaw(
+      `${prefix}/projects/${id}/m/${milestoneId}?resources_cleaned=${cleanedParam}`,
+    );
+  }
+
+  // 배너 표시용: 이번 render에서 삭제된 것 + 직전 redirect에서 전달된 것
+  const removedResources =
+    freshlyRemoved.length > 0
+      ? freshlyRemoved
+      : typeof alreadyCleanedRaw === "string"
+        ? alreadyCleanedRaw.split(",").filter(Boolean)
+        : [];
 
   const catalog = createInMemoryMilestoneCatalog();
   const track = catalog.getTrack(project.track);
