@@ -24,15 +24,22 @@ export interface FileToPush {
 }
 
 /**
- * Next.js 16 + React 19 최소 프로젝트 파일 세트.
+ * Next.js 16 + React 19 + Tailwind v4 최소 프로젝트 파일 세트.
  *
  * 포함 파일:
- *   - `package.json` (next / react / react-dom / typescript)
+ *   - `package.json` (next / react / react-dom / tailwindcss / typescript)
  *   - `tsconfig.json` (`@/*` → `./src/*` alias, M2와 호환)
  *   - `next-env.d.ts` (create-next-app이 생성하는 타입 레퍼런스)
- *   - `src/app/layout.tsx` (required root layout)
+ *   - `postcss.config.mjs` (Tailwind v4 @tailwindcss/postcss 플러그인)
+ *   - `src/app/globals.css` (@import "tailwindcss" — Tailwind 진입점)
+ *   - `src/app/layout.tsx` (globals.css import + required root layout)
  *   - `src/app/page.tsx` (프로젝트 이름 인사 랜딩)
  *   - `.gitignore`
+ *
+ * Tailwind를 포함하는 이유: M2 installAuthUi가 덮어쓰는 `src/app/page.tsx`
+ * 는 Tailwind 클래스 기반 Google 로그인 UI인데, 사용자가 m1-s3 git push를
+ * 건너뛰어 Phase 1 프로젝트가 저장소에 없는 경우 이 fallback 템플릿 위로
+ * M2 파일이 들어오게 된다. Tailwind가 없으면 M2 UI가 unstyled로 렌더된다.
  */
 export function buildNextJsLandingFiles(input: NextJsLandingInput): FileToPush[] {
   const projectNameLiteral = JSON.stringify(input.projectName);
@@ -52,14 +59,42 @@ export function buildNextJsLandingFiles(input: NextJsLandingInput): FileToPush[]
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
+    "tailwindcss": "^4.0.0",
     "typescript": "^5.0.0"
   }
 }
 `;
 
+  const postcssConfig = `const config = {
+  plugins: {
+    "@tailwindcss/postcss": {},
+  },
+};
+
+export default config;
+`;
+
+  const globalsCss = `@import "tailwindcss";
+
+:root {
+  --background: #020617;
+  --foreground: #ffffff;
+}
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+`;
+
+  // jsx: "react-jsx"는 Next.js 16이 기대하는 값. "preserve"로 두면 빌드 시
+  // Next.js가 자동으로 덮어쓰는 경고가 나온다.
   const tsconfigJson = `{
   "compilerOptions": {
     "target": "ES2022",
@@ -73,13 +108,19 @@ export function buildNextJsLandingFiles(input: NextJsLandingInput): FileToPush[]
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "plugins": [{ "name": "next" }],
     "baseUrl": ".",
     "paths": { "@/*": ["./src/*"] }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }
 `;
@@ -91,7 +132,9 @@ export function buildNextJsLandingFiles(input: NextJsLandingInput): FileToPush[]
 // see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
 `;
 
-  const layoutTsx = `export const metadata = {
+  const layoutTsx = `import "./globals.css";
+
+export const metadata = {
   title: ${projectNameLiteral},
   description: "Built with VibeStart",
 };
@@ -103,17 +146,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <body
-        style={{
-          margin: 0,
-          backgroundColor: "#020617",
-          color: "#ffffff",
-          fontFamily:
-            "system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
-        }}
-      >
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
@@ -228,6 +261,8 @@ yarn-error.log*
     { path: "package.json", content: packageJson },
     { path: "tsconfig.json", content: tsconfigJson },
     { path: "next-env.d.ts", content: nextEnvDts },
+    { path: "postcss.config.mjs", content: postcssConfig },
+    { path: "src/app/globals.css", content: globalsCss },
     { path: "src/app/layout.tsx", content: layoutTsx },
     { path: "src/app/page.tsx", content: pageTsx },
     { path: ".gitignore", content: gitignore },

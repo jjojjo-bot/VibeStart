@@ -32,6 +32,26 @@ describe("buildNextJsLandingFiles", () => {
     expect(page).toContain('"My Blog"');
   });
 
+  it("M2 Tailwind UI를 위한 Tailwind v4 스택을 포함한다", () => {
+    // M2 installAuthUi가 Tailwind 클래스 가득한 page.tsx로 덮어쓰기 때문에
+    // fallback 템플릿에 Tailwind 설정이 없으면 unstyled 렌더로 이어진다.
+    const files = buildNextJsLandingFiles({ projectName: "x" });
+    const byPath = new Map(files.map((f) => [f.path, f.content]));
+
+    expect(byPath.has("postcss.config.mjs")).toBe(true);
+    expect(byPath.get("postcss.config.mjs")!).toContain("@tailwindcss/postcss");
+
+    expect(byPath.has("src/app/globals.css")).toBe(true);
+    expect(byPath.get("src/app/globals.css")!).toContain('@import "tailwindcss"');
+
+    const pkg = JSON.parse(byPath.get("package.json")!);
+    expect(pkg.devDependencies.tailwindcss).toBeDefined();
+    expect(pkg.devDependencies["@tailwindcss/postcss"]).toBeDefined();
+
+    const layout = byPath.get("src/app/layout.tsx")!;
+    expect(layout).toContain('"./globals.css"');
+  });
+
   it("프로젝트 이름에 들어간 따옴표/백슬래시를 JS 문자열 리터럴로 안전하게 임베드한다", () => {
     const files = buildNextJsLandingFiles({
       projectName: 'My "Blog" \\ test',
