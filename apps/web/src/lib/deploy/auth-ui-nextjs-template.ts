@@ -1,12 +1,19 @@
 /**
  * (마)-5용 Next.js Auth UI 생성.
  *
- * 기존 index.html 방식을 대체. Next.js App Router 프로젝트의 소스 파일을
- * 직접 생성하여 GitHub에 push한다. 3개 파일을 생성:
+ * Next.js App Router 프로젝트의 소스 파일을 직접 생성하여 GitHub에 push한다.
+ * 2개 파일을 생성:
  *
  *   1. src/lib/supabase.ts — Supabase browser client 설정
  *   2. src/app/page.tsx — Google 로그인 UI (클라이언트 컴포넌트)
- *   3. src/app/auth/callback/route.ts — OAuth callback 처리
+ *
+ * OAuth redirect 처리는 별도 Route Handler를 두지 **않는다**. Supabase JS
+ * v2의 기본 `flowType: 'implicit'`는 토큰을 URL 해시 프래그먼트(`#access_token=
+ * ...`)로 돌려주는데, 해시는 HTTP 요청에 포함되지 않아 서버 Route Handler
+ * 에서 읽을 수 없고 서버사이드 302 리다이렉트 시 해시가 소실되기 때문이다.
+ * 대신 `redirectTo`를 사이트 루트로 지정해 page.tsx의 `src/lib/supabase.ts`
+ * 모듈이 로드되며 `detectSessionInUrl: true`(기본값) 로직이 해시를 읽어
+ * 세션을 자동 복원하도록 한다.
  *
  * Supabase URL / anon key는 환경변수가 아닌 코드에 직접 임베드한다.
  * (비전공자가 .env.local을 만들어야 하는 진입장벽 제거. anon key는 공개 키.)
@@ -74,7 +81,7 @@ export default function Home() {
     setError(null);
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: window.location.origin + "/auth/callback" },
+      options: { redirectTo: window.location.origin },
     });
     if (error) setError(error.message);
   };
@@ -156,34 +163,6 @@ export default function Home() {
       </div>
     </div>
   );
-}
-`;
-}
-
-/**
- * src/app/auth/callback/route.ts — OAuth callback
- *
- * Supabase OAuth는 리다이렉트 후 URL fragment(#)에 토큰이 오는데,
- * Next.js에서는 이를 처리하기 위한 callback route가 필요하다.
- * 클라이언트에서 supabase.auth.exchangeCodeForSession()을 호출한다.
- */
-export function buildAuthCallbackRoute(input: NextJsAuthTemplateInput): string {
-  return `import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
-
-const supabaseUrl = "${escapeBacktick(input.supabaseUrl)}";
-const supabaseAnonKey = "${escapeBacktick(input.supabaseAnonKey)}";
-
-export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
-  const code = searchParams.get("code");
-
-  if (code) {
-    const supabase = createClient(supabaseUrl, supabaseAnonKey);
-    await supabase.auth.exchangeCodeForSession(code);
-  }
-
-  return NextResponse.redirect(origin);
 }
 `;
 }

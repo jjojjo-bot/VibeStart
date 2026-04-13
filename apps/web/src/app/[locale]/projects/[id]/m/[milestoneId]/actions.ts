@@ -55,7 +55,6 @@ import {
 } from "@/lib/adapters/github/github-adapter";
 import {
   addSupabaseDependency,
-  buildAuthCallbackRoute,
   buildPageTsx,
   buildSupabaseClientFile,
 } from "@/lib/deploy/auth-ui-nextjs-template";
@@ -1412,6 +1411,11 @@ export async function installAuthUiAction(
   }
 
   // 4) Next.js Auth 파일 빌드
+  // 별도 /auth/callback Route Handler는 만들지 않는다 — Supabase JS v2의
+  // implicit flow는 토큰을 URL 해시 프래그먼트(#access_token=...)로 돌려주고,
+  // 해시는 HTTP 요청에 포함되지 않아 서버에서 읽을 수 없기 때문. 대신
+  // page.tsx가 redirectTo를 사이트 루트(origin)로 지정해 supabase client의
+  // detectSessionInUrl 로직(기본 true)이 해시를 읽어 세션을 자동 복원한다.
   const templateInput = {
     projectName: project.name,
     supabaseUrl: supabaseApiUrl,
@@ -1419,7 +1423,6 @@ export async function installAuthUiAction(
   };
   const supabaseClientFile = buildSupabaseClientFile(templateInput);
   const pageTsx = buildPageTsx(templateInput);
-  const authCallbackRoute = buildAuthCallbackRoute(templateInput);
 
   // package.json에 @supabase/supabase-js 추가
   // goal에 따라 package.json 경로 결정 (frontend/ 구조 대응)
@@ -1464,7 +1467,6 @@ export async function installAuthUiAction(
     // 모든 Auth UI 파일을 한 커밋으로 push (Vercel 배포 1회만 트리거)
     const filesToPush: Array<{ path: string; content: string }> = [
       { path: `${pathPrefix}src/lib/supabase.ts`, content: supabaseClientFile },
-      { path: `${pathPrefix}src/app/auth/callback/route.ts`, content: authCallbackRoute },
       { path: `${pathPrefix}src/app/page.tsx`, content: pageTsx },
     ];
     if (updatedPackageJson) {
