@@ -8,6 +8,7 @@
  */
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { cookies } from "next/headers";
 import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 import type { TrackDefinition } from "@vibestart/shared-types";
 
@@ -15,6 +16,7 @@ import { Link, redirect } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { TrackBadge } from "@/components/milestone";
 import { Button } from "@/components/ui/button";
+import { PHASE1_DATA_COOKIE } from "@/lib/auth/phase1-cookie";
 import { cn } from "@/lib/utils";
 
 import { createProjectAction } from "./actions";
@@ -41,6 +43,27 @@ export default async function NewProjectPage({
   const catalog = createInMemoryMilestoneCatalog();
   const tracks = catalog.listTracks();
 
+  // Phase 1 쿠키가 있으면 이름 pre-fill + 안내 배너 표시.
+  // 쿠키 삭제는 createProjectAction(Server Action)에서 처리해야 한다 —
+  // Server Component는 쿠키 수정이 금지돼 있어 여기서 delete를 호출하면
+  // 런타임 에러("Cookies can only be modified in a Server Action or
+  // Route Handler")가 난다.
+  const jar = await cookies();
+  const phase1Raw = jar.get(PHASE1_DATA_COOKIE)?.value;
+  let phase1Name: string | null = null;
+  let phase1FromSetup = false;
+  if (phase1Raw) {
+    try {
+      const phase1 = JSON.parse(phase1Raw) as { project?: string };
+      if (typeof phase1.project === "string" && phase1.project.trim().length > 0) {
+        phase1Name = phase1.project.trim();
+        phase1FromSetup = true;
+      }
+    } catch {
+      /* 파싱 실패 무시 — 일반 신규 생성으로 폴백 */
+    }
+  }
+
   return (
     <main
       id="main-content"
@@ -62,6 +85,17 @@ export default async function NewProjectPage({
           {tProjects("newSubtitle")}
         </p>
       </header>
+
+      {phase1FromSetup && (
+        <div className="mb-8 rounded-lg border border-primary/30 bg-primary/5 p-4 text-sm">
+          <p className="font-medium text-primary">
+            🎉 {tProjects("phase1HandoffTitle")}
+          </p>
+          <p className="mt-1 text-muted-foreground">
+            {tProjects("phase1HandoffSubtitle")}
+          </p>
+        </div>
+      )}
 
       <form action={createProjectAction} className="space-y-8">
         <input type="hidden" name="locale" value={locale} />
@@ -90,7 +124,7 @@ export default async function NewProjectPage({
             type="text"
             required
             maxLength={60}
-            defaultValue="my-portfolio"
+            defaultValue={phase1Name ?? "my-portfolio"}
             className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
           />
         </div>

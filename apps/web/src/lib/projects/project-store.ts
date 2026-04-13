@@ -149,6 +149,23 @@ export async function deleteProject(id: string): Promise<boolean> {
   return !error;
 }
 
+/**
+ * Phase 2a에서 트랙은 실제 마일스톤 진행에 영향을 주지 않는 배지 라벨이므로
+ * 언제든 안전하게 변경 가능하다. Phase 2b에서 트랙별 고유 마일스톤이 생기면
+ * 이 함수 호출 시점에 이주/가드 로직을 추가해야 한다.
+ */
+export async function updateProjectTrack(
+  id: string,
+  track: ProjectTrack,
+): Promise<boolean> {
+  const supabase = await createAuthServerClient();
+  const { error } = await supabase
+    .from("projects")
+    .update({ track })
+    .eq("id", id);
+  return !error;
+}
+
 // ─── 마일스톤 진행 상태 ─────────────────────────────────
 
 export async function getProjectProgress(

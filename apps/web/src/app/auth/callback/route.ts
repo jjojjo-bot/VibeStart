@@ -3,20 +3,32 @@
  *
  * Google OAuth가 끝나면 사용자가 여기로 돌아온다. 쿼리 파라미터:
  *   - code: Supabase가 세션으로 교환할 OAuth 코드
- *   - locale: 로그인 ���작 시점의 사용자 언어 (next-intl ��리픽스에 사용)
+ *   - locale: 로그인 시작 시점의 사용자 언어 (next-intl 프리픽스에 사용)
  *
- * Phase 1 데이터가 쿠키에 있으면 프로젝트를 자동 생성하고 해당 프로젝트
- * 페이지로 리다이렉트한다. 없으면 기존 동작(대시보드)으로 이동.
+ * Phase 1 쿠키가 있으면 프로젝트를 **자동 생성하지 않고** 트랙 선택 화면
+ * (`/projects/new`)으로 유도한다. Phase 1 goal(기술 스택)과 Phase 2 track
+ * (제품 유형)은 orthogonal이라 사용자가 직접 골라야 정확하다. 쿠키는
+ * `/projects/new`의 createProjectAction이 소비한다. data-ai/mobile goal은
+ * Phase 2 마일스톤이 맞지 않아 쿠키를 지우고 대시보드로 보낸다.
  */
 
 import { NextResponse, type NextRequest } from "next/server";
 import { cookies } from "next/headers";
 
 import { createSupabaseAuthAdapter } from "@/lib/auth/supabase-auth.adapter";
-import { getCurrentUser } from "@/lib/auth/dal";
-import { createProject } from "@/lib/projects/project-store";
 import { routing } from "@/i18n/routing";
 import { PHASE1_DATA_COOKIE } from "@/lib/auth/phase1-cookie";
+
+const VALID_GOALS = [
+  "web-nextjs",
+  "web-python",
+  "web-java",
+  "mobile",
+  "data-ai",
+  "not-sure",
+] as const;
+type ValidGoal = (typeof VALID_GOALS)[number];
+const PHASE2_UNSUPPORTED_GOALS = new Set<ValidGoal>(["data-ai", "mobile"]);
 
 export async function GET(request: NextRequest): Promise<Response> {
   const url = new URL(request.url);
@@ -47,64 +59,33 @@ export async function GET(request: NextRequest): Promise<Response> {
     return NextResponse.redirect(errorUrl);
   }
 
-  // Phase 1 데이터 쿠키 확인 → 프로젝트 자동 생성
+  // Phase 1 쿠키 확인 → 트랙 선택 화면으로 유도
   const jar = await cookies();
   const phase1Raw = jar.get(PHASE1_DATA_COOKIE)?.value;
 
   if (phase1Raw) {
-    // 쿠키 즉시 삭제
-    jar.delete(PHASE1_DATA_COOKIE);
-
     try {
-      const phase1 = JSON.parse(phase1Raw) as {
-        os?: string;
-        goal?: string;
-        project?: string;
-      };
-      const projectName =
-        typeof phase1.project === "string" && phase1.project.trim().length > 0
-          ? phase1.project.trim()
-          : "my-first-app";
-
-      const os: "windows" | "macos" | null =
-        phase1.os === "windows" || phase1.os === "macos" ? phase1.os : null;
-      const VALID_GOALS = [
-        "web-nextjs",
-        "web-python",
-        "web-java",
-        "mobile",
-        "data-ai",
-        "not-sure",
-      ] as const;
-      type ValidGoal = (typeof VALID_GOALS)[number];
+      const phase1 = JSON.parse(phase1Raw) as { goal?: string };
       const goal: ValidGoal | null =
         typeof phase1.goal === "string" &&
         (VALID_GOALS as readonly string[]).includes(phase1.goal)
           ? (phase1.goal as ValidGoal)
           : null;
 
-      // data-ai/mobile은 Phase 2 마일스톤이 맞지 않아 자동 생성 skip.
-      const PHASE2_UNSUPPORTED_GOALS = new Set<ValidGoal>(["data-ai", "mobile"]);
-      const skipAutoCreate = goal !== null && PHASE2_UNSUPPORTED_GOALS.has(goal);
-
-      const user = await getCurrentUser();
-      if (user && !skipAutoCreate) {
-        const project = await createProject({
-          userId: user.id,
-          track: "static",
-          name: projectName,
-          os,
-          goal,
-        });
-
-        const projectUrl = new URL(
-          `${localePrefix}/projects/${project.id}`,
+      if (goal !== null && PHASE2_UNSUPPORTED_GOALS.has(goal)) {
+        // data-ai/mobile — Phase 2 skip, 쿠키도 정리
+        jar.delete(PHASE1_DATA_COOKIE);
+      } else {
+        // web-* — 트랙 선택 화면으로. 쿠키는 createProjectAction이 소비.
+        const newProjectUrl = new URL(
+          `${localePrefix}/projects/new`,
           url.origin,
         );
-        return NextResponse.redirect(projectUrl);
+        return NextResponse.redirect(newProjectUrl);
       }
     } catch {
-      // Phase 1 데이터 파싱 실패 시 무시하고 대시보드로
+      // 파싱 실패 시 쿠키 정리하고 대시보드로
+      jar.delete(PHASE1_DATA_COOKIE);
     }
   }
 

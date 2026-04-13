@@ -117,5 +117,9 @@ export async function createProjectAction(formData: FormData): Promise<void> {
     goal,
   });
 
+  // Phase 1 쿠키 소비 완료 — Server Action에선 쿠키 수정 가능.
+  const jar = await cookies();
+  jar.delete(PHASE1_DATA_COOKIE);
+
   redirect({ href: `/projects/${project.id}`, locale });
 }
