@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 /**
  * /projects/[id] — 프로젝트 마일스톤 트리 (정적 트랙 5개).
  *

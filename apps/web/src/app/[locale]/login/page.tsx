@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 /**
  * Phase 2 — vibestart 자체 로그인 페이지.
  *

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 /**
  * /projects/new — 트랙 선택 화면 (Phase 2a 정적만 활성).
  *

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 /**
  * /projects/[id]/m/[milestoneId] — 마일스톤 실행 화면.
  *
