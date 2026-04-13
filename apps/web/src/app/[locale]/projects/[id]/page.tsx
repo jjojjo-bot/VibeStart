@@ -6,7 +6,7 @@
  * 없이 렌더되고, 활성/완료 카드만 상세 페이지로 이동 가능.
  */
 
-import { notFound } from "next/navigation";
+import { notFound, redirect as redirectRaw } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 
@@ -22,15 +22,19 @@ import {
   getProject,
   getProjectProgress,
 } from "@/lib/projects/project-store";
+import { verifyProjectResources } from "@/lib/projects/verify-resources";
 
 interface ProjectTreePageProps {
   params: Promise<{ locale: string; id: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export default async function ProjectTreePage({
   params,
+  searchParams,
 }: ProjectTreePageProps): Promise<React.ReactNode> {
   const { locale, id } = await params;
+  const query = await searchParams;
   setRequestLocale(locale);
 
   const user = await getCurrentUser();
@@ -43,6 +47,30 @@ export default async function ProjectTreePage({
   if (!project || project.userId !== user.id) {
     notFound();
   }
+
+  // 외부 리소스 검증 — 삭제된 리소스는 DB에서 자동 정리.
+  // 마일스톤 페이지와 동일하게 cleanup 발생 시 같은 경로로 redirect해
+  // 새 render tree에서 fresh DB 상태를 읽도록 한다 (Next.js Request
+  // Memoization 우회). 2차 render는 URL 쿼리의 resources_cleaned를 읽어
+  // 배너만 노출하고 verify는 clean 상태라 더 이상 redirect하지 않는다.
+  const verificationResults = await verifyProjectResources(project.id, user.id);
+  const freshlyRemoved = verificationResults
+    .filter((r) => r.status === "gone")
+    .map((r) => r.resourceType);
+
+  const alreadyCleanedRaw = query.resources_cleaned;
+  if (freshlyRemoved.length > 0 && typeof alreadyCleanedRaw !== "string") {
+    const cleanedParam = encodeURIComponent(freshlyRemoved.join(","));
+    const prefix = locale === "ko" ? "" : `/${locale}`;
+    redirectRaw(`${prefix}/projects/${id}?resources_cleaned=${cleanedParam}`);
+  }
+
+  const removedResources =
+    freshlyRemoved.length > 0
+      ? freshlyRemoved
+      : typeof alreadyCleanedRaw === "string"
+        ? alreadyCleanedRaw.split(",").filter(Boolean)
+        : [];
 
   const catalog = createInMemoryMilestoneCatalog();
   const track = catalog.getTrack(project.track);
@@ -80,6 +108,29 @@ export default async function ProjectTreePage({
         <span>/</span>
         <span className="text-foreground">{project.name}</span>
       </nav>
+
+      {/* 삭제된 외부 리소스 알림 */}
+      {removedResources.length > 0 && (
+        <div className="mb-6 rounded-lg border border-amber-500/30 bg-amber-500/10 px-4 py-3">
+          <p className="text-sm font-medium text-amber-400">
+            🔄 외부 서비스 상태가 변경되었습니다
+          </p>
+          <p className="mt-1 text-xs text-amber-400/80">
+            {removedResources
+              .map((r) =>
+                r === "github_repo"
+                  ? "GitHub 저장소"
+                  : r === "vercel_project"
+                    ? "Vercel 프로젝트"
+                    : r === "supabase_project"
+                      ? "Supabase 프로젝트"
+                      : r,
+              )
+              .join(", ")}
+            {" "}가 삭제된 것을 감지했습니다. 해당 단계를 다시 진행해 주세요.
+          </p>
+        </div>
+      )}
 
       <header className="mb-10 flex flex-col gap-4">
         <div className="flex flex-wrap items-center gap-3">
