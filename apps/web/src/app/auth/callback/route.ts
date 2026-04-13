@@ -66,12 +66,35 @@ export async function GET(request: NextRequest): Promise<Response> {
           ? phase1.project.trim()
           : "my-first-app";
 
+      const os: "windows" | "macos" | null =
+        phase1.os === "windows" || phase1.os === "macos" ? phase1.os : null;
+      const VALID_GOALS = [
+        "web-nextjs",
+        "web-python",
+        "web-java",
+        "mobile",
+        "data-ai",
+        "not-sure",
+      ] as const;
+      type ValidGoal = (typeof VALID_GOALS)[number];
+      const goal: ValidGoal | null =
+        typeof phase1.goal === "string" &&
+        (VALID_GOALS as readonly string[]).includes(phase1.goal)
+          ? (phase1.goal as ValidGoal)
+          : null;
+
+      // data-ai/mobile은 Phase 2 마일스톤이 맞지 않아 자동 생성 skip.
+      const PHASE2_UNSUPPORTED_GOALS = new Set<ValidGoal>(["data-ai", "mobile"]);
+      const skipAutoCreate = goal !== null && PHASE2_UNSUPPORTED_GOALS.has(goal);
+
       const user = await getCurrentUser();
-      if (user) {
+      if (user && !skipAutoCreate) {
         const project = await createProject({
           userId: user.id,
           track: "static",
           name: projectName,
+          os,
+          goal,
         });
 
         const projectUrl = new URL(

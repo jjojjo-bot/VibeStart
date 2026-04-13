@@ -7,15 +7,13 @@
  */
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { cookies } from "next/headers";
 import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 
 import { Link, redirect } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { TrackBadge } from "@/components/milestone";
 import { Button } from "@/components/ui/button";
-import { listProjects, createProject } from "@/lib/projects/project-store";
-import { PHASE1_DATA_COOKIE } from "@/lib/auth/phase1-cookie";
+import { listProjects } from "@/lib/projects/project-store";
 
 import { signOutAction } from "../login/actions";
 import { DeleteProjectButton } from "./delete-project-button";
@@ -36,48 +34,10 @@ export default async function DashboardPage({
     return null;
   }
 
-  // Phase 1 쿠키가 있으면 프로젝트 자동 생성 후 해당 프로젝트로 이동
-  const jar = await cookies();
-  const phase1Raw = jar.get(PHASE1_DATA_COOKIE)?.value;
-  if (phase1Raw) {
-    jar.delete(PHASE1_DATA_COOKIE);
-    try {
-      const phase1 = JSON.parse(phase1Raw) as {
-        os?: string;
-        goal?: string;
-        project?: string;
-      };
-      const projectName =
-        typeof phase1.project === "string" && phase1.project.trim().length > 0
-          ? phase1.project.trim()
-          : "my-first-app";
-
-      const os = phase1.os === "macos" || phase1.os === "windows" ? phase1.os : null;
-      const goal = ["web-nextjs", "web-python", "web-java", "mobile", "data-ai", "not-sure"].includes(phase1.goal ?? "")
-        ? (phase1.goal as "web-nextjs" | "web-python" | "web-java" | "mobile" | "data-ai" | "not-sure")
-        : null;
-
-      // data-ai/mobile은 Phase 2 마일스톤(Vercel 배포/Auth UI)이 맞지 않아
-      // 프로젝트 자동 생성을 건너뛴다. 대시보드에서 수동 생성은 가능.
-      const PHASE2_UNSUPPORTED_GOALS = new Set(["data-ai", "mobile"]);
-      if (goal && PHASE2_UNSUPPORTED_GOALS.has(goal)) {
-        // 쿠키는 이미 삭제됨 — 대시보드를 그대로 표시
-      } else {
-        const project = await createProject({
-          userId: user.id,
-          track: "static",
-          name: projectName,
-          os,
-          goal,
-        });
-
-        redirect({ href: `/projects/${project.id}`, locale });
-        return null;
-      }
-    } catch {
-      // 파싱 실패 시 무시하고 대시보드 표시
-    }
-  }
+  // NOTE: Phase 1 데이터(os/goal/project) 기반의 자동 프로젝트 생성은
+  // `/auth/callback` Route Handler와 `goToDashboardWithPhase1Action`
+  // Server Action에서 처리된다. Dashboard는 Server Component라 쿠키 수정이
+  // 금지돼(Next.js 16) 여기서 phase1 쿠키를 건드리면 런타임 에러가 난다.
 
   const t = await getTranslations({ locale, namespace: "Dashboard" });
   const tProjects = await getTranslations({
