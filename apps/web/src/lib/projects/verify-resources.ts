@@ -12,7 +12,10 @@ import "server-only";
 
 import { fetchGitHubRepoIfExists } from "@/lib/adapters/github/github-adapter";
 import { vercelProjectExists } from "@/lib/adapters/vercel/vercel-adapter";
-import { getSupabaseProject } from "@/lib/adapters/supabase-mgmt/supabase-mgmt-adapter";
+import {
+  getSupabaseProject,
+  listSupabaseProjects,
+} from "@/lib/adapters/supabase-mgmt/supabase-mgmt-adapter";
 import { getOAuthAccessToken } from "@/lib/auth/oauth-connections";
 import {
   getCompletedSubstepIds,
@@ -180,26 +183,87 @@ async function verifyVercelProject(
   }
 }
 
+// Supabase 프로젝트 상태 — Management API가 반환하는 status 값.
+// - ACTIVE_HEALTHY / COMING_UP / INIT_FAILED / PAUSED / RESTORING / UPGRADING
+//   → 사용자가 되살릴 수 있으므로 "valid"로 처리
+// - GOING_DOWN / REMOVED / INACTIVE
+//   → 사용자가 대시보드에서 삭제한 직후. "gone"으로 처리.
+const SUPABASE_DEAD_STATUSES = new Set(["GOING_DOWN", "REMOVED", "INACTIVE"]);
+
+/**
+ * Supabase 프로젝트 존재 검증.
+ *
+ * 권위 있는 소스는 list 엔드포인트(`GET /v1/projects`). 삭제된 프로젝트는
+ * 리스트에 나타나지 않는다. 리스트 조회가 실패하거나(네트워크/권한 등)
+ * transitional한 이유로 어긋날 경우에 대비해 per-project GET을 fallback으로
+ * 시도한다. 둘 다 실패하면 "skipped"로 보수적으로 처리해 사용자의 완료
+ * 상태를 건드리지 않는다.
+ */
 async function verifySupabaseProject(
   resource: StoredProjectResource,
   userId: string,
 ): Promise<"valid" | "gone" | "skipped"> {
+  const token = await getOAuthAccessToken(userId, "supabase_mgmt");
+  if (!token) {
+    console.warn("[verifySupabaseProject] no supabase_mgmt token, skipping");
+    return "skipped";
+  }
+
+  // createSupabaseProjectAction은 metadata.ref에 Supabase project ref를,
+  // externalId에 project id를 저장한다.
+  const meta = resource.metadata as { ref?: unknown };
+  const ref =
+    typeof meta.ref === "string" && meta.ref.length > 0
+      ? meta.ref
+      : resource.externalId;
+  if (!ref) return "skipped";
+
+  // 1차: list 엔드포인트로 권위 있는 존재 여부 판정
   try {
-    const token = await getOAuthAccessToken(userId, "supabase_mgmt");
-    if (!token) return "skipped";
+    const projects = await listSupabaseProjects(token);
+    const found = projects.find(
+      (p) => p.ref === ref || p.id === resource.externalId,
+    );
+    if (!found) {
+      console.log("[verifySupabaseProject] not in list → gone", {
+        ref,
+        listedCount: projects.length,
+      });
+      return "gone";
+    }
+    if (SUPABASE_DEAD_STATUSES.has(found.status)) {
+      console.log("[verifySupabaseProject] dead status → gone", {
+        ref,
+        status: found.status,
+      });
+      return "gone";
+    }
+    return "valid";
+  } catch (listErr) {
+    console.warn("[verifySupabaseProject] list failed, falling back to GET", {
+      error: listErr instanceof Error ? listErr.message : String(listErr),
+    });
+  }
 
-    // createSupabaseProjectAction은 metadata.ref에 Supabase project ref를
-    // 저장한다. externalId는 project id(동일 값이지만 문서상 분리).
-    const meta = resource.metadata as { ref?: unknown };
-    const ref =
-      typeof meta.ref === "string" && meta.ref.length > 0
-        ? meta.ref
-        : resource.externalId;
-    if (!ref) return "skipped";
-
+  // 2차 fallback: per-project GET
+  try {
     const project = await getSupabaseProject(token, ref);
-    return project ? "valid" : "gone";
-  } catch {
+    if (project === null) {
+      console.log("[verifySupabaseProject] GET 404 → gone", { ref });
+      return "gone";
+    }
+    if (SUPABASE_DEAD_STATUSES.has(project.status)) {
+      console.log("[verifySupabaseProject] GET dead status → gone", {
+        ref,
+        status: project.status,
+      });
+      return "gone";
+    }
+    return "valid";
+  } catch (getErr) {
+    console.error("[verifySupabaseProject] GET fallback also failed", {
+      error: getErr instanceof Error ? getErr.message : String(getErr),
+    });
     return "skipped";
   }
 }

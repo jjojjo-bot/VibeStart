@@ -441,6 +441,51 @@ export async function updateSupabaseSiteConfig(
 }
 
 /**
+ * 사용자가 접근 가능한 모든 Supabase 프로젝트 목록을 조회한다.
+ *
+ * 엔드포인트: GET /v1/projects — 삭제된 프로젝트는 목록에서 제외되므로
+ * verify-resources.ts가 외부 삭제를 감지할 때 per-project GET의 transitional
+ * 상태(GOING_DOWN 등) 이슈를 피할 수 있는 권위 있는 소스.
+ */
+export async function listSupabaseProjects(
+  accessToken: string,
+): Promise<SupabaseProjectResult[]> {
+  const res = await fetch(PROJECTS_URL, {
+    method: "GET",
+    headers: SUPABASE_HEADERS(accessToken),
+  });
+  if (res.status === 401) throw new Error("supabase:invalid_token");
+  if (res.status === 403) throw new Error("supabase:forbidden");
+  if (res.status === 429) throw new Error("supabase:rate_limited");
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("[supabase-mgmt] listSupabaseProjects failed", {
+      status: res.status,
+      bodyPreview: text.slice(0, 200),
+    });
+    throw new Error(`supabase:list_http_${res.status}`);
+  }
+
+  const data = (await res.json()) as Array<{
+    id?: string;
+    ref?: string;
+    name?: string;
+    status?: string;
+  }>;
+  if (!Array.isArray(data)) return [];
+
+  return data
+    .filter((p) => typeof p.id === "string" && typeof p.ref === "string")
+    .map((p) => ({
+      id: p.id!,
+      ref: p.ref!,
+      name: p.name ?? "",
+      status: p.status ?? "COMING_UP",
+      apiUrl: `https://${p.ref}.supabase.co`,
+    }));
+}
+
+/**
  * 프로젝트 ref로 현재 상태를 조회한다. 폴링용.
  * 응답에 status 필드가 있으며 ACTIVE_HEALTHY가 "준비 완료" 상태.
  */
