@@ -6,7 +6,7 @@ import { routing } from "@/i18n/routing";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 
-const GA_ID = "G-4E96RK3TLT";
+const GA_ID = "GT-WK2THPNS";
 const siteUrl = "https://vibe-start.com";
 
 const LOCALE_MAP: Record<string, string> = {
