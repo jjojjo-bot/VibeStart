@@ -676,6 +676,20 @@ const CLAUDE_MD_DATA_AI = `# Project Structure Rules
 4. File names: snake_case`;
 
 /**
+ * 주어진 디렉토리 목록을 `mkdir -p` + 각 디렉토리에 `.gitkeep` 빈 파일 생성
+ * 명령으로 변환한다.
+ *
+ * Git은 빈 디렉토리를 추적하지 않으므로 헥사고날 아키텍처 스캐폴딩(domain/
+ * ports/adapters 하위 폴더)만 만들어 두면 git push 시 전부 사라진다.
+ * 각 leaf 디렉토리에 `.gitkeep`을 넣어 Git이 추적하게 한다.
+ */
+function mkdirWithGitkeep(dirs: ReadonlyArray<string>): string {
+  const mkdirs = `mkdir -p ${dirs.join(" ")}`;
+  const touches = `touch ${dirs.map((d) => `${d}/.gitkeep`).join(" ")}`;
+  return `${mkdirs} && ${touches}`;
+}
+
+/**
  * 주어진 폴더 생성 명령 뒤에 `cd <projectRoot> && cat > CLAUDE.md << 'EOF' ...`
  * heredoc을 붙여 폴더 스캐폴딩과 CLAUDE.md 자동 생성을 한 스크립트로 묶는다.
  *
@@ -698,7 +712,14 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
 
   switch (goal) {
     case "web-nextjs":
-    case "not-sure":
+    case "not-sure": {
+      const feCmd = mkdirWithGitkeep([
+        "src/domain/models",
+        "src/domain/services",
+        "src/ports",
+        "src/adapters/api",
+        "src/adapters/ui",
+      ]);
       return {
         id: "architecture",
         title: t("architecture.title"),
@@ -707,13 +728,29 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         environment: env,
         detailedGuide: t("architecture.detailedGuide"),
         script: withClaudeMd(
-          `cd ${home} && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui`,
+          `cd ${home} && ${feCmd}`,
           home,
           CLAUDE_MD_NEXTJS,
         ),
         claudeMdContent: CLAUDE_MD_NEXTJS,
       };
-    case "web-python":
+    }
+    case "web-python": {
+      const feCmd = mkdirWithGitkeep([
+        "src/domain/models",
+        "src/domain/services",
+        "src/ports",
+        "src/adapters/api",
+        "src/adapters/ui",
+      ]);
+      const beCmd = mkdirWithGitkeep([
+        "domain/models",
+        "domain/services",
+        "ports/inbound",
+        "ports/outbound",
+        "adapters/inbound/api",
+        "adapters/outbound/persistence",
+      ]);
       return {
         id: "architecture",
         title: t("architecture.title"),
@@ -722,13 +759,29 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         environment: env,
         detailedGuide: t("architecture.detailedGuide"),
         script: withClaudeMd(
-          `cd ${home}/frontend && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui && cd ${home}/backend && mkdir -p domain/models domain/services ports/inbound ports/outbound adapters/inbound/api adapters/outbound/persistence`,
+          `cd ${home}/frontend && ${feCmd} && cd ${home}/backend && ${beCmd}`,
           home,
           CLAUDE_MD_WEB_PYTHON,
         ),
         claudeMdContent: CLAUDE_MD_WEB_PYTHON,
       };
-    case "web-java":
+    }
+    case "web-java": {
+      const feCmd = mkdirWithGitkeep([
+        "src/domain/models",
+        "src/domain/services",
+        "src/ports",
+        "src/adapters/api",
+        "src/adapters/ui",
+      ]);
+      const beCmd = mkdirWithGitkeep([
+        "src/main/java/com/example/app/domain/model",
+        "src/main/java/com/example/app/domain/service",
+        "src/main/java/com/example/app/port/in",
+        "src/main/java/com/example/app/port/out",
+        "src/main/java/com/example/app/adapter/in/web",
+        "src/main/java/com/example/app/adapter/out/persistence",
+      ]);
       return {
         id: "architecture",
         title: t("architecture.title"),
@@ -737,13 +790,22 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         environment: env,
         detailedGuide: t("architecture.detailedGuide"),
         script: withClaudeMd(
-          `cd ${home}/frontend && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui && cd ${home}/backend && mkdir -p src/main/java/com/example/app/domain/model src/main/java/com/example/app/domain/service src/main/java/com/example/app/port/in src/main/java/com/example/app/port/out src/main/java/com/example/app/adapter/in/web src/main/java/com/example/app/adapter/out/persistence`,
+          `cd ${home}/frontend && ${feCmd} && cd ${home}/backend && ${beCmd}`,
           home,
           CLAUDE_MD_WEB_JAVA,
         ),
         claudeMdContent: CLAUDE_MD_WEB_JAVA,
       };
-    case "mobile":
+    }
+    case "mobile": {
+      const cmd = mkdirWithGitkeep([
+        "src/domain/models",
+        "src/domain/services",
+        "src/ports",
+        "src/adapters/api",
+        "src/adapters/ui/screens",
+        "src/adapters/ui/components",
+      ]);
       return {
         id: "architecture",
         title: t("architecture.title"),
@@ -752,13 +814,21 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         environment: env,
         detailedGuide: t("architecture.detailedGuide"),
         script: withClaudeMd(
-          `cd ${home} && mkdir -p src/domain/models src/domain/services src/ports src/adapters/api src/adapters/ui/screens src/adapters/ui/components`,
+          `cd ${home} && ${cmd}`,
           home,
           CLAUDE_MD_EXPO,
         ),
         claudeMdContent: CLAUDE_MD_EXPO,
       };
-    case "data-ai":
+    }
+    case "data-ai": {
+      const cmd = mkdirWithGitkeep([
+        "data",
+        "notebooks",
+        "src/loaders",
+        "src/analyzers",
+        "src/visualizers",
+      ]);
       return {
         id: "architecture",
         title: t("architecture.title"),
@@ -767,12 +837,13 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         environment: env,
         detailedGuide: t("architecture.detailedGuide"),
         script: withClaudeMd(
-          `cd ${home} && mkdir -p data notebooks src/loaders src/analyzers src/visualizers`,
+          `cd ${home} && ${cmd}`,
           home,
           CLAUDE_MD_DATA_AI,
         ),
         claudeMdContent: CLAUDE_MD_DATA_AI,
       };
+    }
   }
 }
 
