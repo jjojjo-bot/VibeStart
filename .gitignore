@@ -31,3 +31,6 @@ pnpm-debug.log*
 
 # TypeScript
 *.tsbuildinfo
+
+# Local scratch (screenshots etc. shared with Claude)
+temp/
