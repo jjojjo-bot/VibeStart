@@ -814,6 +814,7 @@
     "changeTrackTitle": "दूसरे ट्रैक पर स्विच करें",
     "changeTrackSubtitle": "अभी ट्रैक बदलने से आपकी प्रगति बनी रहती है — केवल बैज और विवरण बदलते हैं।",
     "changeTrackCta": "इस ट्रैक पर स्विच करें",
+    "openProject": "प्रोजेक्ट खोलें",
     "milestoneIndex": "M{current}/{total}",
     "notFound": "प्रोजेक्ट नहीं मिला",
     "backToTree": "माइलस्टोन सूची पर वापस",

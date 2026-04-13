@@ -7,6 +7,12 @@
  */
 
 export { TrackBadge, type TrackBadgeProps } from "./track-badge";
+export {
+  TrackChangeDropdown,
+  type TrackChangeDropdownProps,
+  type TrackChangeDropdownLabels,
+  type TrackOption,
+} from "./track-change-dropdown";
 export { ProgressDots, type ProgressDotsProps } from "./progress-dots";
 export {
   ExtensionStatus,

@@ -65,8 +65,6 @@ import {
 } from "@/lib/projects/substep-provider";
 import { verifyProjectResources } from "@/lib/projects/verify-resources";
 
-import { updateProjectTrackAction } from "./actions";
-
 interface MilestoneRunPageProps {
   params: Promise<{ locale: string; id: string; milestoneId: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -207,7 +205,6 @@ export default async function MilestoneRunPage({
   }
 
   const allMilestones = catalog.listMilestones(project.track);
-  const allTracks = catalog.listTracks().filter((t) => t.enabled);
   const total = allMilestones.length;
   const order = milestone.order;
 
@@ -1115,64 +1112,7 @@ export default async function MilestoneRunPage({
       {/* 헤더 */}
       <header className="mb-10 flex flex-col gap-4">
         <div className="flex flex-wrap items-center gap-3">
-          <details className="group relative">
-            <summary className="flex cursor-pointer items-center gap-1.5 list-none">
-              <TrackBadge
-                track={track.id}
-                color={track.colorToken}
-                size="sm"
-              />
-              <span className="text-[10px] text-muted-foreground group-hover:text-foreground">
-                {tProjects("changeTrack")} ▾
-              </span>
-            </summary>
-            <div className="absolute left-0 top-full z-10 mt-2 w-72 rounded-lg border border-border bg-popover p-3 shadow-lg">
-              <p className="mb-2 text-xs font-medium text-foreground">
-                {tProjects("changeTrackTitle")}
-              </p>
-              <p className="mb-3 text-[11px] text-muted-foreground">
-                {tProjects("changeTrackSubtitle")}
-              </p>
-              <form
-                action={updateProjectTrackAction}
-                className="flex flex-col gap-2"
-              >
-                <input type="hidden" name="projectId" value={project.id} />
-                <input
-                  type="hidden"
-                  name="milestoneId"
-                  value={milestone.id}
-                />
-                <input type="hidden" name="locale" value={locale} />
-                {allTracks.map((t) => (
-                  <label
-                    key={t.id}
-                    className="flex cursor-pointer items-center gap-2 rounded-md border border-border bg-background/40 p-2 hover:border-primary/40 has-[:checked]:border-primary has-[:checked]:bg-primary/5"
-                  >
-                    <input
-                      type="radio"
-                      name="trackId"
-                      value={t.id}
-                      defaultChecked={t.id === track.id}
-                      required
-                      className="h-3 w-3"
-                    />
-                    <TrackBadge
-                      track={t.id}
-                      color={t.colorToken}
-                      size="sm"
-                    />
-                  </label>
-                ))}
-                <button
-                  type="submit"
-                  className="mt-1 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
-                >
-                  {tProjects("changeTrackCta")}
-                </button>
-              </form>
-            </div>
-          </details>
+          <TrackBadge track={track.id} color={track.colorToken} size="sm" />
           <span className="text-xs font-mono text-muted-foreground">
             {tProjects("milestoneIndex", { current: order, total })}
           </span>

@@ -11,11 +11,12 @@ import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 
 import { Link, redirect } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/dal";
-import { TrackBadge } from "@/components/milestone";
+import { TrackBadge, TrackChangeDropdown } from "@/components/milestone";
 import { Button } from "@/components/ui/button";
 import { listProjects } from "@/lib/projects/project-store";
 
 import { signOutAction } from "../login/actions";
+import { updateProjectTrackAction } from "./actions";
 import { DeleteProjectButton } from "./delete-project-button";
 
 interface DashboardPageProps {
@@ -47,6 +48,14 @@ export default async function DashboardPage({
 
   const projects = await listProjects(user.id);
   const catalog = createInMemoryMilestoneCatalog();
+  const allTracks = catalog.listTracks().filter((t) => t.enabled);
+
+  const trackLabels = {
+    change: tProjects("changeTrack"),
+    title: tProjects("changeTrackTitle"),
+    subtitle: tProjects("changeTrackSubtitle"),
+    cta: tProjects("changeTrackCta"),
+  };
 
   return (
     <main id="main-content" className="mx-auto max-w-4xl px-6 py-16">
@@ -99,29 +108,54 @@ export default async function DashboardPage({
             const track = catalog.getTrack(project.track);
             if (!track) return null;
             return (
-              <li key={project.id}>
-                <Link
-                  href={`/projects/${project.id}`}
-                  className="no-underline"
-                >
-                  <article className="flex items-center gap-4 rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary/60">
-                    <TrackBadge
-                      track={track.id}
-                      color={track.colorToken}
-                      size="sm"
-                    />
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-base font-semibold">
-                        {project.name}
-                      </h3>
-                      <p className="text-xs text-muted-foreground">
-                        {project.createdAt.slice(0, 10)}
-                      </p>
-                    </div>
-                    <DeleteProjectButton projectId={project.id} />
-                    <span className="text-sm text-muted-foreground">→</span>
-                  </article>
-                </Link>
+              <li
+                key={project.id}
+                className="rounded-lg border border-border bg-card transition-colors hover:border-primary/60"
+              >
+                <article className="flex items-center gap-4 p-4">
+                  <TrackChangeDropdown
+                    projectId={project.id}
+                    currentBadge={
+                      <TrackBadge
+                        track={track.id}
+                        color={track.colorToken}
+                        size="sm"
+                      />
+                    }
+                    options={allTracks.map((t) => ({
+                      id: t.id,
+                      badge: (
+                        <TrackBadge
+                          track={t.id}
+                          color={t.colorToken}
+                          size="sm"
+                        />
+                      ),
+                      isCurrent: t.id === project.track,
+                    }))}
+                    labels={trackLabels}
+                    action={updateProjectTrackAction}
+                  />
+                  <Link
+                    href={`/projects/${project.id}`}
+                    className="min-w-0 flex-1 no-underline"
+                  >
+                    <h3 className="text-base font-semibold text-foreground">
+                      {project.name}
+                    </h3>
+                    <p className="text-xs text-muted-foreground">
+                      {project.createdAt.slice(0, 10)}
+                    </p>
+                  </Link>
+                  <DeleteProjectButton projectId={project.id} />
+                  <Link
+                    href={`/projects/${project.id}`}
+                    className="text-sm text-muted-foreground no-underline hover:text-foreground"
+                    aria-label={tProjects("openProject")}
+                  >
+                    →
+                  </Link>
+                </article>
               </li>
             );
           })}
