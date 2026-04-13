@@ -814,6 +814,7 @@
     "changeTrackTitle": "Switch to another track",
     "changeTrackSubtitle": "Changing track right now preserves all progress — only the badge and copy change.",
     "changeTrackCta": "Switch to this track",
+    "changeTrackSaving": "Switching...",
     "openProject": "Open project",
     "milestoneIndex": "M{current}/{total}",
     "notFound": "Project not found",

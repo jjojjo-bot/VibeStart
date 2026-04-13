@@ -814,6 +814,7 @@
     "changeTrackTitle": "Cambiar a otra pista",
     "changeTrackSubtitle": "Cambiar la pista ahora mantiene todo el progreso — solo cambian la insignia y los textos.",
     "changeTrackCta": "Cambiar a esta pista",
+    "changeTrackSaving": "Cambiando...",
     "openProject": "Abrir proyecto",
     "milestoneIndex": "M{current}/{total}",
     "notFound": "Proyecto no encontrado",

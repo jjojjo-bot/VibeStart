@@ -814,6 +814,7 @@
     "changeTrackTitle": "다른 트랙으로 바꾸기",
     "changeTrackSubtitle": "지금은 트랙을 바꿔도 진행 상황이 그대로 유지돼요. 배지와 설명 문구만 달라져요.",
     "changeTrackCta": "이 트랙으로 변경",
+    "changeTrackSaving": "변경 중...",
     "openProject": "프로젝트 열기",
     "milestoneIndex": "M{current}/{total}",
     "notFound": "프로젝트를 찾을 수 없어요",

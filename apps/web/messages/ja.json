@@ -814,6 +814,7 @@
     "changeTrackTitle": "別のトラックに変更",
     "changeTrackSubtitle": "今はトラックを変更しても進捗は保持されます。バッジと説明文だけが変わります。",
     "changeTrackCta": "このトラックに変更",
+    "changeTrackSaving": "変更中...",
     "openProject": "プロジェクトを開く",
     "milestoneIndex": "M{current}/{total}",
     "notFound": "プロジェクトが見つかりません",

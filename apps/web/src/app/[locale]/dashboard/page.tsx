@@ -55,6 +55,7 @@ export default async function DashboardPage({
     title: tProjects("changeTrackTitle"),
     subtitle: tProjects("changeTrackSubtitle"),
     cta: tProjects("changeTrackCta"),
+    saving: tProjects("changeTrackSaving"),
   };
 
   return (

@@ -814,6 +814,7 @@
     "changeTrackTitle": "切换到其他赛道",
     "changeTrackSubtitle": "当前切换赛道不会影响进度,仅更改徽章和描述文案。",
     "changeTrackCta": "切换到此赛道",
+    "changeTrackSaving": "切换中...",
     "openProject": "打开项目",
     "milestoneIndex": "M{current}/{total}",
     "notFound": "找不到项目",
