@@ -17,6 +17,11 @@ import { cn } from "@/lib/utils";
 
 import { installAuthUiAction } from "@/app/[locale]/projects/[id]/m/[milestoneId]/actions";
 
+import {
+  ClaudeCodePromptCard,
+  type ClaudeCodePromptCardLabels,
+} from "./claude-code-prompt-card";
+
 export type InstallAuthUiPanelState =
   | "needs-provider"
   | "ready"
@@ -32,6 +37,9 @@ export interface InstallAuthUiPanelLabels {
   alreadyInstalled: string;
   openSite: string;
   errorMessage: string | null;
+  /** installed 상태에서 노출되는 Claude Code 프롬프트 카드 본문 + 라벨 */
+  claudePrompt?: string;
+  claudeCard?: ClaudeCodePromptCardLabels;
 }
 
 export interface InstallAuthUiPanelProps {
@@ -139,6 +147,13 @@ export function InstallAuthUiPanel({
           </span>
         )}
       </div>
+
+      {state === "installed" && labels.claudePrompt && labels.claudeCard && (
+        <ClaudeCodePromptCard
+          prompt={labels.claudePrompt}
+          labels={labels.claudeCard}
+        />
+      )}
     </section>
   );
 }

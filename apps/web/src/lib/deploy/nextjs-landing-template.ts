@@ -8,8 +8,9 @@
  * 세트를 반환한다.
  *
  * 경로 구조(`src/app/page.tsx`, `src/lib/*`, `@/*` alias)는 (마)-5 Auth UI
- * 설치 단계의 `auth-ui-nextjs-template.ts`와 맞춰 M2에서 `page.tsx`를
- * 덮어쓰며 자연스럽게 이어진다.
+ * 설치 단계의 `auth-ui-nextjs-template.ts`와 맞춘다 — M2가 추가하는
+ * AuthButton 컴포넌트와 supabase 클라이언트가 같은 alias 경로를 쓴다.
+ * (M2는 더 이상 page.tsx를 덮어쓰지 않고, 신규 파일만 추가한다.)
  *
  * 의존성 없는 순수 함수 — 테스트 가능.
  */
@@ -36,10 +37,11 @@ export interface FileToPush {
  *   - `src/app/page.tsx` (프로젝트 이름 인사 랜딩)
  *   - `.gitignore`
  *
- * Tailwind를 포함하는 이유: M2 installAuthUi가 덮어쓰는 `src/app/page.tsx`
- * 는 Tailwind 클래스 기반 Google 로그인 UI인데, 사용자가 m1-s3 git push를
- * 건너뛰어 Phase 1 프로젝트가 저장소에 없는 경우 이 fallback 템플릿 위로
- * M2 파일이 들어오게 된다. Tailwind가 없으면 M2 UI가 unstyled로 렌더된다.
+ * Tailwind를 포함하는 이유: 이 fallback 랜딩 자체가 Tailwind 클래스를
+ * 사용하므로 postcss/globals.css가 누락되면 unstyled로 렌더된다. M2가
+ * 추가하는 AuthButton 컴포넌트도 Tailwind 클래스 기본값을 가져서 같은
+ * 환경을 가정한다. 사용자가 m1-s3 git push를 건너뛰어 fallback이 활성화된
+ * 경우에도 일관된 스타일링 환경을 보장한다.
  */
 export function buildNextJsLandingFiles(input: NextJsLandingInput): FileToPush[] {
   const projectNameLiteral = JSON.stringify(input.projectName);

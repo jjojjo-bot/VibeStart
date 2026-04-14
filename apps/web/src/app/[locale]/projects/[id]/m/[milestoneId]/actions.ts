@@ -55,7 +55,7 @@ import {
 } from "@/lib/adapters/github/github-adapter";
 import {
   addSupabaseDependency,
-  buildPageTsx,
+  buildAuthButtonComponent,
   buildSupabaseClientFile,
 } from "@/lib/deploy/auth-ui-nextjs-template";
 import { buildNextJsLandingFiles } from "@/lib/deploy/nextjs-landing-template";
@@ -1410,19 +1410,24 @@ export async function installAuthUiAction(
     );
   }
 
-  // 4) Next.js Auth 파일 빌드
+  // 4) Next.js Auth 파일 빌드 — 사용자 코드는 절대 건드리지 않는다.
   // 별도 /auth/callback Route Handler는 만들지 않는다 — Supabase JS v2의
   // implicit flow는 토큰을 URL 해시 프래그먼트(#access_token=...)로 돌려주고,
   // 해시는 HTTP 요청에 포함되지 않아 서버에서 읽을 수 없기 때문. 대신
-  // page.tsx가 redirectTo를 사이트 루트(origin)로 지정해 supabase client의
-  // detectSessionInUrl 로직(기본 true)이 해시를 읽어 세션을 자동 복원한다.
+  // AuthButton 컴포넌트가 redirectTo를 사이트 루트(origin)로 지정해 supabase
+  // client의 detectSessionInUrl 로직(기본 true)이 해시를 읽어 세션을 자동
+  // 복원한다.
+  //
+  // 사이트의 어디에 AuthButton을 끼워넣을지는 사용자가 Claude Code에 자연어
+  // 프롬프트로 위임 — 사용자가 만든 사이트 구조가 무엇이든 LLM이 적절한
+  // 위치를 판단한다. M2 완료 화면에서 추천 프롬프트를 복붙으로 제공.
   const templateInput = {
     projectName: project.name,
     supabaseUrl: supabaseApiUrl,
     supabaseAnonKey: anonKey,
   };
   const supabaseClientFile = buildSupabaseClientFile(templateInput);
-  const pageTsx = buildPageTsx(templateInput);
+  const authButtonComponent = buildAuthButtonComponent();
 
   // package.json에 @supabase/supabase-js 추가
   // goal에 따라 package.json 경로 결정 (frontend/ 구조 대응)
@@ -1464,10 +1469,14 @@ export async function installAuthUiAction(
     : "";
 
   try {
-    // 모든 Auth UI 파일을 한 커밋으로 push (Vercel 배포 1회만 트리거)
+    // 사용자 사이트 코드를 절대 건드리지 않고 신규 파일과 의존성만 추가한다.
+    // 모든 Auth 파일을 한 커밋으로 push (Vercel 배포 1회만 트리거).
     const filesToPush: Array<{ path: string; content: string }> = [
       { path: `${pathPrefix}src/lib/supabase.ts`, content: supabaseClientFile },
-      { path: `${pathPrefix}src/app/page.tsx`, content: pageTsx },
+      {
+        path: `${pathPrefix}src/components/auth-button.tsx`,
+        content: authButtonComponent,
+      },
     ];
     if (updatedPackageJson) {
       filesToPush.push({
@@ -1478,7 +1487,7 @@ export async function installAuthUiAction(
     await pushFilesToGitHub(
       ghToken, owner, repoName,
       filesToPush,
-      "feat: add Google sign-in with Supabase Auth via VibeStart",
+      "feat: add Supabase auth scaffold via VibeStart",
     );
   } catch (err) {
     console.error("[installAuthUiAction] pushFilesToGitHub failed", {

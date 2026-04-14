@@ -937,6 +937,14 @@ export default async function MilestoneRunPage({
       alreadyInstalled: string;
       openSite: string;
       errorMessage: string | null;
+      claudePrompt?: string;
+      claudeCard?: {
+        heading: string;
+        subheading: string;
+        badge: string;
+        copy: string;
+        copied: string;
+      };
     };
   } | null = null;
 
@@ -982,6 +990,14 @@ export default async function MilestoneRunPage({
         errorMessage: installAuthUiErrorRaw
           ? resolveInstallAuthUiError(installAuthUiErrorRaw, tInstallAuthUi)
           : null,
+        claudePrompt: tInstallAuthUi("claudePrompt"),
+        claudeCard: {
+          heading: tInstallAuthUi("claudeCardHeading"),
+          subheading: tInstallAuthUi("claudeCardSubheading"),
+          badge: tInstallAuthUi("claudeCardBadge"),
+          copy: tInstallAuthUi("claudeCardCopy"),
+          copied: tInstallAuthUi("claudeCardCopied"),
+        },
       },
     };
   }

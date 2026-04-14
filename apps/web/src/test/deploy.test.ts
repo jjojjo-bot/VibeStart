@@ -32,9 +32,10 @@ describe("buildNextJsLandingFiles", () => {
     expect(page).toContain('"My Blog"');
   });
 
-  it("M2 Tailwind UI를 위한 Tailwind v4 스택을 포함한다", () => {
-    // M2 installAuthUi가 Tailwind 클래스 가득한 page.tsx로 덮어쓰기 때문에
-    // fallback 템플릿에 Tailwind 설정이 없으면 unstyled 렌더로 이어진다.
+  it("Tailwind v4 스택을 포함한다", () => {
+    // fallback 랜딩 자체가 Tailwind 클래스를 사용하므로 postcss/globals.css
+    // /devDependencies가 누락되면 unstyled 렌더로 이어진다. M2 AuthButton
+    // 컴포넌트도 Tailwind 클래스 기본값이라 같은 환경을 가정한다.
     const files = buildNextJsLandingFiles({ projectName: "x" });
     const byPath = new Map(files.map((f) => [f.path, f.content]));
 
