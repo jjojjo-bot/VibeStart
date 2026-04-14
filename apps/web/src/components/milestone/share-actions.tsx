@@ -12,9 +12,17 @@
  * - QR: inline 확장 패널 (외부 이미지 API: api.qrserver.com)
  */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState, useSyncExternalStore } from "react";
 
 import { Button } from "@/components/ui/button";
+
+// Web Share API 지원 여부를 SSR-safe하게 읽는다. 서버/하이드레이션에선 false,
+// 하이드레이션 직후 클라이언트 값으로 전환된다. useEffect + setState 패턴은
+// react-hooks/set-state-in-effect 규칙에 걸리므로 useSyncExternalStore 사용.
+const subscribeNoop = (): (() => void) => () => {};
+const getNativeShareSnapshot = (): boolean =>
+  typeof navigator !== "undefined" && typeof navigator.share === "function";
+const getNativeShareServerSnapshot = (): boolean => false;
 
 export interface ShareActionsLabels {
   shareText: string;
@@ -34,14 +42,11 @@ export interface ShareActionsProps {
 export function ShareActions({ url, labels }: ShareActionsProps): React.ReactNode {
   const [copied, setCopied] = useState(false);
   const [showQr, setShowQr] = useState(false);
-  const [canNativeShare, setCanNativeShare] = useState(false);
-
-  useEffect(() => {
-    // Web Share API 지원 확인 — SSR 환경에선 navigator가 없음.
-    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
-      setCanNativeShare(true);
-    }
-  }, []);
+  const canNativeShare = useSyncExternalStore(
+    subscribeNoop,
+    getNativeShareSnapshot,
+    getNativeShareServerSnapshot,
+  );
 
   const handleCopy = useCallback(async () => {
     try {
