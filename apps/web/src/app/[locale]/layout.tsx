@@ -8,6 +8,9 @@ import { Footer } from "@/components/footer";
 
 const GA_ID = "GT-WK2THPNS";
 const siteUrl = "https://vibe-start.com";
+// OG 이미지 캐시 버스터 — 디자인 변경 시 숫자만 올리면 카톡/X/Threads 등 SNS 캐시가 전부 무효화된다.
+const OG_VERSION = "2";
+const ogImageUrl = `${siteUrl}/api/og?v=${OG_VERSION}`;
 
 const LOCALE_MAP: Record<string, string> = {
   ko: "ko_KR",
@@ -62,7 +65,7 @@ export async function generateMetadata({
       type: "website",
       images: [
         {
-          url: `${siteUrl}/api/og`,
+          url: ogImageUrl,
           width: 1200,
           height: 630,
           alt: "VibeStart — 바이브코딩, 여기서 시작하세요",
@@ -73,7 +76,7 @@ export async function generateMetadata({
       card: "summary_large_image",
       title: t("twitter.title"),
       description: t("twitter.description"),
-      images: [`${siteUrl}/api/og`],
+      images: [ogImageUrl],
     },
     robots: {
       index: true,
