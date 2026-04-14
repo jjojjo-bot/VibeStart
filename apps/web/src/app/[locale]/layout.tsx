@@ -9,7 +9,7 @@ import { Footer } from "@/components/footer";
 const GA_ID = "GT-WK2THPNS";
 const siteUrl = "https://vibe-start.com";
 // OG 이미지 캐시 버스터 — 디자인 변경 시 숫자만 올리면 카톡/X/Threads 등 SNS 캐시가 전부 무효화된다.
-const OG_VERSION = "3";
+const OG_VERSION = "4";
 const ogImageUrl = `${siteUrl}/api/og?v=${OG_VERSION}`;
 
 const LOCALE_MAP: Record<string, string> = {

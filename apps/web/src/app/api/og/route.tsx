@@ -5,7 +5,42 @@ export const runtime = "edge";
 const LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><path d="M 16,24 L 38,40 L 16,56" fill="none" stroke="#c4b5fd" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/><line x1="42" y1="56" x2="64" y2="56" stroke="#c4b5fd" stroke-width="8" stroke-linecap="round"/></svg>`;
 const LOGO_DATA_URL = `data:image/svg+xml;utf8,${encodeURIComponent(LOGO_SVG)}`;
 
+// Google Fonts CSS API에서 특정 weight + 사용 글자만 서브셋 받아 ArrayBuffer로 반환.
+// User-Agent를 모던 브라우저로 위장해야 woff2를 돌려준다 (Satori는 woff2 OK).
+async function loadGoogleFont(
+  family: string,
+  weight: number,
+  text: string,
+): Promise<ArrayBuffer> {
+  const url = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(
+    family,
+  )}:wght@${weight}&text=${encodeURIComponent(text)}`;
+  const cssRes = await fetch(url, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    },
+  });
+  const css = await cssRes.text();
+  const match = css.match(/src:\s*url\(([^)]+)\)\s*format/);
+  if (!match) {
+    throw new Error(`Font URL not found in Google Fonts CSS for ${family}`);
+  }
+  const fontRes = await fetch(match[1]);
+  return fontRes.arrayBuffer();
+}
+
 export async function GET(): Promise<ImageResponse> {
+  const wordmarkText = "VibeStart";
+  const latinText = "VibeStart vibe-start.com 123&";
+  const koreanText = "바이브코딩, 여기서 시작하세요간단한 질문맞춤 안내복사 & 붙여넣기";
+
+  const [geistBold, geistMedium, notoKrMedium] = await Promise.all([
+    loadGoogleFont("Geist", 800, wordmarkText),
+    loadGoogleFont("Geist", 500, latinText),
+    loadGoogleFont("Noto Sans KR", 500, koreanText),
+  ]);
+
   return new ImageResponse(
     (
       <div
@@ -16,7 +51,7 @@ export async function GET(): Promise<ImageResponse> {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          fontFamily: "sans-serif",
+          fontFamily: "Geist, 'Noto Sans KR'",
           position: "relative",
           background:
             "linear-gradient(135deg, #0f0820 0%, #1f1347 50%, #0f0820 100%)",
@@ -68,6 +103,7 @@ export async function GET(): Promise<ImageResponse> {
             marginBottom: 56,
             display: "flex",
             letterSpacing: "-0.5px",
+            fontWeight: 500,
           }}
         >
           바이브코딩, 여기서 시작하세요
@@ -131,12 +167,26 @@ export async function GET(): Promise<ImageResponse> {
             color: "rgba(196,181,253,0.55)",
             display: "flex",
             letterSpacing: "0.5px",
+            fontWeight: 500,
           }}
         >
           vibe-start.com
         </div>
       </div>
     ),
-    { width: 1200, height: 630 },
+    {
+      width: 1200,
+      height: 630,
+      fonts: [
+        { name: "Geist", data: geistBold, weight: 800, style: "normal" },
+        { name: "Geist", data: geistMedium, weight: 500, style: "normal" },
+        {
+          name: "Noto Sans KR",
+          data: notoKrMedium,
+          weight: 500,
+          style: "normal",
+        },
+      ],
+    },
   );
 }
