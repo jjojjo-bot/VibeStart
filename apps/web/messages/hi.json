@@ -847,7 +847,19 @@
     "retryCta": "पुनः प्रयास",
     "celebrationTitle": "🎉 Vibe Coding लूप पूरा!",
     "celebrationDescription": "AI से बात की, कोड बदला, और अपने आप deploy हो गया। अब जो चाहें बनाएँ!",
-    "celebrationCta": "डैशबोर्ड पर वापस जाएँ"
+    "celebrationCta": "डैशबोर्ड पर वापस जाएँ",
+    "celebrationOpenSite": "मेरी साइट खोलें ↗",
+    "celebrationPreviewLabel": "मेरी साइट",
+    "celebrationShareHeading": "दोस्तों को दिखाएँ",
+    "celebrationShareSubheading": "चैट पर भेजें: \"मैंने एक वेबसाइट बनाई।\"",
+    "celebrationShareCardLabel": "शेयर कार्ड",
+    "shareText": "मैंने VibeStart से अपनी पहली वेबसाइट बना ली!",
+    "shareCopy": "URL कॉपी करें",
+    "shareCopied": "कॉपी हो गया",
+    "shareShare": "शेयर करें",
+    "shareOnX": "X पर शेयर",
+    "shareQr": "QR कोड",
+    "shareQrDescription": "फ़ोन कैमरे से स्कैन करें और साइट तुरंत खुलेगी"
   },
   "ExtensionStatus": {
     "connected": "VS Code कनेक्टेड",

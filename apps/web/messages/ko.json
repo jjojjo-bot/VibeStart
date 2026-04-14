@@ -847,7 +847,19 @@
     "retryCta": "다시 시도",
     "celebrationTitle": "🎉 바이브코딩 루프 완성!",
     "celebrationDescription": "AI에게 말하고, 코드가 바뀌고, 자동으로 배포되는 루프를 완성했어요. 이제 자유롭게 만들어보세요!",
-    "celebrationCta": "대시보드로 돌아가기"
+    "celebrationCta": "대시보드로 돌아가기",
+    "celebrationOpenSite": "내 사이트 열기 ↗",
+    "celebrationPreviewLabel": "내 사이트",
+    "celebrationShareHeading": "친구에게 자랑해보세요",
+    "celebrationShareSubheading": "카톡으로 보내보세요. '나 사이트 만들었어'라고.",
+    "celebrationShareCardLabel": "공유 카드",
+    "shareText": "VibeStart로 제 첫 사이트를 만들었어요!",
+    "shareCopy": "URL 복사",
+    "shareCopied": "복사됨",
+    "shareShare": "공유하기",
+    "shareOnX": "X에 공유",
+    "shareQr": "QR 코드",
+    "shareQrDescription": "폰 카메라로 찍으면 바로 내 사이트가 열려요"
   },
   "ExtensionStatus": {
     "connected": "VS Code 연결됨",

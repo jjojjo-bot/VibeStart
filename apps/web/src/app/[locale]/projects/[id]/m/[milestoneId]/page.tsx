@@ -1396,12 +1396,15 @@ export default async function MilestoneRunPage({
           />
         </div>
       </div>
-      {/* 마일스톤 완료 축하 — Provider 안에서 context 기반 즉시 판단 */}
+      {/* 마일스톤 완료 축하 — Provider 안에서 context 기반 즉시 판단.
+          deployedUrl은 모든 마일스톤에서 공통으로 사용하기 위해 existingVercelProject를 재사용한다. */}
       <MilestoneCelebration
         completed={currentState === "completed"}
         allSubstepIds={milestone.substeps.map((s) => s.id)}
-        deployedUrl={vibeCodingData?.deployedUrl ?? null}
+        deployedUrl={existingVercelProject?.url ?? null}
         dashboardUrl={`/${locale}/projects/${project.id}`}
+        projectName={project.name}
+        userName={user.displayName}
         labels={{
           title: tMilestones.has(`${milestone.id}.celebrationTitle`)
             ? tMilestones(`${milestone.id}.celebrationTitle`)
@@ -1410,6 +1413,20 @@ export default async function MilestoneRunPage({
             ? tMilestones(`${milestone.id}.celebrationDescription`)
             : tRun("celebrationDescription"),
           ctaLabel: tRun("celebrationCta"),
+          openSite: tRun("celebrationOpenSite"),
+          previewLabel: tRun("celebrationPreviewLabel"),
+          shareHeading: tRun("celebrationShareHeading"),
+          shareSubheading: tRun("celebrationShareSubheading"),
+          shareCardLabel: tRun("celebrationShareCardLabel"),
+          share: {
+            shareText: tRun("shareText"),
+            copy: tRun("shareCopy"),
+            copied: tRun("shareCopied"),
+            share: tRun("shareShare"),
+            shareOnX: tRun("shareOnX"),
+            qr: tRun("shareQr"),
+            qrDescription: tRun("shareQrDescription"),
+          },
         }}
       />
       </MaybeCompletedSubstepsProvider>

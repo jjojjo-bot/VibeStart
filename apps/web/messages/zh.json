@@ -847,7 +847,19 @@
     "retryCta": "重试",
     "celebrationTitle": "🎉 Vibe Coding 循环完成！",
     "celebrationDescription": "和 AI 对话、代码改变、自动部署的循环已经完成。现在自由地创造吧！",
-    "celebrationCta": "返回仪表盘"
+    "celebrationCta": "返回仪表盘",
+    "celebrationOpenSite": "打开我的网站 ↗",
+    "celebrationPreviewLabel": "我的网站",
+    "celebrationShareHeading": "向朋友炫耀一下",
+    "celebrationShareSubheading": "发条消息给朋友：\"我做了一个网站\"",
+    "celebrationShareCardLabel": "分享卡片",
+    "shareText": "我用 VibeStart 做了我的第一个网站！",
+    "shareCopy": "复制链接",
+    "shareCopied": "已复制",
+    "shareShare": "分享",
+    "shareOnX": "分享到 X",
+    "shareQr": "二维码",
+    "shareQrDescription": "用手机摄像头扫一扫即可立即打开你的网站"
   },
   "ExtensionStatus": {
     "connected": "VS Code 已连接",

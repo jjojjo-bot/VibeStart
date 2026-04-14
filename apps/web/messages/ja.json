@@ -847,7 +847,19 @@
     "retryCta": "再試行",
     "celebrationTitle": "🎉 バイブコーディングループ完成！",
     "celebrationDescription": "AIに話しかけ、コードが変わり、自動でデプロイ。これからは自由に作りましょう！",
-    "celebrationCta": "ダッシュボードに戻る"
+    "celebrationCta": "ダッシュボードに戻る",
+    "celebrationOpenSite": "サイトを開く ↗",
+    "celebrationPreviewLabel": "あなたのサイト",
+    "celebrationShareHeading": "友だちに自慢しよう",
+    "celebrationShareSubheading": "LINEで送ってみましょう。「サイト作ったよ」って。",
+    "celebrationShareCardLabel": "シェアカード",
+    "shareText": "VibeStartで初めてのサイトを作りました！",
+    "shareCopy": "URLをコピー",
+    "shareCopied": "コピーしました",
+    "shareShare": "シェア",
+    "shareOnX": "Xでシェア",
+    "shareQr": "QRコード",
+    "shareQrDescription": "スマホのカメラで読み取るとサイトがすぐに開きます"
   },
   "ExtensionStatus": {
     "connected": "VS Code接続済み",

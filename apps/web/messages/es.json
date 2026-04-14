@@ -847,7 +847,19 @@
     "retryCta": "Reintentar",
     "celebrationTitle": "🎉 ¡Bucle de Vibe Coding completado!",
     "celebrationDescription": "Hablaste con la IA, el código cambió y se desplegó automáticamente. ¡Ahora crea libremente!",
-    "celebrationCta": "Volver al panel"
+    "celebrationCta": "Volver al panel",
+    "celebrationOpenSite": "Abrir mi sitio ↗",
+    "celebrationPreviewLabel": "Mi sitio",
+    "celebrationShareHeading": "Presume ante tus amigos",
+    "celebrationShareSubheading": "Envíalo por chat: \"Hice un sitio web.\"",
+    "celebrationShareCardLabel": "Tarjeta para compartir",
+    "shareText": "¡Acabo de crear mi primer sitio web con VibeStart!",
+    "shareCopy": "Copiar URL",
+    "shareCopied": "Copiado",
+    "shareShare": "Compartir",
+    "shareOnX": "Compartir en X",
+    "shareQr": "Código QR",
+    "shareQrDescription": "Escanéalo con tu cámara para abrir tu sitio al instante"
   },
   "ExtensionStatus": {
     "connected": "VS Code conectado",
