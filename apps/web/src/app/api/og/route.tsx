@@ -45,22 +45,8 @@ export async function GET(): Promise<ImageResponse> {
             marginBottom: 28,
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              width: 148,
-              height: 148,
-              borderRadius: 36,
-              background: "rgba(167,139,250,0.14)",
-              border: "2px solid rgba(167,139,250,0.35)",
-              boxShadow: "0 0 60px rgba(124,58,237,0.35)",
-            }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={LOGO_DATA_URL} width={104} height={104} alt="" />
-          </div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={LOGO_DATA_URL} width={132} height={132} alt="" />
           <div
             style={{
               fontSize: 104,
