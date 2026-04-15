@@ -1,0 +1,192 @@
+---
+title: "GitHub Signup to First Repository — Essential Vibe Coding Guide (2026)"
+description: "A step-by-step guide from GitHub signup to creating your first repository and pushing code. Covers Git authentication, profile settings, and security setup for beginners."
+date: "2026-04-24"
+tags: ["GitHub signup", "GitHub repository", "git push", "GitHub beginners", "vibe coding GitHub", "GitHub profile setup", "GitHub authentication", "Personal Access Token", "GitHub free", "GitHub getting started"]
+---
+
+## 📦 What Is GitHub
+
+GitHub is an online service for storing and managing code. Think of it as "Google Drive for code." You can safely keep your projects on the internet, track change history, and share with others.
+
+GitHub runs on Git, a version control tool. While Git records code changes on your computer, GitHub uploads those records to the internet so you can access them from anywhere. Over 90% of developers worldwide use it, and most features are available with a free account.
+
+## 🎯 Why You Need GitHub for Vibe Coding
+
+As you vibe code, your codebase grows. Sometimes code that worked yesterday breaks after asking AI for changes today. Without GitHub, there's no way to go back to the previous state.
+
+- **Code backup**: Your code stays safe on GitHub even if your computer breaks or you accidentally delete files.
+- **Change tracking**: Records show what file was changed, when, and why. You can revert to previous versions if something goes wrong.
+- **Deployment integration**: Hosting services like Vercel and Netlify connect to GitHub repositories for automatic deployment.
+- **Portfolio**: Your GitHub profile serves as a developer's business card.
+- **AI tool integration**: AI coding tools like Cursor and Claude Code work with Git/GitHub for code management.
+
+## 📝 GitHub Signup Step-by-Step
+
+GitHub signup takes about 5 minutes. Follow these steps exactly.
+
+### 1. Visit the Signup Page
+
+Go to `github.com` in your web browser. Click the "Sign up" button at the center or top right of the screen.
+
+### 2. Enter Your Email
+
+Enter your real email address. This email receives verification codes and is used for password recovery and notifications.
+
+### 3. Set Your Password
+
+Must be at least 15 characters, or at least 8 characters including a number and lowercase letter. Use a strong password since GitHub code often connects to automatic deployments.
+
+### 4. Choose a Username
+
+This is a unique name used in your GitHub URL: `github.com/username`. You can change it later, but changing breaks existing URLs, so choose carefully from the start.
+
+> **Username tips**: Use patterns like `brandon-kim` or `minjae-dev` (real name or name + role). Avoid number sequences (`user12345`) or excessively long names.
+
+### 5. Email Verification
+
+A verification code is sent to your email. Enter the code to complete signup. Check your spam folder if you don't see it.
+
+### 6. Choose a Plan
+
+Choose between Free and Pro (paid). **Free is more than enough** for starting vibe coding. The free account includes unlimited repositories, unlimited collaborators, and 2,000 GitHub Actions minutes/month.
+
+## 🗂️ Creating Your First Repository
+
+A repository is a folder that holds one project. Create one repository for each vibe coding project.
+
+### Creating via Web
+
+1. While logged into GitHub, click the `+` button at the top right → "New repository."
+2. **Repository name**: Enter a project name in lowercase with hyphens. Example: `my-portfolio`, `todo-app`
+3. **Description**: Write a one-line project description.
+4. **Public / Private**: Choose Public for portfolios, Private for personal projects.
+5. **Add a README file**: Check this. The README is your project's "front page."
+6. **Add .gitignore**: Select "Node."
+7. Click "Create repository."
+
+### Creating via Terminal
+
+If you already have project files on your computer from vibe coding, you can create and connect a repository from the terminal.
+
+```bash
+# 1. Navigate to your project folder
+cd my-portfolio
+
+# 2. Initialize Git (skip if already done)
+git init
+
+# 3. Stage all files
+git add .
+
+# 4. First commit
+git commit -m "Initial commit"
+
+# 5. Connect to empty GitHub repository
+git remote add origin https://github.com/username/my-portfolio.git
+
+# 6. Push code
+git push -u origin main
+```
+
+## 🚀 Pushing Code to Your Repository
+
+Once your repository is created, you need to push code. This process is called "push."
+
+### Basic Push Sequence
+
+```bash
+# 1. Check changed files
+git status
+
+# 2. Stage changed files (prepare to upload)
+git add .
+
+# 3. Commit with a description
+git commit -m "Add login page"
+
+# 4. Push to GitHub
+git push
+```
+
+Always run `git status` first to check which files changed. Make sure unintended files (like `.env` with secret information) aren't included.
+
+### Authentication Methods
+
+The first time you run `git push`, GitHub requests authentication. Since 2021, password authentication is no longer supported. Use one of these two methods:
+
+| Method | Difficulty | Description |
+|--------|-----------|-------------|
+| HTTPS + Personal Access Token | Easy | Generate a token in Settings → Developer settings → Personal access tokens, enter it instead of password |
+| SSH Key | Medium | Generate public/private key pair, register public key with GitHub. Once set up, no token entry needed each time |
+
+For beginners, HTTPS + Personal Access Token is recommended. When generating a token, checking only the `repo` permission is sufficient.
+
+> ⚠️ **A Personal Access Token is like a password.** If exposed, someone can push or delete code in your repositories. Never put it directly in code or share via messenger.
+
+## 📖 Essential GitHub Terminology
+
+| Term | Analogy | Description |
+|------|---------|-------------|
+| Repository | Project folder | Space holding one project |
+| Commit | Save point | Unit recording changes, like a game save point |
+| Push | Upload | Upload commits from your computer to GitHub |
+| Pull | Download | Download latest code from GitHub to your computer |
+| Clone | Copy | Copy an entire GitHub repository to your computer |
+| Branch | Parallel universe | Space to develop new features without touching the original |
+| Fork | Duplicate | Copy someone else's repository to your account |
+| README | Project intro | The first document visitors see in a repository |
+| .gitignore | Ignore list | List of files not to upload to Git (e.g., .env, node_modules) |
+
+## ⚙️ Essential Settings After Signup
+
+### Profile Setup
+
+Set your name, bio, and profile picture in Settings → Profile. Your GitHub profile is a developer's business card.
+
+### Enable Two-Factor Authentication (2FA)
+
+Enable 2FA in Settings → Password and authentication. Using an authenticator app (Google Authenticator, Microsoft Authenticator, etc.) is the safest option.
+
+### Email Privacy Setting
+
+Check "Keep my email addresses private" in Settings → Emails. Without this, your real email is exposed in commit history.
+
+```bash
+# Change Git email to noreply in terminal
+git config --global user.email "username@users.noreply.github.com"
+git config --global user.name "username"
+```
+
+## 🚨 Common Mistakes and Prevention
+
+- **Pushing .env files to GitHub**: The most common and dangerous mistake. Always verify `.gitignore` includes `.env`.
+- **Pushing the node_modules folder**: This folder can contain tens of thousands of files. Verify `.gitignore` includes `node_modules/`.
+- **Vague commit messages like "update" or "fix"**: Write specific messages like "Fix login page layout" or "Add signup form validation."
+
+## 🔓 Public vs Private Repository Comparison
+
+| Item | Public | Private |
+|------|--------|---------|
+| Access | Anyone can view | Invited members only |
+| Best for | Portfolios, open source | Personal projects, company code |
+| Free plan | Unlimited | Unlimited |
+| Vercel integration | Free | Free |
+
+Start portfolio projects as Public and backend projects with API keys as Private. You can change this anytime.
+
+## 💡 Tips
+
+- **Push at least once a day**: Code only on your computer is code without backup.
+- **Write a README**: Ask AI to "create a README for this project" for a clean template.
+- **Fill your GitHub contribution graph**: Pushing code daily shows consistent development activity.
+
+---
+
+## 🔗 Related Posts
+
+- [Why Git Is Essential for Vibe Coding + 5-Minute Install Guide](https://1daymillion.com/vibe-coding-git-install-guide/)
+- [Terminal Guide for Complete Beginners](https://1daymillion.com/vibe-coding-terminal-guide-beginners/)
+- [Complete Dev Environment Setup Guide for Vibe Coding](https://1daymillion.com/vibe-coding-dev-environment-setup/)
+- [Cursor vs Claude Code — Which Is Better for Beginners?](https://1daymillion.com/cursor-vs-claude-code/)
+- [What Is .env? How to Safely Manage API Keys](https://1daymillion.com/env-file-api-key-management/)

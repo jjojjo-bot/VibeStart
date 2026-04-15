@@ -1,0 +1,215 @@
+---
+title: "What Is .env? How to Safely Manage API Keys (2026)"
+description: "A practical guide to .env files and API key management for beginners. Covers Next.js environment variables, .gitignore protection, and Vercel deployment environment variable setup."
+date: "2026-04-25"
+tags: ["env file", "API key management", "environment variables", "NEXT_PUBLIC environment variable", ".gitignore setup", "Vercel environment variables", "vibe coding security", "Next.js environment variables", "env.local usage", "API key security"]
+---
+
+## 📄 What Is a .env File
+
+A `.env` file is a configuration file that stores your project's secret information. The name starts with a dot (.) because operating systems treat it as a "hidden file." This file holds sensitive values like API keys, database URLs, and passwords, while your code references them only by variable name.
+
+Think of it this way: if your code is a "blueprint," the `.env` file is a "safe." You can show the blueprint (code) to anyone, but only you should know the safe's (.env) combination.
+
+### .env File Format
+
+The format is very simple. One entry per line, in `NAME=VALUE` format:
+
+```bash
+# .env file example
+DATABASE_URL=postgresql://user:password123@localhost:5432/mydb
+NEXT_PUBLIC_SUPABASE_URL=https://abcdefg.supabase.co
+SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+OPENAI_API_KEY=sk-proj-abc123def456...
+```
+
+Lines starting with `#` are comments. The convention is no spaces around the equals sign (=).
+
+## 🚨 Why You Should Never Put API Keys Directly in Code
+
+When you ask AI to "integrate the OpenAI API," it sometimes generates examples with API keys hardcoded in the source. This works but creates serious security risks.
+
+```typescript
+// ❌ Never do this
+const openai = new OpenAI({
+  apiKey: "sk-proj-abc123def456..."  // API key directly exposed!
+});
+
+// ✅ Correct approach
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY  // Read from .env file
+});
+```
+
+Here's what happens when you hardcode API keys:
+
+- **Public on GitHub**: Anyone can see them in a public repository.
+- **Bots scan automatically**: Bots exist that detect exposed API keys on GitHub within minutes and exploit them.
+- **Code changes needed for key rotation**: With `.env`, you just change one file.
+- **No environment-specific config**: Different keys for development vs production become impossible to manage.
+
+## 🛠️ Creating a .env File Step-by-Step
+
+### 1. Create the File in Project Root
+
+Create a `.env.local` file in your project's root directory. In Next.js projects, `.env.local` is the standard.
+
+```bash
+# Windows PowerShell
+New-Item -Name ".env.local" -ItemType File
+
+# macOS / Linux
+touch .env.local
+```
+
+Or in VS Code, right-click in the file explorer → "New File" → type `.env.local`.
+
+### 2. Enter Environment Variables
+
+Open the file and enter your environment variables:
+
+```bash
+# .env.local
+# Supabase config
+NEXT_PUBLIC_SUPABASE_URL=https://abcdefg.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6...
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6...
+
+# Other API keys
+OPENAI_API_KEY=sk-proj-...
+```
+
+> **What NEXT_PUBLIC_ prefix means**: In Next.js, environment variables starting with `NEXT_PUBLIC_` are accessible in the browser (client). Variables without this prefix are server-only. Never add `NEXT_PUBLIC_` to secret API keys.
+
+### 3. Restart the Dev Server
+
+After modifying `.env.local`, you must stop and restart the dev server. Environment variables are only read at server startup.
+
+```bash
+# Stop dev server: Ctrl+C
+# Restart
+pnpm dev
+```
+
+## 💻 Using Environment Variables in Code
+
+### Server-Side Code (Server Component, API Route)
+
+```typescript
+// app/api/chat/route.ts
+import { OpenAI } from "openai";
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
+// process.env.OPENAI_API_KEY reads from .env.local
+// Not exposed to the browser
+```
+
+### Client-Side Code (Client Component)
+
+```typescript
+// components/supabase-provider.tsx
+"use client";
+
+import { createClient } from "@supabase/supabase-js";
+
+// NEXT_PUBLIC_ prefix required for client access
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
+```
+
+> ⚠️ **NEXT_PUBLIC_ variables are exposed to the browser.** They are embedded directly in the code at build time. Only use this prefix for values that are safe to expose publicly, like Supabase's `anon` key.
+
+## 🛡️ Protecting .env Files with .gitignore
+
+You must add `.env` files to `.gitignore` to prevent accidental uploads to GitHub:
+
+```
+# Verify these entries exist in .gitignore
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+```
+
+## 📋 Creating a .env.example File
+
+Since `.env` files aren't uploaded to Git, others won't know which environment variables are needed. The `.env.example` file solves this:
+
+```bash
+# .env.example — This file IS uploaded to Git
+# Only variable names, no actual values
+
+# Supabase (get from https://supabase.com)
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# OpenAI (get from https://platform.openai.com)
+OPENAI_API_KEY=
+```
+
+## 🌐 Setting Environment Variables for Vercel Deployment
+
+Locally, values come from `.env.local`, but on Vercel, they come from Vercel's environment variable settings.
+
+### Via Vercel Dashboard
+
+1. Select your project in the Vercel dashboard.
+2. Go to Settings → Environment Variables.
+3. Enter the variable name in Key and the actual value in Value.
+4. Select environments (Production, Preview, Development).
+5. Click "Save."
+
+### Via Vercel CLI
+
+```bash
+# Add environment variable via Vercel CLI
+vercel env add OPENAI_API_KEY
+
+# List current environment variables
+vercel env ls
+
+# Pull Vercel environment variables to local .env.local
+vercel env pull .env.local
+```
+
+## 📂 .env File Types Comparison
+
+| File | Purpose | Upload to Git | Priority |
+|------|---------|--------------|----------|
+| `.env.local` | Local-only secrets | ❌ Never | Highest |
+| `.env.development.local` | Dev environment only | ❌ | High |
+| `.env.development` | Shared dev values | ⚠️ If no secrets | Medium |
+| `.env` | Default for all environments | ⚠️ If no secrets | Lowest |
+| `.env.example` | Guide document | ✅ Always | — |
+
+For beginners doing vibe coding, using just `.env.local` is sufficient.
+
+## 🚨 Common Mistakes and Prevention
+
+- **Creating .env but not adding to .gitignore**: Without adding to `.gitignore`, `git add .` includes it in the upload.
+- **Using NEXT_PUBLIC_ prefix on secret keys**: Adding `NEXT_PUBLIC_` to all variables exposes secrets in the browser.
+- **Not restarting server after .env changes**: `.env` files are only read at server startup — always restart after changes.
+
+## 💡 Tips
+
+- **Specify .env usage when asking AI for code**: Say "read API keys from environment variables (.env.local)" explicitly.
+- **Rotate API keys periodically**: Best practice is to rotate every 3-6 months.
+- **Manage keys for multiple projects in one place**: Use a password manager (1Password, Bitwarden, etc.) to track project-specific environment variables.
+
+---
+
+## 🔗 Related Posts
+
+- [GitHub Signup to First Repository — Essential Vibe Coding Guide](https://1daymillion.com/github-signup-repository-guide/)
+- [Complete Dev Environment Setup Guide for Vibe Coding](https://1daymillion.com/vibe-coding-dev-environment-setup/)
+- [Node.js Installation to Vibe Coding in 3 Steps](https://1daymillion.com/vibe-coding-nodejs-install/)
+- [Deploy Your Vibe Coded App to Vercel for Free](https://1daymillion.com/vibe-coding-vercel-free-deploy/)
+- [How to Verify AI-Generated Code — Security Guide](https://1daymillion.com/ai-code-verification-security/)
