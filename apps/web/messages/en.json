@@ -697,50 +697,69 @@
   },
   "Privacy": {
     "title": "Privacy Policy",
-    "effectiveDate": "Effective Date: March 30, 2026",
+    "effectiveDate": "Effective Date: April 15, 2026",
     "sections": {
       "1": {
         "title": "1. Information We Collect",
-        "intro": "VibeStart automatically collects the following information to provide its services.",
-        "items": [
+        "intro": "VibeStart collects the following information to provide its services.",
+        "autoTitle": "Automatically Collected",
+        "autoItems": [
           "Access logs (IP address, access time, browser type)",
           "Service usage records (selected OS, goal, progress steps)"
         ],
-        "note": "VibeStart does not require account registration and does not directly collect personally identifiable information such as names or email addresses."
+        "loginTitle": "Collected via Google Sign-In",
+        "loginItems": [
+          "Email address",
+          "Display name (nickname)",
+          "Profile picture URL"
+        ],
+        "note": "If you do not use Google Sign-In, no personally identifiable information is collected."
       },
       "2": {
         "title": "2. Purpose of Collection and Use",
         "items": [
           "Service usage analytics and quality improvement",
-          "Error detection and service stability"
+          "Error detection and service stability",
+          "User identification and login session management",
+          "Saving project progress and providing personalized services"
         ]
       },
       "3": {
         "title": "3. Retention Period",
-        "content": "Collected information is retained for <strong>one (1) year</strong> from the date of collection and is promptly destroyed thereafter."
+        "content": "Collected information is retained for <strong>one (1) year</strong> from the date of collection and is promptly destroyed thereafter.",
+        "accountNote": "Upon account deletion (withdrawal), all personal information associated with the account is immediately deleted."
       },
       "4": {
-        "title": "4. Disclosure to Third Parties",
+        "title": "4. Disclosure to Third Parties and Data Processing",
         "intro": "VibeStart does not share collected information with third parties, except in the following cases:",
         "items": [
           "When required by applicable law or regulation",
           "When the user has given prior consent"
+        ],
+        "delegateIntro": "The following external services are entrusted with processing personal information for service operation.",
+        "delegateItems": [
+          "Supabase (authentication and data storage): email, display name, profile picture",
+          "Google (social login provider): OAuth authentication information"
         ]
       },
       "5": {
         "title": "5. Cookies and Analytics Tools",
-        "content": "VibeStart may use web analytics tools such as Google Analytics for service improvement, which may involve the use of cookies. You may refuse cookie storage through your browser settings; however, some features of the service may be limited as a result."
+        "content": "VibeStart may use web analytics tools such as Google Analytics for service improvement, which may involve the use of cookies. Authentication session cookies are also used to maintain your login state. You may refuse cookie storage through your browser settings; however, some features including login may be limited as a result."
       },
       "6": {
-        "title": "6. Your Rights",
-        "content": "You may request access to, correction of, or deletion of your collected information at any time. Please contact us using the information below."
+        "title": "6. Social Login (OAuth)",
+        "content": "VibeStart provides login functionality through Google OAuth 2.0. During sign-in, VibeStart receives your email, name, and profile picture from Google. VibeStart does not access your Google account password. You can revoke VibeStart's access at any time through your Google account settings."
       },
       "7": {
-        "title": "7. Data Protection Officer",
-        "emailLabel": "Email"
+        "title": "7. Your Rights",
+        "content": "You may request access to, correction of, or deletion of your collected information at any time. You may also request immediate deletion of all personal information by deleting your account (withdrawal). Please contact us using the information below."
       },
       "8": {
-        "title": "8. Changes to This Policy",
+        "title": "8. Data Protection Officer",
+        "emailLabel": "Email"
+      },
+      "9": {
+        "title": "9. Changes to This Policy",
         "content": "This privacy policy may be updated to reflect changes in applicable laws, policies, or services. Any changes will be posted on this page."
       }
     }

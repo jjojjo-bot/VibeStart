@@ -697,50 +697,69 @@
   },
   "Privacy": {
     "title": "Política de privacidad",
-    "effectiveDate": "Fecha de vigencia: 30 de marzo de 2026",
+    "effectiveDate": "Fecha de vigencia: 15 de abril de 2026",
     "sections": {
       "1": {
         "title": "1. Información recopilada y métodos de recopilación",
-        "intro": "VibeStart recopila automáticamente la siguiente información para ofrecer el servicio.",
-        "items": [
+        "intro": "VibeStart recopila la siguiente información para ofrecer el servicio.",
+        "autoTitle": "Información recopilada automáticamente",
+        "autoItems": [
           "Registros de acceso (dirección IP, hora de conexión, tipo de navegador)",
           "Registros de uso del servicio (SO seleccionado, objetivo, etapa de progreso)"
         ],
-        "note": "VibeStart no requiere registro de cuenta y no recopila directamente información de identificación personal como nombre o correo electrónico."
+        "loginTitle": "Información recopilada mediante inicio de sesión con Google",
+        "loginItems": [
+          "Dirección de correo electrónico",
+          "Nombre para mostrar (apodo)",
+          "URL de la foto de perfil"
+        ],
+        "note": "Si no utilizas el inicio de sesión con Google, no se recopila información de identificación personal."
       },
       "2": {
         "title": "2. Propósito de la recopilación y uso de información",
         "items": [
           "Análisis estadístico del uso del servicio y mejora de la calidad",
-          "Detección de errores del servicio y garantía de estabilidad"
+          "Detección de errores del servicio y garantía de estabilidad",
+          "Identificación de usuarios y mantenimiento del estado de sesión",
+          "Almacenamiento del progreso del proyecto y prestación de servicios personalizados"
         ]
       },
       "3": {
         "title": "3. Período de retención y uso de la información",
-        "content": "La información recopilada se conserva por <strong>1 año</strong> desde la fecha de recopilación y se elimina sin demora una vez transcurrido el período."
+        "content": "La información recopilada se conserva por <strong>1 año</strong> desde la fecha de recopilación y se elimina sin demora una vez transcurrido el período.",
+        "accountNote": "Al eliminar la cuenta (baja), la información personal asociada se elimina de inmediato."
       },
       "4": {
-        "title": "4. Compartir información con terceros",
+        "title": "4. Compartir información con terceros y procesamiento delegado",
         "intro": "VibeStart no comparte la información recopilada con terceros. Sin embargo, se exceptúan los siguientes casos.",
         "items": [
           "Cuando sea requerido por la ley",
           "Cuando exista consentimiento previo del usuario"
+        ],
+        "delegateIntro": "Los siguientes servicios externos están encargados del procesamiento de información personal para la operación del servicio.",
+        "delegateItems": [
+          "Supabase (autenticación y almacenamiento de datos): correo electrónico, nombre para mostrar, foto de perfil",
+          "Google (proveedor de inicio de sesión social): información de autenticación OAuth"
         ]
       },
       "5": {
         "title": "5. Cookies y herramientas de análisis",
-        "content": "VibeStart puede utilizar herramientas de análisis web como Google Analytics para mejorar el servicio, y en este proceso se pueden usar cookies. Puedes rechazar el almacenamiento de cookies a través de la configuración del navegador, aunque algunas funciones del servicio podrían verse limitadas."
+        "content": "VibeStart puede utilizar herramientas de análisis web como Google Analytics para mejorar el servicio, y en este proceso se pueden usar cookies. También se utilizan cookies de sesión de autenticación para mantener el estado de inicio de sesión. Puedes rechazar el almacenamiento de cookies a través de la configuración del navegador, aunque algunas funciones, incluido el inicio de sesión, podrían verse limitadas."
       },
       "6": {
-        "title": "6. Derechos del usuario",
-        "content": "El usuario puede solicitar en cualquier momento la consulta, corrección o eliminación de la información recopilada. Comunícate con nosotros a través del contacto indicado abajo."
+        "title": "6. Inicio de sesión social (OAuth)",
+        "content": "VibeStart ofrece inicio de sesión mediante Google OAuth 2.0. Al iniciar sesión, VibeStart recibe tu correo electrónico, nombre y foto de perfil de Google. VibeStart no accede a la contraseña de tu cuenta de Google. Puedes revocar el acceso de VibeStart en cualquier momento desde la configuración de tu cuenta de Google."
       },
       "7": {
-        "title": "7. Responsable de protección de datos",
-        "emailLabel": "Correo electrónico"
+        "title": "7. Derechos del usuario",
+        "content": "El usuario puede solicitar en cualquier momento la consulta, corrección o eliminación de la información recopilada. También puede solicitar la eliminación inmediata de toda la información personal mediante la eliminación de la cuenta (baja). Comunícate con nosotros a través del contacto indicado abajo."
       },
       "8": {
-        "title": "8. Cambios a esta política",
+        "title": "8. Responsable de protección de datos",
+        "emailLabel": "Correo electrónico"
+      },
+      "9": {
+        "title": "9. Cambios a esta política",
         "content": "Esta política de privacidad puede modificarse debido a cambios en la ley, políticas o el servicio. Los cambios se notificarán a través de esta página."
       }
     }
