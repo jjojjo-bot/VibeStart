@@ -100,6 +100,7 @@ export function AuthButton({ className }: AuthButtonProps) {
   if (loading) {
     return (
       <div
+        data-auth-button="loading"
         className={className ?? "inline-flex items-center gap-2 rounded-md border border-zinc-200 px-3 py-1.5 text-sm text-zinc-400"}
       >
         ...

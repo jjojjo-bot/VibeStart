@@ -1665,11 +1665,13 @@ export async function verifyAuthButtonAction(
     redirect(`${returnTo}?verify_auth_button_error=fetch_failed`);
   }
 
-  // auth-ui-nextjs-template.ts의 AuthButton 컴포넌트가 signed-in / signed-out
-  // 두 상태에서 각각 data-auth-button="signed-in|signed-out"을 렌더하므로,
-  // 느슨한 substring "data-auth-button" 대신 `data-auth-button="signed-`로
-  // 타이트하게 매칭해 우연한 false-positive(댓글/CSS 클래스 등)를 배제한다.
-  const hasButton = html.includes('data-auth-button="signed-');
+  // auth-ui-nextjs-template.ts의 AuthButton 컴포넌트는 "use client"이며
+  // 서버 렌더 시점에는 loading=true 상태로 렌더되므로, SSR HTML에는 signed-in/
+  // signed-out이 아니라 data-auth-button="loading"만 들어 있다. 하이드레이션
+  // 이후에만 signed-* 상태가 나타나는데, 우리 HTTP fetch는 JS 실행 없이 원본
+  // 마크업만 받으므로 loading 상태를 기준으로 검증해야 한다. 세 상태 모두
+  // 커버하면서 우연한 매칭은 피하기 위해 `data-auth-button="` 접두를 사용한다.
+  const hasButton = html.includes('data-auth-button="');
   if (!hasButton) {
     revalidatePath(returnTo);
     redirect(`${returnTo}?verify_auth_button_error=not_found`);
