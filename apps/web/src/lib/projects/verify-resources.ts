@@ -38,36 +38,58 @@ export async function verifyProjectResources(
   projectId: string,
   userId: string,
 ): Promise<VerificationResult[]> {
+  // ── 0) 선행 DB 조회 (3개 리소스 + M1/M2 substep 목록) 병렬 실행 ──
+  // 외부 API 검증 3개를 병렬로 돌리기 전에 필요한 DB 조회를 먼저 한 번에 해둔다.
+  const [
+    githubResource,
+    vercelResource,
+    supabaseResource,
+    m1Substeps,
+    m2Substeps,
+  ] = await Promise.all([
+    getProjectResourceByType(projectId, "github_repo"),
+    getProjectResourceByType(projectId, "vercel_project"),
+    getProjectResourceByType(projectId, "supabase_project"),
+    getCompletedSubstepIds(projectId, "m1-deploy"),
+    getCompletedSubstepIds(projectId, "m2-google-auth"),
+  ]);
+
+  // ── 1) 외부 API 검증 3개 병렬 실행 ──
+  // 기존에는 GitHub → Vercel → Supabase 순차 호출로 각각 0.5~2초씩 쌓여
+  // 2~6초 블로킹이었다. 병렬화하면 가장 느린 한 개의 지연만 발생한다.
+  // GitHub이 gone일 때 Vercel 검증이 낭비되지만 드문 edge case로 수용.
+  const [githubStatus, vercelStatus, supabaseStatus] = await Promise.all([
+    githubResource
+      ? verifyGitHubRepo(githubResource, userId)
+      : Promise.resolve<"valid" | "gone" | "skipped" | "absent">("absent"),
+    vercelResource
+      ? verifyVercelProject(vercelResource, userId)
+      : Promise.resolve<"valid" | "gone" | "skipped" | "absent">("absent"),
+    supabaseResource
+      ? verifySupabaseProject(supabaseResource, userId)
+      : Promise.resolve<"valid" | "gone" | "skipped" | "absent">("absent"),
+  ]);
+
   const results: VerificationResult[] = [];
 
-  // ── 1) GitHub repo 검증 ──
-  const githubResource = await getProjectResourceByType(projectId, "github_repo");
+  // ── 2) GitHub 정리 (cascade 전파) ──
   let githubGone = false;
-
   if (githubResource) {
-    const result = await verifyGitHubRepo(githubResource, userId);
-    if (result === "gone") {
+    if (githubStatus === "gone") {
       githubGone = true;
       await removeProjectResourceByType(projectId, "github_repo");
       results.push({ resourceType: "github_repo", status: "gone" });
-    } else {
-      results.push({ resourceType: "github_repo", status: result });
+    } else if (githubStatus !== "absent") {
+      results.push({ resourceType: "github_repo", status: githubStatus });
     }
-  } else {
-    // 리소스 없음 — orphaned substep 확인
-    const substeps = await getCompletedSubstepIds(projectId, "m1-deploy");
-    if (substeps.includes("m1-s2-create-repo")) {
-      githubGone = true;
-      results.push({ resourceType: "github_repo", status: "gone" });
-    }
+  } else if (m1Substeps.includes("m1-s2-create-repo")) {
+    githubGone = true;
+    results.push({ resourceType: "github_repo", status: "gone" });
   }
 
-  // GitHub repo가 삭제됐으면 관련 substep 모두 정리
   if (githubGone) {
     await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s2-create-repo");
     await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s3-git-push");
-    // repo가 없으면 배포도 무효 — Vercel 리소스와 배포 substep도 함께 정리
-    const vercelResource = await getProjectResourceByType(projectId, "vercel_project");
     if (vercelResource) {
       await removeProjectResourceByType(projectId, "vercel_project");
     }
@@ -79,25 +101,20 @@ export async function verifyProjectResources(
     return results;
   }
 
-  // ── 2) Vercel project 검증 (GitHub가 살아있을 때만) ──
-  const vercelResource = await getProjectResourceByType(projectId, "vercel_project");
-
+  // ── 3) Vercel 정리 ──
   if (vercelResource) {
-    const result = await verifyVercelProject(vercelResource, userId);
-    if (result === "gone") {
+    if (vercelStatus === "gone") {
       await removeProjectResourceByType(projectId, "vercel_project");
       await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s5-first-deploy");
       await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s6-verify-url");
       results.push({ resourceType: "vercel_project", status: "gone" });
-    } else {
-      results.push({ resourceType: "vercel_project", status: result });
+    } else if (vercelStatus !== "absent") {
+      results.push({ resourceType: "vercel_project", status: vercelStatus });
     }
   } else {
-    // 리소스 없음 — orphaned substep 확인
-    const substeps = await getCompletedSubstepIds(projectId, "m1-deploy");
     const hasOrphanedDeploy =
-      substeps.includes("m1-s5-first-deploy") ||
-      substeps.includes("m1-s6-verify-url");
+      m1Substeps.includes("m1-s5-first-deploy") ||
+      m1Substeps.includes("m1-s6-verify-url");
     if (hasOrphanedDeploy) {
       await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s5-first-deploy");
       await unmarkSubstepCompleted(projectId, "m1-deploy", "m1-s6-verify-url");
@@ -105,15 +122,12 @@ export async function verifyProjectResources(
     }
   }
 
-  // ── 3) Supabase project 검증 ──
+  // ── 4) Supabase 정리 ──
   // 사용자가 Supabase 대시보드에서 프로젝트를 직접 삭제해도 DB에는 리소스가
-  // 남아 M2 substep들이 완료로 표시돼 혼란을 준다. Management API로 실제
-  // 존재를 확인하고 없어지면 M2 전체(m2-s2 ~ m2-s6)와 google_oauth_keys를
-  // 함께 정리한다. google_oauth_keys는 redirect URI가 기존 supabase ref에
-  // 묶여 있어 새 프로젝트에서 재사용 불가 — 함께 지워 사용자가 m2-s3에서
-  // 새 redirect URI를 다시 확인하도록 유도한다.
-  const supabaseResource = await getProjectResourceByType(projectId, "supabase_project");
-
+  // 남아 M2 substep들이 완료로 표시돼 혼란을 준다. 삭제 감지 시 M2 전체와
+  // google_oauth_keys까지 함께 정리한다. google_oauth_keys는 redirect URI가
+  // 기존 supabase ref에 묶여 있어 새 프로젝트에서 재사용 불가 — 함께 지워
+  // 사용자가 m2-s3에서 새 redirect URI를 다시 확인하도록 유도한다.
   async function cascadeSupabaseCleanup(): Promise<void> {
     await removeProjectResourceByType(projectId, "google_oauth_keys");
     await unmarkSubstepCompleted(projectId, "m2-google-auth", "m2-s2-create-supabase-project");
@@ -124,23 +138,20 @@ export async function verifyProjectResources(
   }
 
   if (supabaseResource) {
-    const result = await verifySupabaseProject(supabaseResource, userId);
-    if (result === "gone") {
+    if (supabaseStatus === "gone") {
       await removeProjectResourceByType(projectId, "supabase_project");
       await cascadeSupabaseCleanup();
       results.push({ resourceType: "supabase_project", status: "gone" });
-    } else {
-      results.push({ resourceType: "supabase_project", status: result });
+    } else if (supabaseStatus !== "absent") {
+      results.push({ resourceType: "supabase_project", status: supabaseStatus });
     }
   } else {
-    // 리소스 없음 — orphaned M2 substep 확인
-    const substeps = await getCompletedSubstepIds(projectId, "m2-google-auth");
     const hasOrphanedSupabase =
-      substeps.includes("m2-s2-create-supabase-project") ||
-      substeps.includes("m2-s3-google-oauth-keys") ||
-      substeps.includes("m2-s4-enable-google-provider") ||
-      substeps.includes("m2-s5-install-auth-ui") ||
-      substeps.includes("m2-s6-verify-signup");
+      m2Substeps.includes("m2-s2-create-supabase-project") ||
+      m2Substeps.includes("m2-s3-google-oauth-keys") ||
+      m2Substeps.includes("m2-s4-enable-google-provider") ||
+      m2Substeps.includes("m2-s5-install-auth-ui") ||
+      m2Substeps.includes("m2-s6-verify-signup");
     if (hasOrphanedSupabase) {
       await cascadeSupabaseCleanup();
       results.push({ resourceType: "supabase_project", status: "gone" });
