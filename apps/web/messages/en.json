@@ -17,6 +17,10 @@
       "title": "Privacy Policy",
       "description": "VibeStart Privacy Policy"
     },
+    "about": {
+      "title": "About | How You Can Build Your Own Website Without Coding",
+      "description": "VibeStart guides non-developers to set up a dev environment in 10 minutes and build their own website with AI."
+    },
     "onboarding": {
       "title": "Start Dev Environment Setup | Choose Your OS and Goal",
       "description": "Select your operating system and tell us what you want to build. We'll create a custom dev setup guide just for you."
@@ -774,6 +778,116 @@
       "title": "Page not found",
       "description": "The address may be incorrect or the page may have been removed.",
       "homeButton": "Go to Home"
+    }
+  },
+  "About": {
+    "nav": "About",
+    "hero": {
+      "badge": "Zero coding experience? No problem",
+      "title": "Don't know coding?",
+      "highlight": "You can still build your own site",
+      "description": "VibeStart guides you step by step — from installing dev tools\nto publishing your website on the internet.",
+      "cta": "Start Now — It's Free",
+      "subCta": "Free · No sign-up · Done in 10 minutes"
+    },
+    "result": {
+      "title": "You can build a site like this",
+      "description": "Follow VibeStart and publish your own site on the internet",
+      "imageAlt": "Example website built with VibeStart",
+      "caption": "An actual app landing page created by a VibeStart user"
+    },
+    "target": {
+      "title": "Who is this for?",
+      "noCode": {
+        "emoji": "💡",
+        "title": "Have something to build",
+        "desc": "No coding skills? No problem. Start here."
+      },
+      "sideProject": {
+        "emoji": "🎯",
+        "title": "Want your own website",
+        "desc": "Build a portfolio, blog, or landing page yourself."
+      },
+      "vibeCoding": {
+        "emoji": "🤖",
+        "title": "Want to code with AI",
+        "desc": "Once setup is done, AI writes code for you."
+      }
+    },
+    "roadmap": {
+      "title": "How far can you go?",
+      "description": "It doesn't end at setup. We guide you all the way to publishing your site.",
+      "phases": {
+        "1": {
+          "step": "1",
+          "time": "10 min",
+          "title": "Dev Environment Setup",
+          "desc": "Install Git, Node.js, VS Code and create your first project. Just copy and paste commands.",
+          "resultIcon": "✓",
+          "result": "git --version, node --version confirmed in terminal"
+        },
+        "2": {
+          "step": "2",
+          "time": "15 min",
+          "title": "Publish Your Site Online",
+          "desc": "Push code to GitHub, deploy with Vercel — your site is live for everyone to see.",
+          "resultIcon": "🌐",
+          "result": "my-site.vercel.app — your site is live worldwide"
+        },
+        "3": {
+          "step": "3",
+          "time": "At your pace",
+          "title": "Add Features with AI (Vibe Coding)",
+          "desc": "Tell AI what you want — login, design changes, new pages — and it writes the code.",
+          "resultIcon": "🤖",
+          "result": "\"Add a login button\" → AI writes code → instantly reflected on your site"
+        }
+      },
+      "cta": "Start with Phase 1"
+    },
+    "tools": {
+      "title": "Tools VibeStart helps you install",
+      "git": {
+        "icon": "Git",
+        "name": "Git",
+        "desc": "Tracks code changes. Undo mistakes easily."
+      },
+      "node": {
+        "icon": "N",
+        "name": "Node.js",
+        "desc": "Engine that runs websites. Essential for web dev."
+      },
+      "vscode": {
+        "icon": "VS",
+        "name": "VS Code",
+        "desc": "Code editor. Foundation for AI coding tools."
+      },
+      "nextjs": {
+        "icon": "N.js",
+        "name": "Next.js Project",
+        "desc": "Auto-generates your first site. Edit and deploy."
+      }
+    },
+    "myths": {
+      "title": "Common misconceptions",
+      "1": {
+        "wrong": "\"Is this a coding school?\"",
+        "right": "We don't teach coding. We guide you through installing tools — that's it."
+      },
+      "2": {
+        "wrong": "\"Do I need to install an app?\"",
+        "right": "No app needed. Just follow instructions on the web and paste commands in your terminal."
+      },
+      "3": {
+        "wrong": "\"Don't I still need to know how to code?\"",
+        "right": "Nope. AI writes the code. You just say \"make it like this.\""
+      }
+    },
+    "bottomCta": {
+      "title": "In 10 minutes, you'll be a developer",
+      "desc": "VibeStart handles the hard stuff.\nYou just follow along.",
+      "button": "Start for Free",
+      "reassurance": "No sign-up · Completely free · No coding experience needed"
     }
   },
   "Blog": {

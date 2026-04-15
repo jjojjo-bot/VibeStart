@@ -17,6 +17,10 @@
       "title": "隐私政策",
       "description": "VibeStart 隐私政策"
     },
+    "about": {
+      "title": "介绍 | 不懂编程也能创建自己网站的原因",
+      "description": "VibeStart帮助非技术人员在10分钟内搭建开发环境，用AI创建自己的网站。"
+    },
     "onboarding": {
       "title": "开始搭建开发环境 | 选择操作系统和目标",
       "description": "选择您的操作系统并告诉我们您想创建什么项目。我们将为您制定专属开发环境搭建指南。"
@@ -774,6 +778,116 @@
       "title": "找不到页面",
       "description": "地址可能有误，或者该页面已被删除。",
       "homeButton": "返回首页"
+    }
+  },
+  "About": {
+    "nav": "介绍",
+    "hero": {
+      "badge": "零编程经验也OK",
+      "title": "不懂编程",
+      "highlight": "也能创建自己的网站",
+      "description": "VibeStart从安装开发工具到发布网站，\n一步步引导零基础的你完成。",
+      "cta": "立即开始 — 免费",
+      "subCta": "免费 · 无需注册 · 10分钟搞定"
+    },
+    "result": {
+      "title": "你可以做出这样的网站",
+      "description": "跟着VibeStart操作，你的网站就能发布到互联网上",
+      "imageAlt": "用VibeStart创建的网站示例",
+      "caption": "VibeStart用户实际制作的App着陆页示例"
+    },
+    "target": {
+      "title": "为这样的你而生",
+      "noCode": {
+        "emoji": "💡",
+        "title": "想做点什么的人",
+        "desc": "不会编程没关系，从这里开始就行。"
+      },
+      "sideProject": {
+        "emoji": "🎯",
+        "title": "想发布自己的网站",
+        "desc": "自己动手做作品集、博客或着陆页。"
+      },
+      "vibeCoding": {
+        "emoji": "🤖",
+        "title": "想用AI写代码的人",
+        "desc": "环境搭好后，AI替你写代码。"
+      }
+    },
+    "roadmap": {
+      "title": "能做到什么程度？",
+      "description": "不止于环境搭建。我们会引导你把网站发布到全世界。",
+      "phases": {
+        "1": {
+          "step": "1",
+          "time": "10分钟",
+          "title": "搭建开发环境",
+          "desc": "安装Git、Node.js、VS Code并创建第一个项目。只需复制粘贴命令即可。",
+          "resultIcon": "✓",
+          "result": "在终端确认 git --version、node --version"
+        },
+        "2": {
+          "step": "2",
+          "time": "15分钟",
+          "title": "将网站发布到互联网",
+          "desc": "把代码推送到GitHub，用Vercel部署，任何人都能访问你的网站。",
+          "resultIcon": "🌐",
+          "result": "my-site.vercel.app — 你的网站已向全世界公开"
+        },
+        "3": {
+          "step": "3",
+          "time": "自由掌控",
+          "title": "用AI添加功能（氛围编程）",
+          "desc": "用语言告诉AI你想要什么——登录、设计变更、新页面——AI来写代码。",
+          "resultIcon": "🤖",
+          "result": "\u201c加个登录按钮\u201d → AI编写代码 → 立即反映在网站上"
+        }
+      },
+      "cta": "从Phase 1开始"
+    },
+    "tools": {
+      "title": "VibeStart帮你安装的工具",
+      "git": {
+        "icon": "Git",
+        "name": "Git",
+        "desc": "保存代码变更记录。出错也能撤回。"
+      },
+      "node": {
+        "icon": "N",
+        "name": "Node.js",
+        "desc": "运行网站的引擎。Web开发必备。"
+      },
+      "vscode": {
+        "icon": "VS",
+        "name": "VS Code",
+        "desc": "代码编辑器。AI编程工具的基础。"
+      },
+      "nextjs": {
+        "icon": "N.js",
+        "name": "Next.js项目",
+        "desc": "自动生成首个网站。即可编辑和部署。"
+      }
+    },
+    "myths": {
+      "title": "你是不是这样想的？",
+      "1": {
+        "wrong": "\u201c这是编程培训网站吧？\u201d",
+        "right": "我们不教编程。只是引导你安装工具，仅此而已。"
+      },
+      "2": {
+        "wrong": "\u201c需要安装App吗？\u201d",
+        "right": "不需要安装任何App。在网页上看指引，把命令粘贴到终端就行。"
+      },
+      "3": {
+        "wrong": "\u201c最终还是得会编程吧？\u201d",
+        "right": "不需要。AI写代码，你只需要说\u201c帮我做成这样\u201d就行。"
+      }
+    },
+    "bottomCta": {
+      "title": "10分钟后，你也是开发者",
+      "desc": "复杂的事VibeStart全搞定。\n你只需要跟着做就行。",
+      "button": "免费开始",
+      "reassurance": "无需注册 · 完全免费 · 无需编程经验"
     }
   },
   "Blog": {

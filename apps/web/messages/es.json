@@ -17,6 +17,10 @@
       "title": "Política de privacidad",
       "description": "Política de privacidad de VibeStart"
     },
+    "about": {
+      "title": "Acerca de | Cómo crear tu propio sitio web sin saber programar",
+      "description": "VibeStart guía a no programadores para configurar un entorno de desarrollo en 10 minutos y crear su propio sitio web con IA."
+    },
     "onboarding": {
       "title": "Iniciar configuración del entorno | Elige tu SO y objetivo",
       "description": "Selecciona tu sistema operativo y dinos qué quieres crear. Te prepararemos una guía de configuración personalizada."
@@ -774,6 +778,116 @@
       "title": "Página no encontrada",
       "description": "La dirección puede ser incorrecta o la página fue eliminada.",
       "homeButton": "Volver al inicio"
+    }
+  },
+  "About": {
+    "nav": "Acerca de",
+    "hero": {
+      "badge": "Cero experiencia en programación? Sin problema",
+      "title": "¿No sabes programar?",
+      "highlight": "Igual puedes crear tu propio sitio",
+      "description": "VibeStart te guía paso a paso — desde instalar herramientas\nhasta publicar tu sitio web en internet.",
+      "cta": "Empieza ahora — Es gratis",
+      "subCta": "Gratis · Sin registro · En 10 minutos"
+    },
+    "result": {
+      "title": "Puedes crear un sitio como este",
+      "description": "Sigue VibeStart y publica tu propio sitio en internet",
+      "imageAlt": "Ejemplo de sitio web creado con VibeStart",
+      "caption": "Página de inicio real creada por un usuario de VibeStart"
+    },
+    "target": {
+      "title": "¿Para quién es esto?",
+      "noCode": {
+        "emoji": "💡",
+        "title": "Tienes algo que crear",
+        "desc": "No sabes programar? No importa. Empieza aquí."
+      },
+      "sideProject": {
+        "emoji": "🎯",
+        "title": "Quieres tu propio sitio web",
+        "desc": "Crea tu portafolio, blog o landing page."
+      },
+      "vibeCoding": {
+        "emoji": "🤖",
+        "title": "Quieres programar con IA",
+        "desc": "Una vez configurado, la IA escribe el código."
+      }
+    },
+    "roadmap": {
+      "title": "¿Hasta dónde puedes llegar?",
+      "description": "No termina en la configuración. Te guiamos hasta publicar tu sitio.",
+      "phases": {
+        "1": {
+          "step": "1",
+          "time": "10 min",
+          "title": "Configurar entorno de desarrollo",
+          "desc": "Instala Git, Node.js, VS Code y crea tu primer proyecto. Solo copia y pega comandos.",
+          "resultIcon": "✓",
+          "result": "git --version, node --version confirmados en la terminal"
+        },
+        "2": {
+          "step": "2",
+          "time": "15 min",
+          "title": "Publica tu sitio en internet",
+          "desc": "Sube código a GitHub, despliega con Vercel — tu sitio está en línea para todos.",
+          "resultIcon": "🌐",
+          "result": "my-site.vercel.app — tu sitio está en línea en todo el mundo"
+        },
+        "3": {
+          "step": "3",
+          "time": "A tu ritmo",
+          "title": "Agrega funciones con IA (Vibe Coding)",
+          "desc": "Dile a la IA lo que quieres — login, cambios de diseño, nuevas páginas — y escribe el código.",
+          "resultIcon": "🤖",
+          "result": "\"Agrega un botón de login\" → La IA escribe código → Se refleja al instante"
+        }
+      },
+      "cta": "Empieza con la Fase 1"
+    },
+    "tools": {
+      "title": "Herramientas que VibeStart te ayuda a instalar",
+      "git": {
+        "icon": "Git",
+        "name": "Git",
+        "desc": "Registra cambios en el código. Deshaz errores fácilmente."
+      },
+      "node": {
+        "icon": "N",
+        "name": "Node.js",
+        "desc": "Motor para ejecutar sitios web. Esencial."
+      },
+      "vscode": {
+        "icon": "VS",
+        "name": "VS Code",
+        "desc": "Editor de código. Base para herramientas de IA."
+      },
+      "nextjs": {
+        "icon": "N.js",
+        "name": "Proyecto Next.js",
+        "desc": "Genera tu primer sitio. Edita y despliega al instante."
+      }
+    },
+    "myths": {
+      "title": "¿Pensabas esto?",
+      "1": {
+        "wrong": "\"¿Es un sitio de cursos de programación?\"",
+        "right": "No enseñamos a programar. Solo te guiamos para instalar herramientas."
+      },
+      "2": {
+        "wrong": "\"¿Necesito instalar una app?\"",
+        "right": "No necesitas ninguna app. Solo sigue las instrucciones web y pega comandos en tu terminal."
+      },
+      "3": {
+        "wrong": "\"¿Igual necesito saber programar?\"",
+        "right": "No. La IA escribe el código. Tú solo dices \"hazlo así.\""
+      }
+    },
+    "bottomCta": {
+      "title": "En 10 minutos, serás desarrollador",
+      "desc": "VibeStart se encarga de lo difícil.\nTú solo sigue los pasos.",
+      "button": "Empieza gratis",
+      "reassurance": "Sin registro · Completamente gratis · Sin experiencia necesaria"
     }
   },
   "Blog": {

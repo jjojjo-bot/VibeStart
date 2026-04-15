@@ -17,6 +17,10 @@
       "title": "개인정보처리방침",
       "description": "VibeStart 개인정보처리방침"
     },
+    "about": {
+      "title": "소개 | 코딩 몰라도 내 사이트를 만들 수 있는 이유",
+      "description": "VibeStart는 비전공자가 10분 만에 개발 환경을 세팅하고, AI로 나만의 웹사이트를 만들 수 있도록 안내합니다."
+    },
     "onboarding": {
       "title": "개발 환경 설정 시작하기 | OS 선택 및 목표 설정",
       "description": "운영체제를 선택하고 만들고 싶은 프로젝트를 알려주세요. 맞춤 개발 환경 설정 가이드를 만들어 드립니다."
@@ -774,6 +778,116 @@
       "title": "페이지를 찾을 수 없어요",
       "description": "주소가 잘못되었거나, 삭제된 페이지일 수 있어요.",
       "homeButton": "홈으로 돌아가기"
+    }
+  },
+  "About": {
+    "nav": "소개",
+    "hero": {
+      "badge": "코딩 경험 제로도 OK",
+      "title": "코딩 몰라도",
+      "highlight": "내 사이트 만들 수 있어요",
+      "description": "VibeStart는 개발 도구 설치부터 웹사이트 공개까지,\n비전공자도 따라할 수 있게 하나하나 안내합니다.",
+      "cta": "지금 바로 시작하기",
+      "subCta": "무료 · 회원가입 없이 · 10분이면 끝"
+    },
+    "result": {
+      "title": "이런 사이트를 직접 만들 수 있어요",
+      "description": "VibeStart를 따라하면, 이런 결과물이 인터넷에 공개됩니다",
+      "imageAlt": "VibeStart로 만든 웹사이트 예시",
+      "caption": "실제 VibeStart 사용자가 만든 앱 랜딩페이지 예시"
+    },
+    "target": {
+      "title": "이런 분을 위해 만들었어요",
+      "noCode": {
+        "emoji": "💡",
+        "title": "만들고 싶은 게 있는 분",
+        "desc": "코딩 몰라도 여기서 시작하세요"
+      },
+      "sideProject": {
+        "emoji": "🎯",
+        "title": "내 사이트를 공개하고 싶은 분",
+        "desc": "내 프로젝트를 세상에 공개하세요"
+      },
+      "vibeCoding": {
+        "emoji": "🤖",
+        "title": "AI로 코딩하고 싶은 분",
+        "desc": "세팅 후 AI가 코드를 써줍니다"
+      }
+    },
+    "roadmap": {
+      "title": "어디까지 할 수 있나요?",
+      "description": "환경 설정에서 끝나지 않아요. 내 사이트를 세상에 공개하는 것까지 안내합니다.",
+      "phases": {
+        "1": {
+          "step": "1",
+          "time": "10분",
+          "title": "개발 환경 설정",
+          "desc": "Git, Node.js, VS Code를 설치하고 첫 프로젝트를 생성합니다. 명령어를 복사해서 붙여넣기만 하면 끝.",
+          "resultIcon": "✓",
+          "result": "터미널에서 git --version, node --version 확인 완료"
+        },
+        "2": {
+          "step": "2",
+          "time": "15분",
+          "title": "내 사이트 인터넷에 공개",
+          "desc": "GitHub에 코드를 올리고, Vercel로 누구나 접속할 수 있는 내 사이트를 만듭니다.",
+          "resultIcon": "🌐",
+          "result": "my-site.vercel.app — 내 사이트가 전 세계에 공개됨"
+        },
+        "3": {
+          "step": "3",
+          "time": "자유롭게",
+          "title": "AI로 기능 추가 (바이브코딩)",
+          "desc": "AI에게 말로 요청해서 로그인, 디자인 변경, 새 페이지 추가 등을 합니다.",
+          "resultIcon": "🤖",
+          "result": "\"로그인 버튼 추가해줘\" → AI가 코드 작성 → 사이트에 바로 반영"
+        }
+      },
+      "cta": "Phase 1부터 시작하기"
+    },
+    "tools": {
+      "title": "VibeStart가 설치를 도와주는 도구들",
+      "git": {
+        "icon": "Git",
+        "name": "Git",
+        "desc": "코드 변경 기록을 저장. 실수해도 되돌릴 수 있어요."
+      },
+      "node": {
+        "icon": "N",
+        "name": "Node.js",
+        "desc": "웹사이트를 실행하는 엔진. 웹 프로젝트의 필수품."
+      },
+      "vscode": {
+        "icon": "VS",
+        "name": "VS Code",
+        "desc": "코드 편집기. AI 코딩 도구의 기반이 됩니다."
+      },
+      "nextjs": {
+        "icon": "N.js",
+        "name": "Next.js 프로젝트",
+        "desc": "첫 웹사이트를 자동 생성. 바로 수정·배포 가능."
+      }
+    },
+    "myths": {
+      "title": "혹시 이렇게 생각하셨나요?",
+      "1": {
+        "wrong": "\"코딩 배우는 학원 사이트 아닌가요?\"",
+        "right": "코딩을 가르치지 않아요. 도구 설치를 대신 안내해드리는 서비스입니다."
+      },
+      "2": {
+        "wrong": "\"프로그램을 설치해야 하는 거 아닌가요?\"",
+        "right": "VibeStart 앱은 없어요. 웹에서 안내만 보고, 명령어를 터미널에 붙여넣기만 하면 됩니다."
+      },
+      "3": {
+        "wrong": "\"결국 코딩을 할 줄 알아야 하는 거 아닌가요?\"",
+        "right": "아니요. AI가 코드를 쓰고, 여러분은 \"이렇게 만들어줘\"라고 말만 하면 됩니다."
+      }
+    },
+    "bottomCta": {
+      "title": "10분 뒤, 당신도 개발자입니다",
+      "desc": "복잡한 건 VibeStart가 다 처리해요.\n여러분은 따라하기만 하면 됩니다.",
+      "button": "무료로 시작하기",
+      "reassurance": "회원가입 없이 바로 시작 · 완전 무료 · 코딩 경험 불필요"
     }
   },
   "Blog": {

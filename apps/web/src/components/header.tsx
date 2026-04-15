@@ -4,7 +4,8 @@ import { useTranslations } from "next-intl";
 import { LanguageSwitcher } from "./language-switcher";
 
 export function Header() {
-  const t = useTranslations("Blog");
+  const tBlog = useTranslations("Blog");
+  const tAbout = useTranslations("About");
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4">
@@ -19,8 +20,11 @@ export function Header() {
           <Image src="/logo.svg" alt="VibeStart" width={32} height={32} />
           VibeStart
         </Link>
+        <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+          {tAbout("nav")}
+        </Link>
         <Link href="/blog" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-          {t("nav")}
+          {tBlog("nav")}
         </Link>
       </div>
       <LanguageSwitcher />
