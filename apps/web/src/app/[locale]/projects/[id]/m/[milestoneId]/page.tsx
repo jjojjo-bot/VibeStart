@@ -1126,7 +1126,6 @@ export default async function MilestoneRunPage({
       step1Desc: string;
       step1VscodeMacCmd: string;
       step1VscodeWinCmd: string;
-      step1ClaudeCmd: string;
       step2Title: string;
       step2Desc: string;
       step2Prompt: string;
@@ -1155,7 +1154,6 @@ export default async function MilestoneRunPage({
         step1Desc: tVibeCoding("step1Desc"),
         step1VscodeMacCmd: tVibeCoding("step1VscodeMacCmd"),
         step1VscodeWinCmd: tVibeCoding("step1VscodeWinCmd"),
-        step1ClaudeCmd: tVibeCoding("step1ClaudeCmd"),
         step2Title: tVibeCoding("step2Title"),
         step2Desc: tVibeCoding("step2Desc"),
         step2Prompt: tVibeCoding("step2Prompt"),

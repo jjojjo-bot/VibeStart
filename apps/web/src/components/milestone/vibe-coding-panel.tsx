@@ -24,9 +24,9 @@ export interface VibeCodingPanelLabels {
   /** Step 1 */
   step1Title: string;
   step1Desc: string;
+  /** OS별 단일 체인 명령어 — cd + VS Code 열기 + Claude Code 시작 모두 포함. */
   step1VscodeMacCmd: string;
   step1VscodeWinCmd: string;
-  step1ClaudeCmd: string;
   /** Step 2 */
   step2Title: string;
   step2Desc: string;
@@ -124,9 +124,22 @@ export function VibeCodingPanel({
       title: labels.step1Title,
       desc: labels.step1Desc,
       commands: [
-        ...(os !== "windows" ? [{ label: os === "macos" ? "VS Code" : "VS Code (macOS)", cmd: labels.step1VscodeMacCmd.replace("{project}", projectName) }] : []),
-        ...(os !== "macos" ? [{ label: os === "windows" ? "VS Code" : "VS Code (Windows)", cmd: labels.step1VscodeWinCmd.replace("{project}", projectName) }] : []),
-        { label: "Claude Code", cmd: labels.step1ClaudeCmd.replace("{project}", projectName) },
+        ...(os !== "windows"
+          ? [
+              {
+                label: os === "macos" ? "macOS" : "macOS",
+                cmd: labels.step1VscodeMacCmd.replace("{project}", projectName),
+              },
+            ]
+          : []),
+        ...(os !== "macos"
+          ? [
+              {
+                label: os === "windows" ? "Windows" : "Windows",
+                cmd: labels.step1VscodeWinCmd.replace("{project}", projectName),
+              },
+            ]
+          : []),
       ],
     },
     {
