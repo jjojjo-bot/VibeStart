@@ -1677,6 +1677,66 @@ export async function verifyAuthButtonAction(
     redirect(`${returnTo}?verify_auth_button_error=not_found`);
   }
 
+  // 1단계(HTTP verify) 통과. 아직 substep 완료로 마킹하지 않는다.
+  // supabase_project.metadata.authButtonHttpVerified 플래그만 세워 두고,
+  // 2단계(사용자 수동 가입 테스트 확인)까지 통과하면 confirmSignupTestAction
+  // 에서 markSubstepCompleted가 호출된다. 두 단계로 쪼갠 이유:
+  // HTTP에 data-auth-button 속성이 있다는 건 버튼 컴포넌트가 페이지에 심어져
+  // 있다는 뜻일 뿐, Supabase URL/anon key가 정확한지, Google OAuth redirect가
+  // 제대로 돌아가는지, 세션이 실제로 붙는지 등 end-to-end 정상성은 검증
+  // 못 한다. 사용자가 본인 계정으로 한 번 눌러봐야 silent failure가 드러난다.
+  await updateProjectResourceMetadata(project.id, "supabase_project", {
+    authButtonHttpVerified: true,
+  });
+
+  revalidatePath(returnTo);
+  redirect(`${returnTo}?verify_auth_button=1`);
+}
+
+/**
+ * (마)-6 2단계 — 사용자가 직접 본인 계정으로 Google 가입/로그인 테스트를
+ * 완료했음을 확인. 1단계(verifyAuthButtonAction)가 통과한 뒤에만 호출 가능.
+ *
+ * 이 액션이 실제로 m2-s6-verify-signup를 markSubstepCompleted 처리해
+ * 마일스톤 완료 celebration을 발동시킨다.
+ */
+export async function confirmSignupTestAction(
+  formData: FormData,
+): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("로그인이 필요합니다");
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const milestoneId = String(formData.get("milestoneId") ?? "");
+  const substepId = String(formData.get("substepId") ?? "");
+  const locale = String(formData.get("locale") ?? "ko");
+
+  const project = await getProject(projectId);
+  if (!project || project.userId !== user.id) {
+    throw new Error("프로젝트를 찾을 수 없습니다");
+  }
+
+  const returnTo = buildReturnTo(locale, projectId, milestoneId);
+
+  // 1단계(authButtonHttpVerified)가 선행돼야 함을 확인. 없으면 무시하고
+  // ready 상태로 돌려보낸다 (사용자가 URL 조작 등으로 스킵 시도하는 경우).
+  const supabaseResource = await getProjectResourceByType(
+    project.id,
+    "supabase_project",
+  );
+  const httpVerified =
+    supabaseResource &&
+    typeof supabaseResource.metadata === "object" &&
+    supabaseResource.metadata !== null &&
+    "authButtonHttpVerified" in supabaseResource.metadata &&
+    (supabaseResource.metadata as { authButtonHttpVerified?: unknown })
+      .authButtonHttpVerified === true;
+
+  if (!httpVerified) {
+    revalidatePath(returnTo);
+    redirect(`${returnTo}?verify_auth_button_error=not_http_verified`);
+  }
+
   const catalog = createInMemoryMilestoneCatalog();
   const milestone = catalog.getMilestone(project.track, milestoneId);
   const allMilestones = catalog.listMilestones(project.track);
@@ -1691,7 +1751,7 @@ export async function verifyAuthButtonAction(
   }
 
   revalidatePath(returnTo);
-  redirect(`${returnTo}?verify_auth_button=1`);
+  redirect(`${returnTo}?signup_test_confirmed=1`);
 }
 
 /**

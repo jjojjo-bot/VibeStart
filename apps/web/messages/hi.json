@@ -1029,7 +1029,12 @@
     "verifiedSuccess": "साइट पर लॉगिन बटन दिख रहा है!",
     "errorNoDeployedUrl": "आपकी डिप्लॉय्ड साइट का URL नहीं मिला। पहले first deploy पूरा कीजिए",
     "errorFetchFailed": "साइट तक पहुँच नहीं पाए। थोड़ी देर बाद दोबारा दबाइए",
-    "errorNotFound": "अभी साइट पर लॉगिन बटन नहीं दिख रहा। Vercel के redeploy खत्म होने के 1–2 मिनट बाद दोबारा दबाइए (यह भी confirm कर लीजिए कि Claude Code ने git push तक कर दिया है)"
+    "errorNotFound": "अभी साइट पर लॉगिन बटन नहीं दिख रहा। Vercel के redeploy खत्म होने के 1–2 मिनट बाद दोबारा दबाइए (यह भी confirm कर लीजिए कि Claude Code ने git push तक कर दिया है)",
+    "stage2Title": "अब अपने अकाउंट से एक बार साइनअप करके देखिए",
+    "stage2Description": "HTML में बटन दिखना यह proof नहीं है कि Google लॉगिन सच में काम कर रहा है — Supabase keys, Google OAuth redirect, session persistence — इनमें से कुछ भी silently टूटा हो सकता है। अपनी साइट खोलिए, लॉगिन बटन दबाइए, Google अकाउंट चुनिए, अपनी साइट पर वापस आइए और देखिए कि लॉगिन हुआ है या नहीं। फिर नीचे \"मैंने साइनअप कर लिया\" दबाइए।",
+    "stage2OpenSite": "साइट खोलें",
+    "stage2CtaConfirm": "मैंने साइनअप कर लिया",
+    "stage2Confirming": "confirm हो रहा है..."
   },
   "FirstDeploy": {
     "title": "पहला डिप्लॉय",

@@ -1029,7 +1029,12 @@
     "verifiedSuccess": "The login button is live on your site!",
     "errorNoDeployedUrl": "We couldn't find your deployed site URL. Finish the first deploy first",
     "errorFetchFailed": "We couldn't reach your site. Please try again in a moment",
-    "errorNotFound": "The login button isn't showing up yet. Wait 1–2 minutes for Vercel to finish redeploying, then try again (also make sure Claude Code ran git push)"
+    "errorNotFound": "The login button isn't showing up yet. Wait 1–2 minutes for Vercel to finish redeploying, then try again (also make sure Claude Code ran git push)",
+    "stage2Title": "Now try signing up with your own account",
+    "stage2Description": "Seeing the button in the HTML isn't proof that sign-in actually works — Supabase keys, Google OAuth redirect, and session persistence can still be wrong in silent ways. Open your site, click the login button, pick your Google account, come back to your site, and confirm you're signed in. Then click \"I signed up\" below.",
+    "stage2OpenSite": "Open site",
+    "stage2CtaConfirm": "I signed up",
+    "stage2Confirming": "Confirming..."
   },
   "FirstDeploy": {
     "title": "First deploy",

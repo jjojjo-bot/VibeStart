@@ -1029,7 +1029,12 @@
     "verifiedSuccess": "¡El botón de inicio de sesión ya está en tu sitio!",
     "errorNoDeployedUrl": "No encontramos la URL de tu sitio desplegado. Completa primero el primer despliegue",
     "errorFetchFailed": "No pudimos acceder a tu sitio. Inténtalo de nuevo en un momento",
-    "errorNotFound": "Todavía no aparece el botón de inicio de sesión. Espera 1–2 minutos a que Vercel termine el redespliegue e inténtalo otra vez (también comprueba que Claude Code ejecutó git push)"
+    "errorNotFound": "Todavía no aparece el botón de inicio de sesión. Espera 1–2 minutos a que Vercel termine el redespliegue e inténtalo otra vez (también comprueba que Claude Code ejecutó git push)",
+    "stage2Title": "Ahora prueba a registrarte con tu propia cuenta",
+    "stage2Description": "Que el botón aparezca en el HTML no prueba que el inicio de sesión funcione realmente — las claves de Supabase, la redirección de Google OAuth o la persistencia de sesión todavía pueden fallar silenciosamente. Abre tu sitio, pulsa el botón de login, elige tu cuenta de Google, vuelve a tu sitio y confirma que sigues con sesión iniciada. Luego pulsa \"Me he registrado\".",
+    "stage2OpenSite": "Abrir sitio",
+    "stage2CtaConfirm": "Me he registrado",
+    "stage2Confirming": "Confirmando..."
   },
   "FirstDeploy": {
     "title": "Primer despliegue",

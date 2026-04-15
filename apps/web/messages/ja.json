@@ -1029,7 +1029,12 @@
     "verifiedSuccess": "サイトにログインボタンが表示されています！",
     "errorNoDeployedUrl": "デプロイされたサイトのURLが見つかりません。先に初回デプロイを完了してください",
     "errorFetchFailed": "サイトにアクセスできませんでした。少し待ってからもう一度押してください",
-    "errorNotFound": "まだサイトにログインボタンが見つかりません。Vercelの再デプロイが終わってから1～2分後にもう一度押してください（Claude Codeがgit pushまで完了しているかも確認してください）"
+    "errorNotFound": "まだサイトにログインボタンが見つかりません。Vercelの再デプロイが終わってから1～2分後にもう一度押してください（Claude Codeがgit pushまで完了しているかも確認してください）",
+    "stage2Title": "次に、自分のアカウントで実際にサインアップしてみましょう",
+    "stage2Description": "ボタンが表示されているだけでは、Supabaseキー・Google OAuthのリダイレクト・セッション維持などが本当に正しいかは分かりません。サイトを開いてログインボタンを押し、Googleアカウントを選んで自分のサイトに戻り、ログイン状態が維持されているか確認したら、下の「登録してみました」を押してください。",
+    "stage2OpenSite": "サイトを開く",
+    "stage2CtaConfirm": "登録してみました",
+    "stage2Confirming": "確認中..."
   },
   "FirstDeploy": {
     "title": "初回デプロイ",

@@ -1022,6 +1022,7 @@ export default async function MilestoneRunPage({
   // M2 (마)-6 verify 패널 데이터.
   let verifyAuthButtonPanelData: {
     state: VerifyAuthButtonPanelState;
+    deployedUrl: string | null;
     labels: {
       title: string;
       description: string;
@@ -1030,6 +1031,11 @@ export default async function MilestoneRunPage({
       waitingInstall: string;
       verifiedSuccess: string;
       errorMessage: string | null;
+      stage2Title: string;
+      stage2Description: string;
+      stage2OpenSite: string;
+      stage2CtaConfirm: string;
+      stage2Confirming: string;
     };
   } | null = null;
 
@@ -1037,11 +1043,25 @@ export default async function MilestoneRunPage({
     const alreadyVerified = initialCompletedSubsteps.includes(
       verifySignupSubstep.id,
     );
+    // Stage 1 통과 플래그 — supabase_project metadata에서 직접 읽는다.
+    const authButtonHttpVerified =
+      !!existingSupabaseProject &&
+      typeof existingSupabaseProject.metadata === "object" &&
+      existingSupabaseProject.metadata !== null &&
+      "authButtonHttpVerified" in existingSupabaseProject.metadata &&
+      (
+        existingSupabaseProject.metadata as {
+          authButtonHttpVerified?: unknown;
+        }
+      ).authButtonHttpVerified === true;
+
     const verifyState: VerifyAuthButtonPanelState = alreadyVerified
       ? "completed"
-      : authUiAlreadyInstalled
-        ? "ready"
-        : "waiting-install";
+      : !authUiAlreadyInstalled
+        ? "waiting-install"
+        : authButtonHttpVerified
+          ? "awaiting-signup-test"
+          : "ready";
 
     const verifyErrorRaw =
       typeof query.verify_auth_button_error === "string"
@@ -1059,6 +1079,7 @@ export default async function MilestoneRunPage({
 
     verifyAuthButtonPanelData = {
       state: verifyState,
+      deployedUrl: existingVercelProject?.url ?? null,
       labels: {
         title: tVerifyAuthButton("title"),
         description: tVerifyAuthButton("description"),
@@ -1067,6 +1088,11 @@ export default async function MilestoneRunPage({
         waitingInstall: tVerifyAuthButton("waitingInstall"),
         verifiedSuccess: tVerifyAuthButton("verifiedSuccess"),
         errorMessage: verifyErrorMessage,
+        stage2Title: tVerifyAuthButton("stage2Title"),
+        stage2Description: tVerifyAuthButton("stage2Description"),
+        stage2OpenSite: tVerifyAuthButton("stage2OpenSite"),
+        stage2CtaConfirm: tVerifyAuthButton("stage2CtaConfirm"),
+        stage2Confirming: tVerifyAuthButton("stage2Confirming"),
       },
     };
   }
@@ -1360,7 +1386,7 @@ export default async function MilestoneRunPage({
             </div>
           )}
 
-          {/* M2 (6) 로그인 버튼 HTTP verify — m2-s6 */}
+          {/* M2 (6) 로그인 버튼 HTTP verify + 수동 가입 테스트 확인 — m2-s6 */}
           {verifyAuthButtonPanelData && verifySignupSubstep && (
             <div id={`panel-${verifySignupSubstep.id}`} className="scroll-mt-8">
               <VerifyAuthButtonPanel
@@ -1369,6 +1395,7 @@ export default async function MilestoneRunPage({
                 substepId={verifySignupSubstep.id}
                 locale={locale}
                 state={verifyAuthButtonPanelData.state}
+                deployedUrl={verifyAuthButtonPanelData.deployedUrl}
                 labels={verifyAuthButtonPanelData.labels}
               />
             </div>

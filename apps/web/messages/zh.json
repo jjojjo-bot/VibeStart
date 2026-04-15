@@ -1029,7 +1029,12 @@
     "verifiedSuccess": "网站上已经能看到登录按钮了！",
     "errorNoDeployedUrl": "找不到你已部署站点的地址。请先完成首次部署",
     "errorFetchFailed": "暂时无法访问你的网站。请稍后再试",
-    "errorNotFound": "网站上暂时还没看到登录按钮。请等 Vercel 重新部署完成后 1–2 分钟再点一次（也请确认 Claude Code 已经执行了 git push）"
+    "errorNotFound": "网站上暂时还没看到登录按钮。请等 Vercel 重新部署完成后 1–2 分钟再点一次（也请确认 Claude Code 已经执行了 git push）",
+    "stage2Title": "现在用你自己的账号实际注册一次",
+    "stage2Description": "HTML 里看得到按钮，并不等于登录真的能用 — Supabase 密钥、Google OAuth 回调、会话保持都可能出错。请打开网站，点击登录按钮，选你的 Google 账号，返回网站后确认确实处于登录状态，然后点下面的「我注册过了」。",
+    "stage2OpenSite": "打开网站",
+    "stage2CtaConfirm": "我注册过了",
+    "stage2Confirming": "确认中..."
   },
   "FirstDeploy": {
     "title": "首次部署",
