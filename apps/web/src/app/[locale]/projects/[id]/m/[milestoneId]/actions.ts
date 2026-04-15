@@ -1292,19 +1292,10 @@ export async function installAuthUiAction(
       allMilestoneIds: allMilestones.map((m) => m.id),
     });
 
-    // (마)-6: Auth UI가 설치된 직후 따라오는 verify substep을 자동 완료.
-    // ((라)-5 firstDeployAction 패턴과 동일)
-    const currentIdx = milestone.substeps.findIndex((s) => s.id === substepId);
-    const nextSubstep = milestone.substeps[currentIdx + 1];
-    if (nextSubstep && nextSubstep.kind === "verify") {
-      await markSubstepCompleted({
-        projectId: project!.id,
-        milestoneId,
-        substepId: nextSubstep.id,
-        totalSubsteps: milestone.substeps.length,
-        allMilestoneIds: allMilestones.map((m) => m.id),
-      });
-    }
+    // (마)-6 (m2-s6-verify-signup)은 서버 쪽에서 자동 완료하지 않는다.
+    // 사용자가 Claude Code로 실제 버튼을 코드에 끼워 넣고 git push까지 마친 뒤
+    // 배포된 HTML에 data-auth-button 속성이 실제 렌더되는지 HTTP verify
+    // (verifyAuthButtonAction)가 통과해야만 완료 처리된다.
   }
 
   // 1) 선행 리소스 + 토큰 조회
