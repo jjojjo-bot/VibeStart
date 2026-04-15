@@ -279,7 +279,10 @@ function wslClaudeStep(t: T): SetupStep {
     'echo "▶ (2/4) Installing Claude Code CLI..."',
     "npm install -g @anthropic-ai/claude-code",
     'echo "▶ (3/4) Installing VS Code extension..."',
-    "code --install-extension anthropic.claude-code",
+    // `code` CLI는 Windows VS Code의 "Add to PATH" 옵션 + 셸 재시작 이후에만
+    // WSL bash에서 접근 가능. 둘 중 하나라도 빠지면 `command not found`로 체인이
+    // 멈추므로, 없을 땐 수동 설치 안내만 출력하고 계속 진행한다.
+    "if command -v code >/dev/null 2>&1; then code --install-extension anthropic.claude-code; else echo '⚠ VS Code CLI (code) not on PATH. Skipping extension install — open VS Code → Extensions (Ctrl+Shift+X) → search Claude Code → Install manually.'; fi",
     'echo "▶ (4/4) Logging in..."',
     "claude login",
   ]);
@@ -516,7 +519,10 @@ function macClaudeStep(t: T): SetupStep {
     'echo "▶ (1/3) Installing Claude Code CLI..."',
     "npm install -g @anthropic-ai/claude-code",
     'echo "▶ (2/3) Installing VS Code extension..."',
-    "code --install-extension anthropic.claude-code",
+    // macOS는 `code` shim이 VS Code.app의 Command Palette → "Install 'code'
+    // command in PATH"를 실행해야 생긴다. 안 했으면 chain을 깨뜨리지 않고
+    // 수동 설치 안내만 남긴다.
+    "if command -v code >/dev/null 2>&1; then code --install-extension anthropic.claude-code; else echo '⚠ VS Code CLI (code) not on PATH. Skipping extension install — open VS Code → Extensions (Cmd+Shift+X) → search Claude Code → Install manually.'; fi",
     'echo "▶ (3/3) Logging in..."',
     "claude login",
   ]);
