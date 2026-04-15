@@ -1119,7 +1119,7 @@
     "step2Prompt": "메인 페이지의 제목을 '내 첫 번째 사이트'로 바꾸고, 배경색을 파란색으로 변경해줘",
     "step3Title": "변경사항 push하기",
     "step3Desc": "Claude Code에게 아래와 같이 요청하세요",
-    "step3Prompt": "지금까지 수정한 내용을 커밋하고 GitHub에 push해줘",
+    "step3Prompt": "먼저 `git pull`로 최신 파일을 받아온 다음, 지금까지 수정한 내용을 커밋하고 GitHub에 push해줘",
     "step4Title": "자동 배포 결과 확인",
     "step4Desc": "push하면 Vercel이 자동으로 배포해요. 1~2분 후 사이트를 확인해 보세요",
     "step4Cta": "내 사이트 열기",

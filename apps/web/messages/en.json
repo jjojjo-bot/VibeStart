@@ -1119,7 +1119,7 @@
     "step2Prompt": "Change the main page title to 'My First Site' and set the background color to blue",
     "step3Title": "Push Your Changes",
     "step3Desc": "Ask Claude Code like this",
-    "step3Prompt": "Commit the changes and push to GitHub",
+    "step3Prompt": "First run `git pull` to grab the latest files, then commit what we changed and push to GitHub",
     "step4Title": "Check the Auto-Deploy Result",
     "step4Desc": "After pushing, Vercel auto-deploys your site. Check it in 1–2 minutes",
     "step4Cta": "Open My Site",

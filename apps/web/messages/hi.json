@@ -1119,7 +1119,7 @@
     "step2Prompt": "मुख्य पेज का शीर्षक 'My First Site' में बदलो और बैकग्राउंड रंग नीला कर दो",
     "step3Title": "अपने बदलाव push करें",
     "step3Desc": "Claude Code से ऐसे कहें",
-    "step3Prompt": "बदलावों को commit करो और GitHub पर push करो",
+    "step3Prompt": "पहले `git pull` चलाकर latest files ले आओ, फिर अब तक के बदलावों को commit करके GitHub पर push कर दो",
     "step4Title": "ऑटो-डिप्लॉय का नतीजा जांचें",
     "step4Desc": "push करने के बाद Vercel अपने आप डिप्लॉय कर देगा। 1-2 मिनट बाद अपनी साइट देखें",
     "step4Cta": "मेरी साइट खोलें",

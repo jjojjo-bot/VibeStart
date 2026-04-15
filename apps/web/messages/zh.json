@@ -1119,7 +1119,7 @@
     "step2Prompt": "把主页标题改成「My First Site」，把背景色改成蓝色",
     "step3Title": "推送你的更改",
     "step3Desc": "向 Claude Code 这样请求",
-    "step3Prompt": "把修改提交并推送到 GitHub",
+    "step3Prompt": "先执行 `git pull` 拉取最新文件，然后把改动 commit 并 push 到 GitHub",
     "step4Title": "查看自动部署结果",
     "step4Desc": "push之后Vercel会自动部署你的网站。1-2分钟后查看你的网站吧",
     "step4Cta": "打开我的网站",

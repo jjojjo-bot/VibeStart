@@ -1119,7 +1119,7 @@
     "step2Prompt": "Cambia el título de la página principal a 'Mi Primer Sitio' y pon el color de fondo azul",
     "step3Title": "Sube tus cambios",
     "step3Desc": "Pide a Claude Code lo siguiente",
-    "step3Prompt": "Haz commit de los cambios y push a GitHub",
+    "step3Prompt": "Primero ejecuta `git pull` para traer los archivos más recientes, luego haz commit de los cambios y push a GitHub",
     "step4Title": "Verifica el despliegue automático",
     "step4Desc": "Después de hacer push, Vercel despliega automáticamente. Revisa tu sitio en 1-2 minutos",
     "step4Cta": "Abrir mi sitio",
