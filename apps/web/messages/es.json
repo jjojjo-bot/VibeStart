@@ -886,9 +886,13 @@
     "vercelHelperLink": "Crear un token",
     "vercelTokenPlaceholder": "Pega tu token aquí",
     "vercelConnectButton": "Conectar Vercel",
+    "vercelGithubWarningTitle": "La forma en que te registres en Vercel importa",
+    "vercelGithubWarningBody": "Cuando crees tu cuenta de Vercel, elige obligatoriamente \"Continue with GitHub\". Si te registras con Google o email, Vercel no podrá acceder a tus repos de GitHub y los despliegues quedarán bloqueados. Si ya te registraste con Google/email, conecta GitHub a tu cuenta de Vercel desde Ajustes.",
+    "vercelGithubWarningCta": "Conectar GitHub en Vercel",
     "vercelErrorMissingToken": "Introduce un token",
     "vercelErrorInvalidToken": "El token no es válido. Genera uno nuevo en vercel.com y vuelve a intentarlo.",
     "vercelErrorForbidden": "El token no tiene permisos suficientes. Genera uno con permiso Full Account.",
+    "vercelErrorNoGithubLink": "Tu cuenta de Vercel no está conectada a GitHub. Ve a vercel.com/account/login-connections, conecta GitHub y vuelve a intentarlo.",
     "vercelErrorServiceUnavailable": "Vercel no responde. Vuelve a intentarlo más tarde.",
     "vercelErrorGeneric": "Conexión a Vercel fallida: {code}"
   },
@@ -916,7 +920,7 @@
     "waitingRepo": "Primero crea un repositorio",
     "completedMessage": "Tu proyecto está en GitHub",
     "folderMovedHint": "¿Moviste la carpeta del proyecto? Pídele a Claude Code",
-    "folderMovedPrompt": "Sube este proyecto a GitHub"
+    "folderMovedPrompt": "Inicializa solo esta carpeta como un nuevo repositorio git independiente y súbela a GitHub. Ignora cualquier repositorio git en carpetas superiores — sube únicamente los archivos dentro de esta carpeta."
   },
   "CreateSupabaseProject": {
     "title": "Crear un proyecto de Supabase",
@@ -998,7 +1002,7 @@
     "installedPending": "Las herramientas se están subiendo. En un momento envía el mensaje de abajo a Claude Code",
     "alreadyInstalled": "Las herramientas ya están instaladas",
     "openSite": "Abrir sitio",
-    "claudePrompt": "Agrega un botón de inicio de sesión con Google a mi sitio.\n\nVibeStart acaba de instalar todo lo que necesito para el inicio de sesión. Usa esas herramientas para añadir un botón de iniciar/cerrar sesión en un lugar natural de mi sitio.\n\nReglas:\n- No cambies el diseño ni las funciones de mi sitio. Solo añade el botón.\n- La gente debe poder seguir usando el sitio sin iniciar sesión.\n- Lee mi código para entender qué tipo de sitio he hecho.",
+    "claudePrompt": "Agrega un botón de inicio de sesión con Google a mi sitio.\n\n1. Primero ejecuta `git pull` para traer los archivos más recientes — acaban de subir a GitHub los archivos necesarios para el login.\n2. Dentro de esos archivos ya hay un componente de botón de iniciar/cerrar sesión. Úsalo para añadir un botón en un lugar natural de mi sitio.\n3. Por último ejecuta `git add`, `git commit -m \"agregar botón de inicio de sesión\"` y `git push` para que el cambio se publique.\n\nReglas:\n- No cambies el diseño ni las funciones de mi sitio. Solo añade el botón.\n- La gente debe poder seguir usando el sitio sin iniciar sesión.\n- Lee mi código para entender qué tipo de sitio he hecho.",
     "claudeCardHeading": "Mensaje para enviar a Claude Code",
     "claudeCardSubheading": "Copia este texto y pégalo en la ventana de Claude Code — el botón de inicio se añadirá a tu sitio automáticamente",
     "claudeCardBadge": "Siguiente paso",
@@ -1016,6 +1020,17 @@
     "errorPushFailed": "No se pudo subir el archivo a GitHub. Inténtalo de nuevo en un momento",
     "errorDeployFailed": "El despliegue de Vercel falló. Revisa el panel de Vercel para ver los registros"
   },
+  "VerifyAuthButton": {
+    "title": "Verifica si el botón de inicio de sesión está en vivo",
+    "description": "Cuando Claude Code haya terminado el git push y Vercel haya vuelto a desplegar, pulsa \"Verificar\". Comprobaremos tu sitio y confirmaremos si el botón de inicio de sesión realmente aparece.",
+    "ctaVerify": "Verificar",
+    "verifying": "Verificando...",
+    "waitingInstall": "Completa primero el paso \"Instalar herramientas de inicio de sesión\" de arriba",
+    "verifiedSuccess": "¡El botón de inicio de sesión ya está en tu sitio!",
+    "errorNoDeployedUrl": "No encontramos la URL de tu sitio desplegado. Completa primero el primer despliegue",
+    "errorFetchFailed": "No pudimos acceder a tu sitio. Inténtalo de nuevo en un momento",
+    "errorNotFound": "Todavía no aparece el botón de inicio de sesión. Espera 1–2 minutos a que Vercel termine el redespliegue e inténtalo otra vez (también comprueba que Claude Code ejecutó git push)"
+  },
   "FirstDeploy": {
     "title": "Primer despliegue",
     "description": "Despliega una página de aterrizaje desde tu repositorio de GitHub en Vercel",
@@ -1032,7 +1047,7 @@
     "errorNoRepo": "No se encontró el repositorio de GitHub. Crea un repositorio primero.",
     "errorPlanLimit": "Se superó el límite del plan gratuito de Vercel.",
     "errorTimeout": "El despliegue aún está en progreso. Revisa tu sitio en un momento.",
-    "errorGithubAppNotInstalled": "Vercel no puede acceder a tu repositorio de GitHub. Instala la Vercel GitHub App en github.com/apps/vercel."
+    "errorGithubAppNotInstalled": "Vercel no puede acceder a tu repositorio de GitHub. Normalmente ocurre cuando tu cuenta de Vercel no está conectada a GitHub (si te registraste con Google/email) o cuando la Vercel GitHub App no está instalada. Conecta GitHub en vercel.com/account/login-connections, instala la app en github.com/apps/vercel y vuelve a desplegar."
   },
   "Milestones": {
     "m1-deploy": {

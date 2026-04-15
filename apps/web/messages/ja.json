@@ -886,9 +886,13 @@
     "vercelHelperLink": "トークンを作成する",
     "vercelTokenPlaceholder": "ここにトークンを貼り付けてください",
     "vercelConnectButton": "Vercelに接続",
+    "vercelGithubWarningTitle": "Vercelの登録方法が重要です",
+    "vercelGithubWarningBody": "Vercelに登録する際は必ず「Continue with GitHub」を選んでください。Googleやメールで登録するとVercelがあなたのGitHubリポジトリにアクセスできず、デプロイが止まります。すでにGoogleやメールで登録してしまった場合は、Vercelの設定画面からGitHubを後から接続してください。",
+    "vercelGithubWarningCta": "VercelでGitHubを接続する",
     "vercelErrorMissingToken": "トークンを入力してください",
     "vercelErrorInvalidToken": "トークンが無効です。vercel.comで新しいトークンを発行してもう一度お試しください。",
     "vercelErrorForbidden": "トークンの権限が不足しています。Full Account権限で新規発行してください。",
+    "vercelErrorNoGithubLink": "VercelアカウントにGitHubが接続されていません。vercel.com/account/login-connections でGitHubを接続してからもう一度お試しください。",
     "vercelErrorServiceUnavailable": "Vercelサーバーから応答がありません。しばらくしてからもう一度お試しください。",
     "vercelErrorGeneric": "Vercel接続失敗: {code}"
   },
@@ -916,7 +920,7 @@
     "waitingRepo": "まずリポジトリを作成してください",
     "completedMessage": "プロジェクトがGitHubにアップロードされました",
     "folderMovedHint": "プロジェクトフォルダを移動しましたか？Claude Codeに頼んでみてください",
-    "folderMovedPrompt": "このプロジェクトをGitHubにアップロードして"
+    "folderMovedPrompt": "このフォルダだけを新しい独立した git リポジトリとして初期化して GitHub にアップロードして。上の階層に別の git があっても無視して、このフォルダの中のファイルだけアップロードすればいいよ。"
   },
   "CreateSupabaseProject": {
     "title": "Supabaseプロジェクトを作成",
@@ -998,7 +1002,7 @@
     "installedPending": "ツールをアップロード中です。少ししてから下のメッセージをClaude Codeに送ってください",
     "alreadyInstalled": "ツールはすでにインストールされています",
     "openSite": "サイトを開く",
-    "claudePrompt": "私のサイトにGoogleログインボタンを入れてください。\n\nさっきVibeStartがログインに必要なものを自動で入れてくれました。あなたはそれを使って、私のサイトの自然な場所にログイン/ログアウトボタンだけを追加すればOKです。\n\nルール:\n- 私のサイトのデザインや機能は絶対に変えないでください。\n- ログインしなくてもサイトは普通に使えるようにしてください。\n- どんなサイトかはコードを直接読んで判断してください。",
+    "claudePrompt": "私のサイトにGoogleログインボタンを入れてください。\n\n1. まず `git pull` で最新のファイルを取ってきてください。ログインに必要なファイルがさっきGitHubに上がりました。\n2. そのファイルの中にログイン/ログアウトボタンのコンポーネントがもう入っているので、それを使って私のサイトの自然な場所に追加してください。\n3. 最後に `git add`、`git commit -m \"ログインボタン追加\"`、`git push` までやってサイトに反映してください。\n\nルール:\n- 私のサイトのデザインや機能は絶対に変えないでください。\n- ログインしなくてもサイトは普通に使えるようにしてください。\n- どんなサイトかはコードを直接読んで判断してください。",
     "claudeCardHeading": "Claude Codeに送るメッセージ",
     "claudeCardSubheading": "下の内容をコピーしてClaude Codeのウィンドウに貼り付けると、サイトに自動でログインボタンが追加されます",
     "claudeCardBadge": "次のステップ",
@@ -1016,6 +1020,17 @@
     "errorPushFailed": "GitHubへのファイルアップロードに失敗しました。しばらくしてから再試行してください",
     "errorDeployFailed": "Vercelのデプロイに失敗しました。Vercelダッシュボードでログを確認してください"
   },
+  "VerifyAuthButton": {
+    "title": "ログインボタンがサイトに反映されたか確認",
+    "description": "Claude Codeがgit pushを終えて、Vercelの再デプロイが完了したら「確認する」を押してください。サイトに実際にログインボタンが表示されているか自動で確認します。",
+    "ctaVerify": "確認する",
+    "verifying": "確認中...",
+    "waitingInstall": "まず上の「ログインツールをインストール」を完了してください",
+    "verifiedSuccess": "サイトにログインボタンが表示されています！",
+    "errorNoDeployedUrl": "デプロイされたサイトのURLが見つかりません。先に初回デプロイを完了してください",
+    "errorFetchFailed": "サイトにアクセスできませんでした。少し待ってからもう一度押してください",
+    "errorNotFound": "まだサイトにログインボタンが見つかりません。Vercelの再デプロイが終わってから1～2分後にもう一度押してください（Claude Codeがgit pushまで完了しているかも確認してください）"
+  },
   "FirstDeploy": {
     "title": "初回デプロイ",
     "description": "GitHubリポジトリのランディングページをVercelにデプロイします",
@@ -1032,7 +1047,7 @@
     "errorNoRepo": "GitHubリポジトリが見つかりません。リポジトリを再作成してください。",
     "errorPlanLimit": "Vercel無料プランの上限を超えました。",
     "errorTimeout": "デプロイはまだ進行中です。しばらくしてからサイトを確認してください。",
-    "errorGithubAppNotInstalled": "VercelがGitHubリポジトリにアクセスできません。github.com/apps/vercel でVercel GitHub Appをインストールしてください。"
+    "errorGithubAppNotInstalled": "VercelがあなたのGitHubリポジトリにアクセスできません。たいていはVercelアカウントにGitHubが接続されていない(Google/メール登録)か、Vercel GitHub Appが未インストールのときに起きます。vercel.com/account/login-connections でGitHubを接続し、github.com/apps/vercel でVercel GitHub Appもインストールしてから再デプロイしてください。"
   },
   "Milestones": {
     "m1-deploy": {

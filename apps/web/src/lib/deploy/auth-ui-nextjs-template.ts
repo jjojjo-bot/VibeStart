@@ -109,7 +109,10 @@ export function AuthButton({ className }: AuthButtonProps) {
 
   if (session) {
     return (
-      <div className={className ?? "inline-flex items-center gap-2 rounded-md border border-zinc-200 px-3 py-1.5 text-sm"}>
+      <div
+        data-auth-button="signed-in"
+        className={className ?? "inline-flex items-center gap-2 rounded-md border border-zinc-200 px-3 py-1.5 text-sm"}
+      >
         <span className="truncate max-w-[160px]">{session.user.email}</span>
         <button
           type="button"
@@ -125,6 +128,7 @@ export function AuthButton({ className }: AuthButtonProps) {
   return (
     <button
       type="button"
+      data-auth-button="signed-out"
       onClick={handleLogin}
       className={className ?? "inline-flex items-center gap-2 rounded-md bg-white px-4 py-2 text-sm font-medium text-zinc-900 shadow-sm ring-1 ring-zinc-200 hover:bg-zinc-50"}
     >

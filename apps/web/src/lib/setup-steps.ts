@@ -862,9 +862,15 @@ function nextjsProjectStep(projectName: string, variant: "wsl" | "mac", isFronte
     group: "projectCreate",
     environment: env,
     detailedGuide: t("projectFrontend.detailedGuideTemplate", { path }),
+    // create-next-app@latest(Next.js 16+)는 AGENTS.md를 자동 생성하는데, 그 안의
+    // "This is NOT the Next.js you know" 문구가 Phase 1 테스트 단계에서 Claude
+    // Code를 혼란스럽게 만든다 (사용자는 평범한 랜딩 페이지만 만들고 싶을 뿐인데
+    // Claude가 docs를 먼저 읽으러 감). 비전공자 프로젝트에는 불필요한 AI agent
+    // 내부 문서이므로 스캐폴딩 직후 제거한다. CLAUDE.md는 architectureStep에서
+    // VibeStart 아키텍처 가이드로 별도 작성됨.
     script: isFrontendOnly
-      ? `mkdir -p ~/${projectName} && npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm`
-      : `npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm`,
+      ? `mkdir -p ~/${projectName} && npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm && rm -f ~/${path}/AGENTS.md`
+      : `npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm && rm -f ~/${path}/AGENTS.md`,
     resultPreview: `✔ Would you like to use TypeScript? … Yes
 ✔ Would you like to use ESLint? … Yes
 ✔ Would you like to use Tailwind CSS? … Yes

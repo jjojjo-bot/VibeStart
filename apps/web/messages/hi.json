@@ -886,9 +886,13 @@
     "vercelHelperLink": "टोकन बनाएं",
     "vercelTokenPlaceholder": "यहाँ टोकन पेस्ट करें",
     "vercelConnectButton": "Vercel कनेक्ट करें",
+    "vercelGithubWarningTitle": "Vercel पर साइनअप कैसे करते हैं, यह ज़रूरी है",
+    "vercelGithubWarningBody": "Vercel अकाउंट बनाते समय ज़रूर \"Continue with GitHub\" चुनें। Google या ईमेल से साइनअप करने पर Vercel आपकी GitHub रिपो तक नहीं पहुँच पाता, और डिप्लॉय ब्लॉक हो जाता है। अगर आप पहले से Google/ईमेल से साइनअप कर चुके हैं, तो Vercel Settings में जाकर GitHub को अलग से कनेक्ट कर दीजिए।",
+    "vercelGithubWarningCta": "Vercel पर GitHub कनेक्ट करें",
     "vercelErrorMissingToken": "कृपया टोकन दर्ज करें",
     "vercelErrorInvalidToken": "यह टोकन अमान्य है। vercel.com पर नया टोकन बनाकर फिर से कोशिश करें।",
     "vercelErrorForbidden": "टोकन की अनुमति पर्याप्त नहीं है। Full Account अनुमति के साथ नया टोकन बनाएं।",
+    "vercelErrorNoGithubLink": "आपके Vercel अकाउंट से GitHub कनेक्ट नहीं है। vercel.com/account/login-connections पर जाकर GitHub कनेक्ट कीजिए और फिर से कोशिश कीजिए।",
     "vercelErrorServiceUnavailable": "Vercel सर्वर से जवाब नहीं आ रहा। कृपया कुछ देर बाद फिर से कोशिश करें।",
     "vercelErrorGeneric": "Vercel कनेक्शन विफल: {code}"
   },
@@ -916,7 +920,7 @@
     "waitingRepo": "पहले रिपॉजिटरी बनाएं",
     "completedMessage": "प्रोजेक्ट GitHub पर अपलोड हो गया",
     "folderMovedHint": "प्रोजेक्ट फ़ोल्डर कहीं और ले गए? Claude Code से कहें",
-    "folderMovedPrompt": "इस प्रोजेक्ट को GitHub पर अपलोड करो"
+    "folderMovedPrompt": "बस इस फोल्डर को एक नए स्वतंत्र git रिपॉजिटरी के रूप में शुरू करो और GitHub पर अपलोड करो। ऊपर के फोल्डर में कोई भी git हो, उसे अनदेखा करो — सिर्फ इस फोल्डर के अंदर की फाइलें अपलोड करो।"
   },
   "CreateSupabaseProject": {
     "title": "Supabase प्रोजेक्ट बनाएं",
@@ -998,7 +1002,7 @@
     "installedPending": "टूल अपलोड हो रहे हैं। थोड़ी देर बाद नीचे का मैसेज Claude Code को भेजिए",
     "alreadyInstalled": "टूल पहले से इंस्टॉल हैं",
     "openSite": "साइट खोलें",
-    "claudePrompt": "मेरी साइट पर Google लॉगिन बटन जोड़ दो।\n\nVibeStart ने अभी लॉगिन के लिए ज़रूरी सब चीज़ें इंस्टॉल कर दी हैं। उन्हीं का इस्तेमाल करके मेरी साइट की किसी natural जगह पर लॉगिन/लॉगआउट बटन जोड़ दो।\n\nनियम:\n- मेरी साइट का डिज़ाइन या फीचर बिल्कुल मत बदलना। बस बटन जोड़ना।\n- बिना लॉगिन वाले लोग भी साइट normally इस्तेमाल कर सकें।\n- मैंने किस तरह की साइट बनाई है, यह कोड पढ़कर खुद समझ लेना।",
+    "claudePrompt": "मेरी साइट पर Google लॉगिन बटन जोड़ दो।\n\n1. पहले `git pull` चलाकर latest files ले आओ — लॉगिन के लिए ज़रूरी files अभी GitHub पर upload हुई हैं।\n2. उन files में पहले से एक लॉगिन/लॉगआउट बटन component है, उसी का इस्तेमाल करके मेरी साइट की किसी natural जगह पर बटन जोड़ दो।\n3. आख़िर में `git add`, `git commit -m \"लॉगिन बटन जोड़ा\"`, और `git push` भी कर देना ताकि बदलाव साइट पर live हो जाए।\n\nनियम:\n- मेरी साइट का डिज़ाइन या फीचर बिल्कुल मत बदलना। बस बटन जोड़ना।\n- बिना लॉगिन वाले लोग भी साइट normally इस्तेमाल कर सकें।\n- मैंने किस तरह की साइट बनाई है, यह कोड पढ़कर खुद समझ लेना।",
     "claudeCardHeading": "Claude Code को भेजने वाला मैसेज",
     "claudeCardSubheading": "नीचे का टेक्स्ट कॉपी करके Claude Code की विंडो में पेस्ट करें — लॉगिन बटन आपकी साइट पर अपने आप जुड़ जाएगा",
     "claudeCardBadge": "अगला कदम",
@@ -1016,6 +1020,17 @@
     "errorPushFailed": "GitHub पर फ़ाइल अपलोड विफल। कृपया कुछ समय बाद पुनः प्रयास करें",
     "errorDeployFailed": "Vercel डिप्लॉय विफल। कृपया Vercel डैशबोर्ड पर लॉग देखें"
   },
+  "VerifyAuthButton": {
+    "title": "साइट पर लॉगिन बटन आया है या नहीं चेक करें",
+    "description": "जब Claude Code ने git push कर दिया हो और Vercel ने दोबारा डिप्लॉय कर दिया हो, तो नीचे 'वेरिफाई करें' दबाइए। हम आपकी साइट से HTML लाकर खुद चेक कर लेंगे कि लॉगिन बटन सच में दिख रहा है या नहीं।",
+    "ctaVerify": "वेरिफाई करें",
+    "verifying": "चेक हो रहा है...",
+    "waitingInstall": "पहले ऊपर का 'लॉगिन टूल इंस्टॉल करें' स्टेप पूरा कीजिए",
+    "verifiedSuccess": "साइट पर लॉगिन बटन दिख रहा है!",
+    "errorNoDeployedUrl": "आपकी डिप्लॉय्ड साइट का URL नहीं मिला। पहले first deploy पूरा कीजिए",
+    "errorFetchFailed": "साइट तक पहुँच नहीं पाए। थोड़ी देर बाद दोबारा दबाइए",
+    "errorNotFound": "अभी साइट पर लॉगिन बटन नहीं दिख रहा। Vercel के redeploy खत्म होने के 1–2 मिनट बाद दोबारा दबाइए (यह भी confirm कर लीजिए कि Claude Code ने git push तक कर दिया है)"
+  },
   "FirstDeploy": {
     "title": "पहला डिप्लॉय",
     "description": "GitHub रिपॉजिटरी से लैंडिंग पेज को Vercel पर डिप्लॉय करें",
@@ -1032,7 +1047,7 @@
     "errorNoRepo": "GitHub रिपॉजिटरी नहीं मिली। कृपया पहले रिपॉजिटरी बनाएं।",
     "errorPlanLimit": "Vercel मुफ्त प्लान की सीमा पार हो गई।",
     "errorTimeout": "डिप्लॉय अभी भी प्रगति पर है। कुछ देर बाद अपनी साइट जांचें।",
-    "errorGithubAppNotInstalled": "Vercel आपकी GitHub रिपॉजिटरी तक पहुंच नहीं सकता। github.com/apps/vercel पर Vercel GitHub App इंस्टॉल करें।"
+    "errorGithubAppNotInstalled": "Vercel आपकी GitHub रिपॉजिटरी तक पहुँच नहीं पा रहा। आमतौर पर यह तब होता है जब आपका Vercel अकाउंट GitHub से कनेक्ट नहीं है (Google/ईमेल से signup किया हो) या रिपो पर Vercel GitHub App install नहीं है। vercel.com/account/login-connections पर GitHub कनेक्ट कीजिए, github.com/apps/vercel पर app install कीजिए, फिर दोबारा डिप्लॉय कीजिए।"
   },
   "Milestones": {
     "m1-deploy": {

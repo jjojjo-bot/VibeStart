@@ -886,9 +886,13 @@
     "vercelHelperLink": "토큰 만들러 가기",
     "vercelTokenPlaceholder": "여기에 토큰을 붙여넣어 주세요",
     "vercelConnectButton": "Vercel 연결",
+    "vercelGithubWarningTitle": "Vercel 가입 방식이 중요해요",
+    "vercelGithubWarningBody": "Vercel에 가입할 때 반드시 'Continue with GitHub'을 선택해 주세요. Google이나 이메일로 가입하면 Vercel이 내 GitHub 저장소에 접근 못 해서 배포가 막혀요. 이미 Google/이메일로 가입했다면 Vercel 설정에서 GitHub을 추가 연결해 주세요.",
+    "vercelGithubWarningCta": "Vercel에서 GitHub 연결하러 가기",
     "vercelErrorMissingToken": "토큰을 입력해 주세요",
     "vercelErrorInvalidToken": "토큰이 유효하지 않아요. vercel.com에서 새 토큰을 발급해 다시 시도해 주세요",
     "vercelErrorForbidden": "토큰의 권한이 부족해요. Full Account 권한으로 새로 발급해 주세요",
+    "vercelErrorNoGithubLink": "Vercel 계정에 GitHub이 연결돼 있지 않아요. vercel.com/account/login-connections 에서 GitHub을 연결한 뒤 다시 시도해 주세요",
     "vercelErrorServiceUnavailable": "Vercel 서버 응답이 없어요. 잠시 후 다시 시도해 주세요",
     "vercelErrorGeneric": "Vercel 연결 실패: {code}"
   },
@@ -916,7 +920,7 @@
     "waitingRepo": "먼저 저장소를 만들어 주세요",
     "completedMessage": "GitHub에 프로젝트가 올라갔어요",
     "folderMovedHint": "프로젝트 폴더를 다른 곳으로 옮겼나요? Claude Code에게 요청해 보세요",
-    "folderMovedPrompt": "이 프로젝트를 GitHub에 올려줘"
+    "folderMovedPrompt": "이 폴더만 새 git 저장소로 독립시켜서 GitHub에 올려줘. 상위 폴더에 다른 git이 있어도 무시하고, 이 폴더 안의 파일만 올리면 돼."
   },
   "CreateSupabaseProject": {
     "title": "Supabase 프로젝트 만들기",
@@ -998,7 +1002,7 @@
     "installedPending": "도구를 올리는 중이에요. 잠시 후 아래 메시지를 Claude Code에 보내 주세요",
     "alreadyInstalled": "도구가 이미 설치돼 있어요",
     "openSite": "사이트 열기",
-    "claudePrompt": "내 사이트에 Google 로그인 버튼 좀 넣어줘.\n\n방금 VibeStart가 로그인에 필요한 것들을 자동으로 깔아줬어. 너는 그걸 써서 내 사이트 적당한 곳에 로그인/로그아웃 버튼만 자연스럽게 추가하면 돼.\n\n규칙:\n- 내 사이트 디자인이나 기능은 절대 바꾸지 마.\n- 로그인 안 해도 사이트는 그대로 쓸 수 있게.\n- 어떤 사이트인지는 코드 직접 읽어보고 판단해줘.",
+    "claudePrompt": "내 사이트에 Google 로그인 버튼 좀 넣어줘.\n\n1. 먼저 `git pull`로 최신 파일을 받아와줘. 방금 로그인에 필요한 파일이 GitHub에 새로 올라왔어.\n2. 받은 파일 안에 이미 로그인/로그아웃 버튼 컴포넌트가 들어 있으니까, 그걸 써서 내 사이트 적당한 곳에 자연스럽게 추가해줘.\n3. 마지막으로 `git add`, `git commit -m \"로그인 버튼 추가\"`, `git push`까지 해서 사이트에 반영되게 해줘.\n\n규칙:\n- 내 사이트 디자인이나 기능은 절대 바꾸지 마.\n- 로그인 안 해도 사이트는 그대로 쓸 수 있게.\n- 어떤 사이트인지는 코드 직접 읽어보고 판단해줘.",
     "claudeCardHeading": "Claude Code에 보낼 메시지",
     "claudeCardSubheading": "아래 내용을 복사해서 Claude Code 창에 붙여넣으면 사이트에 자동으로 로그인 버튼이 들어가요",
     "claudeCardBadge": "다음 단계",
@@ -1016,6 +1020,17 @@
     "errorPushFailed": "GitHub 파일 업로드에 실패했어요. 잠시 후 다시 시도해 주세요",
     "errorDeployFailed": "Vercel 배포에 실패했어요. Vercel 대시보드에서 로그를 확인해 주세요"
   },
+  "VerifyAuthButton": {
+    "title": "로그인 버튼이 사이트에 떴는지 확인",
+    "description": "Claude Code가 git push까지 끝냈고 Vercel이 재배포했다면, 아래 '확인하기'를 눌러주세요. 사이트에 로그인 버튼이 실제로 보이는지 자동으로 확인해요.",
+    "ctaVerify": "확인하기",
+    "verifying": "확인 중...",
+    "waitingInstall": "먼저 위의 단계에서 '로그인 도구 설치'를 완료해 주세요",
+    "verifiedSuccess": "사이트에 로그인 버튼이 잘 떴어요!",
+    "errorNoDeployedUrl": "배포된 사이트 주소를 찾을 수 없어요. 첫 배포를 먼저 끝내 주세요",
+    "errorFetchFailed": "사이트에 접속하지 못했어요. 잠시 후 다시 눌러 주세요",
+    "errorNotFound": "아직 사이트에 로그인 버튼이 보이지 않아요. Vercel 재배포가 끝난 뒤 1~2분 후 다시 눌러 주세요 (Claude Code에서 git push까지 완료했는지도 확인해 주세요)"
+  },
   "FirstDeploy": {
     "title": "첫 배포",
     "description": "GitHub 저장소의 랜딩 페이지를 Vercel에 배포해요",
@@ -1032,7 +1047,7 @@
     "errorNoRepo": "GitHub 저장소를 찾을 수 없어요. 저장소를 다시 만들어 주세요",
     "errorPlanLimit": "Vercel 무료 플랜 한도를 초과했어요",
     "errorTimeout": "배포가 아직 진행 중이에요. 잠시 후 사이트를 확인해 보세요",
-    "errorGithubAppNotInstalled": "Vercel이 GitHub 저장소에 접근할 수 없어요. github.com/apps/vercel 에서 Vercel GitHub App을 설치해 주세요"
+    "errorGithubAppNotInstalled": "Vercel이 내 GitHub 저장소에 접근할 수 없어요. 보통 Vercel 계정에 GitHub이 연결돼 있지 않거나(Google/이메일 가입), Vercel GitHub App이 설치돼 있지 않을 때 생겨요. vercel.com/account/login-connections 에서 GitHub을 연결하고, github.com/apps/vercel 에서 Vercel GitHub App도 설치한 뒤 다시 배포해 주세요"
   },
   "Milestones": {
     "m1-deploy": {

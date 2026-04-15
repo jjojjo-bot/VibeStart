@@ -886,9 +886,13 @@
     "vercelHelperLink": "去创建令牌",
     "vercelTokenPlaceholder": "在此粘贴令牌",
     "vercelConnectButton": "连接 Vercel",
+    "vercelGithubWarningTitle": "Vercel 注册方式很关键",
+    "vercelGithubWarningBody": "注册 Vercel 账号时必须选择「Continue with GitHub」。如果用 Google 或邮箱注册，Vercel 访问不到你的 GitHub 仓库，部署就会被拒绝。如果已经用 Google/邮箱注册了，请到 Vercel 设置里把 GitHub 手动连上。",
+    "vercelGithubWarningCta": "去 Vercel 连接 GitHub",
     "vercelErrorMissingToken": "请输入令牌",
     "vercelErrorInvalidToken": "令牌无效。请在 vercel.com 重新生成令牌后再试。",
     "vercelErrorForbidden": "令牌权限不足。请使用 Full Account 权限重新生成。",
+    "vercelErrorNoGithubLink": "你的 Vercel 账号还没连 GitHub。请到 vercel.com/account/login-connections 连接 GitHub 后再试。",
     "vercelErrorServiceUnavailable": "Vercel 服务器无响应。请稍后再试。",
     "vercelErrorGeneric": "Vercel 连接失败: {code}"
   },
@@ -916,7 +920,7 @@
     "waitingRepo": "请先创建仓库",
     "completedMessage": "项目已上传到 GitHub",
     "folderMovedHint": "移动了项目文件夹？试试让 Claude Code 帮你",
-    "folderMovedPrompt": "把这个项目上传到 GitHub"
+    "folderMovedPrompt": "把这个文件夹作为一个新的独立 git 仓库初始化后上传到 GitHub。即使上级文件夹里有其他 git，也请忽略，只上传这个文件夹里的文件。"
   },
   "CreateSupabaseProject": {
     "title": "创建 Supabase 项目",
@@ -998,7 +1002,7 @@
     "installedPending": "工具上传中。稍等片刻，然后把下面的消息发给 Claude Code",
     "alreadyInstalled": "工具已经安装",
     "openSite": "打开网站",
-    "claudePrompt": "请帮我在网站上加一个 Google 登录按钮。\n\n刚才 VibeStart 已经自动装好了登录需要的东西。你只要用那些东西，在我网站合适的位置自然地加个登录/退出按钮就行。\n\n规则：\n- 我网站的设计和功能绝对不要改。\n- 不登录的人也能正常使用网站。\n- 我做的是什么样的网站，你直接读代码自己判断。",
+    "claudePrompt": "请帮我在网站上加一个 Google 登录按钮。\n\n1. 先执行 `git pull` 拉取最新文件，登录需要的文件刚刚上传到 GitHub 了。\n2. 那些文件里已经有一个登录/退出按钮组件，用它在我网站合适的位置自然地加一个按钮。\n3. 最后执行 `git add`、`git commit -m \"添加登录按钮\"`、`git push`，让改动发布到线上。\n\n规则：\n- 我网站的设计和功能绝对不要改。\n- 不登录的人也能正常使用网站。\n- 我做的是什么样的网站，你直接读代码自己判断。",
     "claudeCardHeading": "要发给 Claude Code 的消息",
     "claudeCardSubheading": "复制下面的内容粘贴到 Claude Code 窗口，网站就会自动加上登录按钮",
     "claudeCardBadge": "下一步",
@@ -1016,6 +1020,17 @@
     "errorPushFailed": "上传文件到 GitHub 失败。请稍后重试",
     "errorDeployFailed": "Vercel 部署失败。请在 Vercel 控制台查看日志"
   },
+  "VerifyAuthButton": {
+    "title": "检查登录按钮是否已经上线",
+    "description": "Claude Code 完成 git push 并且 Vercel 重新部署好以后，点下方的\"确认\"。我们会抓取你的网站，自动检查登录按钮是否真的出现了。",
+    "ctaVerify": "确认",
+    "verifying": "确认中...",
+    "waitingInstall": "请先完成上面的\"安装登录工具\"步骤",
+    "verifiedSuccess": "网站上已经能看到登录按钮了！",
+    "errorNoDeployedUrl": "找不到你已部署站点的地址。请先完成首次部署",
+    "errorFetchFailed": "暂时无法访问你的网站。请稍后再试",
+    "errorNotFound": "网站上暂时还没看到登录按钮。请等 Vercel 重新部署完成后 1–2 分钟再点一次（也请确认 Claude Code 已经执行了 git push）"
+  },
   "FirstDeploy": {
     "title": "首次部署",
     "description": "将 GitHub 仓库中的落地页部署到 Vercel",
@@ -1032,7 +1047,7 @@
     "errorNoRepo": "找不到 GitHub 仓库。请先创建仓库。",
     "errorPlanLimit": "已超出 Vercel 免费计划限制。",
     "errorTimeout": "部署仍在进行中。请稍后查看您的网站。",
-    "errorGithubAppNotInstalled": "Vercel 无法访问您的 GitHub 仓库。请在 github.com/apps/vercel 安装 Vercel GitHub App。"
+    "errorGithubAppNotInstalled": "Vercel 无法访问您的 GitHub 仓库。常见原因是：您的 Vercel 账号没有连上 GitHub（用 Google/邮箱注册的情况），或者没有在仓库上安装 Vercel GitHub App。请到 vercel.com/account/login-connections 连接 GitHub，并在 github.com/apps/vercel 安装 Vercel GitHub App 后重新部署。"
   },
   "Milestones": {
     "m1-deploy": {

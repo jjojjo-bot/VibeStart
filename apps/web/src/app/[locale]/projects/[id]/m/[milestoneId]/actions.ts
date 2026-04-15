@@ -43,6 +43,7 @@ import {
 } from "@/lib/adapters/supabase-mgmt/supabase-mgmt-adapter";
 import {
   createVercelProject,
+  fetchVercelGitNamespaces,
   fetchVercelUser,
   getLatestDeployment,
   getVercelProjectProductionUrl,
@@ -383,6 +384,18 @@ export async function connectVercelAction(formData: FormData): Promise<void> {
     redirect(
       `${returnTo}?vercel_error=${encodeURIComponent(errCode ?? "unknown")}`,
     );
+  }
+
+  // Vercel 계정에 GitHub이 실제로 연결돼 있는지 확인. Vercel에 Google/이메일
+  // 로만 가입한 경우 PAT 자체는 유효하지만 GitHub 신원을 Vercel이 모르기 때문에
+  // 첫 배포에서 "linked to their GitHub account" 에러가 나고 사용자는 영문도
+  // 모른 채 막힌다. 여기서 미리 막아 친절한 가이드로 유도한다.
+  //
+  // "unknown"(네트워크/권한으로 확인 실패)은 통과시킨다 — 기존 배포 에러
+  // 매핑이 백업 레이어로 동작하므로 여기서 과도하게 차단하지 않는다.
+  const gitLinkStatus = await fetchVercelGitNamespaces(vercelToken, "github");
+  if (gitLinkStatus === "not-linked") {
+    redirect(`${returnTo}?vercel_error=no_github_link`);
   }
 
   await saveOAuthConnection({
@@ -1592,6 +1605,100 @@ export async function installAuthUiAction(
   redirect(
     `${returnTo}?auth_ui_installed=${deployResult === "ready" ? "1" : "pending"}`,
   );
+}
+
+/**
+ * (마)-6 — 배포된 사이트 HTML을 fetch해서 로그인 버튼이 실제로 반영됐는지 확인.
+ *
+ * 사용자가 M2 ClaudeCodePromptCard의 프롬프트대로 Claude Code에 git pull +
+ * AuthButton 끼워넣기 + git commit/push까지 마치고 Vercel 재배포가 끝난 뒤
+ * "확인하기" 버튼을 누른다. 서버가 Vercel deployedUrl을 GET해서 응답 body에
+ * `data-auth-button` 속성이 있으면 (auth-ui-nextjs-template.ts가 버튼 루트
+ * 요소에 주입하는 값) 성공으로 간주하고 m2-s6를 완료 마킹한다.
+ *
+ * 실패 케이스: deployedUrl 없음 / fetch 실패 / 속성 없음 → query param으로
+ * 에러 코드 전달, 패널이 해당 메시지 표시.
+ */
+export async function verifyAuthButtonAction(
+  formData: FormData,
+): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("로그인이 필요합니다");
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const milestoneId = String(formData.get("milestoneId") ?? "");
+  const substepId = String(formData.get("substepId") ?? "");
+  const locale = String(formData.get("locale") ?? "ko");
+
+  const project = await getProject(projectId);
+  if (!project || project.userId !== user.id) {
+    throw new Error("프로젝트를 찾을 수 없습니다");
+  }
+
+  const returnTo = buildReturnTo(locale, projectId, milestoneId);
+
+  const vercelResource = await getProjectResourceByType(
+    project.id,
+    "vercel_project",
+  );
+  const deployedUrl = vercelResource?.url;
+  if (!deployedUrl) {
+    revalidatePath(returnTo);
+    redirect(`${returnTo}?verify_auth_button_error=no_deployed_url`);
+  }
+
+  let html: string | null = null;
+  try {
+    const res = await fetch(deployedUrl, {
+      cache: "no-store",
+      redirect: "follow",
+      headers: { "user-agent": "VibeStart-Verifier/1.0" },
+    });
+    if (res.ok) {
+      html = await res.text();
+    } else {
+      console.warn("[verifyAuthButtonAction] non-OK response", {
+        deployedUrl,
+        status: res.status,
+      });
+    }
+  } catch (err) {
+    console.error("[verifyAuthButtonAction] fetch failed", {
+      deployedUrl,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+
+  if (!html) {
+    revalidatePath(returnTo);
+    redirect(`${returnTo}?verify_auth_button_error=fetch_failed`);
+  }
+
+  // auth-ui-nextjs-template.ts의 AuthButton 컴포넌트가 signed-in / signed-out
+  // 두 상태에서 각각 data-auth-button="signed-in|signed-out"을 렌더하므로,
+  // 느슨한 substring "data-auth-button" 대신 `data-auth-button="signed-`로
+  // 타이트하게 매칭해 우연한 false-positive(댓글/CSS 클래스 등)를 배제한다.
+  const hasButton = html.includes('data-auth-button="signed-');
+  if (!hasButton) {
+    revalidatePath(returnTo);
+    redirect(`${returnTo}?verify_auth_button_error=not_found`);
+  }
+
+  const catalog = createInMemoryMilestoneCatalog();
+  const milestone = catalog.getMilestone(project.track, milestoneId);
+  const allMilestones = catalog.listMilestones(project.track);
+  if (milestone) {
+    await markSubstepCompleted({
+      projectId: project.id,
+      milestoneId,
+      substepId,
+      totalSubsteps: milestone.substeps.length,
+      allMilestoneIds: allMilestones.map((m) => m.id),
+    });
+  }
+
+  revalidatePath(returnTo);
+  redirect(`${returnTo}?verify_auth_button=1`);
 }
 
 /**

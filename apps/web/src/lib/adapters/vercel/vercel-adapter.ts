@@ -95,6 +95,63 @@ export async function fetchVercelUser(
   };
 }
 
+/**
+ * Vercel 계정에 특정 git provider (기본 github)가 연결돼 있는지 검증한다.
+ *
+ * 사용자가 Google/이메일만으로 Vercel 계정에 가입했다면 Vercel은 그 사용자의
+ * GitHub 신원을 모른다. 그 상태로 createVercelProject에서 repo를 연결하면
+ * "T-Brandon does not have a Vercel account linked to their GitHub account"
+ * 식 에러가 떨어진다 — 사용자가 PAT를 붙여넣은 이 시점에 미리 막는 것이
+ * 첫 배포에서 실패하는 것보다 훨씬 나은 UX.
+ *
+ * `/v1/integrations/git-namespaces?provider=github` 엔드포인트는 해당 토큰의
+ * Vercel 계정이 접근 가능한 GitHub namespace(개인 + org) 목록을 반환한다.
+ * 빈 배열이면 GitHub 연결이 없다는 뜻.
+ *
+ * 네트워크/권한 에러 등으로 확인 자체가 실패하면 "unknown"을 반환해
+ * 호출자가 보수적으로 통과시키도록 한다 (기존 배포 에러 매핑이 복구 안내를
+ * 하는 백업 레이어이므로).
+ */
+export async function fetchVercelGitNamespaces(
+  accessToken: string,
+  provider: "github" | "gitlab" | "bitbucket" = "github",
+): Promise<"linked" | "not-linked" | "unknown"> {
+  try {
+    const res = await fetch(
+      `${VERCEL_API_BASE}/v1/integrations/git-namespaces?provider=${provider}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          Accept: "application/json",
+          "User-Agent": "VibeStart",
+        },
+      },
+    );
+    if (!res.ok) {
+      console.warn("[fetchVercelGitNamespaces] non-OK", {
+        provider,
+        status: res.status,
+      });
+      return "unknown";
+    }
+    const data = (await res.json()) as unknown;
+    // Vercel 응답은 배열 or { namespaces: [...] } 두 형태 모두 관측된 적 있음
+    const arr: unknown[] = Array.isArray(data)
+      ? data
+      : Array.isArray((data as { namespaces?: unknown[] }).namespaces)
+        ? ((data as { namespaces: unknown[] }).namespaces)
+        : [];
+    return arr.length > 0 ? "linked" : "not-linked";
+  } catch (err) {
+    console.warn("[fetchVercelGitNamespaces] fetch failed", {
+      provider,
+      error: err instanceof Error ? err.message : String(err),
+    });
+    return "unknown";
+  }
+}
+
 // ─────────────────────────────────────────────────────────────
 // (라)-4: Vercel 프로젝트 생성 + 배포 조회
 // ─────────────────────────────────────────────────────────────

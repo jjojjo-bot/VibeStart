@@ -69,6 +69,12 @@ export {
   type InstallAuthUiPanelState,
 } from "./install-auth-ui-panel";
 export {
+  VerifyAuthButtonPanel,
+  type VerifyAuthButtonPanelProps,
+  type VerifyAuthButtonPanelLabels,
+  type VerifyAuthButtonPanelState,
+} from "./verify-auth-button-panel";
+export {
   VibeCodingPanel,
   type VibeCodingPanelProps,
   type VibeCodingPanelLabels,

@@ -41,6 +41,7 @@ export function GitPushPanel({
   onComplete,
 }: GitPushPanelProps): React.ReactNode {
   const [copied, setCopied] = useState(false);
+  const [promptCopied, setPromptCopied] = useState(false);
   const [saving, setSaving] = useState(false);
   const router = useRouter();
 
@@ -135,11 +136,22 @@ git push -u origin main`;
                 onClick={async () => {
                   try {
                     await navigator.clipboard.writeText(labels.folderMovedPrompt);
-                  } catch { /* ignore */ }
+                  } catch {
+                    const el = document.createElement("textarea");
+                    el.value = labels.folderMovedPrompt;
+                    el.style.position = "fixed";
+                    el.style.opacity = "0";
+                    document.body.appendChild(el);
+                    el.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(el);
+                  }
+                  setPromptCopied(true);
+                  setTimeout(() => setPromptCopied(false), 2000);
                 }}
                 className="shrink-0 text-xs"
               >
-                {labels.copyButton}
+                {promptCopied ? labels.copiedButton : labels.copyButton}
               </Button>
             </div>
           </div>

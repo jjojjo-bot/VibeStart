@@ -886,9 +886,13 @@
     "vercelHelperLink": "Create a token",
     "vercelTokenPlaceholder": "Paste your token here",
     "vercelConnectButton": "Connect Vercel",
+    "vercelGithubWarningTitle": "How you sign up to Vercel matters",
+    "vercelGithubWarningBody": "When you create your Vercel account, you must choose \"Continue with GitHub\". Signing up with Google or email means Vercel can't reach your GitHub repos and deploys will be blocked. If you already signed up with Google/email, connect GitHub to your Vercel account in Settings.",
+    "vercelGithubWarningCta": "Connect GitHub on Vercel",
     "vercelErrorMissingToken": "Please enter a token",
     "vercelErrorInvalidToken": "That token is invalid. Generate a new one on vercel.com and try again.",
     "vercelErrorForbidden": "The token doesn't have enough permissions. Issue a new one with Full Account scope.",
+    "vercelErrorNoGithubLink": "Your Vercel account isn't connected to GitHub. Go to vercel.com/account/login-connections, connect GitHub, then try again.",
     "vercelErrorServiceUnavailable": "Vercel is not responding. Please try again later.",
     "vercelErrorGeneric": "Vercel connection failed: {code}"
   },
@@ -916,7 +920,7 @@
     "waitingRepo": "Create a repository first",
     "completedMessage": "Your project is on GitHub",
     "folderMovedHint": "Moved your project folder? Ask Claude Code instead",
-    "folderMovedPrompt": "Push this project to GitHub"
+    "folderMovedPrompt": "Initialize only this folder as a new independent git repository and push it to GitHub. Ignore any git repository in parent folders — only upload files inside this folder."
   },
   "CreateSupabaseProject": {
     "title": "Create a Supabase project",
@@ -998,7 +1002,7 @@
     "installedPending": "Tools are uploading. In a moment, send the message below to Claude Code",
     "alreadyInstalled": "Tools are already installed",
     "openSite": "Open site",
-    "claudePrompt": "Add a Google login button to my site.\n\nVibeStart just installed everything I need for login. Use those tools to add a login/logout button to my site in a natural place.\n\nRules:\n- Don't change my site's design or features. Just add the button.\n- People should still be able to use the site without logging in.\n- Read my code to figure out what kind of site I built.",
+    "claudePrompt": "Add a Google login button to my site.\n\n1. First run `git pull` to grab the latest files — new login files were just pushed to GitHub.\n2. Inside those files there's already a login/logout button component. Use it to add a button to a natural spot on my site.\n3. Finally run `git add`, `git commit -m \"add login button\"`, and `git push` so the change goes live.\n\nRules:\n- Don't change my site's design or features. Just add the button.\n- People should still be able to use the site without logging in.\n- Read my code to figure out what kind of site I built.",
     "claudeCardHeading": "Message to send to Claude Code",
     "claudeCardSubheading": "Copy this and paste it into Claude Code — the login button will be added to your site automatically",
     "claudeCardBadge": "Next step",
@@ -1016,6 +1020,17 @@
     "errorPushFailed": "Failed to upload file to GitHub. Please try again in a moment",
     "errorDeployFailed": "Vercel deployment failed. Please check the Vercel dashboard for logs"
   },
+  "VerifyAuthButton": {
+    "title": "Check if the login button is live",
+    "description": "Once Claude Code has finished git push and Vercel has redeployed, click \"Verify\". We'll fetch your site and check whether the login button actually appears.",
+    "ctaVerify": "Verify",
+    "verifying": "Verifying...",
+    "waitingInstall": "Finish the \"Install login tools\" step above first",
+    "verifiedSuccess": "The login button is live on your site!",
+    "errorNoDeployedUrl": "We couldn't find your deployed site URL. Finish the first deploy first",
+    "errorFetchFailed": "We couldn't reach your site. Please try again in a moment",
+    "errorNotFound": "The login button isn't showing up yet. Wait 1–2 minutes for Vercel to finish redeploying, then try again (also make sure Claude Code ran git push)"
+  },
   "FirstDeploy": {
     "title": "First deploy",
     "description": "Deploy a landing page from your GitHub repository to Vercel",
@@ -1032,7 +1047,7 @@
     "errorNoRepo": "GitHub repository not found. Please create a repository first.",
     "errorPlanLimit": "Vercel free plan limit exceeded.",
     "errorTimeout": "Deployment is still in progress. Check your site in a moment.",
-    "errorGithubAppNotInstalled": "Vercel cannot access your GitHub repository. Install the Vercel GitHub App at github.com/apps/vercel."
+    "errorGithubAppNotInstalled": "Vercel can't reach your GitHub repository. This usually means your Vercel account isn't linked to GitHub (if you signed up with Google/email), or the Vercel GitHub App isn't installed on your repo. Connect GitHub at vercel.com/account/login-connections, install the app at github.com/apps/vercel, then redeploy."
   },
   "Milestones": {
     "m1-deploy": {

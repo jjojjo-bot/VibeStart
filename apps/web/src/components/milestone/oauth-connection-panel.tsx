@@ -50,6 +50,10 @@ export interface OAuthConnectionPanelLabels {
   vercelHelperLink: string;
   vercelTokenPlaceholder: string;
   vercelConnectButton: string;
+  /** Vercel 계정에 GitHub 연결이 필수라는 경고 배너. (이슈 5 레이어 1) */
+  vercelGithubWarningTitle: string;
+  vercelGithubWarningBody: string;
+  vercelGithubWarningCta: string;
   /** Provider별 가입 가이드. 연결 안 된 상태에서만 표시. */
   signupGuideGithub: string;
   signupGuideVercel: string;
@@ -222,6 +226,23 @@ export function OAuthConnectionPanel({
                     value={row.substepId}
                   />
                   <input type="hidden" name="locale" value={locale} />
+                  {/* 이슈 5 레이어 1 — GitHub 미연결 Vercel 계정 예방 배너 */}
+                  <div className="rounded-md border border-amber-500/40 bg-amber-500/10 p-3 text-xs">
+                    <p className="font-medium text-amber-300">
+                      ⚠️ {labels.vercelGithubWarningTitle}
+                    </p>
+                    <p className="mt-1 text-amber-200/90">
+                      {labels.vercelGithubWarningBody}
+                    </p>
+                    <a
+                      href="https://vercel.com/account/login-connections"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-1 inline-block text-amber-300 underline underline-offset-2 hover:text-amber-200"
+                    >
+                      {labels.vercelGithubWarningCta} ↗
+                    </a>
+                  </div>
                   <p className="text-xs text-muted-foreground">
                     {labels.signupGuideVercel}{" "}
                     <a

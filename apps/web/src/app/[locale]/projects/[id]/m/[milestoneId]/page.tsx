@@ -36,6 +36,8 @@ import {
   ResultPreview,
   SubstepList,
   TrackBadge,
+  VerifyAuthButtonPanel,
+  type VerifyAuthButtonPanelState,
   VibeCodingPanel,
 } from "@/components/milestone";
 import { MaybeCompletedSubstepsProvider } from "@/components/milestone/maybe-completed-provider";
@@ -98,6 +100,7 @@ function resolveVercelError(
 ): string {
   if (raw.includes("missing_token")) return t("vercelErrorMissingToken");
   if (raw.includes("invalid_token")) return t("vercelErrorInvalidToken");
+  if (raw.includes("no_github_link")) return t("vercelErrorNoGithubLink");
   if (raw.includes("forbidden")) return t("vercelErrorForbidden");
   if (raw.includes("service_unavailable"))
     return t("vercelErrorServiceUnavailable");
@@ -261,6 +264,7 @@ export default async function MilestoneRunPage({
   const tGoogleKeys = await getTranslations("GoogleOAuthKeys");
   const tEnableGoogle = await getTranslations("EnableGoogleProvider");
   const tInstallAuthUi = await getTranslations("InstallAuthUi");
+  const tVerifyAuthButton = await getTranslations("VerifyAuthButton");
   const tVibeCoding = await getTranslations("VibeCoding");
 
   // OAuth 연결 패널 데이터 — 이 마일스톤의 oauth kind 서브스텝을 모아
@@ -406,6 +410,9 @@ export default async function MilestoneRunPage({
     vercelHelperLink: tConnections("vercelHelperLink"),
     vercelTokenPlaceholder: tConnections("vercelTokenPlaceholder"),
     vercelConnectButton: tConnections("vercelConnectButton"),
+    vercelGithubWarningTitle: tConnections("vercelGithubWarningTitle"),
+    vercelGithubWarningBody: tConnections("vercelGithubWarningBody"),
+    vercelGithubWarningCta: tConnections("vercelGithubWarningCta"),
     signupGuideGithub: tConnections("signupGuideGithub"),
     signupGuideVercel: tConnections("signupGuideVercel"),
     signupGuideSupabase: tConnections("signupGuideSupabase"),
@@ -1002,17 +1009,66 @@ export default async function MilestoneRunPage({
     };
   }
 
-  // authUiInstalled 플래그 시 m2-s5 + m2-s6 두 개를 derive에 추가.
+  // authUiInstalled 플래그 시 m2-s5만 derive에 추가.
+  // m2-s6는 HTTP verify가 통과해야만 완료로 간주한다 (사용자가 Claude Code로
+  // 실제 버튼 추가 → git commit/push → Vercel 재배포 → 배포된 HTML에
+  // data-auth-button 속성 존재 확인).
   if (authUiAlreadyInstalled && installAuthUiSubstep) {
     if (!initialCompletedSubsteps.includes(installAuthUiSubstep.id)) {
       initialCompletedSubsteps.push(installAuthUiSubstep.id);
     }
-    if (
-      verifySignupSubstep &&
-      !initialCompletedSubsteps.includes(verifySignupSubstep.id)
-    ) {
-      initialCompletedSubsteps.push(verifySignupSubstep.id);
-    }
+  }
+
+  // M2 (마)-6 verify 패널 데이터.
+  let verifyAuthButtonPanelData: {
+    state: VerifyAuthButtonPanelState;
+    labels: {
+      title: string;
+      description: string;
+      ctaVerify: string;
+      verifying: string;
+      waitingInstall: string;
+      verifiedSuccess: string;
+      errorMessage: string | null;
+    };
+  } | null = null;
+
+  if (verifySignupSubstep) {
+    const alreadyVerified = initialCompletedSubsteps.includes(
+      verifySignupSubstep.id,
+    );
+    const verifyState: VerifyAuthButtonPanelState = alreadyVerified
+      ? "completed"
+      : authUiAlreadyInstalled
+        ? "ready"
+        : "waiting-install";
+
+    const verifyErrorRaw =
+      typeof query.verify_auth_button_error === "string"
+        ? query.verify_auth_button_error
+        : null;
+    const verifyErrorMessage = verifyErrorRaw
+      ? verifyErrorRaw === "no_deployed_url"
+        ? tVerifyAuthButton("errorNoDeployedUrl")
+        : verifyErrorRaw === "fetch_failed"
+          ? tVerifyAuthButton("errorFetchFailed")
+          : verifyErrorRaw === "not_found"
+            ? tVerifyAuthButton("errorNotFound")
+            : tVerifyAuthButton("errorFetchFailed")
+      : null;
+
+    verifyAuthButtonPanelData = {
+      state: verifyState,
+      labels: {
+        title: tVerifyAuthButton("title"),
+        description: tVerifyAuthButton("description"),
+        ctaVerify: tVerifyAuthButton("ctaVerify"),
+        verifying: tVerifyAuthButton("verifying"),
+        waitingInstall: tVerifyAuthButton("waitingInstall"),
+        verifiedSuccess: tVerifyAuthButton("verifiedSuccess"),
+        errorMessage: verifyErrorMessage,
+      },
+    };
   }
 
   // vercel_project 존재 시 m1-s4 + 다음 verify substep을 derive에 추가.
@@ -1289,7 +1345,7 @@ export default async function MilestoneRunPage({
             </div>
           )}
 
-          {/* M2 (5) Auth UI 설치 — m2-s5 (+ m2-s6 verify 자동 완료) */}
+          {/* M2 (5) Auth UI 설치 — m2-s5 */}
           {installAuthUiPanelData && installAuthUiSubstep && (
             <div id={`panel-${installAuthUiSubstep.id}`} className="scroll-mt-8">
               <InstallAuthUiPanel
@@ -1300,6 +1356,20 @@ export default async function MilestoneRunPage({
                 state={installAuthUiPanelData.state}
                 deployedUrl={installAuthUiPanelData.deployedUrl}
                 labels={installAuthUiPanelData.labels}
+              />
+            </div>
+          )}
+
+          {/* M2 (6) 로그인 버튼 HTTP verify — m2-s6 */}
+          {verifyAuthButtonPanelData && verifySignupSubstep && (
+            <div id={`panel-${verifySignupSubstep.id}`} className="scroll-mt-8">
+              <VerifyAuthButtonPanel
+                projectId={project.id}
+                milestoneId={milestone.id}
+                substepId={verifySignupSubstep.id}
+                locale={locale}
+                state={verifyAuthButtonPanelData.state}
+                labels={verifyAuthButtonPanelData.labels}
               />
             </div>
           )}
