@@ -279,10 +279,12 @@ function wslClaudeStep(t: T): SetupStep {
     'echo "▶ (2/4) Installing Claude Code CLI..."',
     "npm install -g @anthropic-ai/claude-code",
     'echo "▶ (3/4) Installing VS Code extension..."',
-    // `code` CLI는 Windows VS Code의 "Add to PATH" 옵션 + 셸 재시작 이후에만
-    // WSL bash에서 접근 가능. 둘 중 하나라도 빠지면 `command not found`로 체인이
-    // 멈추므로, 없을 땐 수동 설치 안내만 출력하고 계속 진행한다.
-    "if command -v code >/dev/null 2>&1; then code --install-extension anthropic.claude-code; else echo '⚠ VS Code CLI (code) not on PATH. Skipping extension install — open VS Code → Extensions (Ctrl+Shift+X) → search Claude Code → Install manually.'; fi",
+    // `code` CLI는 Windows VS Code의 "Add to PATH"(기본 ON) + 셸 재시작 이후에만
+    // WSL bash PATH에 들어온다. step 6에서 VS Code를 설치한 직후 같은 Ubuntu
+    // 창에서 이어 실행하면 PATH가 갱신되지 않아 실패한다. detailedGuide에
+    // "Ubuntu 창을 닫고 다시 열라"고 명시했고, 여기선 명시적 에러로 중단해서
+    // 비전공자가 어디서 막혔는지 확실히 알게 한다.
+    "code --install-extension anthropic.claude-code",
     'echo "▶ (4/4) Logging in..."',
     "claude login",
   ]);
@@ -309,6 +311,7 @@ Opening browser for authentication...
       { symptom: t("aiSetup.troubleshooting.1.symptom"), solution: t("aiSetup.troubleshooting.1.solution") },
       { symptom: t("aiSetup.troubleshooting.2.symptom"), solution: t("aiSetup.troubleshooting.2.solution") },
       { symptom: t("aiSetup.troubleshooting.3.symptom"), solution: t("aiSetup.troubleshooting.3.solution") },
+      { symptom: t("aiSetup.troubleshooting.4.symptom"), solution: t("aiSetup.troubleshooting.4.solution") },
     ],
   };
 }
@@ -519,10 +522,10 @@ function macClaudeStep(t: T): SetupStep {
     'echo "▶ (1/3) Installing Claude Code CLI..."',
     "npm install -g @anthropic-ai/claude-code",
     'echo "▶ (2/3) Installing VS Code extension..."',
-    // macOS는 `code` shim이 VS Code.app의 Command Palette → "Install 'code'
-    // command in PATH"를 실행해야 생긴다. 안 했으면 chain을 깨뜨리지 않고
-    // 수동 설치 안내만 남긴다.
-    "if command -v code >/dev/null 2>&1; then code --install-extension anthropic.claude-code; else echo '⚠ VS Code CLI (code) not on PATH. Skipping extension install — open VS Code → Extensions (Cmd+Shift+X) → search Claude Code → Install manually.'; fi",
+    // macOS는 `code` shim이 VS Code.app의 Command Palette → "Shell Command:
+    // Install 'code' command in PATH" 실행 후 셸 재시작을 해야 잡힌다.
+    // detailedGuide에 절차를 명시하고, 누락 시엔 명시적 에러로 중단한다.
+    "code --install-extension anthropic.claude-code",
     'echo "▶ (3/3) Logging in..."',
     "claude login",
   ]);

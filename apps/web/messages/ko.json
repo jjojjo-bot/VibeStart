@@ -470,7 +470,7 @@
       "description": "코드를 편집하는 프로그램을 설치해요",
       "whyNeeded": "VS Code는 코드를 작성하는 전용 편집기예요. 메모장과 비슷하지만, 코드 자동 완성, 오류 표시, AI 도우미 연결 등 개발에 특화된 기능이 있어요.",
       "detailedGuide": {
-        "windows": "VS Code는 Windows에 설치하지만, WSL과 자동으로 연결됩니다. 새 PowerShell 창을 열어서 실행해주세요."
+        "windows": "VS Code는 Windows에 설치하지만, WSL과 자동으로 연결됩니다. 새 PowerShell 창을 열어서 실행해주세요. 설치가 끝나면 기존에 열어두었던 Ubuntu 창을 반드시 닫고 새로 열어주세요 — 다음 단계(AI 코딩 도우미)에서 code 명령을 사용하려면 Ubuntu가 새 PATH를 읽어야 합니다."
       },
       "troubleshooting": {
         "windows": [
@@ -536,6 +536,10 @@
         {
           "symptom": "로그인 후 터미널에 반응이 없어요",
           "solution": "브라우저에서 로그인을 완료하면 터미널이 자동으로 인식합니다. 잠시 기다려주세요."
+        },
+        {
+          "symptom": "code: command not found 에러",
+          "solution": "VS Code 설치 직후에 열어두었던 Ubuntu 창은 아직 새 PATH를 모릅니다. 현재 Ubuntu 창을 완전히 닫고 시작 메뉴에서 Ubuntu를 새로 연 뒤 이 단계를 다시 실행해주세요."
         }
       ]
     },

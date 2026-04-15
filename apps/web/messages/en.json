@@ -470,7 +470,7 @@
       "description": "Install a program for editing code",
       "whyNeeded": "VS Code is a dedicated code editor. It's like Notepad, but with superpowers — code autocomplete, error highlighting, AI assistant integration, and more.",
       "detailedGuide": {
-        "windows": "VS Code is installed on Windows but automatically connects to WSL. Open a new PowerShell window to run the command."
+        "windows": "VS Code is installed on Windows but automatically connects to WSL. Open a new PowerShell window to run the command. Once installation finishes, be sure to close any Ubuntu windows you had open and reopen Ubuntu — the next step (AI coding assistant) needs Ubuntu to pick up the new PATH so the code command works."
       },
       "troubleshooting": {
         "windows": [
@@ -536,6 +536,10 @@
         {
           "symptom": "No response in terminal after logging in",
           "solution": "The terminal will automatically detect when you've completed the login in the browser. Just wait a moment."
+        },
+        {
+          "symptom": "code: command not found error",
+          "solution": "The Ubuntu window you had open before installing VS Code doesn't know about the new PATH yet. Close your current Ubuntu window completely, open Ubuntu fresh from the Start menu, and run this step again."
         }
       ]
     },

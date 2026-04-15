@@ -470,7 +470,7 @@
       "description": "Instalamos el programa para editar código",
       "whyNeeded": "VS Code es un editor especializado para escribir código. Es similar al bloc de notas, pero tiene funciones especializadas para desarrollo como autocompletado, indicador de errores y conexión con asistentes de IA.",
       "detailedGuide": {
-        "windows": "VS Code se instala en Windows, pero se conecta automáticamente con WSL. Abre una nueva ventana de PowerShell para ejecutarlo."
+        "windows": "VS Code se instala en Windows, pero se conecta automáticamente con WSL. Abre una nueva ventana de PowerShell para ejecutarlo. Cuando termine la instalación, asegúrate de cerrar cualquier ventana de Ubuntu que tuvieras abierta y vuelve a abrir Ubuntu — el siguiente paso (asistente de IA) necesita que Ubuntu lea el nuevo PATH para poder usar el comando code."
       },
       "troubleshooting": {
         "windows": [
@@ -536,6 +536,10 @@
         {
           "symptom": "No hay respuesta en la terminal después de iniciar sesión",
           "solution": "La terminal lo detectará automáticamente cuando completes el inicio de sesión en el navegador. Espera un momento."
+        },
+        {
+          "symptom": "Error: code: command not found",
+          "solution": "La ventana de Ubuntu que tenías abierta antes de instalar VS Code todavía no conoce el nuevo PATH. Cierra por completo la ventana actual de Ubuntu, abre Ubuntu de nuevo desde el menú Inicio y vuelve a ejecutar este paso."
         }
       ]
     },

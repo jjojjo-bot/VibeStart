@@ -470,7 +470,7 @@
       "description": "安装用于编写代码的程序",
       "whyNeeded": "VS Code是专门写代码的编辑器。和记事本类似，但有代码自动补全、错误提示、AI助手连接等开发专用功能。",
       "detailedGuide": {
-        "windows": "VS Code安装在Windows上，但会自动连接WSL。请打开新的PowerShell窗口运行。"
+        "windows": "VS Code安装在Windows上，但会自动连接WSL。请打开新的PowerShell窗口运行。安装完成后，请务必关闭之前打开的Ubuntu窗口并重新打开 — 下一步（AI编程助手）需要Ubuntu读取新的PATH才能使用code命令。"
       },
       "troubleshooting": {
         "windows": [
@@ -536,6 +536,10 @@
         {
           "symptom": "登录后终端没有反应",
           "solution": "在浏览器中完成登录后终端会自动识别。请稍等一下。"
+        },
+        {
+          "symptom": "code: command not found 错误",
+          "solution": "在安装VS Code之前就打开的Ubuntu窗口还不知道新的PATH。请完全关闭当前的Ubuntu窗口，从开始菜单重新打开Ubuntu，然后再次运行此步骤。"
         }
       ]
     },
