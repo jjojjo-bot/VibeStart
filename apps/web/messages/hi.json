@@ -94,13 +94,7 @@
       "noExp": "कोडिंग अनुभव ज़रूरी नहीं"
     },
     "demo": {
-      "cmd1": "git --version",
-      "out1": "git version 2.44.0",
-      "cmd2": "node --version",
-      "out2": "v22.12.0",
-      "cmd3": "npx create-next-app@latest my-site",
-      "out3": "✔ Success! Created my-site",
-      "caption": "VibeStart के कमांड कॉपी-पेस्ट करें — बस इतना ही"
+      "caption": "VibeStart को फॉलो करें और खुद ऐसी साइट बनाएं"
     },
     "howItWorks": "यह कैसे काम करता है?",
     "compare": {

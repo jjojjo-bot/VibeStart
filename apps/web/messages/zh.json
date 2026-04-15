@@ -94,13 +94,7 @@
       "noExp": "无需编程经验"
     },
     "demo": {
-      "cmd1": "git --version",
-      "out1": "git version 2.44.0",
-      "cmd2": "node --version",
-      "out2": "v22.12.0",
-      "cmd3": "npx create-next-app@latest my-site",
-      "out3": "✔ Success! Created my-site",
-      "caption": "复制粘贴 VibeStart 提供的命令就行了"
+      "caption": "跟着VibeStart操作，你也能做出这样的网站"
     },
     "howItWorks": "怎么操作？",
     "compare": {

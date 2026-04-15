@@ -94,13 +94,7 @@
       "noExp": "No coding experience needed"
     },
     "demo": {
-      "cmd1": "git --version",
-      "out1": "git version 2.44.0",
-      "cmd2": "node --version",
-      "out2": "v22.12.0",
-      "cmd3": "npx create-next-app@latest my-site",
-      "out3": "✔ Success! Created my-site",
-      "caption": "Copy-paste the commands VibeStart provides — that's all it takes"
+      "caption": "Follow VibeStart and you can build a site like this yourself"
     },
     "howItWorks": "How does it work?",
     "compare": {
