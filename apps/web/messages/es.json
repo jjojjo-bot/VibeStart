@@ -21,6 +21,10 @@
       "title": "Acerca de | Cómo crear tu propio sitio web sin saber programar",
       "description": "VibeStart guía a no programadores para configurar un entorno de desarrollo en 10 minutos y crear su propio sitio web con IA."
     },
+    "terms": {
+      "title": "Términos de servicio",
+      "description": "Términos de servicio de VibeStart"
+    },
     "onboarding": {
       "title": "Iniciar configuración del entorno | Elige tu SO y objetivo",
       "description": "Selecciona tu sistema operativo y dinos qué quieres crear. Te prepararemos una guía de configuración personalizada."
@@ -42,6 +46,7 @@
     "siteName": "VibeStart",
     "skipToContent": "Ir al contenido",
     "privacyPolicy": "Política de privacidad",
+    "termsOfService": "Términos de servicio",
     "copy": "Copiar",
     "copied": "¡Copiado!",
     "next": "Siguiente",
@@ -698,6 +703,48 @@
       "comingSoonDescription": "Las funciones de despliegue e inicio de sesión son compatibles con proyectos web (Next.js). Phase 2 para las pistas de móvil y análisis de datos estará disponible pronto."
     },
     "backToHome": "Volver al inicio"
+  },
+  "Terms": {
+    "title": "Términos de servicio",
+    "effectiveDate": "Fecha de vigencia: 15 de abril de 2026",
+    "sections": {
+      "1": {
+        "title": "1. Propósito",
+        "content": "Estos términos definen las condiciones y procedimientos para el uso de VibeStart (en adelante, \"el Servicio\"), así como los derechos y obligaciones del operador y los usuarios. Al usar el Servicio, se considera que acepta estos términos."
+      },
+      "2": {
+        "title": "2. Descripción del servicio",
+        "content": "VibeStart es un servicio de guía de configuración de entorno de desarrollo para no programadores. Proporciona comandos de script de shell adaptados a cada sistema operativo a través de páginas web, que los usuarios ejecutan en sus propias computadoras. El Servicio solo proporciona orientación y no accede ni controla remotamente las computadoras de los usuarios."
+      },
+      "3": {
+        "title": "3. Cuentas e inicio de sesión",
+        "content": "Algunas funciones del Servicio requieren inicio de sesión social con Google. Los usuarios son responsables de gestionar su información de cuenta de forma segura y no pueden transferir ni compartir sus cuentas. La guía básica de configuración está disponible sin inicio de sesión."
+      },
+      "4": {
+        "title": "4. Descargo de responsabilidad sobre ejecución de scripts",
+        "content": "Los comandos proporcionados por el Servicio guían la instalación de software oficial (Git, Node.js, VS Code, etc.), que los usuarios pegan y ejecutan en sus terminales. El operador no es responsable de cambios en el sistema, conflictos de software o pérdida de datos resultantes de la ejecución. Se considera que los usuarios ejecutan voluntariamente tras revisar los comandos."
+      },
+      "5": {
+        "title": "5. Actividades prohibidas",
+        "content": "Los usuarios no pueden usar el Servicio para fines distintos a los previstos. Se prohíben: interferir con la operación normal del Servicio, usar información de terceros, actividades ilegales, y acceso anormal mediante herramientas automatizadas (bots, crawlers, etc.)."
+      },
+      "6": {
+        "title": "6. Propiedad intelectual",
+        "content": "Los derechos de propiedad intelectual del diseño, logotipo, contenido y código fuente del Servicio pertenecen al operador. Los usuarios no pueden reproducir, distribuir ni usar comercialmente el contenido del Servicio más allá del uso personal."
+      },
+      "7": {
+        "title": "7. Cambios e interrupciones del servicio",
+        "content": "El operador puede cambiar o interrumpir todo o parte del Servicio por razones operativas o técnicas. No se ofrece compensación por cambios o interrupciones de servicios gratuitos, y los cambios importantes se anunciarán a través del Servicio."
+      },
+      "8": {
+        "title": "8. Limitación de responsabilidad",
+        "content": "El Servicio se proporciona \"tal cual\" (as-is), y el operador no garantiza su completitud, precisión o fiabilidad. El operador no es responsable de daños directos o indirectos derivados del uso del Servicio en la medida permitida por la ley aplicable."
+      },
+      "9": {
+        "title": "9. Ley aplicable y jurisdicción",
+        "content": "La interpretación y aplicación de estos términos se rigen por las leyes de la República de Corea, y las disputas relacionadas con el uso del Servicio se someterán a la jurisdicción prescrita por la Ley de Procedimiento Civil."
+      }
+    }
   },
   "Privacy": {
     "title": "Política de privacidad",

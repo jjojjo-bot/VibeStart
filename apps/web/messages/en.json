@@ -21,6 +21,10 @@
       "title": "About | How You Can Build Your Own Website Without Coding",
       "description": "VibeStart guides non-developers to set up a dev environment in 10 minutes and build their own website with AI."
     },
+    "terms": {
+      "title": "Terms of Service",
+      "description": "VibeStart Terms of Service"
+    },
     "onboarding": {
       "title": "Start Dev Environment Setup | Choose Your OS and Goal",
       "description": "Select your operating system and tell us what you want to build. We'll create a custom dev setup guide just for you."
@@ -42,6 +46,7 @@
     "siteName": "VibeStart",
     "skipToContent": "Skip to content",
     "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
     "copy": "Copy",
     "copied": "Copied!",
     "next": "Next",
@@ -698,6 +703,48 @@
       "comingSoonDescription": "Deployment and login features are supported for web projects (Next.js). Phase 2 for mobile and data analysis tracks is coming soon."
     },
     "backToHome": "Back to Home"
+  },
+  "Terms": {
+    "title": "Terms of Service",
+    "effectiveDate": "Effective Date: April 15, 2026",
+    "sections": {
+      "1": {
+        "title": "1. Purpose",
+        "content": "These terms define the conditions and procedures for using VibeStart (hereinafter \"the Service\"), as well as the rights and obligations of the operator and users. By using the Service, you are deemed to agree to these terms."
+      },
+      "2": {
+        "title": "2. Description of Service",
+        "content": "VibeStart is a development environment setup guide for non-developers. It provides shell script commands tailored to each operating system through web pages, which users execute on their own computers. The Service only provides command guidance and does not directly access or remotely control users' computers."
+      },
+      "3": {
+        "title": "3. Accounts and Login",
+        "content": "Some features of the Service require Google social login. Users are responsible for securely managing their account information and may not transfer or share their accounts with others. Basic environment setup guidance is available without login."
+      },
+      "4": {
+        "title": "4. Disclaimer Regarding Script Execution",
+        "content": "The commands provided by the Service guide the installation of official software (Git, Node.js, VS Code, etc.), which users paste and execute in their own terminals. The operator is not liable for system environment changes, software conflicts, or data loss resulting from command execution. Users are deemed to have voluntarily reviewed and executed the commands."
+      },
+      "5": {
+        "title": "5. Prohibited Activities",
+        "content": "Users may not use the Service for purposes other than its intended use. The following activities are prohibited: interfering with the normal operation of the Service, misusing others' information, illegal activities through the Service, and abnormal access using automated tools (bots, crawlers, etc.)."
+      },
+      "6": {
+        "title": "6. Intellectual Property",
+        "content": "Intellectual property rights for the Service's design, logo, content, and source code belong to the operator. Users may not reproduce, distribute, or commercially use the Service's content beyond personal use."
+      },
+      "7": {
+        "title": "7. Service Changes and Interruptions",
+        "content": "The operator may change or discontinue all or part of the Service for operational or technical reasons. No compensation is provided for changes or discontinuation of free services, and significant changes will be announced through the Service."
+      },
+      "8": {
+        "title": "8. Limitation of Liability",
+        "content": "The Service is provided \"as-is,\" and the operator does not guarantee its completeness, accuracy, or reliability. The operator is not liable for direct or indirect damages arising from the use of the Service to the extent permitted by applicable law."
+      },
+      "9": {
+        "title": "9. Governing Law and Jurisdiction",
+        "content": "The interpretation and application of these terms are governed by the laws of the Republic of Korea, and disputes related to the use of the Service shall be subject to the jurisdiction prescribed by the Civil Procedure Act."
+      }
+    }
   },
   "Privacy": {
     "title": "Privacy Policy",

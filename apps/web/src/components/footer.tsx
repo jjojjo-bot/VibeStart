@@ -12,6 +12,12 @@ export function Footer() {
         <span>&copy; {new Date().getFullYear()} VibeStart</span>
         <nav className="flex gap-4">
           <Link
+            href="/terms"
+            className="hover:text-foreground transition-colors"
+          >
+            {t("termsOfService")}
+          </Link>
+          <Link
             href="/privacy"
             className="hover:text-foreground transition-colors"
           >

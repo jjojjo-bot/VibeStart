@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 export async function createPageMetadata(
   locale: string,
-  page: "onboarding" | "plan" | "setup" | "complete" | "about",
+  page: "onboarding" | "plan" | "setup" | "complete" | "about" | "terms",
 ): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "Metadata" });
 
