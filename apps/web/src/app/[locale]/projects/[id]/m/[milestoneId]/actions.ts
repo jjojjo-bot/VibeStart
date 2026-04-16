@@ -67,6 +67,7 @@ import {
   signOAuthState,
 } from "@/lib/auth/oauth-state";
 import {
+  deleteOAuthConnection,
   getOAuthAccessToken,
   getOAuthConnection,
   saveOAuthConnection,
@@ -429,6 +430,47 @@ export async function connectVercelAction(formData: FormData): Promise<void> {
 
   revalidatePath(returnTo);
   redirect(`${returnTo}?vercel_connected=1`);
+}
+
+/**
+ * (라)-3 리셋 — 저장된 Vercel PAT 연결 해제.
+ *
+ * 사용자가 잘못된 스코프로 발급한 토큰(Read-only, Specific Team 등)을
+ * 붙여넣어 (라)-4 배포에서 403이 난 경우, 새 토큰으로 갈아끼우려면 기존
+ * 연결을 먼저 삭제해야 한다 (saveOAuthConnection은 upsert라 덮어쓸 수는
+ * 있지만 UI가 "이미 연결됨" 상태라 입력 폼이 감춰져 있음).
+ *
+ * 1. oauth_connections에서 vercel row 삭제
+ * 2. substep 완료 해제 — 패널이 다시 "연결하기" 상태로 전환되어 PAT 폼 노출
+ * 3. ?vercel_reset=1 쿼리로 redirect
+ */
+export async function resetVercelConnectionAction(
+  formData: FormData,
+): Promise<void> {
+  const user = await getCurrentUser();
+  if (!user) throw new Error("로그인이 필요합니다");
+
+  const projectId = String(formData.get("projectId") ?? "");
+  const milestoneId = String(formData.get("milestoneId") ?? "");
+  const substepId = String(formData.get("substepId") ?? "");
+  const locale = resolveLocale(formData.get("locale"));
+
+  if (!projectId || !milestoneId || !substepId) {
+    throw new Error("필수 파라미터 누락");
+  }
+
+  const project = await getProject(projectId);
+  if (!project || project.userId !== user.id) {
+    throw new Error("프로젝트를 찾을 수 없습니다");
+  }
+
+  const returnTo = buildReturnTo(locale, projectId, milestoneId);
+
+  await deleteOAuthConnection(user.id, "vercel");
+  await unmarkSubstepCompleted(project.id, milestoneId, substepId);
+
+  revalidatePath(returnTo);
+  redirect(`${returnTo}?vercel_reset=1`);
 }
 
 /**

@@ -19,6 +19,7 @@ import {
   connectGitHubAction,
   connectSupabaseAction,
   connectVercelAction,
+  resetVercelConnectionAction,
 } from "@/app/[locale]/projects/[id]/m/[milestoneId]/actions";
 
 export interface OAuthConnectionRow {
@@ -137,23 +138,37 @@ export function OAuthConnectionPanel({
                   >
                     ✓
                   </span>
-                  {row.supported && (row.provider === "github" || row.provider === "supabase_mgmt") && (
-                    <form action={row.provider === "github" ? connectGitHubAction : connectSupabaseAction}>
-                      <input type="hidden" name="projectId" value={projectId} />
-                      <input type="hidden" name="milestoneId" value={milestoneId} />
-                      <input type="hidden" name="substepId" value={row.substepId} />
-                      <input type="hidden" name="locale" value={locale} />
-                      <PendingButton
-                        type="submit"
-                        size="sm"
-                        variant="ghost"
-                        pendingText={labels.connecting}
-                        className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                  {row.supported &&
+                    (row.provider === "github" ||
+                      row.provider === "supabase_mgmt" ||
+                      row.provider === "vercel") && (
+                      <form
+                        action={
+                          row.provider === "github"
+                            ? connectGitHubAction
+                            : row.provider === "supabase_mgmt"
+                              ? connectSupabaseAction
+                              : // vercel은 OAuth가 아니라 PAT 기반이라 재인증 흐름이 없다.
+                                // 대신 기존 연결을 삭제해 패널을 "연결하기" 상태로 되돌리면
+                                // 아래쪽 토큰 입력 폼이 다시 나타나 사용자가 새 PAT를 붙여넣을 수 있다.
+                                resetVercelConnectionAction
+                        }
                       >
-                        {labels.reconnectButton}
-                      </PendingButton>
-                    </form>
-                  )}
+                        <input type="hidden" name="projectId" value={projectId} />
+                        <input type="hidden" name="milestoneId" value={milestoneId} />
+                        <input type="hidden" name="substepId" value={row.substepId} />
+                        <input type="hidden" name="locale" value={locale} />
+                        <PendingButton
+                          type="submit"
+                          size="sm"
+                          variant="ghost"
+                          pendingText={labels.connecting}
+                          className="h-7 px-2 text-xs text-muted-foreground hover:text-foreground"
+                        >
+                          {labels.reconnectButton}
+                        </PendingButton>
+                      </form>
+                    )}
                 </div>
               ) : !row.supported ? (
                 <span className="rounded-full border border-border bg-muted px-2 py-0.5 text-[10px] text-muted-foreground">
