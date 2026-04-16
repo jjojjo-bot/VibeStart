@@ -213,14 +213,23 @@ export async function createVercelProject(
     throw new Error(`vercel:http_${getRes.status}`);
   }
 
+  // 여기까지 왔으면 non-OK && non-409. 본문을 한 번만 읽어서 로그 + 에러
+  // 메시지 snippet에 같이 활용한다. 이전 구현은 400/403일 때만 body를 읽고
+  // 키워드 매칭 실패 시 그대로 버렸기 때문에 실제 Vercel 원문 메시지를
+  // 추적할 수 없었다 (예: `vercel:http_403`만 남고 무엇이 금지됐는지 모름).
+  const errBody = await res.text();
+  console.error("[createVercelProject] error body", {
+    status: res.status,
+    body: errBody.slice(0, 500),
+  });
+
   // GitHub App 미설치 관련 에러 감지. Vercel은 여러 코드로 보낼 수 있으나
   // 본문에 "repo" 또는 "git" 키워드가 있으면 GitHub 접근 문제로 간주.
   if (res.status === 400 || res.status === 403) {
-    const body = await res.text();
     if (
-      body.includes("repo") ||
-      body.includes("git") ||
-      body.includes("installation")
+      errBody.includes("repo") ||
+      errBody.includes("git") ||
+      errBody.includes("installation")
     ) {
       throw new Error("vercel:github_app_not_installed");
     }
@@ -228,7 +237,12 @@ export async function createVercelProject(
 
   if (res.status === 402) throw new Error("vercel:plan_limit");
   if (res.status === 401) throw new Error("vercel:invalid_token");
-  throw new Error(`vercel:http_${res.status}`);
+
+  // triggerVercelDeployment와 동일 패턴: 본문 일부를 에러 코드에 포함시켜
+  // 사용자에게 redirect query로 단서를 전달한다. actions.ts가 메시지를 120자로
+  // 자르므로 snippet은 60자면 충분.
+  const snippet = errBody.replace(/[^a-zA-Z0-9_]/g, "_").slice(0, 60);
+  throw new Error(`vercel:http_${res.status}_${snippet}`);
 }
 
 /**
