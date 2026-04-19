@@ -676,15 +676,16 @@
       ],
       "reassurance": "Don't worry about saying the wrong thing. You can always say \"Undo that and try again.\""
     },
-    "v0Design": {
+    "claudeDesign": {
       "heading": "Stuck on the Design?",
-      "subtitle": "Use v0.dev to create a UI with AI first, then bring it into your project.",
+      "subtitle": "Create a UI with AI first, then bring it straight into your project.",
       "steps": [
-        "Go to v0.dev and describe the screen you want, like \"Create a login page\"",
-        "If you like it, click Download ZIP to download it",
-        "Extract the ZIP and place the files in the {v0Path} folder",
-        "Tell Claude Code: \"Apply this code to my project\""
-      ]
+        "Go to claude.ai/design and describe the screen you want, like \"Create a login page\"",
+        "When you like it, open the Export menu, choose \"Send to local coding agent\", then click Copy command",
+        "Paste it into a Claude Code terminal opened in your project folder — the design is applied automatically",
+        "Using a different AI agent (Cursor, etc.)? Check \"Download zip instead\", extract the ZIP, and drop the files into {designPath}"
+      ],
+      "note": "Available only to Claude Pro, Max, Team, and Enterprise subscribers. It's in research preview with its own weekly limit — usage here doesn't count toward other Claude limits."
     },
     "phase2": {
       "badge": "Next Step",

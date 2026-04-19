@@ -676,15 +676,16 @@
       ],
       "reassurance": "うまく言えなくても大丈夫です。「さっきのやつ取り消してやり直して」と言えばOKです。"
     },
-    "v0Design": {
+    "claudeDesign": {
       "heading": "デザインに困ったら",
-      "subtitle": "v0.devでAIを使って画面を先に作り、自分のプロジェクトに取り込めます。",
+      "subtitle": "AIで画面を先に作り、自分のプロジェクトにそのまま取り込めます。",
       "steps": [
-        "v0.devで「ログインページを作って」のように作りたい画面を説明してください",
-        "気に入ったらDownload ZIPをクリックしてダウンロードしてください",
-        "解凍して{v0Path}フォルダに入れてください",
-        "Claude Codeに「このコードを自分のプロジェクトに適用して」と言ってください"
-      ]
+        "claude.ai/designにアクセスして「ログインページを作って」のように作りたい画面を説明してください",
+        "気に入ったらExportメニューで「Send to local coding agent」を選び、Copy commandを押してください",
+        "プロジェクトフォルダを開いたClaude Codeのターミナルに貼り付け — デザインが自動で適用されます",
+        "Cursorなど他のAIエージェントを使うときは「Download zip instead」にチェックしてZIPを取得し、解凍して{designPath}フォルダに入れてください"
+      ],
+      "note": "Claude Pro・Max・Team・Enterpriseの加入者のみ利用可能です。リサーチプレビュー中で独自の週次上限があり、ここでの使用量は他のClaude上限には含まれません。"
     },
     "phase2": {
       "badge": "次のステップ",

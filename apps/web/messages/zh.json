@@ -676,15 +676,16 @@
       ],
       "reassurance": "说错了也没关系。说「把刚才的撤销重来」就行。"
     },
-    "v0Design": {
+    "claudeDesign": {
       "heading": "不知道怎么设计？",
-      "subtitle": "可以在 v0.dev 用AI先做好页面，再导入到你的项目中。",
+      "subtitle": "用AI先做好页面，再直接导入到你的项目中。",
       "steps": [
-        "在v0.dev上描述你想要的页面，比如「帮我做个登录页面」",
-        "满意的话点击 Download ZIP 下载",
-        "解压后放到 {v0Path} 文件夹",
-        "告诉Claude Code「把这个代码应用到我的项目里」"
-      ]
+        "打开 claude.ai/design 并描述你想要的页面，比如「帮我做个登录页面」",
+        "满意的话在 Export 菜单里选择「Send to local coding agent」，然后点 Copy command",
+        "在打开项目文件夹的 Claude Code 终端里粘贴 — 设计会自动应用",
+        "如果用的是其他 AI 代理（比如 Cursor）就勾选「Download zip instead」，解压后放到 {designPath} 文件夹"
+      ],
+      "note": "仅限 Claude Pro、Max、Team、Enterprise 订阅用户使用。目前处于研究预览阶段，拥有独立的每周使用限额，这里的用量不计入其他 Claude 限额。"
     },
     "phase2": {
       "badge": "下一步",

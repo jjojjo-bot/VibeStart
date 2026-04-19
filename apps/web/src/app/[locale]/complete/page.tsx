@@ -82,8 +82,8 @@ function getPromptExampleKey(goal: Goal): string {
   }
 }
 
-/** v0 ZIP을 풀어야 할 경로 (웹 프로젝트만 해당) */
-function getV0UnzipPath(goal: Goal, projectName: string): string | null {
+/** Claude Design 내보내기 ZIP을 풀어야 할 경로 (웹 프로젝트만 해당) */
+function getDesignUnzipPath(goal: Goal, projectName: string): string | null {
   switch (goal) {
     case "web-nextjs":
     case "not-sure":
@@ -156,7 +156,7 @@ function CompleteContent() {
   const tree = t(getProjectTreeKey(goal) as Parameters<typeof t>[0], { projectName });
   const promptTemplate = t(getPromptTemplateKey(goal) as Parameters<typeof t>[0]);
   const firstPrompt = t(getPromptExampleKey(goal) as Parameters<typeof t>[0]);
-  const v0Path = getV0UnzipPath(goal, projectName);
+  const designPath = getDesignUnzipPath(goal, projectName);
 
   // Follow-up examples from translation
   const followUpExamples = [
@@ -168,12 +168,12 @@ function CompleteContent() {
     t("followUp.examples.5" as Parameters<typeof t>[0]),
   ];
 
-  // v0 design steps from translation
-  const v0Steps = v0Path ? [
-    t("v0Design.steps.0" as Parameters<typeof t>[0]),
-    t("v0Design.steps.1" as Parameters<typeof t>[0]),
-    t("v0Design.steps.2" as Parameters<typeof t>[0], { v0Path }),
-    t("v0Design.steps.3" as Parameters<typeof t>[0]),
+  // Claude Design steps from translation
+  const designSteps = designPath ? [
+    t("claudeDesign.steps.0" as Parameters<typeof t>[0]),
+    t("claudeDesign.steps.1" as Parameters<typeof t>[0]),
+    t("claudeDesign.steps.2" as Parameters<typeof t>[0]),
+    t("claudeDesign.steps.3" as Parameters<typeof t>[0], { designPath }),
   ] : [];
 
   return (
@@ -252,22 +252,25 @@ function CompleteContent() {
           </p>
         </div>
 
-        {/* v0 디자인 팁 (웹 프로젝트만) */}
-        {v0Path && (
+        {/* Claude Design 팁 (웹 프로젝트만) */}
+        {designPath && (
           <div className="mb-6 rounded-xl border border-border/50 bg-card p-6">
-            <h2 className="mb-1 font-semibold">{t("v0Design.heading")}</h2>
+            <h2 className="mb-1 font-semibold">{t("claudeDesign.heading")}</h2>
             <p className="mb-4 text-sm text-muted-foreground">
-              <a href="https://v0.dev" target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2">v0.dev</a>
-              {" "}{t("v0Design.subtitle")}
+              <a href="https://claude.ai/design" target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2">Claude Design</a>
+              {" — "}{t("claudeDesign.subtitle")}
             </p>
             <ol className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {v0Steps.map((step, idx) => (
+              {designSteps.map((step, idx) => (
                 <li key={idx} className="flex items-start gap-2">
                   <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">{idx + 1}</span>
                   <span>{step}</span>
                 </li>
               ))}
             </ol>
+            <p className="mt-4 text-xs text-muted-foreground/70">
+              {t("claudeDesign.note")}
+            </p>
           </div>
         )}
 

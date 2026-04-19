@@ -676,15 +676,16 @@
       ],
       "reassurance": "No te preocupes si no lo dices perfecto. Puedes decir \"Cancela lo anterior y hazlo de nuevo\" y listo."
     },
-    "v0Design": {
+    "claudeDesign": {
       "heading": "Si no sabes cómo diseñar",
-      "subtitle": "En v0.dev puedes crear pantallas con IA y luego traerlas a tu proyecto.",
+      "subtitle": "Crea pantallas con IA primero y llévalas directamente a tu proyecto.",
       "steps": [
-        "En v0.dev describe la pantalla que quieres, por ejemplo \"Hazme una página de login\"",
-        "Si te gusta, haz clic en Download ZIP para descargarlo",
-        "Descomprime y coloca los archivos en la carpeta {v0Path}",
-        "Dile a Claude Code \"Aplica este código a mi proyecto\""
-      ]
+        "Abre claude.ai/design y describe la pantalla que quieres, por ejemplo \"Hazme una página de login\"",
+        "Cuando te guste, en el menú Export elige \"Send to local coding agent\" y pulsa Copy command",
+        "Pégalo en un terminal de Claude Code abierto en tu carpeta de proyecto — el diseño se aplica automáticamente",
+        "Si usas otro agente de IA (Cursor, etc.), marca \"Download zip instead\", descomprime y coloca los archivos en {designPath}"
+      ],
+      "note": "Solo disponible para suscriptores de Claude Pro, Max, Team y Enterprise. Está en vista previa de investigación con su propio límite semanal independiente; el uso aquí no cuenta para los demás límites de Claude."
     },
     "phase2": {
       "badge": "Siguiente paso",

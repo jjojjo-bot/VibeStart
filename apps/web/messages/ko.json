@@ -676,15 +676,16 @@
       ],
       "reassurance": "잘못 말해도 괜찮아요. \"아까 거 취소하고 다시 해줘\"라고 하면 돼요."
     },
-    "v0Design": {
+    "claudeDesign": {
       "heading": "디자인이 막막하다면",
-      "subtitle": "v0.dev에서 AI로 화면을 먼저 만들고, 내 프로젝트에 가져올 수 있어요.",
+      "subtitle": "AI로 화면을 먼저 만들고, 내 프로젝트에 바로 가져올 수 있어요.",
       "steps": [
-        "v0.dev에서 \"로그인 페이지 만들어줘\"처럼 원하는 화면을 설명하세요",
-        "마음에 들면 Download ZIP을 클릭해서 다운로드하세요",
-        "압축을 풀어서 {v0Path} 폴더에 넣으세요",
-        "Claude Code에 \"이 코드를 내 프로젝트에 적용해줘\"라고 말하세요"
-      ]
+        "claude.ai/design 에 들어가서 \"로그인 페이지 만들어줘\"처럼 원하는 화면을 설명하세요",
+        "마음에 들면 Export 메뉴에서 \"Send to local coding agent\"를 선택하고 Copy command를 누르세요",
+        "프로젝트 폴더를 연 Claude Code 터미널에 붙여넣기 — 디자인이 자동으로 적용돼요",
+        "다른 AI 에이전트(Cursor 등)를 쓸 땐 \"Download zip instead\"를 체크해 ZIP을 받고, 압축을 풀어 {designPath} 폴더에 넣으세요"
+      ],
+      "note": "Claude Pro·Max·Team·Enterprise 구독자만 사용할 수 있어요. 리서치 프리뷰 단계라 자체 주간 한도가 있고, 여기서의 사용량은 다른 한도에 포함되지 않아요."
     },
     "phase2": {
       "badge": "다음 단계",
