@@ -57,12 +57,14 @@ export function Stage({
   width = 1920,
   height = 1080,
   duration = 32,
+  speed = 1,
   background = "#0a0712",
   children,
 }: {
   width?: number;
   height?: number;
   duration?: number;
+  speed?: number;
   background?: string;
   children: ReactNode;
 }): ReactNode {
@@ -92,7 +94,7 @@ export function Stage({
   useEffect(() => {
     const step = (ts: number): void => {
       if (lastTsRef.current == null) lastTsRef.current = ts;
-      const dt = (ts - lastTsRef.current) / 1000;
+      const dt = ((ts - lastTsRef.current) / 1000) * speed;
       lastTsRef.current = ts;
       setTime((t) => {
         let next = t + dt;
@@ -106,7 +108,7 @@ export function Stage({
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       lastTsRef.current = null;
     };
-  }, [duration]);
+  }, [duration, speed]);
 
   const ctxValue = useMemo<TimelineValue>(
     () => ({ time, duration, playing: true }),

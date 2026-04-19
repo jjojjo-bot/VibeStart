@@ -14,7 +14,7 @@ import {
 
 export function HeroVideo(): ReactNode {
   return (
-    <Stage width={1920} height={1080} duration={32} background="#0a0712">
+    <Stage width={1920} height={1080} duration={32} speed={32 / 15} background="#0a0712">
       <BackgroundDark />
       <SceneColdOpen start={0} end={3} />
       <SceneDoubt start={3} end={8} />
