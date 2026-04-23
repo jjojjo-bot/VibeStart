@@ -379,7 +379,7 @@
       "title": "Install Linux Environment (WSL2)",
       "description": "AI coding tools on Windows require a Linux environment",
       "whyNeeded": "AI coding tools (Claude Code) only run on Linux. WSL2 is a mini Linux computer that runs inside Windows. Once installed, you can use Linux commands while staying on Windows.",
-      "detailedGuide": "You'll need to restart your computer after installation. After restarting, an Ubuntu window will open automatically, prompting you to set up a username and password.",
+      "detailedGuide": "You'll need to restart your computer after installation. After restarting, an Ubuntu window may open automatically with a username and password prompt. If it doesn't open automatically, that's okay — the next step shows you how to open it directly.",
       "troubleshooting": [
         {
           "symptom": "'wsl' is not recognized as a command",
@@ -394,8 +394,8 @@
           "solution": "That's fine! Run wsl --update to update to the latest version and move on to the next step."
         },
         {
-          "symptom": "Ubuntu doesn't open after restarting",
-          "solution": "Search for 'Ubuntu' in Windows search. If it's not there, search for 'Ubuntu' in the Microsoft Store and install it."
+          "symptom": "Ubuntu window doesn't open after restart, or `wsl` command returns an error",
+          "solution": "The first `wsl --install` may have installed only the WSL platform without finishing the Ubuntu distribution. Re-run `wsl --install` in Windows PowerShell — the already-installed WSL platform is skipped, and only the Ubuntu portion completes, opening the login window immediately (no second reboot needed). If that still fails, search for 'Ubuntu' in the Microsoft Store and install it."
         }
       ]
     },
@@ -479,7 +479,7 @@
         "windows": [
           {
             "symptom": "'winget' is not recognized",
-            "solution": "Search for 'App Installer' in the Microsoft Store and update it. If that doesn't work, download VS Code directly from code.visualstudio.com."
+            "solution": "If VS Code is already installed, you can skip this step (move on to the next step). If you still need to install it, install or update 'App Installer' from the Microsoft Store, then open a new PowerShell window and try again. If it still fails, download VS Code directly from https://code.visualstudio.com/download."
           },
           {
             "symptom": "Message saying it's already installed",
@@ -615,11 +615,15 @@
       "description": "Open the project in VS Code and start coding with AI",
       "detailedGuide": {
         "simple": "The command below opens VS Code. Inside VS Code, open the terminal (Ctrl+` or Cmd+`) and type claude to start AI coding.",
-        "withBackend": "The command below opens VS Code. Inside VS Code, open the terminal (Ctrl+` or Cmd+`) and type claude to start AI coding. You'll see both the frontend/ and backend/ folders."
+        "withBackend": "The command below opens VS Code. Inside VS Code, open the terminal (Ctrl+` or Cmd+`) and type claude to start AI coding. You'll see both the frontend/ and backend/ folders.",
+        "wsl": {
+          "simple": "The command below opens VS Code in WSL Remote mode. Inside VS Code, open the terminal (Ctrl+`) and type claude to start AI coding.\n\n💡 Wondering where your project folder actually lives on your computer?\nYour project was created inside WSL (Linux), so it doesn't show up directly on the C: drive.\n• Paste \\\\wsl$ into the address bar of Windows File Explorer and press Enter → Ubuntu → home → your account → {projectName}.\n• Faster way: from the Ubuntu terminal, type explorer.exe . (include the trailing dot) and the current folder opens in File Explorer.",
+          "withBackend": "The command below opens VS Code in WSL Remote mode. Inside VS Code, open the terminal (Ctrl+`) and type claude to start AI coding. You'll see both the frontend/ and backend/ folders.\n\n💡 Wondering where your project folder actually lives on your computer?\nYour project was created inside WSL (Linux), so it doesn't show up directly on the C: drive.\n• Paste \\\\wsl$ into the address bar of Windows File Explorer and press Enter → Ubuntu → home → your account → {projectName}.\n• Faster way: from the Ubuntu terminal, type explorer.exe . (include the trailing dot) and the current folder opens in File Explorer."
+        }
       }
     },
     "environments": {
-      "windowsCmd": "Windows Command Prompt",
+      "windowsCmd": "Windows PowerShell",
       "linuxCmd": "Linux Terminal",
       "macTerminal": "Mac Terminal",
       "vscodeTerminal": "VS Code Terminal",

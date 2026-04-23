@@ -267,7 +267,7 @@ function SetupContent() {
 
                 {/* 상세 가이드 (초보자용) */}
                 {active && step.detailedGuide && (
-                  <div className="mb-4 rounded-lg bg-primary/5 p-4 text-sm text-muted-foreground">
+                  <div className="mb-4 whitespace-pre-line rounded-lg bg-primary/5 p-4 text-sm text-muted-foreground">
                     {step.detailedGuide}
                   </div>
                 )}

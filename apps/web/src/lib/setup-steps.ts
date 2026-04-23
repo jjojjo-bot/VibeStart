@@ -233,7 +233,19 @@ function wslNodejsStep(t: T): SetupStep {
   };
 }
 
+// PowerShell 방어 스크립트:
+//   1) `code`가 PATH에 있으면 이미 설치돼 있으므로 건너뛴다.
+//   2) `winget` 자체가 없으면 (구 Windows 10 / App Installer 미설치 환경) 명시적으로
+//      에러 메시지 + 수동 다운로드 링크를 안내하고 exit 1.
+//   3) 둘 다 통과하면 winget으로 User-scope 설치.
+// 단일 라인 세미콜론 체인 — 복붙 시 PowerShell이 중간에 `>>` 프롬프트로 멈추는 걸 피한다.
 function wslVscodeStep(t: T): SetupStep {
+  const script = [
+    "if (Get-Command code -ErrorAction SilentlyContinue) { Write-Host 'VS Code already installed - skipping.' }",
+    "elseif (-not (Get-Command winget -ErrorAction SilentlyContinue)) { Write-Host \"winget not found. Install 'App Installer' from Microsoft Store, or download VS Code from https://code.visualstudio.com/download\"; exit 1 }",
+    "else { winget install --id Microsoft.VisualStudioCode -e --accept-source-agreements --accept-package-agreements }",
+  ].join(" ");
+
   return {
     id: "editor",
     title: t("editor.title"),
@@ -242,7 +254,7 @@ function wslVscodeStep(t: T): SetupStep {
     group: "toolInstall",
     environment: t("environments.windowsCmd"),
     detailedGuide: t("editor.detailedGuide.windows"),
-    script: "winget install --id Microsoft.VisualStudioCode --accept-source-agreements --accept-package-agreements",
+    script,
     resultPreview: `Found Visual Studio Code [Microsoft.VisualStudioCode]
 This application is licensed to you by its owner.
 Downloading https://az764295.vo.msecnd.net/...
@@ -278,15 +290,21 @@ function wslClaudeStep(t: T): SetupStep {
     'export PATH="$HOME/.npm-global/bin:$PATH"',
     'echo "▶ (2/4) Installing Claude Code CLI..."',
     "npm install -g @anthropic-ai/claude-code",
-    'echo "▶ (3/4) Installing VS Code extension..."',
+    'echo "▶ (3/4) Installing VS Code extensions..."',
     // `code` CLI는 Windows VS Code의 "Add to PATH"(기본 ON) + 셸 재시작 이후에만
     // WSL bash PATH에 들어온다. step 6에서 VS Code를 설치한 직후 같은 Ubuntu
     // 창에서 이어 실행하면 PATH가 갱신되지 않아 실패한다. detailedGuide에
     // "Ubuntu 창을 닫고 다시 열라"고 명시했고, 여기선 명시적 에러로 중단해서
     // 비전공자가 어디서 막혔는지 확실히 알게 한다.
+    //
+    // WSL 확장(ms-vscode-remote.remote-wsl)이 필수다. 없으면 `code ~/my-project`
+    // 실행 시 VS Code가 "WSL Remote" 모드로 열리지 않고 단순히 \\wsl$\... UNC
+    // 경로로 파일만 로드된다 → 통합 터미널이 Windows PowerShell로 떨어져서
+    // 사용자가 `npm run dev` 같은 명령을 WSL에서 실행하지 못한다.
+    "code --install-extension ms-vscode-remote.remote-wsl",
     "code --install-extension anthropic.claude-code",
     'echo "▶ (4/4) Logging in..."',
-    "claude login",
+    "claude auth login",
   ]);
 
   return {
@@ -301,7 +319,8 @@ function wslClaudeStep(t: T): SetupStep {
     resultPreview: `▶ (1/4) Configuring npm user prefix...
 ▶ (2/4) Installing Claude Code CLI...
 added 1 package in 3s
-▶ (3/4) Installing VS Code extension...
+▶ (3/4) Installing VS Code extensions...
+Extension 'ms-vscode-remote.remote-wsl' was successfully installed.
 Extension 'anthropic.claude-code' was successfully installed.
 ▶ (4/4) Logging in...
 Opening browser for authentication...
@@ -527,7 +546,7 @@ function macClaudeStep(t: T): SetupStep {
     // detailedGuide에 절차를 명시하고, 누락 시엔 명시적 에러로 중단한다.
     "code --install-extension anthropic.claude-code",
     'echo "▶ (3/3) Logging in..."',
-    "claude login",
+    "claude auth login",
   ]);
 
   return {
@@ -901,15 +920,19 @@ function firstRunStep(projectName: string, goal: Goal, variant: "wsl" | "mac", e
     ? `open -a "Visual Studio Code" ~/${projectName}`
     : `code ~/${projectName}`;
 
+  // WSL 변형에서는 비전공자에게 프로젝트 폴더가 Windows 어디에 있는지
+  // (\\wsl$ UNC 경로, explorer.exe .) 안내하는 가이드를 사용한다.
+  const guideKey = variant === "wsl"
+    ? (hasFeBe ? "firstRun.detailedGuide.wsl.withBackend" : "firstRun.detailedGuide.wsl.simple")
+    : (hasFeBe ? "firstRun.detailedGuide.withBackend" : "firstRun.detailedGuide.simple");
+
   return {
     id: "first-run",
     title: t("firstRun.title"),
     description: t("firstRun.description"),
     group: "projectCreate",
     environment: env,
-    detailedGuide: hasFeBe
-      ? t("firstRun.detailedGuide.withBackend")
-      : t("firstRun.detailedGuide.simple"),
+    detailedGuide: t(guideKey, { projectName }),
     script: openCmd,
   };
 }

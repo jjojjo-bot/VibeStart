@@ -379,7 +379,7 @@
       "title": "리눅스 환경 설치 (WSL2)",
       "description": "Windows에서 AI 코딩 도구를 쓰려면 리눅스가 필요해요",
       "whyNeeded": "AI 코딩 도구(Claude Code)는 리눅스에서만 작동해요. WSL2는 Windows 안에서 돌아가는 미니 리눅스 컴퓨터예요. 설치하면 Windows를 쓰면서 리눅스 명령어를 사용할 수 있어요.",
-      "detailedGuide": "설치 후 컴퓨터를 재시작해야 합니다. 재시작 후 Ubuntu 창이 자동으로 열리며 사용자 이름과 비밀번호를 설정하게 됩니다.",
+      "detailedGuide": "설치 후 컴퓨터를 재시작해주세요. 재시작하면 Ubuntu 창이 자동으로 열려 사용자 이름과 비밀번호를 설정하는 화면이 나올 수 있어요. 자동으로 안 떠도 괜찮아요 — 다음 단계에서 직접 여는 방법을 안내해드려요.",
       "troubleshooting": [
         {
           "symptom": "'wsl'은(는) 인식할 수 없는 명령입니다",
@@ -394,8 +394,8 @@
           "solution": "정상입니다! wsl --update 를 실행해서 최신 버전으로 업데이트한 후 다음 단계로 넘어가세요."
         },
         {
-          "symptom": "재시작 후에도 Ubuntu가 열리지 않음",
-          "solution": "Windows 검색에서 'Ubuntu'를 검색해보세요. 없으면 Microsoft Store에서 'Ubuntu'를 검색해서 설치해주세요."
+          "symptom": "재시작 후 Ubuntu 창이 자동으로 안 뜨거나, `wsl` 명령어가 에러가 나요",
+          "solution": "첫 `wsl --install`이 WSL 플랫폼만 설치하고 Ubuntu 배포판까지는 완전히 설치하지 못한 상태일 수 있어요. 이럴 때는 Windows PowerShell에서 `wsl --install`을 한 번 더 실행해주세요. 이미 설치된 WSL 플랫폼은 건너뛰고 Ubuntu 부분만 마저 설치되면서, 재부팅 없이 로그인 창이 바로 열립니다. 그래도 해결이 안 되면 Microsoft Store에서 'Ubuntu'를 검색해 설치해주세요."
         }
       ]
     },
@@ -479,7 +479,7 @@
         "windows": [
           {
             "symptom": "'winget'이 인식되지 않습니다",
-            "solution": "Microsoft Store에서 '앱 설치 관리자'를 검색해서 업데이트해주세요. 그래도 안 되면 code.visualstudio.com 에서 직접 다운로드하세요."
+            "solution": "이미 VS Code가 설치돼 있다면 이 단계는 건너뛰어도 돼요 (다음 단계로 이동). 새로 설치가 필요하다면, Microsoft Store에서 '앱 설치 관리자(App Installer)'를 설치하거나 업데이트한 뒤 PowerShell 창을 새로 열고 다시 실행해주세요. 그래도 안 되면 https://code.visualstudio.com/download 에서 직접 다운로드해 설치하세요."
           },
           {
             "symptom": "이미 설치되어 있다는 메시지",
@@ -615,11 +615,15 @@
       "description": "VS Code에서 프로젝트를 열고 AI 코딩을 시작해요",
       "detailedGuide": {
         "simple": "아래 명령어로 VS Code가 열립니다. VS Code 안에서 터미널(Ctrl+` 또는 Cmd+`)을 열고 claude를 입력하면 AI 코딩이 시작됩니다.",
-        "withBackend": "아래 명령어로 VS Code가 열립니다. VS Code 안에서 터미널(Ctrl+` 또는 Cmd+`)을 열고 claude를 입력하면 AI 코딩이 시작됩니다. frontend/와 backend/ 폴더가 함께 보여요."
+        "withBackend": "아래 명령어로 VS Code가 열립니다. VS Code 안에서 터미널(Ctrl+` 또는 Cmd+`)을 열고 claude를 입력하면 AI 코딩이 시작됩니다. frontend/와 backend/ 폴더가 함께 보여요.",
+        "wsl": {
+          "simple": "아래 명령어로 VS Code가 WSL Remote 모드로 열립니다. VS Code 안에서 터미널(Ctrl+`)을 열고 claude를 입력하면 AI 코딩이 시작돼요.\n\n💡 프로젝트 폴더가 내 컴퓨터 어디에 있는지 궁금하다면?\n내 프로젝트는 WSL(리눅스) 영역에 만들어져서 C: 드라이브에서는 바로 보이지 않아요.\n• Windows 파일 탐색기 주소창에 \\\\wsl$ 를 붙여넣고 Enter → Ubuntu → home → 본인 계정 → {projectName} 순서로 들어가면 됩니다.\n• 더 빠른 방법: Ubuntu 명령창에서 explorer.exe . (마지막 점까지 포함) 을 입력하면 현재 폴더가 파일 탐색기로 바로 열려요.",
+          "withBackend": "아래 명령어로 VS Code가 WSL Remote 모드로 열립니다. VS Code 안에서 터미널(Ctrl+`)을 열고 claude를 입력하면 AI 코딩이 시작돼요. frontend/와 backend/ 폴더가 함께 보여요.\n\n💡 프로젝트 폴더가 내 컴퓨터 어디에 있는지 궁금하다면?\n내 프로젝트는 WSL(리눅스) 영역에 만들어져서 C: 드라이브에서는 바로 보이지 않아요.\n• Windows 파일 탐색기 주소창에 \\\\wsl$ 를 붙여넣고 Enter → Ubuntu → home → 본인 계정 → {projectName} 순서로 들어가면 됩니다.\n• 더 빠른 방법: Ubuntu 명령창에서 explorer.exe . (마지막 점까지 포함) 을 입력하면 현재 폴더가 파일 탐색기로 바로 열려요."
+        }
       }
     },
     "environments": {
-      "windowsCmd": "Windows 명령창",
+      "windowsCmd": "Windows PowerShell",
       "linuxCmd": "리눅스 명령창",
       "macTerminal": "Mac 터미널",
       "vscodeTerminal": "VS Code 터미널",

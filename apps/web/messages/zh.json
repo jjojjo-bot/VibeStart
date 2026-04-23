@@ -379,7 +379,7 @@
       "title": "安装Linux环境（WSL2）",
       "description": "在Windows上使用AI编程工具需要Linux",
       "whyNeeded": "AI编程工具（Claude Code）只能在Linux上运行。WSL2是运行在Windows里的迷你Linux电脑。安装后就可以在Windows上使用Linux命令了。",
-      "detailedGuide": "安装后需要重启电脑。重启后Ubuntu窗口会自动打开，需要设置用户名和密码。",
+      "detailedGuide": "安装后需要重启电脑。重启后Ubuntu窗口可能会自动打开，让你设置用户名和密码。如果没有自动打开也没关系 — 下一步会教你直接打开的方法。",
       "troubleshooting": [
         {
           "symptom": "「wsl」不是可识别的命令",
@@ -394,8 +394,8 @@
           "solution": "这是正常的！运行 wsl --update 更新到最新版本，然后继续下一步。"
         },
         {
-          "symptom": "重启后Ubuntu没有打开",
-          "solution": "在Windows搜索中搜索「Ubuntu」。如果没有，在Microsoft Store中搜索「Ubuntu」进行安装。"
+          "symptom": "重启后Ubuntu窗口没有自动打开，或运行 `wsl` 命令出现错误",
+          "solution": "第一次 `wsl --install` 可能只安装了 WSL 平台，Ubuntu 发行版的安装未完成。在 Windows PowerShell 中再次运行 `wsl --install`。已安装的 WSL 平台会被跳过，只补充安装 Ubuntu 部分，登录窗口会立即打开（无需再次重启）。如果仍无法解决，请在 Microsoft Store 中搜索「Ubuntu」进行安装。"
         }
       ]
     },
@@ -479,7 +479,7 @@
         "windows": [
           {
             "symptom": "「winget」不被识别",
-            "solution": "在Microsoft Store中搜索「应用安装程序」并更新。如果还不行，请在 code.visualstudio.com 直接下载。"
+            "solution": "如果已经安装了 VS Code，这一步可以跳过（直接进入下一步）。如果需要安装，请先在 Microsoft Store 安装或更新「应用安装程序(App Installer)」，然后打开新的 PowerShell 窗口重试。如果仍然失败，请直接从 https://code.visualstudio.com/download 下载 VS Code 安装。"
           },
           {
             "symptom": "提示已经安装了",
@@ -615,11 +615,15 @@
       "description": "在VS Code中打开项目，开始AI编程",
       "detailedGuide": {
         "simple": "以下命令会打开VS Code。在VS Code中打开终端（Ctrl+` 或 Cmd+`），输入 claude 即可开始AI编程。",
-        "withBackend": "以下命令会打开VS Code。在VS Code中打开终端（Ctrl+` 或 Cmd+`），输入 claude 即可开始AI编程。可以同时看到 frontend/ 和 backend/ 文件夹。"
+        "withBackend": "以下命令会打开VS Code。在VS Code中打开终端（Ctrl+` 或 Cmd+`），输入 claude 即可开始AI编程。可以同时看到 frontend/ 和 backend/ 文件夹。",
+        "wsl": {
+          "simple": "以下命令会以 WSL Remote 模式打开 VS Code。在 VS Code 中打开终端（Ctrl+`），输入 claude 即可开始 AI 编程。\n\n💡 想知道项目文件夹实际在电脑的哪个位置？\n项目创建在 WSL（Linux）区域，所以在 C: 盘中直接看不到。\n• 在 Windows 文件资源管理器的地址栏粘贴 \\\\wsl$ 并回车 → Ubuntu → home → 你的账户 → {projectName} 即可找到。\n• 更快捷: 在 Ubuntu 终端中输入 explorer.exe .（包含末尾的点），当前文件夹会立即在文件资源管理器中打开。",
+          "withBackend": "以下命令会以 WSL Remote 模式打开 VS Code。在 VS Code 中打开终端（Ctrl+`），输入 claude 即可开始 AI 编程。可以同时看到 frontend/ 和 backend/ 文件夹。\n\n💡 想知道项目文件夹实际在电脑的哪个位置？\n项目创建在 WSL（Linux）区域，所以在 C: 盘中直接看不到。\n• 在 Windows 文件资源管理器的地址栏粘贴 \\\\wsl$ 并回车 → Ubuntu → home → 你的账户 → {projectName} 即可找到。\n• 更快捷: 在 Ubuntu 终端中输入 explorer.exe .（包含末尾的点），当前文件夹会立即在文件资源管理器中打开。"
+        }
       }
     },
     "environments": {
-      "windowsCmd": "Windows 命令窗口",
+      "windowsCmd": "Windows PowerShell",
       "linuxCmd": "Linux 命令窗口",
       "macTerminal": "Mac 终端",
       "vscodeTerminal": "VS Code 终端",

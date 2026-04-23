@@ -379,7 +379,7 @@
       "title": "Instalar entorno Linux (WSL2)",
       "description": "Para usar herramientas de IA en Windows necesitas Linux",
       "whyNeeded": "Las herramientas de IA para programación (Claude Code) solo funcionan en Linux. WSL2 es como una mini computadora Linux dentro de Windows. Al instalarlo, puedes usar comandos de Linux sin dejar Windows.",
-      "detailedGuide": "Después de la instalación debes reiniciar la computadora. Al reiniciar, se abrirá automáticamente una ventana de Ubuntu donde configurarás tu nombre de usuario y contraseña.",
+      "detailedGuide": "Después de la instalación debes reiniciar la computadora. Al reiniciar, es posible que se abra automáticamente una ventana de Ubuntu para configurar nombre de usuario y contraseña. Si no se abre automáticamente, no pasa nada — el siguiente paso te muestra cómo abrirlo directamente.",
       "troubleshooting": [
         {
           "symptom": "'wsl' no se reconoce como un comando",
@@ -394,8 +394,8 @@
           "solution": "¡Es normal! Ejecuta wsl --update para actualizar a la última versión y continúa con el siguiente paso."
         },
         {
-          "symptom": "Ubuntu no se abre después de reiniciar",
-          "solution": "Busca 'Ubuntu' en la búsqueda de Windows. Si no aparece, búscalo en Microsoft Store e instálalo."
+          "symptom": "La ventana de Ubuntu no se abre tras reiniciar, o el comando `wsl` da error",
+          "solution": "Es posible que el primer `wsl --install` haya instalado solo la plataforma WSL sin completar la distribución de Ubuntu. Vuelve a ejecutar `wsl --install` en Windows PowerShell: la plataforma WSL ya instalada se omite y solo se completa la parte de Ubuntu, abriendo inmediatamente la ventana de inicio de sesión (sin necesidad de reiniciar de nuevo). Si aún así no funciona, busca 'Ubuntu' en Microsoft Store e instálalo."
         }
       ]
     },
@@ -479,7 +479,7 @@
         "windows": [
           {
             "symptom": "'winget' no se reconoce",
-            "solution": "Busca 'Instalador de aplicaciones' en Microsoft Store y actualízalo. Si sigue sin funcionar, descárgalo directamente desde code.visualstudio.com."
+            "solution": "Si VS Code ya está instalado, puedes omitir este paso (continúa al siguiente). Si necesitas instalarlo, instala o actualiza 'Instalador de aplicaciones (App Installer)' desde Microsoft Store, luego abre una nueva ventana de PowerShell y vuelve a intentar. Si aún falla, descarga VS Code directamente desde https://code.visualstudio.com/download."
           },
           {
             "symptom": "Mensaje de que ya está instalado",
@@ -615,11 +615,15 @@
       "description": "Abre el proyecto en VS Code y empieza a programar con IA",
       "detailedGuide": {
         "simple": "El comando de abajo abrirá VS Code. Dentro de VS Code, abre la terminal (Ctrl+` o Cmd+`) y escribe claude para comenzar a programar con IA.",
-        "withBackend": "El comando de abajo abrirá VS Code. Dentro de VS Code, abre la terminal (Ctrl+` o Cmd+`) y escribe claude para comenzar a programar con IA. Verás las carpetas frontend/ y backend/ juntas."
+        "withBackend": "El comando de abajo abrirá VS Code. Dentro de VS Code, abre la terminal (Ctrl+` o Cmd+`) y escribe claude para comenzar a programar con IA. Verás las carpetas frontend/ y backend/ juntas.",
+        "wsl": {
+          "simple": "El comando de abajo abre VS Code en modo WSL Remote. Dentro de VS Code, abre la terminal (Ctrl+`) y escribe claude para comenzar a programar con IA.\n\n💡 ¿Te preguntas dónde está realmente tu carpeta del proyecto en tu computadora?\nEl proyecto se crea dentro de WSL (Linux), por lo que no aparece directamente en la unidad C:.\n• Pega \\\\wsl$ en la barra de direcciones del Explorador de archivos de Windows y pulsa Enter → Ubuntu → home → tu cuenta → {projectName}.\n• Forma rápida: desde la terminal de Ubuntu, escribe explorer.exe . (incluyendo el punto final) y la carpeta actual se abrirá en el Explorador de archivos.",
+          "withBackend": "El comando de abajo abre VS Code en modo WSL Remote. Dentro de VS Code, abre la terminal (Ctrl+`) y escribe claude para comenzar a programar con IA. Verás las carpetas frontend/ y backend/ juntas.\n\n💡 ¿Te preguntas dónde está realmente tu carpeta del proyecto en tu computadora?\nEl proyecto se crea dentro de WSL (Linux), por lo que no aparece directamente en la unidad C:.\n• Pega \\\\wsl$ en la barra de direcciones del Explorador de archivos de Windows y pulsa Enter → Ubuntu → home → tu cuenta → {projectName}.\n• Forma rápida: desde la terminal de Ubuntu, escribe explorer.exe . (incluyendo el punto final) y la carpeta actual se abrirá en el Explorador de archivos."
+        }
       }
     },
     "environments": {
-      "windowsCmd": "Terminal de Windows",
+      "windowsCmd": "Windows PowerShell",
       "linuxCmd": "Terminal de Linux",
       "macTerminal": "Terminal de Mac",
       "vscodeTerminal": "Terminal de VS Code",

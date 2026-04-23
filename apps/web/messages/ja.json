@@ -379,7 +379,7 @@
       "title": "Linux環境のインストール（WSL2）",
       "description": "WindowsでAIコーディングツールを使うにはLinuxが必要です",
       "whyNeeded": "AIコーディングツール（Claude Code）はLinuxでのみ動作します。WSL2はWindows内で動くミニLinuxコンピュータです。インストールすると、Windowsを使いながらLinuxコマンドが使えるようになります。",
-      "detailedGuide": "インストール後、パソコンを再起動する必要があります。再起動後、Ubuntuウィンドウが自動で開き、ユーザー名とパスワードを設定します。",
+      "detailedGuide": "インストール後、パソコンを再起動してください。再起動するとUbuntuウィンドウが自動で開き、ユーザー名とパスワードを設定する画面が出ることがあります。自動で開かなくても大丈夫です — 次のステップで直接開く方法を案内します。",
       "troubleshooting": [
         {
           "symptom": "「wsl」は認識されないコマンドです",
@@ -394,8 +394,8 @@
           "solution": "正常です！ wsl --update を実行して最新バージョンに更新してから、次のステップに進んでください。"
         },
         {
-          "symptom": "再起動後もUbuntuが開かない",
-          "solution": "Windowsの検索で「Ubuntu」を検索してみてください。見つからない場合は、Microsoft Storeで「Ubuntu」を検索してインストールしてください。"
+          "symptom": "再起動後にUbuntuウィンドウが自動で開かない、または `wsl` コマンドでエラーが出る",
+          "solution": "最初の `wsl --install` でWSLプラットフォームだけがインストールされ、Ubuntuディストリビューションのインストールが完了していない可能性があります。Windows PowerShellで `wsl --install` をもう一度実行してください。既にインストール済みのWSLプラットフォームはスキップされ、Ubuntu部分だけが完了してログインウィンドウが即座に開きます（再起動不要）。それでも解決しない場合は、Microsoft Storeで「Ubuntu」を検索してインストールしてください。"
         }
       ]
     },
@@ -479,7 +479,7 @@
         "windows": [
           {
             "symptom": "「winget」が認識されません",
-            "solution": "Microsoft Storeで「アプリ インストーラー」を検索してアップデートしてください。それでもダメな場合は code.visualstudio.com から直接ダウンロードしてください。"
+            "solution": "すでにVS Codeがインストール済みであれば、このステップは飛ばして次に進んでかまいません。新規インストールが必要な場合は、Microsoft Storeで「アプリ インストーラー（App Installer）」をインストール／アップデートしてから、新しいPowerShellウィンドウを開いて再実行してください。それでもダメなら https://code.visualstudio.com/download から直接ダウンロードしてインストールしてください。"
           },
           {
             "symptom": "すでにインストールされているというメッセージ",
@@ -615,11 +615,15 @@
       "description": "VS Codeでプロジェクトを開いてAIコーディングを始めます",
       "detailedGuide": {
         "simple": "以下のコマンドでVS Codeが開きます。VS Code内でターミナル（Ctrl+`またはCmd+`）を開き、claudeと入力するとAIコーディングが始まります。",
-        "withBackend": "以下のコマンドでVS Codeが開きます。VS Code内でターミナル（Ctrl+`またはCmd+`）を開き、claudeと入力するとAIコーディングが始まります。frontend/とbackend/フォルダが一緒に表示されます。"
+        "withBackend": "以下のコマンドでVS Codeが開きます。VS Code内でターミナル（Ctrl+`またはCmd+`）を開き、claudeと入力するとAIコーディングが始まります。frontend/とbackend/フォルダが一緒に表示されます。",
+        "wsl": {
+          "simple": "以下のコマンドでVS CodeがWSL Remoteモードで開きます。VS Code内でターミナル（Ctrl+`）を開き、claudeと入力するとAIコーディングが始まります。\n\n💡 プロジェクトフォルダがパソコンのどこにあるか気になる場合は？\nプロジェクトはWSL（Linux）領域に作成されるため、C: ドライブからは直接見えません。\n• Windowsエクスプローラーのアドレスバーに \\\\wsl$ を貼り付けてEnter → Ubuntu → home → 自分のアカウント → {projectName} の順で開けます。\n• もっと早い方法: Ubuntuのターミナルで explorer.exe . （末尾のドットまで含む）と入力すると、現在のフォルダがエクスプローラーですぐに開きます。",
+          "withBackend": "以下のコマンドでVS CodeがWSL Remoteモードで開きます。VS Code内でターミナル（Ctrl+`）を開き、claudeと入力するとAIコーディングが始まります。frontend/とbackend/フォルダが一緒に表示されます。\n\n💡 プロジェクトフォルダがパソコンのどこにあるか気になる場合は？\nプロジェクトはWSL（Linux）領域に作成されるため、C: ドライブからは直接見えません。\n• Windowsエクスプローラーのアドレスバーに \\\\wsl$ を貼り付けてEnter → Ubuntu → home → 自分のアカウント → {projectName} の順で開けます。\n• もっと早い方法: Ubuntuのターミナルで explorer.exe . （末尾のドットまで含む）と入力すると、現在のフォルダがエクスプローラーですぐに開きます。"
+        }
       }
     },
     "environments": {
-      "windowsCmd": "Windowsコマンドライン",
+      "windowsCmd": "Windows PowerShell",
       "linuxCmd": "Linuxコマンドライン",
       "macTerminal": "Macターミナル",
       "vscodeTerminal": "VS Codeターミナル",
