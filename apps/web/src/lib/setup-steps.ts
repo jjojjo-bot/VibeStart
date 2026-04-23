@@ -13,6 +13,8 @@ export interface SetupStep {
   description: string;
   group: SetupGroup;
   detailedGuide?: string;
+  /** detailedGuide 아래에 함께 보여줄 참고 이미지 (스크린샷/다이어그램) */
+  guideImage?: { src: string; alt: string };
   script: string;
   /** 실행 환경 표시 — 초보자가 어디서 실행해야 하는지 알 수 있도록 */
   environment?: string;
@@ -921,7 +923,8 @@ function firstRunStep(projectName: string, goal: Goal, variant: "wsl" | "mac", e
     : `code ~/${projectName}`;
 
   // WSL 변형에서는 비전공자에게 프로젝트 폴더가 Windows 어디에 있는지
-  // (\\wsl$ UNC 경로, explorer.exe .) 안내하는 가이드를 사용한다.
+  // (Linux 사이드바 → Ubuntu → home → 계정 → 프로젝트명) 안내하고,
+  // 파일 탐색기 예시 이미지를 함께 보여준다.
   const guideKey = variant === "wsl"
     ? (hasFeBe ? "firstRun.detailedGuide.wsl.withBackend" : "firstRun.detailedGuide.wsl.simple")
     : (hasFeBe ? "firstRun.detailedGuide.withBackend" : "firstRun.detailedGuide.simple");
@@ -933,6 +936,12 @@ function firstRunStep(projectName: string, goal: Goal, variant: "wsl" | "mac", e
     group: "projectCreate",
     environment: env,
     detailedGuide: t(guideKey, { projectName }),
+    ...(variant === "wsl" && {
+      guideImage: {
+        src: "/setup/wsl-file-explorer.svg",
+        alt: t("firstRun.detailedGuide.wsl.imageAlt"),
+      },
+    }),
     script: openCmd,
   };
 }

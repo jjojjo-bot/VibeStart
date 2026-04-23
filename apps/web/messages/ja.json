@@ -617,8 +617,9 @@
         "simple": "以下のコマンドでVS Codeが開きます。VS Code内でターミナル（Ctrl+`またはCmd+`）を開き、claudeと入力するとAIコーディングが始まります。",
         "withBackend": "以下のコマンドでVS Codeが開きます。VS Code内でターミナル（Ctrl+`またはCmd+`）を開き、claudeと入力するとAIコーディングが始まります。frontend/とbackend/フォルダが一緒に表示されます。",
         "wsl": {
-          "simple": "以下のコマンドでVS CodeがWSL Remoteモードで開きます。VS Code内でターミナル（Ctrl+`）を開き、claudeと入力するとAIコーディングが始まります。\n\n💡 プロジェクトフォルダがパソコンのどこにあるか気になる場合は？\nプロジェクトはWSL（Linux）領域に作成されるため、C: ドライブからは直接見えません。\n• Windowsエクスプローラーのアドレスバーに \\\\wsl$ を貼り付けてEnter → Ubuntu → home → 自分のアカウント → {projectName} の順で開けます。\n• もっと早い方法: Ubuntuのターミナルで explorer.exe . （末尾のドットまで含む）と入力すると、現在のフォルダがエクスプローラーですぐに開きます。",
-          "withBackend": "以下のコマンドでVS CodeがWSL Remoteモードで開きます。VS Code内でターミナル（Ctrl+`）を開き、claudeと入力するとAIコーディングが始まります。frontend/とbackend/フォルダが一緒に表示されます。\n\n💡 プロジェクトフォルダがパソコンのどこにあるか気になる場合は？\nプロジェクトはWSL（Linux）領域に作成されるため、C: ドライブからは直接見えません。\n• Windowsエクスプローラーのアドレスバーに \\\\wsl$ を貼り付けてEnter → Ubuntu → home → 自分のアカウント → {projectName} の順で開けます。\n• もっと早い方法: Ubuntuのターミナルで explorer.exe . （末尾のドットまで含む）と入力すると、現在のフォルダがエクスプローラーですぐに開きます。"
+          "simple": "以下のコマンドでVS CodeがWSL Remoteモードで開きます。VS Code内でターミナル（Ctrl+`）を開き、claudeと入力するとAIコーディングが始まります。\n\n💡 プロジェクトフォルダはファイルエクスプローラー左側の Linux → Ubuntu → home → 自分のアカウント → {projectName} にあります。",
+          "withBackend": "以下のコマンドでVS CodeがWSL Remoteモードで開きます。VS Code内でターミナル（Ctrl+`）を開き、claudeと入力するとAIコーディングが始まります。frontend/とbackend/フォルダが一緒に表示されます。\n\n💡 プロジェクトフォルダはファイルエクスプローラー左側の Linux → Ubuntu → home → 自分のアカウント → {projectName} にあります。",
+          "imageAlt": "ファイルエクスプローラーのサイドバーにあるLinux項目と、Ubuntu/home/アカウント/プロジェクトのフォルダパスを示すサンプル画像"
         }
       }
     },

@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" role="img" aria-label="Windows File Explorer showing Linux sidebar entry with path Ubuntu → home → account → project">
+  <!-- Window frame -->
+  <rect x="8" y="8" width="784" height="424" rx="10" fill="#1c1c22" stroke="#2e2e38" stroke-width="1.5"/>
+
+  <!-- Title bar -->
+  <rect x="8" y="8" width="784" height="32" rx="10" fill="#26262e"/>
+  <rect x="8" y="24" width="784" height="16" fill="#26262e"/>
+  <circle cx="28" cy="24" r="5" fill="#ff5f57"/>
+  <circle cx="46" cy="24" r="5" fill="#febc2e"/>
+  <circle cx="64" cy="24" r="5" fill="#28c840"/>
+  <text x="400" y="28" text-anchor="middle" fill="#9ca3af" font-size="12" font-family="system-ui,-apple-system,sans-serif">File Explorer</text>
+
+  <!-- Address bar -->
+  <rect x="8" y="40" width="784" height="36" fill="#1f1f25"/>
+  <rect x="24" y="50" width="752" height="22" rx="4" fill="#2a2a32" stroke="#3a3a44"/>
+  <text x="40" y="65" fill="#e5e7eb" font-size="12" font-family="Menlo,Monaco,Consolas,monospace">\\wsl$ › Ubuntu › home › (your account) › my-first-app</text>
+
+  <!-- Body split -->
+  <rect x="8" y="76" width="220" height="356" fill="#17171c"/>
+  <rect x="228" y="76" width="564" height="356" fill="#121216"/>
+  <line x1="228" y1="76" x2="228" y2="432" stroke="#2a2a32" stroke-width="1"/>
+
+  <!-- Sidebar items -->
+  <circle cx="32" cy="104" r="3.5" fill="#6b7280"/>
+  <text x="44" y="108" fill="#9ca3af" font-size="12" font-family="system-ui,-apple-system,sans-serif">Quick access</text>
+
+  <circle cx="32" cy="128" r="3.5" fill="#6b7280"/>
+  <text x="44" y="132" fill="#9ca3af" font-size="12" font-family="system-ui,-apple-system,sans-serif">This PC</text>
+
+  <!-- Linux (highlighted) -->
+  <rect x="16" y="148" width="196" height="26" rx="4" fill="#3b82f6" fill-opacity="0.18" stroke="#3b82f6" stroke-opacity="0.35"/>
+  <!-- Simplified penguin icon -->
+  <ellipse cx="34" cy="162" rx="6.5" ry="8" fill="#f3f4f6"/>
+  <ellipse cx="34" cy="159" rx="5" ry="6" fill="#0f0f13"/>
+  <circle cx="31.5" cy="158" r="1" fill="#f3f4f6"/>
+  <circle cx="36.5" cy="158" r="1" fill="#f3f4f6"/>
+  <polygon points="32,162 36,162 34,164.5" fill="#fbbf24"/>
+  <text x="50" y="166" fill="#93c5fd" font-size="13" font-weight="600" font-family="system-ui,-apple-system,sans-serif">Linux</text>
+
+  <!-- Tree under Linux -->
+  <text x="56" y="196" fill="#cbd5e1" font-size="12" font-family="system-ui,-apple-system,sans-serif">▾ Ubuntu</text>
+  <text x="74" y="218" fill="#cbd5e1" font-size="12" font-family="system-ui,-apple-system,sans-serif">▾ home</text>
+  <text x="92" y="240" fill="#cbd5e1" font-size="12" font-family="system-ui,-apple-system,sans-serif">▾ (your account)</text>
+
+  <!-- Project folder (highlighted in tree) -->
+  <rect x="100" y="250" width="112" height="22" rx="3" fill="#fbbf24" fill-opacity="0.14"/>
+  <path d="M108 259 h5 l1.5 -2 h9 v9 h-15.5 z" fill="#fbbf24"/>
+  <text x="128" y="265" fill="#fde68a" font-size="12" font-weight="600" font-family="system-ui,-apple-system,sans-serif">my-first-app</text>
+
+  <!-- Right pane column headers -->
+  <text x="256" y="104" fill="#6b7280" font-size="11" font-family="system-ui,-apple-system,sans-serif">Name</text>
+  <text x="600" y="104" fill="#6b7280" font-size="11" font-family="system-ui,-apple-system,sans-serif">Date modified</text>
+  <line x1="244" y1="114" x2="776" y2="114" stroke="#2a2a32" stroke-width="1"/>
+
+  <!-- File rows -->
+  <g font-family="system-ui,-apple-system,sans-serif">
+    <!-- src folder -->
+    <path d="M252 136 h8 l2 -3 h14 v12 h-24 z" fill="#60a5fa"/>
+    <text x="288" y="145" fill="#e5e7eb" font-size="13">src</text>
+    <text x="600" y="145" fill="#6b7280" font-size="11">Today</text>
+
+    <!-- public -->
+    <path d="M252 166 h8 l2 -3 h14 v12 h-24 z" fill="#60a5fa"/>
+    <text x="288" y="175" fill="#e5e7eb" font-size="13">public</text>
+    <text x="600" y="175" fill="#6b7280" font-size="11">Today</text>
+
+    <!-- node_modules -->
+    <path d="M252 196 h8 l2 -3 h14 v12 h-24 z" fill="#60a5fa"/>
+    <text x="288" y="205" fill="#e5e7eb" font-size="13">node_modules</text>
+    <text x="600" y="205" fill="#6b7280" font-size="11">Today</text>
+
+    <!-- package.json -->
+    <rect x="253" y="220" width="20" height="14" rx="2" fill="#2a2a32" stroke="#3a3a44"/>
+    <text x="263" y="231" text-anchor="middle" fill="#fbbf24" font-size="7" font-weight="700">{ }</text>
+    <text x="288" y="232" fill="#e5e7eb" font-size="13">package.json</text>
+    <text x="600" y="232" fill="#6b7280" font-size="11">Today</text>
+
+    <!-- next.config.ts -->
+    <rect x="253" y="250" width="20" height="14" rx="2" fill="#2a2a32" stroke="#3a3a44"/>
+    <text x="263" y="260" text-anchor="middle" fill="#3b82f6" font-size="7" font-weight="700">TS</text>
+    <text x="288" y="261" fill="#e5e7eb" font-size="13">next.config.ts</text>
+    <text x="600" y="261" fill="#6b7280" font-size="11">Today</text>
+
+    <!-- tsconfig.json -->
+    <rect x="253" y="279" width="20" height="14" rx="2" fill="#2a2a32" stroke="#3a3a44"/>
+    <text x="263" y="289" text-anchor="middle" fill="#3b82f6" font-size="7" font-weight="700">TS</text>
+    <text x="288" y="290" fill="#e5e7eb" font-size="13">tsconfig.json</text>
+    <text x="600" y="290" fill="#6b7280" font-size="11">Today</text>
+
+    <!-- README.md -->
+    <rect x="253" y="308" width="20" height="14" rx="2" fill="#2a2a32" stroke="#3a3a44"/>
+    <text x="263" y="318" text-anchor="middle" fill="#10b981" font-size="7" font-weight="700">MD</text>
+    <text x="288" y="319" fill="#e5e7eb" font-size="13">README.md</text>
+    <text x="600" y="319" fill="#6b7280" font-size="11">Today</text>
+  </g>
+
+  <!-- Placeholder watermark -->
+  <g opacity="0.85">
+    <rect x="16" y="400" width="280" height="22" rx="4" fill="#fbbf24" fill-opacity="0.12"/>
+    <text x="24" y="415" fill="#fbbf24" font-size="11" font-family="system-ui,-apple-system,sans-serif">📷 Example illustration — real screenshot coming</text>
+  </g>
+</svg>

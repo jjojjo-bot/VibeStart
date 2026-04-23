@@ -617,8 +617,9 @@
         "simple": "아래 명령어로 VS Code가 열립니다. VS Code 안에서 터미널(Ctrl+` 또는 Cmd+`)을 열고 claude를 입력하면 AI 코딩이 시작됩니다.",
         "withBackend": "아래 명령어로 VS Code가 열립니다. VS Code 안에서 터미널(Ctrl+` 또는 Cmd+`)을 열고 claude를 입력하면 AI 코딩이 시작됩니다. frontend/와 backend/ 폴더가 함께 보여요.",
         "wsl": {
-          "simple": "아래 명령어로 VS Code가 WSL Remote 모드로 열립니다. VS Code 안에서 터미널(Ctrl+`)을 열고 claude를 입력하면 AI 코딩이 시작돼요.\n\n💡 프로젝트 폴더가 내 컴퓨터 어디에 있는지 궁금하다면?\n내 프로젝트는 WSL(리눅스) 영역에 만들어져서 C: 드라이브에서는 바로 보이지 않아요.\n• Windows 파일 탐색기 주소창에 \\\\wsl$ 를 붙여넣고 Enter → Ubuntu → home → 본인 계정 → {projectName} 순서로 들어가면 됩니다.\n• 더 빠른 방법: Ubuntu 명령창에서 explorer.exe . (마지막 점까지 포함) 을 입력하면 현재 폴더가 파일 탐색기로 바로 열려요.",
-          "withBackend": "아래 명령어로 VS Code가 WSL Remote 모드로 열립니다. VS Code 안에서 터미널(Ctrl+`)을 열고 claude를 입력하면 AI 코딩이 시작돼요. frontend/와 backend/ 폴더가 함께 보여요.\n\n💡 프로젝트 폴더가 내 컴퓨터 어디에 있는지 궁금하다면?\n내 프로젝트는 WSL(리눅스) 영역에 만들어져서 C: 드라이브에서는 바로 보이지 않아요.\n• Windows 파일 탐색기 주소창에 \\\\wsl$ 를 붙여넣고 Enter → Ubuntu → home → 본인 계정 → {projectName} 순서로 들어가면 됩니다.\n• 더 빠른 방법: Ubuntu 명령창에서 explorer.exe . (마지막 점까지 포함) 을 입력하면 현재 폴더가 파일 탐색기로 바로 열려요."
+          "simple": "아래 명령어로 VS Code가 WSL Remote 모드로 열립니다. VS Code 안에서 터미널(Ctrl+`)을 열고 claude를 입력하면 AI 코딩이 시작돼요.\n\n💡 내 프로젝트 폴더는 파일 탐색기 왼쪽의 Linux → Ubuntu → home → 내 계정 → {projectName} 에 있어요.",
+          "withBackend": "아래 명령어로 VS Code가 WSL Remote 모드로 열립니다. VS Code 안에서 터미널(Ctrl+`)을 열고 claude를 입력하면 AI 코딩이 시작돼요. frontend/와 backend/ 폴더가 함께 보여요.\n\n💡 내 프로젝트 폴더는 파일 탐색기 왼쪽의 Linux → Ubuntu → home → 내 계정 → {projectName} 에 있어요.",
+          "imageAlt": "파일 탐색기 사이드바의 Linux 항목과 Ubuntu/home/계정/프로젝트 폴더 경로를 보여주는 예시 이미지"
         }
       }
     },

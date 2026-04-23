@@ -617,8 +617,9 @@
         "simple": "The command below opens VS Code. Inside VS Code, open the terminal (Ctrl+` or Cmd+`) and type claude to start AI coding.",
         "withBackend": "The command below opens VS Code. Inside VS Code, open the terminal (Ctrl+` or Cmd+`) and type claude to start AI coding. You'll see both the frontend/ and backend/ folders.",
         "wsl": {
-          "simple": "The command below opens VS Code in WSL Remote mode. Inside VS Code, open the terminal (Ctrl+`) and type claude to start AI coding.\n\n💡 Wondering where your project folder actually lives on your computer?\nYour project was created inside WSL (Linux), so it doesn't show up directly on the C: drive.\n• Paste \\\\wsl$ into the address bar of Windows File Explorer and press Enter → Ubuntu → home → your account → {projectName}.\n• Faster way: from the Ubuntu terminal, type explorer.exe . (include the trailing dot) and the current folder opens in File Explorer.",
-          "withBackend": "The command below opens VS Code in WSL Remote mode. Inside VS Code, open the terminal (Ctrl+`) and type claude to start AI coding. You'll see both the frontend/ and backend/ folders.\n\n💡 Wondering where your project folder actually lives on your computer?\nYour project was created inside WSL (Linux), so it doesn't show up directly on the C: drive.\n• Paste \\\\wsl$ into the address bar of Windows File Explorer and press Enter → Ubuntu → home → your account → {projectName}.\n• Faster way: from the Ubuntu terminal, type explorer.exe . (include the trailing dot) and the current folder opens in File Explorer."
+          "simple": "The command below opens VS Code in WSL Remote mode. Inside VS Code, open the terminal (Ctrl+`) and type claude to start AI coding.\n\n💡 Your project folder is in File Explorer's sidebar under Linux → Ubuntu → home → your account → {projectName}.",
+          "withBackend": "The command below opens VS Code in WSL Remote mode. Inside VS Code, open the terminal (Ctrl+`) and type claude to start AI coding. You'll see both the frontend/ and backend/ folders.\n\n💡 Your project folder is in File Explorer's sidebar under Linux → Ubuntu → home → your account → {projectName}.",
+          "imageAlt": "Example illustration of File Explorer showing the Linux sidebar entry and the Ubuntu/home/account/project folder path"
         }
       }
     },

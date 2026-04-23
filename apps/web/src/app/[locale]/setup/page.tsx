@@ -269,6 +269,14 @@ function SetupContent() {
                 {active && step.detailedGuide && (
                   <div className="mb-4 whitespace-pre-line rounded-lg bg-primary/5 p-4 text-sm text-muted-foreground">
                     {step.detailedGuide}
+                    {step.guideImage && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img
+                        src={step.guideImage.src}
+                        alt={step.guideImage.alt}
+                        className="mt-3 w-full max-w-2xl rounded-md border border-border/40"
+                      />
+                    )}
                   </div>
                 )}
 

@@ -617,8 +617,9 @@
         "simple": "以下命令会打开VS Code。在VS Code中打开终端（Ctrl+` 或 Cmd+`），输入 claude 即可开始AI编程。",
         "withBackend": "以下命令会打开VS Code。在VS Code中打开终端（Ctrl+` 或 Cmd+`），输入 claude 即可开始AI编程。可以同时看到 frontend/ 和 backend/ 文件夹。",
         "wsl": {
-          "simple": "以下命令会以 WSL Remote 模式打开 VS Code。在 VS Code 中打开终端（Ctrl+`），输入 claude 即可开始 AI 编程。\n\n💡 想知道项目文件夹实际在电脑的哪个位置？\n项目创建在 WSL（Linux）区域，所以在 C: 盘中直接看不到。\n• 在 Windows 文件资源管理器的地址栏粘贴 \\\\wsl$ 并回车 → Ubuntu → home → 你的账户 → {projectName} 即可找到。\n• 更快捷: 在 Ubuntu 终端中输入 explorer.exe .（包含末尾的点），当前文件夹会立即在文件资源管理器中打开。",
-          "withBackend": "以下命令会以 WSL Remote 模式打开 VS Code。在 VS Code 中打开终端（Ctrl+`），输入 claude 即可开始 AI 编程。可以同时看到 frontend/ 和 backend/ 文件夹。\n\n💡 想知道项目文件夹实际在电脑的哪个位置？\n项目创建在 WSL（Linux）区域，所以在 C: 盘中直接看不到。\n• 在 Windows 文件资源管理器的地址栏粘贴 \\\\wsl$ 并回车 → Ubuntu → home → 你的账户 → {projectName} 即可找到。\n• 更快捷: 在 Ubuntu 终端中输入 explorer.exe .（包含末尾的点），当前文件夹会立即在文件资源管理器中打开。"
+          "simple": "以下命令会以 WSL Remote 模式打开 VS Code。在 VS Code 中打开终端（Ctrl+`），输入 claude 即可开始 AI 编程。\n\n💡 项目文件夹在文件资源管理器左侧的 Linux → Ubuntu → home → 你的账户 → {projectName} 下。",
+          "withBackend": "以下命令会以 WSL Remote 模式打开 VS Code。在 VS Code 中打开终端（Ctrl+`），输入 claude 即可开始 AI 编程。可以同时看到 frontend/ 和 backend/ 文件夹。\n\n💡 项目文件夹在文件资源管理器左侧的 Linux → Ubuntu → home → 你的账户 → {projectName} 下。",
+          "imageAlt": "文件资源管理器侧边栏中的 Linux 项目以及 Ubuntu/home/账户/项目文件夹路径的示例图"
         }
       }
     },
