@@ -7,7 +7,8 @@
     "description": "氛围编程第一步。从Git、Node.js、VS Code安装到Next.js项目创建，零基础也能通过复制粘贴完成开发环境搭建。",
     "og": {
       "title": "VibeStart — 编程入门指南 | 开发环境搭建教程",
-      "description": "想用AI写代码但环境搭建太难？通过复制粘贴就能安装Git、Node.js、VS Code。"
+      "description": "想用AI写代码但环境搭建太难？通过复制粘贴就能安装Git、Node.js、VS Code。",
+      "imageAlt": "VibeStart — 从这里开始你的氛围编程之旅"
     },
     "twitter": {
       "title": "VibeStart — 编程入门指南 | 开发环境搭建教程",

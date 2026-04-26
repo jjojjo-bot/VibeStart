@@ -39,6 +39,8 @@ export async function generateMetadata({
   }
   languages["x-default"] = siteUrl;
 
+  const localeUrl = locale === routing.defaultLocale ? siteUrl : `${siteUrl}/${locale}`;
+
   return {
     verification: {
       google: "KRpn29rCSZ7cSBZ-Q_al_8GqvENUm2q3aqiXthtQN8U",
@@ -53,13 +55,13 @@ export async function generateMetadata({
     description: t("description"),
     metadataBase: new URL(siteUrl),
     alternates: {
-      canonical: locale === routing.defaultLocale ? siteUrl : `${siteUrl}/${locale}`,
+      canonical: localeUrl,
       languages,
     },
     openGraph: {
       title: t("og.title"),
       description: t("og.description"),
-      url: siteUrl,
+      url: localeUrl,
       siteName: "VibeStart",
       locale: LOCALE_MAP[locale] ?? "ko_KR",
       type: "website",
@@ -68,7 +70,7 @@ export async function generateMetadata({
           url: ogImageUrl,
           width: 1200,
           height: 630,
-          alt: "VibeStart — 바이브코딩, 여기서 시작하세요",
+          alt: t("og.imageAlt"),
         },
       ],
     },

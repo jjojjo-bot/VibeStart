@@ -7,7 +7,8 @@
     "description": "Tu primer paso en el vibe coding. Instala Git, Node.js, VS Code y crea un proyecto Next.js — sin experiencia previa, solo copia y pega.",
     "og": {
       "title": "VibeStart — Cómo empezar a programar | Guía de configuración del entorno",
-      "description": "¿Quieres programar con IA pero la configuración es difícil? Instala Git, Node.js y VS Code con simples comandos de copiar y pegar."
+      "description": "¿Quieres programar con IA pero la configuración es difícil? Instala Git, Node.js y VS Code con simples comandos de copiar y pegar.",
+      "imageAlt": "VibeStart — Comienza aquí tu viaje de vibe coding"
     },
     "twitter": {
       "title": "VibeStart — Cómo empezar a programar | Guía de configuración del entorno",

@@ -7,7 +7,8 @@
     "description": "バイブコーディングの第一歩。Git、Node.js、VS CodeのインストールからNext.jsプロジェクト作成まで、コピペだけで開発環境を構築できます。",
     "og": {
       "title": "VibeStart — プログラミングの始め方 | 開発環境セットアップガイド",
-      "description": "AIでコーディングしたいけど環境構築が難しい？Git、Node.js、VS Codeをコピペだけでインストール。"
+      "description": "AIでコーディングしたいけど環境構築が難しい？Git、Node.js、VS Codeをコピペだけでインストール。",
+      "imageAlt": "VibeStart — バイブコーディング、ここから始めよう"
     },
     "twitter": {
       "title": "VibeStart — プログラミングの始め方 | 開発環境セットアップガイド",
