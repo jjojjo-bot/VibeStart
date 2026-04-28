@@ -3,7 +3,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
-import { getBlogPost, getAllBlogSlugs } from "@/lib/blog";
+import { getBlogPost, getAllBlogSlugs, getWpCanonicalUrl } from "@/lib/blog";
 import { Badge } from "@/components/ui/badge";
 import type { Metadata } from "next";
 
@@ -16,9 +16,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const post = getBlogPost(locale, slug);
   if (!post) return {};
 
+  const canonical = getWpCanonicalUrl(locale, slug);
+
   return {
     title: post.title,
     description: post.description,
+    alternates: canonical ? { canonical } : undefined,
   };
 }
 
