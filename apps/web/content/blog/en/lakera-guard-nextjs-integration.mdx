@@ -1,0 +1,192 @@
+---
+title: "Lakera Guard in 30 Lines: Production-Ready AI Safety for Next.js Route Handlers (2026)"
+description: "Wire Lakera Guard into your Next.js App Router AI endpoints to block prompt injection, PII leakage, and jailbreak attempts. Edge-runtime compatible code, Vercel AI SDK streaming integration, and real-world latency/cost numbers."
+date: "2026-04-30"
+tags: ["Lakera Guard", "Next.js AI security", "prompt injection defense", "AI agent security", "OWASP ASI", "Vercel AI SDK", "Route Handler", "Edge Runtime", "PII masking", "AI guardrails"]
+---
+
+## 🛡 Why Your AI Route Handlers Need a Guard Layer
+
+The moment you ship `/api/chat` in Next.js App Router, you have a structural security problem. User input flows directly into your LLM prompt, which means prompt injection, PII leakage, and system-prompt overrides are exposed without a single line of malicious code. OWASP's 2026 Agentic Top 10 (ASI) covers exactly this surface in ASI01 (Goal Hijack) and ASI02 (Memory Poisoning).
+
+Regex blocklists fall apart against variant inputs (`"!gnore previous instructions"`, base64-encoded payloads, newline tricks), and writing "refuse harmful requests" in your system prompt is trivially bypassed. The 2026 standard is a separate validation layer in front of the LLM call: only validated inputs reach the model. Lakera Guard delivers that validation as a one-call SaaS — the lowest-friction option on the market.
+
+## 📋 The 4 Risks Lakera Guard Catches
+
+POST text to the Lakera Guard API and you get back a per-category risk score (0.0 to 1.0). Standard policy: block above 0.5, pass below.
+
+| Category | Risk it catches | OWASP ASI mapping |
+|----------|----------------|-------------------|
+| `prompt_injection` | System-prompt override, mission swap | ASI01 Goal Hijack |
+| `jailbreak` | Safety guideline bypass (DAN, "ignore previous") | ASI01 / ASI06 |
+| `pii` | Emails, phone, SSN, card numbers in input | ASI02 Memory Poisoning |
+| `moderation` | Violence, self-harm, hate, sexual content | ASI05 Cascading Hallucination |
+
+The free tier covers 10,000 calls per month — plenty for personal projects or a side SaaS during validation. Switch to paid when production traffic crosses that line.
+
+## 🔑 Setup — 5 Minutes End to End
+
+### 1. Get an API key
+
+Sign up at [lakera.ai](https://www.lakera.ai/) → Dashboard → **API Keys** → create a new key. Keys start with the `lak_` prefix.
+
+### 2. Add the env var
+
+```bash
+# .env.local
+LAKERA_GUARD_API_KEY=lak_your_key_here
+```
+
+Don't commit `.env.local`. On Vercel, add the same variable in Project Settings → Environment Variables. LLM calls in this guide route through **Vercel AI Gateway (OIDC)** — no OpenAI/Anthropic provider keys in code. One `vercel env pull .env.local` provisions the `VERCEL_OIDC_TOKEN` and you're done.
+
+### 3. Use fetch directly — zero dependencies
+
+Lakera ships an SDK, but for Edge Runtime compatibility plain `fetch` is the safer choice. No `node_modules` bloat and the same code runs identically on Edge.
+
+```ts
+// lib/lakera.ts
+type GuardCategory = "prompt_injection" | "jailbreak" | "pii" | "moderation";
+
+type GuardResult = {
+  flagged: boolean;
+  categories: Record<GuardCategory, number>;
+};
+
+export async function lakeraGuard(input: string): Promise<GuardResult> {
+  const res = await fetch("https://api.lakera.ai/v2/guard", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.LAKERA_GUARD_API_KEY}`,
+    },
+    body: JSON.stringify({ messages: [{ role: "user", content: input }] }),
+  });
+
+  if (!res.ok) throw new Error(`Lakera Guard ${res.status}`);
+  return res.json() as Promise<GuardResult>;
+}
+```
+
+That's the entire helper. Reuse this 14-line file from every Route Handler that touches an LLM.
+
+## 💻 30-Line Integration — App Router Route Handler
+
+The simplest one-shot chat endpoint with Lakera Guard wired in. User message arrives → ① Lakera validates → ② if allowed, OpenAI is called → ③ if blocked, return 422.
+
+```ts
+// app/api/chat/route.ts
+import { NextResponse } from "next/server";
+import { generateText } from "ai";
+import { lakeraGuard } from "@/lib/lakera";
+
+export const runtime = "edge";
+
+export async function POST(req: Request): Promise<Response> {
+  const { message } = (await req.json()) as { message: string };
+
+  const guard = await lakeraGuard(message);
+  if (guard.flagged) {
+    return NextResponse.json(
+      { error: "Input blocked by safety check" },
+      { status: 422 }
+    );
+  }
+
+  const { text } = await generateText({
+    model: "openai/gpt-5.4",
+    prompt: message,
+  });
+
+  return NextResponse.json({ reply: text });
+}
+```
+
+The entire defense is `if (guard.flagged) return 422`. Closing the gate before the LLM call prevents wasted tokens, latency, and log pollution all at once. The model is specified as a plain `"provider/model"` string — AI SDK v6 routes this through the AI Gateway automatically, with no provider SDK import and no API key in code. In production, omit category names from the 422 body — exposing them gives bypass attempts a free training signal.
+
+## 🌊 Streaming Chat — Vercel AI SDK Integration
+
+Real chat UIs stream. With Vercel AI SDK's `streamText`, the question is where to put the guard, and the answer is **before the stream opens**. Output validation belongs in a separate layer.
+
+```ts
+// app/api/chat-stream/route.ts
+import { streamText, convertToModelMessages, type UIMessage } from "ai";
+import { lakeraGuard } from "@/lib/lakera";
+
+export const runtime = "edge";
+
+export async function POST(req: Request): Promise<Response> {
+  const { messages } = (await req.json()) as { messages: UIMessage[] };
+
+  const lastUser = messages.filter((m) => m.role === "user").pop();
+  const lastUserText = lastUser?.parts
+    .filter((p) => p.type === "text")
+    .map((p) => p.text)
+    .join("\n");
+
+  if (!lastUserText) return new Response("No user text", { status: 400 });
+
+  const guard = await lakeraGuard(lastUserText);
+  if (guard.flagged) {
+    return new Response(JSON.stringify({ error: "blocked" }), {
+      status: 422,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const result = streamText({
+    model: "openai/gpt-5.4",
+    messages: convertToModelMessages(messages),
+  });
+
+  return result.toUIMessageStreamResponse();
+}
+```
+
+Two AI SDK v6 essentials are baked in here. ① The client sends `UIMessage[]`, where each message has a `parts` array (not a `content` string) — extract user text by filtering parts of `type: "text"`. ② `streamText` returns a result whose `toUIMessageStreamResponse()` is what `useChat` clients expect (the older `toDataStreamResponse()` was renamed in v6). Once a stream opens it's hard to cleanly cut tokens mid-flight, so blocking at the input stage wins on both UX and cost. Output-side risks (model emitting PII, model complying with jailbreak) belong in a downstream post-processing layer.
+
+## ⚙️ Cost & Latency — Real Numbers
+
+Numbers worth knowing before you adopt this, because they make decisions faster.
+
+| Metric | Value | Notes |
+|--------|-------|-------|
+| Average API latency | 80–120ms (us-east) | Add ~100ms from APAC |
+| Free tier | 10,000 calls/month | Enough for solo side projects |
+| Paid entry | $99/month (50,000 calls) | ~$0.002 per call |
+| Edge Runtime | ✅ Fully compatible | fetch-based, no cold start hit |
+| Response payload | ~300 bytes | Negligible |
+
+100–200ms of guard latency disappears next to first-token LLM latency (typically 500–1500ms). If you still want to shave it, pin your Edge Function region to us-east-1 to colocate with the Lakera endpoint.
+
+## 🚀 Production Checklist
+
+Five things to verify before you ship. Five-minute review.
+
+1. **Fail-open or fail-closed?** What happens if the Lakera API is down? Decide explicitly: security-first → fail-closed (block on error); availability-first → fail-open (pass + log).
+2. **Don't leak block reasons** — Strip categories and scores from the 422 response. Exposing them hands bypass attempts a feedback loop.
+3. **Mask blocked input in logs** — Persisting raw blocked content puts log readers in front of malicious payloads. Hash or truncate.
+4. **Track separately from rate limits** — Lakera blocks are likely intentional attacks. Count them per-IP/per-account distinct from generic rate limits, and ramp blocking duration on repeat offenders.
+5. **Alert on quota** — Wire an alert at 80% of your monthly quota. A traffic spike that you only notice on next month's invoice is an avoidable surprise.
+
+For the broader OWASP ASI checklist that covers permissions, logging, and human-approval gates, pair this article with the [5-minute audit guide](https://1daymillion.com/owasp-agentic-top-10-2026/).
+
+## 📝 Next Layers
+
+Lakera Guard is the first input-validation layer. Once your runtime is stable, layer in:
+
+- **Output validation** — Verify model responses don't contain PII (Lakera can score outputs too)
+- **Call logging** — Langfuse or Helicone auto-records every call's I/O, cost, and latency (covers ASI09 Untraceability)
+- **Human-approval gates** — Wire Slack-bot approval for risky tools like payment, external send (covers ASI06 / ASI10)
+- **NeMo Guardrails** — Policy-as-code over conversation flow itself. YAML overhead, but strong for complex agents
+
+Stack all four and you cover ~90% of OWASP ASI Top 10 in production.
+
+---
+
+## 🔗 Related Reading
+
+- [AI Agent Security: OWASP Top 10 — 5-Minute Audit Guide for Non-Developers](https://1daymillion.com/owasp-agentic-top-10-2026/)
+- [Vibe Coding Security in Practice — Finding and Fixing AI Code Vulnerabilities](https://1daymillion.com/vibe-coding-security-vulnerabilities/)
+- [Building with AI Agents — The Next Step for Vibe Coding](https://1daymillion.com/ai-agent-development-vibe-coding/)
+- [Vibe Coding Security Checklist — Preventing AI Code Vulnerabilities](https://1daymillion.com/vibe-coding-security-checklist/)
+- [What Is a .env File? Safely Managing API Keys](https://1daymillion.com/env-file-api-key-management/)

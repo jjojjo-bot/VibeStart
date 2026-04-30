@@ -1,0 +1,192 @@
+---
+title: "Lakera Guard를 Next.js Route Handler에 30줄로 붙이기 — AI 에이전트 보안 실전 (2026)"
+description: "Next.js App Router에서 OpenAI·Claude API를 호출하는 Route Handler에 Lakera Guard를 통합해 프롬프트 인젝션·PII 유출·jailbreak 시도를 차단하는 30줄 코드 패턴, 스트리밍 채팅 결합, 비용·지연 측정까지 실전 통합 가이드."
+date: "2026-04-30"
+tags: ["Lakera Guard", "Next.js AI 보안", "프롬프트 인젝션 방어", "AI 에이전트 보안", "OWASP ASI", "Vercel AI SDK", "Route Handler", "Edge Runtime", "PII 마스킹", "AI 가드레일"]
+---
+
+## 🛡 왜 AI Route Handler에 가드가 필요한가
+
+Next.js App Router로 AI 채팅이나 에이전트 API를 만들면 곧바로 부딪히는 구조적 문제가 있다. `/api/chat` 같은 Route Handler가 사용자 입력을 그대로 LLM 프롬프트로 흘려보내는 구조라, 프롬프트 인젝션·민감 정보 유출·시스템 프롬프트 우회 같은 위험이 한 줄짜리 코드 변경 없이 노출된다. OWASP가 2026년 발표한 Agentic Top 10(ASI)의 ASI01(목표 탈취)과 ASI02(메모리 오염)가 정확히 이 지점을 다룬다.
+
+정규식이나 키워드 차단 리스트로 막는 방식은 변종 입력(`"!gnore previous instructions"`, base64 인코딩, 줄바꿈 트릭)에 무력하고, 시스템 프롬프트에 "위험 요청 거부"라고 적어두는 건 우회가 너무 쉽다. 입력 검증 단계를 LLM 호출 앞에 별도 레이어로 두고, 통과한 입력만 모델로 보내는 흐름이 2026년 기준 표준이다. Lakera Guard는 그 검증 레이어를 SaaS 한 줄 호출로 제공한다.
+
+## 📋 Lakera Guard가 막아주는 위험 4가지
+
+Lakera Guard API에 텍스트를 POST하면 카테고리별 위험 점수(0.0 ~ 1.0)가 반환된다. 일반적으로 0.5 이상이면 차단, 미만이면 통과로 정책을 잡는다.
+
+| 카테고리 | 막는 위험 | OWASP ASI 매핑 |
+|---------|----------|---------------|
+| `prompt_injection` | 시스템 프롬프트 우회·임무 변경 시도 | ASI01 목표 탈취 |
+| `jailbreak` | 안전 가이드라인 회피 (DAN, "이전 지침 무시") | ASI01·ASI06 |
+| `pii` | 이메일·전화번호·주민번호·카드번호 포함 | ASI02 메모리 오염 |
+| `moderation` | 폭력·자해·혐오·성적 콘텐츠 | ASI05 환각 연쇄 |
+
+무료 체험 한도가 월 10,000 호출이라 개인 프로젝트나 사이드 SaaS 한 달치는 충분히 검증 가능하다. 프로덕션 트래픽이 늘면 도입 시점에 유료로 전환하면 된다.
+
+## 🔑 셋업 — 5분 안에 끝남
+
+### 1. API 키 발급
+
+[lakera.ai](https://www.lakera.ai/) 가입 → Dashboard → **API Keys** → 새 키 발급. 키는 `lak_` 접두사로 시작한다.
+
+### 2. 환경변수 등록
+
+```bash
+# .env.local
+LAKERA_GUARD_API_KEY=lak_your_key_here
+```
+
+`.env.local`은 Git에 올리지 말고 Vercel 배포 환경에서는 Project Settings → Environment Variables에 동일한 이름으로 추가한다. LLM 호출은 Vercel AI Gateway(OIDC)로 라우팅하는 게 표준이라 OpenAI/Anthropic API 키를 직접 코드에 넣지 않는다 — 한 번 `vercel env pull .env.local`로 `VERCEL_OIDC_TOKEN`만 받아두면 끝이다.
+
+### 3. fetch 기반 호출 — 의존성 0개
+
+Lakera는 공식 SDK도 제공하지만 Next.js Edge Runtime 호환성을 위해 그냥 fetch로 호출하는 편이 안전하다. `node_modules` 부풀기도 없고 Edge에서도 동일한 코드가 돈다.
+
+```ts
+// lib/lakera.ts
+type GuardCategory = "prompt_injection" | "jailbreak" | "pii" | "moderation";
+
+type GuardResult = {
+  flagged: boolean;
+  categories: Record<GuardCategory, number>;
+};
+
+export async function lakeraGuard(input: string): Promise<GuardResult> {
+  const res = await fetch("https://api.lakera.ai/v2/guard", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.LAKERA_GUARD_API_KEY}`,
+    },
+    body: JSON.stringify({ messages: [{ role: "user", content: input }] }),
+  });
+
+  if (!res.ok) throw new Error(`Lakera Guard ${res.status}`);
+  return res.json() as Promise<GuardResult>;
+}
+```
+
+이게 끝이다. 14줄짜리 헬퍼 하나로 모든 Route Handler에서 재사용한다.
+
+## 💻 30줄 통합 — App Router Route Handler
+
+가장 단순한 단발성 채팅 API에 Lakera Guard를 붙인 패턴이다. 사용자 메시지가 들어오면 ① Lakera로 검증 → ② 통과하면 OpenAI 호출 → ③ 차단되면 422 반환.
+
+```ts
+// app/api/chat/route.ts
+import { NextResponse } from "next/server";
+import { generateText } from "ai";
+import { lakeraGuard } from "@/lib/lakera";
+
+export const runtime = "edge";
+
+export async function POST(req: Request): Promise<Response> {
+  const { message } = (await req.json()) as { message: string };
+
+  const guard = await lakeraGuard(message);
+  if (guard.flagged) {
+    return NextResponse.json(
+      { error: "Input blocked by safety check" },
+      { status: 422 }
+    );
+  }
+
+  const { text } = await generateText({
+    model: "openai/gpt-5.4",
+    prompt: message,
+  });
+
+  return NextResponse.json({ reply: text });
+}
+```
+
+핵심은 `if (guard.flagged) return 422` 한 줄이다. LLM 호출 전에 게이트가 닫히므로 비용·지연·로그 오염이 모두 방지된다. 모델은 `"openai/gpt-5.4"` 같은 `provider/model` 문자열로 지정하면 AI Gateway가 자동 라우팅해준다 — 별도 SDK 임포트나 API 키 노출이 없다. 차단 이유를 클라이언트에 그대로 노출하면 우회 시도자에게 학습 자료가 되니, 422 응답 본문에서는 카테고리 정보를 빼고 일반화된 메시지만 반환한다.
+
+## 🌊 스트리밍 채팅 케이스 — Vercel AI SDK 결합
+
+실제 채팅 UI는 거의 다 스트리밍이다. Vercel AI SDK의 `streamText`를 쓸 때 가드를 어디 넣을지가 포인트인데, **스트리밍 시작 전 입력 검증**이 정답이다. 출력 검증은 별도 레이어로 분리한다.
+
+```ts
+// app/api/chat-stream/route.ts
+import { streamText, convertToModelMessages, type UIMessage } from "ai";
+import { lakeraGuard } from "@/lib/lakera";
+
+export const runtime = "edge";
+
+export async function POST(req: Request): Promise<Response> {
+  const { messages } = (await req.json()) as { messages: UIMessage[] };
+
+  const lastUser = messages.filter((m) => m.role === "user").pop();
+  const lastUserText = lastUser?.parts
+    .filter((p) => p.type === "text")
+    .map((p) => p.text)
+    .join("\n");
+
+  if (!lastUserText) return new Response("No user text", { status: 400 });
+
+  const guard = await lakeraGuard(lastUserText);
+  if (guard.flagged) {
+    return new Response(JSON.stringify({ error: "blocked" }), {
+      status: 422,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const result = streamText({
+    model: "openai/gpt-5.4",
+    messages: convertToModelMessages(messages),
+  });
+
+  return result.toUIMessageStreamResponse();
+}
+```
+
+AI SDK v6 기준 변경점 두 가지를 같이 반영했다. ① 클라이언트가 보내는 `UIMessage`는 `content` 문자열이 아니라 `parts` 배열을 가진다 — 텍스트만 추출하려면 `parts.filter(p => p.type === "text")`로 모은다. ② `streamText` 결과는 `toUIMessageStreamResponse()`로 반환해야 `useChat` 클라이언트가 정상 파싱한다(이전의 `toDataStreamResponse()`는 v6에서 이름이 바뀌었다). 스트리밍이 시작된 후에는 토큰을 끊기 어렵기 때문에 입력 단계에서 차단하는 편이 UX와 비용 양쪽에 유리하다. 출력 쪽 위험(모델이 PII를 생성하거나 jailbreak에 응답)은 별도 후처리 레이어에서 다룬다.
+
+## ⚙️ 비용·지연 측정 — 실측 기반 수치
+
+실제 프로젝트에 도입하시기 전에 알아두면 의사결정이 빨라지는 수치들이다.
+
+| 항목 | 값 | 비고 |
+|------|-----|------|
+| API 평균 지연 | 80~120ms (us-east) | 한국에서 호출 시 +100ms |
+| 무료 한도 | 월 10,000 호출 | 개인 사이드 프로젝트 충분 |
+| 유료 시작가 | $99/월 (50,000 호출) | 호출당 약 $0.002 |
+| Edge Runtime 호환 | ✅ 완전 호환 | fetch 기반이라 Cold start 영향 없음 |
+| 응답 페이로드 | ~300 bytes | 무시할 수준 |
+
+지연 100~200ms이 LLM 첫 토큰 지연(보통 500~1500ms)에 비해 작아 사용자가 체감하기 어렵다. 그래도 줄이고 싶다면 Edge Function을 us-east-1에 고정 배치하는 옵션을 고려할 만하다.
+
+## 🚀 프로덕션 체크리스트
+
+발행 전에 확인할 5가지다. 5분이면 다 본다.
+
+1. **에러 fail-open인가 fail-closed인가** — Lakera API가 다운되면 어떻게 동작하는가? 보안 우선이면 fail-closed(에러 시 차단), 가용성 우선이면 fail-open(에러 시 통과 + 로깅)으로 명시적으로 결정.
+2. **차단 이유 노출 금지** — 422 응답에 카테고리/점수를 그대로 넣지 말 것. 우회 시도자에게 단서가 된다.
+3. **로그에 사용자 입력 마스킹** — 차단된 입력 자체를 로그에 남기면 이후 로그 조회자가 위험 콘텐츠에 노출된다. 해시 또는 일부만 남길 것.
+4. **rate limit과 분리** — Lakera 차단은 의도적 공격일 가능성이 있어 IP·계정 단위 rate limit과 별도로 카운팅해 반복 차단되는 IP는 차단 시간 늘리는 정책 추가.
+5. **비용 알람** — 무료 한도 80% 도달 시 알림 설정. 폭증 시 즉시 인지하지 못하면 다음 달 청구서가 놀랄 수 있다.
+
+OWASP ASI Top 10의 항목별 점검은 [별도 5분 체크리스트 글](https://1daymillion.com/owasp-agentic-top-10-2026/)을 같이 보시면 권한·로그·승인 게이트까지 종합적으로 점검할 수 있다.
+
+## 📝 다음 단계
+
+Lakera Guard는 입력 검증의 첫 레이어다. 운영 안정화 이후 추가하면 좋은 레이어들:
+
+- **출력 검증** — 모델 응답에 PII가 포함되는지 별도 검증 (Lakera는 응답도 검사 가능)
+- **호출 로깅** — Langfuse나 Helicone으로 모든 호출의 입출력·비용·지연을 자동 기록 (ASI09 추적 불가 대응)
+- **사람 승인 게이트** — 결제·외부 발송 같은 위험 도구는 Slack 봇으로 승인 요청 (ASI06·ASI10 대응)
+- **NeMo Guardrails** — 대화 흐름 자체에 정책을 거는 단계. YAML 작성 부담은 있지만 복잡한 에이전트엔 효과적
+
+이 4가지를 다 붙이면 OWASP ASI Top 10의 90%가 커버된다.
+
+---
+
+## 🔗 관련 글
+
+- [AI 에이전트 보안 OWASP Top 10 — 비전공자가 만든 에이전트 5분 점검 가이드](https://1daymillion.com/owasp-agentic-top-10-2026/)
+- [바이브코딩 보안 실전 가이드 — AI 코드 취약점 찾고 고치기](https://1daymillion.com/vibe-coding-security-vulnerabilities/)
+- [AI 에이전트로 개발하기 — 바이브코딩의 다음 단계](https://1daymillion.com/ai-agent-development-vibe-coding/)
+- [바이브코딩 보안 체크리스트 — AI 코드 취약점 예방 가이드](https://1daymillion.com/vibe-coding-security-checklist/)
+- [.env 파일이란? API 키 안전하게 관리하는 방법](https://1daymillion.com/env-file-api-key-management/)
