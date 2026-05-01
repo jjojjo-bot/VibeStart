@@ -3,6 +3,8 @@ import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { LandingStats } from "@/components/landing-stats";
+import { LandingHeroTerminal } from "@/components/landing-hero-terminal";
+import { HeroVideo } from "@/components/hero-video";
 
 const STEP_NUMBERS = ["1", "2", "3"] as const;
 const FAQ_NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8"] as const;
@@ -13,118 +15,68 @@ export default function LandingPage() {
   return (
     <main id="main-content" className="flex flex-col items-center px-6">
       {/* ───── 히어로 ───── */}
-      <section className="flex min-h-[85vh] max-w-3xl flex-col items-center justify-center py-24 text-center">
-        <div className="mb-4 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm text-primary">
-          {t("badge")}
-        </div>
-        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
-          {t("heroTitle")}
-          <br />
-          <span className="text-primary">{t("heroHighlight")}</span>
-        </h1>
-        <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground whitespace-pre-line">
-          {t("heroDescription")}
-        </p>
+      <section className="grid w-full max-w-6xl items-center gap-10 py-16 lg:grid-cols-[1fr_1fr] lg:gap-16 lg:py-24">
+        <div className="text-center">
+          <div className="mb-4 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm text-primary">
+            {t("badge")}
+          </div>
+          <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">
+            {t("heroTitle")}
+            <br />
+            <span className="text-primary">{t("heroHighlight")}</span>
+          </h1>
+          <p className="mt-6 text-lg leading-relaxed text-muted-foreground whitespace-pre-line">
+            {t("heroDescription")}
+          </p>
 
-        {/* 결과 약속 뱃지 */}
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card px-3 py-1">
-            <span className="text-emerald-400">✓</span> {t("promise.free")}
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card px-3 py-1">
-            <span className="text-emerald-400">✓</span> {t("promise.time")}
-          </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card px-3 py-1">
-            <span className="text-emerald-400">✓</span> {t("promise.noExp")}
-          </span>
+          {/* 결과 약속 뱃지 */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card px-3 py-1">
+              <span className="text-emerald-400">✓</span> {t("promise.free")}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card px-3 py-1">
+              <span className="text-emerald-400">✓</span> {t("promise.time")}
+            </span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-card px-3 py-1">
+              <span className="text-emerald-400">✓</span> {t("promise.noExp")}
+            </span>
+          </div>
+
+          {/* CTA */}
+          <div className="mt-10 flex justify-center">
+            <Link href="/onboarding">
+              <Button size="lg" className="h-12 px-8 text-base">
+                {t("ctaButton")}
+              </Button>
+            </Link>
+          </div>
+
+          <div className="mt-5 text-center text-sm text-muted-foreground">
+            <span>{t("secondaryCta.prefix")} </span>
+            <Link
+              href="/dashboard"
+              className="text-primary underline underline-offset-4 hover:text-primary/80"
+            >
+              {t("secondaryCta.link")}
+            </Link>
+          </div>
         </div>
 
-        {/* CTA */}
-        <div className="mt-10">
-          <Link href="/onboarding">
-            <Button size="lg" className="h-12 px-8 text-base">
-              {t("ctaButton")}
-            </Button>
-          </Link>
-        </div>
-
-        <div className="mt-5 text-sm text-muted-foreground">
-          <span>{t("secondaryCta.prefix")} </span>
-          <Link
-            href="/dashboard"
-            className="text-primary underline underline-offset-4 hover:text-primary/80"
-          >
-            {t("secondaryCta.link")}
-          </Link>
+        <div className="lg:order-last">
+          <LandingHeroTerminal />
         </div>
       </section>
 
-      {/* ───── 결과물 미리보기 ───── */}
-      <section className="w-full max-w-2xl pb-24">
-        <div className="overflow-hidden rounded-xl border border-border/50 bg-card shadow-2xl shadow-primary/5">
-          {/* 브라우저 타이틀바 */}
-          <div className="flex items-center gap-2 border-b border-border/50 bg-muted/50 px-4 py-2.5">
-            <div className="flex gap-1.5">
-              <div className="h-3 w-3 rounded-full bg-red-500/70" />
-              <div className="h-3 w-3 rounded-full bg-yellow-500/70" />
-              <div className="h-3 w-3 rounded-full bg-green-500/70" />
-            </div>
-            <div className="mx-auto flex h-6 w-56 items-center justify-center rounded-md bg-background/80 text-xs text-muted-foreground">
-              my-portfolio.vercel.app
-            </div>
-          </div>
-          {/* CSS 랜딩페이지 목업 */}
-          <div className="bg-zinc-950 p-6 sm:p-8">
-            {/* 미니 네비게이션 */}
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-1.5">
-                <div className="h-4 w-4 rounded-full bg-violet-500" />
-                <span className="text-[10px] font-semibold text-zinc-200 sm:text-xs">Portfolio</span>
-              </div>
-              <div className="flex gap-3 text-[9px] text-zinc-500 sm:text-[10px]">
-                <span>About</span>
-                <span>Work</span>
-                <span>Contact</span>
-              </div>
-            </div>
-            {/* 히어로 */}
-            <div className="mb-6">
-              <div className="mb-2 inline-block rounded-full bg-violet-500/10 px-2.5 py-0.5 text-[9px] text-violet-400 sm:text-[10px]">
-                Full-Stack Developer
-              </div>
-              <h3 className="text-lg font-bold text-zinc-100 leading-tight sm:text-xl">
-                Hi, I&apos;m <span className="text-violet-400">Minjun</span>
-              </h3>
-              <p className="mt-1.5 text-[10px] leading-relaxed text-zinc-500 sm:text-xs">
-                I build beautiful web experiences with modern tools.
-              </p>
-              <div className="mt-3 flex gap-2">
-                <div className="rounded-md bg-violet-500 px-3 py-1 text-[9px] font-medium text-white sm:text-[10px]">
-                  View Projects
-                </div>
-                <div className="rounded-md border border-zinc-700 px-3 py-1 text-[9px] text-zinc-400 sm:text-[10px]">
-                  Contact Me
-                </div>
-              </div>
-            </div>
-            {/* 프로젝트 카드 */}
-            <div className="grid grid-cols-2 gap-2.5">
-              <div className="rounded-lg bg-zinc-900 p-3">
-                <div className="mb-2 h-16 rounded-md bg-gradient-to-br from-violet-500/20 to-indigo-500/20 sm:h-20" />
-                <span className="text-[10px] font-medium text-zinc-300 sm:text-xs">E-commerce App</span>
-                <p className="mt-0.5 text-[8px] text-zinc-600 sm:text-[9px]">Next.js · Stripe · Tailwind</p>
-              </div>
-              <div className="rounded-lg bg-zinc-900 p-3">
-                <div className="mb-2 h-16 rounded-md bg-gradient-to-br from-emerald-500/20 to-teal-500/20 sm:h-20" />
-                <span className="text-[10px] font-medium text-zinc-300 sm:text-xs">AI Chat Bot</span>
-                <p className="mt-0.5 text-[8px] text-zinc-600 sm:text-[9px]">React · OpenAI · Vercel</p>
-              </div>
-            </div>
-          </div>
+      {/* ───── Hero Video (제품 스토리) ───── */}
+      <section className="w-full max-w-5xl pb-16">
+        <div className="aspect-video w-full overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl shadow-primary/10">
+          <HeroVideo />
         </div>
-        <p className="mt-3 text-center text-xs text-muted-foreground">
-          {t("demo.caption")}
-        </p>
+      </section>
+
+      {/* ───── 통계 (소셜 proof) ───── */}
+      <section className="w-full max-w-2xl pb-24">
+        <LandingStats />
       </section>
 
       {/* ───── 3스텝 ───── */}
@@ -237,11 +189,6 @@ export default function LandingPage() {
           }),
         }}
       />
-
-      {/* ───── 통계 ───── */}
-      <section className="w-full max-w-2xl pb-16">
-        <LandingStats />
-      </section>
 
       {/* ───── 하단 CTA ───── */}
       <section className="w-full max-w-2xl pb-24 text-center">
