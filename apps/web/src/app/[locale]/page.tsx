@@ -1,10 +1,9 @@
-import Script from "next/script";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { LandingStats } from "@/components/landing-stats";
 import { LandingHeroTerminal } from "@/components/landing-hero-terminal";
-import { HeroVideo } from "@/components/hero-video";
+import { HeroVideoLazy } from "@/components/hero-video-lazy";
 
 const STEP_NUMBERS = ["1", "2", "3"] as const;
 const FAQ_NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8"] as const;
@@ -70,7 +69,7 @@ export default function LandingPage() {
       {/* ───── Hero Video (제품 스토리) ───── */}
       <section className="w-full max-w-5xl pb-16">
         <div className="aspect-video w-full overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl shadow-primary/10">
-          <HeroVideo />
+          <HeroVideoLazy />
         </div>
       </section>
 
@@ -171,8 +170,7 @@ export default function LandingPage() {
       </section>
 
       {/* FAQ JSON-LD */}
-      <Script
-        id="faq-jsonld"
+      <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify({
