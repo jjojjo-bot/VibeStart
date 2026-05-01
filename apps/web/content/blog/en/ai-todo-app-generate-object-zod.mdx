@@ -187,7 +187,7 @@ Measured averages for single-line inputs.
 | Avg LLM latency | 1.2–2.0s | gpt-5.4, 30–80 char input |
 | Tokens used | ~200 in / ~100 out | Includes schema + prompt |
 | Cost per call | ~.0007 | .70 per 1,000 todos |
-| Gateway routing overhead | <20ms | Negligible |
+| Gateway routing overhead | Under 20ms | Negligible |
 | Perceived latency (optimistic) | 0ms | Input shown instantly |
 
 Even at 10,000 monthly conversions (typical solo user) the bill stays around .00. If users dump ten todos at once you're approaching ten seconds of compound latency — that's the moment to introduce input batching or a job queue, not before.
