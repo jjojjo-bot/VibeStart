@@ -3,7 +3,13 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
-import { getBlogPost, getAllBlogSlugs, getWpCanonicalUrl } from "@/lib/blog";
+import { routing } from "@/i18n/routing";
+import {
+  getBlogPost,
+  getAllBlogSlugs,
+  getAvailableBlogLocales,
+  getWpCanonicalUrl,
+} from "@/lib/blog";
 import { Badge } from "@/components/ui/badge";
 import type { Metadata } from "next";
 
@@ -11,17 +17,46 @@ interface PageProps {
   params: Promise<{ locale: string; slug: string }>;
 }
 
+const SITE_URL = "https://vibe-start.com";
+
+function blogPostUrl(locale: string, slug: string): string {
+  const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
+  return `${SITE_URL}${prefix}/blog/${slug}`;
+}
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale, slug } = await params;
   const post = getBlogPost(locale, slug);
   if (!post) return {};
 
-  const canonical = getWpCanonicalUrl(locale, slug);
+  const wpCanonical = getWpCanonicalUrl(locale, slug);
+  const selfUrl = blogPostUrl(locale, slug);
+
+  // hreflang alternates: 실제 MDX가 존재하는 locale만 가리킨다.
+  const availableLocales = getAvailableBlogLocales(slug, routing.locales);
+  const languages: Record<string, string> = {};
+  for (const loc of availableLocales) {
+    languages[loc] = blogPostUrl(loc, slug);
+  }
+  if (availableLocales.includes(routing.defaultLocale)) {
+    languages["x-default"] = blogPostUrl(routing.defaultLocale, slug);
+  }
 
   return {
     title: post.title,
     description: post.description,
-    alternates: canonical ? { canonical } : undefined,
+    alternates: {
+      canonical: wpCanonical ?? selfUrl,
+      languages,
+    },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      url: selfUrl,
+      type: "article",
+      publishedTime: post.date,
+      tags: post.tags,
+    },
   };
 }
 
@@ -32,8 +67,69 @@ export default async function BlogPostPage({ params }: PageProps) {
 
   if (!post) notFound();
 
+  const selfUrl = blogPostUrl(locale, slug);
+  const blogIndexUrl = `${SITE_URL}${
+    locale === routing.defaultLocale ? "" : `/${locale}`
+  }/blog`;
+
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    dateModified: post.date,
+    inLanguage: locale,
+    keywords: post.tags.join(", "),
+    url: selfUrl,
+    mainEntityOfPage: { "@type": "WebPage", "@id": selfUrl },
+    author: {
+      "@type": "Person",
+      name: "Brandon",
+      url: SITE_URL,
+    },
+    publisher: {
+      "@type": "Organization",
+      name: "VibeStart",
+      url: SITE_URL,
+    },
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "VibeStart",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: t("backToList"),
+        item: blogIndexUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: post.title,
+        item: selfUrl,
+      },
+    ],
+  };
+
   return (
     <main id="main-content" className="flex min-h-screen flex-col items-center px-6 py-24">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
       <article className="mx-auto w-full max-w-2xl">
         <Link
           href="/blog"

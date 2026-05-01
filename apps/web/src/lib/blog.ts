@@ -112,3 +112,17 @@ export function getAllBlogSlugs(locale: string): string[] {
     .filter((f) => f.endsWith(".mdx"))
     .map((f) => f.replace(/\.mdx$/, ""));
 }
+
+/**
+ * 특정 slug의 MDX가 실제로 존재하는 locale 목록.
+ * fallback (getLocaleDir의 ko 폴백)을 거치지 않은 진짜 파일 존재 여부 기준.
+ * hreflang alternate 출력 시 fallback 콘텐츠를 가리키지 않으려고 사용.
+ */
+export function getAvailableBlogLocales(
+  slug: string,
+  candidates: readonly string[],
+): string[] {
+  return candidates.filter((loc) =>
+    fs.existsSync(path.join(CONTENT_DIR, loc, `${slug}.mdx`)),
+  );
+}
