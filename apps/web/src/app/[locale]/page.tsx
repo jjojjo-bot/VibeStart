@@ -5,8 +5,25 @@ import { LandingStats } from "@/components/landing-stats";
 import { LandingHeroTerminal } from "@/components/landing-hero-terminal";
 import { HeroVideoLazy } from "@/components/hero-video-lazy";
 
-const STEP_NUMBERS = ["1", "2", "3"] as const;
+const STEPS = [
+  { num: "1", gradient: "from-sky-500 to-cyan-400" },
+  { num: "2", gradient: "from-violet-500 to-purple-400" },
+  { num: "3", gradient: "from-pink-500 to-rose-400" },
+] as const;
+
+const PHASE2_TRACKS = [
+  { key: "deploy", gradient: "from-sky-500 to-cyan-400" },
+  { key: "auth", gradient: "from-violet-500 to-purple-400" },
+  { key: "vibe", gradient: "from-pink-500 to-rose-400" },
+] as const;
+
 const FAQ_NUMBERS = ["1", "2", "3", "4", "5", "6", "7", "8"] as const;
+
+const FAQ_GROUPS = [
+  { key: "start", items: ["1", "2", "3"] as const },
+  { key: "install", items: ["4", "7"] as const },
+  { key: "next", items: ["5", "6", "8"] as const },
+] as const;
 
 export default function LandingPage() {
   const t = useTranslations("Landing");
@@ -82,18 +99,23 @@ export default function LandingPage() {
       <section className="w-full max-w-2xl pb-24">
         <h2 className="mb-8 text-center text-2xl font-bold">{t("howItWorks")}</h2>
         <div className="grid gap-6 sm:grid-cols-3">
-          {STEP_NUMBERS.map((num) => (
+          {STEPS.map(({ num, gradient }) => (
             <div
               key={num}
-              className="rounded-xl border border-border/50 bg-card p-6 text-left"
+              className="overflow-hidden rounded-xl border border-border/50 bg-card text-left"
             >
-              <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-sm font-bold text-primary">
-                {num}
+              <div className={`h-1 bg-gradient-to-r ${gradient}`} />
+              <div className="p-6">
+                <div
+                  className={`mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br ${gradient} text-base font-bold text-white shadow-md`}
+                >
+                  {num}
+                </div>
+                <h3 className="font-semibold">{t(`steps.${num}.title`)}</h3>
+                <p className="mt-1.5 text-sm text-muted-foreground">
+                  {t(`steps.${num}.description`)}
+                </p>
               </div>
-              <h3 className="font-semibold">{t(`steps.${num}.title`)}</h3>
-              <p className="mt-1.5 text-sm text-muted-foreground">
-                {t(`steps.${num}.description`)}
-              </p>
             </div>
           ))}
         </div>
@@ -135,14 +157,17 @@ export default function LandingPage() {
         <h2 className="mb-3 text-center text-2xl font-bold">{t("phase2.title")}</h2>
         <p className="mb-8 text-center text-sm text-muted-foreground">{t("phase2.subtitle")}</p>
         <div className="grid gap-4 sm:grid-cols-3">
-          {(["deploy", "auth", "vibe"] as const).map((key) => (
+          {PHASE2_TRACKS.map(({ key, gradient }) => (
             <div
               key={key}
-              className="rounded-xl border border-border/50 bg-card p-5 text-center"
+              className="overflow-hidden rounded-xl border border-border/50 bg-card text-center"
             >
-              <div className="mb-2 text-2xl">{t(`phase2.${key}.emoji`)}</div>
-              <h3 className="text-sm font-semibold">{t(`phase2.${key}.title`)}</h3>
-              <p className="mt-1 text-xs text-muted-foreground">{t(`phase2.${key}.desc`)}</p>
+              <div className={`h-1 bg-gradient-to-r ${gradient}`} />
+              <div className="p-5">
+                <div className="mb-2 text-2xl">{t(`phase2.${key}.emoji`)}</div>
+                <h3 className="text-sm font-semibold">{t(`phase2.${key}.title`)}</h3>
+                <p className="mt-1 text-xs text-muted-foreground">{t(`phase2.${key}.desc`)}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -151,20 +176,29 @@ export default function LandingPage() {
       {/* ───── FAQ ───── */}
       <section className="w-full max-w-2xl pb-24">
         <h2 className="mb-8 text-center text-2xl font-bold">{t("faq.title")}</h2>
-        <div className="space-y-3">
-          {FAQ_NUMBERS.map((num) => (
-            <details
-              key={num}
-              className="group rounded-xl border border-border/50 bg-card"
-            >
-              <summary className="flex cursor-pointer items-center justify-between px-5 py-4 text-sm font-medium">
-                {t(`faq.${num}.q`)}
-                <span className="ml-2 shrink-0 text-muted-foreground transition-transform group-open:rotate-45">+</span>
-              </summary>
-              <div className="border-t border-border/30 px-5 py-4 text-sm text-muted-foreground">
-                {t(`faq.${num}.a`)}
+        <div className="space-y-8">
+          {FAQ_GROUPS.map(({ key, items }) => (
+            <div key={key}>
+              <h3 className="mb-3 text-sm font-semibold text-muted-foreground">
+                {t(`faq.groups.${key}`)}
+              </h3>
+              <div className="space-y-3">
+                {items.map((num) => (
+                  <details
+                    key={num}
+                    className="group rounded-xl border border-border/50 bg-card"
+                  >
+                    <summary className="flex cursor-pointer items-center justify-between px-5 py-4 text-sm font-medium">
+                      {t(`faq.${num}.q`)}
+                      <span className="ml-2 shrink-0 text-muted-foreground transition-transform group-open:rotate-45">+</span>
+                    </summary>
+                    <div className="border-t border-border/30 px-5 py-4 text-sm text-muted-foreground">
+                      {t(`faq.${num}.a`)}
+                    </div>
+                  </details>
+                ))}
               </div>
-            </details>
+            </div>
           ))}
         </div>
       </section>

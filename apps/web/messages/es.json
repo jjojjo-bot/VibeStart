@@ -167,6 +167,11 @@
       "8": {
         "q": "¿Qué hago después de la configuración?",
         "a": "VibeStart Phase 2 te guía para subir código a GitHub, desplegar en Vercel y añadir login con Google — todo paso a paso. También puedes probar el ciclo de vibe coding: editar tu sitio hablando con IA."
+      },
+      "groups": {
+        "start": "🔰 Comenzar",
+        "install": "⚙️ Instalación y entorno",
+        "next": "💰 Tiempo, coste y próximos pasos"
       }
     },
     "bottomCta": {

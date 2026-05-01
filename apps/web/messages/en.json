@@ -167,6 +167,11 @@
       "8": {
         "q": "What do I do after environment setup?",
         "a": "VibeStart Phase 2 guides you through pushing code to GitHub, deploying to Vercel, and adding Google login — all step by step. You can also try the vibe coding loop: edit your site by talking to AI."
+      },
+      "groups": {
+        "start": "🔰 Getting started",
+        "install": "⚙️ Installation & environment",
+        "next": "💰 Time, cost & next"
       }
     },
     "bottomCta": {
