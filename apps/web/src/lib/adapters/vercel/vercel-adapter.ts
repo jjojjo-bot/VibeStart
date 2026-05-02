@@ -269,6 +269,8 @@ export interface VercelDeploymentResult {
   readyState: string;
   /** production alias 목록 (예: my-blog.vercel.app). READY 이전엔 비어있을 수 있음. */
   alias: string[];
+  /** 배포 생성 epoch ms — M3 Step 4에서 "최근 N분 전 배포" 표시용. */
+  createdAt: number;
 }
 
 /**
@@ -291,6 +293,7 @@ export async function getLatestDeployment(
       url: string;
       readyState: string;
       alias?: string[];
+      created: number;
     }>;
   };
   const first = data.deployments[0];
@@ -300,6 +303,7 @@ export async function getLatestDeployment(
     url: first.url,
     readyState: first.readyState,
     alias: first.alias ?? [],
+    createdAt: first.created,
   };
 }
 
@@ -320,12 +324,14 @@ export async function getDeployment(
     url: string;
     readyState: string;
     alias?: string[];
+    createdAt?: number;
   };
   return {
     id: data.id,
     url: data.url,
     readyState: data.readyState,
     alias: data.alias ?? [],
+    createdAt: data.createdAt ?? Date.now(),
   };
 }
 
@@ -476,12 +482,14 @@ export async function triggerVercelDeployment(
       url: string;
       readyState?: string;
       alias?: string[];
+      createdAt?: number;
     };
     return {
       id: data.id,
       url: data.url,
       readyState: data.readyState ?? "QUEUED",
       alias: data.alias ?? [],
+      createdAt: data.createdAt ?? Date.now(),
     };
   }
 

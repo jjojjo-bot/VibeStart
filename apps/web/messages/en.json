@@ -1292,20 +1292,17 @@
         "m3-s3-git-push": "Push your changes",
         "m3-s4-verify-deploy": "Verify the auto-deploy result"
       },
-      "celebrationTitle": "🎉 Vibe coding loop complete!",
-      "celebrationDescription": "Talk to AI, code changes, auto-deploy — the loop is complete. Now build freely!"
+      "celebrationTitle": "🎉 First vibe coding loop done!",
+      "celebrationDescription": "You just ran the full cycle yourself — one sentence → AI code change → git push → live on the web. The fastest next step is your second attempt. Try a different category (color, new section, font) and share the live URL with a friend or family member to collect a first reaction. 📸 Browser screenshots or phone capture make great before-and-after comparisons."
     }
   },
   "VibeCoding": {
     "title": "Start Vibe Coding",
     "description": "Open your project in an AI editor, request changes in natural language, then push — auto-deploy takes care of the rest",
-    "step1Title": "Open Project in VS Code + Claude Code",
-    "step1Desc": "Paste the one-liner below into your terminal — it opens VS Code and starts Claude Code in one shot",
-    "step1VscodeMacCmd": "cd {project} && open -a \"Visual Studio Code\" . && claude",
-    "step1VscodeWinCmd": "cd {project} && code . && claude",
+    "step1Title": "Open the project in your editor",
+    "step1Desc": "Pick your AI editor and paste the line below into your terminal.",
     "step2Title": "Ask AI for Your First Edit",
-    "step2Desc": "Try asking Claude Code something like the prompt below. Feel free to change it!",
-    "step2Prompt": "Change the main page title to 'My First Site' and set the background color to blue",
+    "step2Desc": "Pick a category and copy the prompt. Feel free to tweak it.",
     "step3Title": "Push Your Changes",
     "step3Desc": "Ask Claude Code like this",
     "step3Prompt": "First run `git pull` to grab the latest files, then commit what we changed and push to GitHub",
@@ -1316,6 +1313,81 @@
     "copiedButton": "Copied",
     "doneButton": "Done",
     "undoButton": "Undo",
-    "doneLabel": "Done!"
+    "doneLabel": "Done!",
+    "step2Categories": {
+      "text": {
+        "label": "Text",
+        "prompt": "Change the main page's big heading to 'My First Site' and the subtitle below it to 'Built with AI'."
+      },
+      "color": {
+        "label": "Color",
+        "prompt": "Change the whole site background to a soft blue gradient, and unify all buttons in purple."
+      },
+      "section": {
+        "label": "New section",
+        "prompt": "Add an 'About Me' section below the hero. Just one short bio sentence and one email link."
+      },
+      "visual": {
+        "label": "Gradient bg",
+        "prompt": "Give the hero area a purple-to-blue gradient background, and scatter 3 light star SVG decorations."
+      },
+      "font": {
+        "label": "Font",
+        "prompt": "Switch all fonts to clean Inter, and make the large headings bolder at weight 800."
+      }
+    },
+    "step1Tools": {
+      "claudeCode": {
+        "label": "Claude Code",
+        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "cd '{'project'}' && code . && claude",
+        "note": "VS Code opens and Claude Code starts in the terminal in one go."
+      },
+      "cursor": {
+        "label": "Cursor",
+        "macCmd": "cd '{'project'}' && open -a \"Cursor\" .",
+        "winCmd": "cd '{'project'}' && cursor .",
+        "note": "Cursor opens — chat with AI directly from the right side panel."
+      }
+    },
+    "troubleshoot": {
+      "title": "🆘 When you get stuck",
+      "intro": "Three things that commonly block M3. Click to expand.",
+      "items": {
+        "gitConflict": {
+          "title": "git push is rejected",
+          "symptom": "Terminal shows 'updates were rejected because the remote contains work'.",
+          "fix": "git pull --rebase origin main && git push",
+          "linkLabel": "7 git push error fixes",
+          "linkUrl": "https://1daymillion.com/git-push-error-solutions/"
+        },
+        "aiNoResponse": {
+          "title": "AI doesn't respond or stalls",
+          "symptom": "Claude Code/Cursor hangs or keeps replying 'cannot help with that'.",
+          "fix": "Split your prompt into smaller pieces. One change at a time almost always unblocks it.",
+          "linkLabel": "10 prompt writing tips",
+          "linkUrl": "https://1daymillion.com/ai-coding-prompt-writing-tips/"
+        },
+        "deployFailed": {
+          "title": "Vercel deploy fails",
+          "symptom": "You see a red 'Failed' label or the live site doesn't reflect your change.",
+          "fix": "Open the failing deploy in Vercel → Build Logs tab → read the first red line.",
+          "linkLabel": "Top 10 Vercel deploy failures",
+          "linkUrl": "https://1daymillion.com/vercel-deploy-failure-top-10/"
+        }
+      }
+    },
+    "step4Verify": {
+      "button": "🔄 Check deploy",
+      "checking": "Checking...",
+      "successFresh": "✅ Fresh deploy '{'minutes'}' min ago — your changes are live",
+      "successStale": "⚠️ Last deploy was '{'minutes'}' min ago — try git push again",
+      "building": "⏳ Build in progress (started '{'seconds'}'s ago) — check again shortly",
+      "errorBuild": "❌ Last build failed. Check the logs in Vercel dashboard",
+      "errorNoToken": "Vercel isn't connected. Complete the Vercel connection in M1 first",
+      "errorNoProject": "No Vercel project linked. Re-run M1",
+      "errorNoDeploy": "No deployment yet. Push your code first",
+      "errorGeneric": "Check failed. Try again shortly"
+    }
   }
 }

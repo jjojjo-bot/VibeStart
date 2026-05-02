@@ -1292,20 +1292,17 @@
         "m3-s3-git-push": "推送你的更改",
         "m3-s4-verify-deploy": "确认自动部署结果"
       },
-      "celebrationTitle": "🎉 Vibe Coding 循环完成！",
-      "celebrationDescription": "对AI说话、代码改变、自动部署——循环已完成。现在自由地创作吧！"
+      "celebrationTitle": "🎉 vibe coding 循环完成!",
+      "celebrationDescription": "你刚刚亲自跑完了完整循环 — 一句话 → AI改代码 → git push → 上线。最快的下一步就是第二次尝试。换一个类别(颜色、新模块、字体)再来一次,把上线URL发给朋友或家人,收集第一份反馈。📸 浏览器截图或手机录屏最适合做改前/改后对比。"
     }
   },
   "VibeCoding": {
     "title": "开始 Vibe Coding",
     "description": "用AI编辑器打开项目，用自然语言请求修改，然后push — 自动部署搞定一切",
-    "step1Title": "用VS Code + Claude Code打开项目",
-    "step1Desc": "把下面这一行粘贴到终端 — 会同时打开 VS Code 并启动 Claude Code",
-    "step1VscodeMacCmd": "cd {project} && open -a \"Visual Studio Code\" . && claude",
-    "step1VscodeWinCmd": "cd {project} && code . && claude",
+    "step1Title": "在编辑器中打开项目",
+    "step1Desc": "选择你要使用的AI编辑器,然后把下面这一行粘贴到终端。",
     "step2Title": "向AI提出第一次修改请求",
-    "step2Desc": "尝试像下面这样向Claude Code提问。随意修改也没关系！",
-    "step2Prompt": "把主页标题改成「My First Site」，把背景色改成蓝色",
+    "step2Desc": "选择一个类别并复制提示。可以自由调整。",
     "step3Title": "推送你的更改",
     "step3Desc": "向 Claude Code 这样请求",
     "step3Prompt": "先执行 `git pull` 拉取最新文件，然后把改动 commit 并 push 到 GitHub",
@@ -1316,6 +1313,81 @@
     "copiedButton": "已复制",
     "doneButton": "完成",
     "undoButton": "撤销",
-    "doneLabel": "已完成！"
+    "doneLabel": "已完成！",
+    "step2Categories": {
+      "text": {
+        "label": "文本",
+        "prompt": "把主页的大标题改成'我的第一个网站',下面的副标题改成'与AI一起打造'。"
+      },
+      "color": {
+        "label": "颜色",
+        "prompt": "把整站背景改成柔和的蓝色渐变,所有按钮统一为紫色。"
+      },
+      "section": {
+        "label": "新模块",
+        "prompt": "在Hero下面新增一个'About Me'模块。只需一句简短自我介绍和一个邮件链接。"
+      },
+      "visual": {
+        "label": "渐变背景",
+        "prompt": "Hero区域设置紫色到蓝色的渐变背景,撒上3个轻量星形SVG装饰。"
+      },
+      "font": {
+        "label": "字体",
+        "prompt": "全站字体改成简洁的Inter,大标题字重提高到800让它更粗。"
+      }
+    },
+    "step1Tools": {
+      "claudeCode": {
+        "label": "Claude Code",
+        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "cd '{'project'}' && code . && claude",
+        "note": "VS Code会打开,另一个终端自动启动Claude Code。"
+      },
+      "cursor": {
+        "label": "Cursor",
+        "macCmd": "cd '{'project'}' && open -a \"Cursor\" .",
+        "winCmd": "cd '{'project'}' && cursor .",
+        "note": "Cursor打开后,可以直接在右侧聊天面板向AI提出请求。"
+      }
+    },
+    "troubleshoot": {
+      "title": "🆘 卡住的时候",
+      "intro": "M3中经常遇到的3种情况。点击展开。",
+      "items": {
+        "gitConflict": {
+          "title": "git push被拒绝 (rejected)",
+          "symptom": "终端出现 'updates were rejected because the remote contains work' 之类的消息。",
+          "fix": "git pull --rebase origin main && git push",
+          "linkLabel": "git push 7种错误解决",
+          "linkUrl": "https://1daymillion.com/git-push-error-solutions/"
+        },
+        "aiNoResponse": {
+          "title": "AI没回复或卡住",
+          "symptom": "Claude Code/Cursor没响应,或者反复回 'cannot help with that'。",
+          "fix": "把提示词拆得更小。一次只改一处几乎都能解决。",
+          "linkLabel": "AI提示词10条",
+          "linkUrl": "https://1daymillion.com/ai-coding-prompt-writing-tips/"
+        },
+        "deployFailed": {
+          "title": "Vercel部署失败",
+          "symptom": "部署页显示红色 'Failed',或者站点没反映你的修改。",
+          "fix": "在Vercel仪表板打开失败的部署 → 'Build Logs' 标签页 → 看第一行红字。",
+          "linkLabel": "Vercel部署失败Top 10",
+          "linkUrl": "https://1daymillion.com/vercel-deploy-failure-top-10/"
+        }
+      }
+    },
+    "step4Verify": {
+      "button": "🔄 检查部署",
+      "checking": "检查中...",
+      "successFresh": "✅ '{'minutes'}'分钟前新部署完成 — 已上线",
+      "successStale": "⚠️ 最新部署是'{'minutes'}'分钟前 — 请重新git push",
+      "building": "⏳ 构建中 ('{'seconds'}'秒前开始) — 稍后再查",
+      "errorBuild": "❌ 最近构建失败。请到Vercel仪表板看日志",
+      "errorNoToken": "Vercel未连接。请先在M1完成连接",
+      "errorNoProject": "没有Vercel项目信息。请重新执行M1",
+      "errorNoDeploy": "还没有部署。请先git push",
+      "errorGeneric": "检查失败。请稍后重试"
+    }
   }
 }

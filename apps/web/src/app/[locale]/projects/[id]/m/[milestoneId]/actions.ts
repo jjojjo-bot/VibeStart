@@ -102,6 +102,51 @@ function buildReturnTo(
   return `${prefix}/projects/${projectId}/m/${milestoneId}`;
 }
 
+/**
+ * M3 Step 4 자동 검증 — 사용자의 Vercel 프로젝트에 최신 배포가 있는지 확인.
+ *
+ * 사용자가 git push 후 "배포 확인" 버튼을 누르면 호출. Vercel API로 최신
+ * deployment를 조회해 createdAt·readyState·ageMinutes를 반환한다. 진행/실패/
+ * 타임아웃을 구분해서 UI가 적절한 메시지를 보여주도록.
+ */
+export async function verifyVibeDeployAction(
+  projectId: string,
+): Promise<
+  | {
+      ok: true;
+      createdAt: number;
+      ageSeconds: number;
+      readyState: string;
+      url: string;
+    }
+  | { ok: false; reason: "no_token" | "no_project" | "no_deployment" | "error" }
+> {
+  const user = await getCurrentUser();
+  if (!user) return { ok: false, reason: "no_token" };
+
+  const vercelToken = await getOAuthAccessToken(user.id, "vercel");
+  if (!vercelToken) return { ok: false, reason: "no_token" };
+
+  const vercelResource = await getProjectResourceByType(projectId, "vercel_project");
+  const vercelProjectId = vercelResource?.externalId;
+  if (!vercelProjectId) return { ok: false, reason: "no_project" };
+
+  try {
+    const latest = await getLatestDeployment(vercelToken, vercelProjectId);
+    if (!latest) return { ok: false, reason: "no_deployment" };
+    const ageSeconds = Math.max(0, Math.floor((Date.now() - latest.createdAt) / 1000));
+    return {
+      ok: true,
+      createdAt: latest.createdAt,
+      ageSeconds,
+      readyState: latest.readyState,
+      url: latest.url,
+    };
+  } catch {
+    return { ok: false, reason: "error" };
+  }
+}
+
 export async function connectGitHubAction(formData: FormData): Promise<void> {
   const user = await getCurrentUser();
   if (!user) {

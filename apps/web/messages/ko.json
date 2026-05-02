@@ -1293,19 +1293,16 @@
         "m3-s4-verify-deploy": "자동 배포 결과 확인"
       },
       "celebrationTitle": "🎉 바이브코딩 루프 완성!",
-      "celebrationDescription": "AI에게 말하고, 코드가 바뀌고, 자동으로 배포되는 루프를 완성했어요. 이제 자유롭게 만들어보세요!"
+      "celebrationDescription": "방금 첫 사이클을 직접 돌리셨어요 — 말 한 줄 → AI 코드 변경 → git push → 라이브 반영. 가장 빠른 다음 단계는 두 번째 시도예요. 다른 카테고리(색상·새 섹션·폰트)로 한 번 더 돌려보시고, 라이브 URL을 친구·가족에게 공유해 첫 반응을 받아보세요. 📸 변경 전후 비교는 브라우저 스크린샷·모바일 캡처가 가장 간단합니다."
     }
   },
   "VibeCoding": {
     "title": "바이브코딩 시작",
     "description": "AI 에디터로 프로젝트를 열고, 자연어로 수정 요청한 뒤 push → 자동 배포까지 완성해요",
-    "step1Title": "VS Code + Claude Code로 프로젝트 열기",
-    "step1Desc": "아래 한 줄을 터미널에 붙여넣어 주세요 — VS Code가 열리고 Claude Code까지 한 번에 시작돼요",
-    "step1VscodeMacCmd": "cd {project} && open -a \"Visual Studio Code\" . && claude",
-    "step1VscodeWinCmd": "cd {project} && code . && claude",
+    "step1Title": "에디터로 프로젝트 열기",
+    "step1Desc": "사용하실 AI 에디터를 고르고, 아래 한 줄을 터미널에 붙여넣어 주세요.",
     "step2Title": "AI에게 첫 수정 요청하기",
-    "step2Desc": "Claude Code에서 아래와 같이 요청해 보세요. 자유롭게 바꿔도 괜찮아요!",
-    "step2Prompt": "메인 페이지의 제목을 '내 첫 번째 사이트'로 바꾸고, 배경색을 파란색으로 변경해줘",
+    "step2Desc": "원하는 종류를 골라 프롬프트를 복사하세요. 자유롭게 바꿔도 됩니다.",
     "step3Title": "변경사항 push하기",
     "step3Desc": "Claude Code에게 아래와 같이 요청하세요",
     "step3Prompt": "먼저 `git pull`로 최신 파일을 받아온 다음, 지금까지 수정한 내용을 커밋하고 GitHub에 push해줘",
@@ -1316,6 +1313,81 @@
     "copiedButton": "복사됨",
     "doneButton": "완료",
     "undoButton": "취소",
-    "doneLabel": "완료했어요!"
+    "doneLabel": "완료했어요!",
+    "step2Categories": {
+      "text": {
+        "label": "텍스트",
+        "prompt": "메인 페이지의 큰 제목을 '내 첫 번째 사이트'로 바꾸고, 그 아래 부제를 'AI와 함께 만들었어요'로 바꿔줘."
+      },
+      "color": {
+        "label": "색상",
+        "prompt": "전체 사이트 배경을 부드러운 파란색 그라디언트로 바꾸고, 버튼은 보라색으로 통일해줘."
+      },
+      "section": {
+        "label": "새 섹션",
+        "prompt": "히어로 섹션 아래에 'About Me' 섹션을 추가해줘. 짧은 자기소개 한 문장과 이메일 링크 1개만."
+      },
+      "visual": {
+        "label": "그라디언트 배경",
+        "prompt": "히어로 영역에 보라-파랑 그라디언트 배경을 넣고, 가벼운 별 SVG 장식 3개를 흩뿌려줘."
+      },
+      "font": {
+        "label": "폰트",
+        "prompt": "전체 폰트를 깔끔한 Inter로 바꾸고, 큰 제목은 글자 두께를 800으로 더 굵게 해줘."
+      }
+    },
+    "step1Tools": {
+      "claudeCode": {
+        "label": "Claude Code",
+        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "cd '{'project'}' && code . && claude",
+        "note": "VS Code가 열리고 별도 터미널에서 Claude Code가 시작됩니다."
+      },
+      "cursor": {
+        "label": "Cursor",
+        "macCmd": "cd '{'project'}' && open -a \"Cursor\" .",
+        "winCmd": "cd '{'project'}' && cursor .",
+        "note": "Cursor가 열리면 우측 채팅 패널에서 바로 AI에게 요청할 수 있어요."
+      }
+    },
+    "troubleshoot": {
+      "title": "🆘 막혔을 때",
+      "intro": "M3에서 자주 마주치는 3가지. 클릭해서 펼치세요.",
+      "items": {
+        "gitConflict": {
+          "title": "git push가 거부돼요 (rejected)",
+          "symptom": "터미널에 'updates were rejected because the remote contains work' 같은 메시지가 보일 때.",
+          "fix": "git pull --rebase origin main && git push",
+          "linkLabel": "git push 에러 7가지 해결법",
+          "linkUrl": "https://1daymillion.com/git-push-error-solutions/"
+        },
+        "aiNoResponse": {
+          "title": "AI가 답을 안 하거나 멈춰요",
+          "symptom": "Claude Code/Cursor가 응답 없이 멈추거나 'cannot help with that' 같은 답변만 반복할 때.",
+          "fix": "프롬프트를 더 짧게 쪼개세요. 한 번에 한 가지 변경만 요청하면 거의 풀립니다.",
+          "linkLabel": "AI 프롬프트 작성법 10가지",
+          "linkUrl": "https://1daymillion.com/ai-coding-prompt-writing-tips/"
+        },
+        "deployFailed": {
+          "title": "Vercel 배포가 실패해요",
+          "symptom": "배포 화면에 빨간색 'Failed' 표시가 뜨거나, 사이트 접속 시 변경 내용이 안 보일 때.",
+          "fix": "Vercel 대시보드 → 해당 배포 → 'Build Logs' 탭에서 빨간 글자 첫 줄을 확인하세요.",
+          "linkLabel": "Vercel 배포 실패 Top 10",
+          "linkUrl": "https://1daymillion.com/vercel-deploy-failure-top-10/"
+        }
+      }
+    },
+    "step4Verify": {
+      "button": "🔄 배포 확인",
+      "checking": "확인 중...",
+      "successFresh": "✅ '{'minutes'}'분 전 새 배포 완료 — 사이트에 반영됐어요",
+      "successStale": "⚠️ 마지막 배포가 '{'minutes'}'분 전입니다 — 새 git push가 필요할 수 있어요",
+      "building": "⏳ 빌드 중 ('{'seconds'}'초 전 시작) — 잠시 후 다시 확인하세요",
+      "errorBuild": "❌ 마지막 배포가 빌드 실패. Vercel 대시보드에서 로그를 확인해주세요",
+      "errorNoToken": "Vercel 연결이 안 돼 있어요. M1에서 Vercel 연결을 먼저 완료해주세요",
+      "errorNoProject": "Vercel 프로젝트 정보가 없어요. M1을 다시 진행해주세요",
+      "errorNoDeploy": "배포 기록이 없어요. git push를 먼저 진행해주세요",
+      "errorGeneric": "확인 실패. 잠시 후 다시 시도해주세요"
+    }
   }
 }

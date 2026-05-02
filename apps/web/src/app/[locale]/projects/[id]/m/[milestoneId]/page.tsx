@@ -39,6 +39,7 @@ import {
   VerifyAuthButtonPanel,
   type VerifyAuthButtonPanelState,
   VibeCodingPanel,
+  type VibeCodingPanelLabels,
 } from "@/components/milestone";
 import { MaybeCompletedSubstepsProvider } from "@/components/milestone/maybe-completed-provider";
 import { MilestoneCelebration } from "@/components/milestone/milestone-celebration";
@@ -1117,30 +1118,19 @@ export default async function MilestoneRunPage({
   }
 
   // M3 바이브코딩 패널 데이터
+  const VIBE_PROMPT_CATEGORY_META = [
+    { id: "text" as const, emoji: "📝" },
+    { id: "color" as const, emoji: "🎨" },
+    { id: "section" as const, emoji: "🧩" },
+    { id: "visual" as const, emoji: "✨" },
+    { id: "font" as const, emoji: "✍️" },
+  ];
+  const VIBE_EDITOR_TOOL_IDS = ["claudeCode", "cursor"] as const;
+  const VIBE_TROUBLESHOOT_IDS = ["gitConflict", "aiNoResponse", "deployFailed"] as const;
+
   let vibeCodingData: {
     deployedUrl: string | null;
-    labels: {
-      title: string;
-      description: string;
-      step1Title: string;
-      step1Desc: string;
-      step1VscodeMacCmd: string;
-      step1VscodeWinCmd: string;
-      step2Title: string;
-      step2Desc: string;
-      step2Prompt: string;
-      step3Title: string;
-      step3Desc: string;
-      step3Prompt: string;
-      step4Title: string;
-      step4Desc: string;
-      step4Cta: string;
-      copyButton: string;
-      copiedButton: string;
-      doneButton: string;
-      undoButton: string;
-      doneLabel: string;
-    };
+    labels: VibeCodingPanelLabels;
   } | null = null;
 
   if (milestone.id === "m3-vibe-coding") {
@@ -1152,11 +1142,21 @@ export default async function MilestoneRunPage({
         description: tVibeCoding("description"),
         step1Title: tVibeCoding("step1Title"),
         step1Desc: tVibeCoding("step1Desc"),
-        step1VscodeMacCmd: tVibeCoding("step1VscodeMacCmd"),
-        step1VscodeWinCmd: tVibeCoding("step1VscodeWinCmd"),
+        step1Tools: VIBE_EDITOR_TOOL_IDS.map((id) => ({
+          id,
+          label: tVibeCoding(`step1Tools.${id}.label`),
+          macCmd: tVibeCoding(`step1Tools.${id}.macCmd`),
+          winCmd: tVibeCoding(`step1Tools.${id}.winCmd`),
+          note: tVibeCoding(`step1Tools.${id}.note`),
+        })),
         step2Title: tVibeCoding("step2Title"),
         step2Desc: tVibeCoding("step2Desc"),
-        step2Prompt: tVibeCoding("step2Prompt"),
+        step2Categories: VIBE_PROMPT_CATEGORY_META.map((meta) => ({
+          id: meta.id,
+          emoji: meta.emoji,
+          label: tVibeCoding(`step2Categories.${meta.id}.label`),
+          prompt: tVibeCoding(`step2Categories.${meta.id}.prompt`),
+        })),
         step3Title: tVibeCoding("step3Title"),
         step3Desc: tVibeCoding("step3Desc"),
         step3Prompt: tVibeCoding("step3Prompt"),
@@ -1168,6 +1168,30 @@ export default async function MilestoneRunPage({
         doneButton: tVibeCoding("doneButton"),
         undoButton: tVibeCoding("undoButton"),
         doneLabel: tVibeCoding("doneLabel"),
+        step4Verify: {
+          button: tVibeCoding("step4Verify.button"),
+          checking: tVibeCoding("step4Verify.checking"),
+          successFresh: tVibeCoding("step4Verify.successFresh"),
+          successStale: tVibeCoding("step4Verify.successStale"),
+          building: tVibeCoding("step4Verify.building"),
+          errorBuild: tVibeCoding("step4Verify.errorBuild"),
+          errorNoToken: tVibeCoding("step4Verify.errorNoToken"),
+          errorNoProject: tVibeCoding("step4Verify.errorNoProject"),
+          errorNoDeploy: tVibeCoding("step4Verify.errorNoDeploy"),
+          errorGeneric: tVibeCoding("step4Verify.errorGeneric"),
+        },
+        troubleshoot: {
+          title: tVibeCoding("troubleshoot.title"),
+          intro: tVibeCoding("troubleshoot.intro"),
+          items: VIBE_TROUBLESHOOT_IDS.map((id) => ({
+            id,
+            title: tVibeCoding(`troubleshoot.items.${id}.title`),
+            symptom: tVibeCoding(`troubleshoot.items.${id}.symptom`),
+            fix: tVibeCoding(`troubleshoot.items.${id}.fix`),
+            linkLabel: tVibeCoding(`troubleshoot.items.${id}.linkLabel`),
+            linkUrl: tVibeCoding(`troubleshoot.items.${id}.linkUrl`),
+          })),
+        },
       },
     };
   }
@@ -1495,6 +1519,11 @@ export default async function MilestoneRunPage({
                 "use server";
                 const { toggleSubstepAction } = await import("./actions");
                 return toggleSubstepAction(project.id, milestone.id, substepId, checked);
+              }}
+              onVerifyDeploy={async () => {
+                "use server";
+                const { verifyVibeDeployAction } = await import("./actions");
+                return verifyVibeDeployAction(project.id);
               }}
             />
           )}

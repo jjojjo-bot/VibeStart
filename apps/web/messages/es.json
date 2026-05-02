@@ -1292,20 +1292,17 @@
         "m3-s3-git-push": "Sube tus cambios",
         "m3-s4-verify-deploy": "Verifica el resultado del despliegue automático"
       },
-      "celebrationTitle": "🎉 ¡Bucle de vibe coding completado!",
-      "celebrationDescription": "Habla con la IA, el código cambia, se despliega automáticamente. ¡El bucle está completo!"
+      "celebrationTitle": "🎉 ¡Primer ciclo de vibe coding!",
+      "celebrationDescription": "Acabas de ejecutar el ciclo completo tú mismo — una frase → la IA cambia el código → git push → en vivo. El siguiente paso más rápido es tu segundo intento. Prueba con otra categoría (color, nueva sección, fuente) y comparte la URL en vivo con un amigo o familiar para recoger una primera reacción. 📸 Capturas de pantalla del navegador o del móvil son perfectas para comparar antes y después."
     }
   },
   "VibeCoding": {
     "title": "Iniciar Vibe Coding",
     "description": "Abre tu proyecto en un editor IA, solicita cambios en lenguaje natural, haz push y el despliegue automático se encarga del resto",
-    "step1Title": "Abrir proyecto en VS Code + Claude Code",
-    "step1Desc": "Pega esta línea en tu terminal — abrirá VS Code e iniciará Claude Code de una sola vez",
-    "step1VscodeMacCmd": "cd {project} && open -a \"Visual Studio Code\" . && claude",
-    "step1VscodeWinCmd": "cd {project} && code . && claude",
+    "step1Title": "Abre el proyecto en tu editor",
+    "step1Desc": "Elige tu editor de IA y pega la línea de abajo en tu terminal.",
     "step2Title": "Pide a la IA tu primera edición",
-    "step2Desc": "Prueba pedirle a Claude Code algo como el siguiente ejemplo. ¡Puedes cambiarlo libremente!",
-    "step2Prompt": "Cambia el título de la página principal a 'Mi Primer Sitio' y pon el color de fondo azul",
+    "step2Desc": "Elige una categoría y copia el prompt. Siéntete libre de modificarlo.",
     "step3Title": "Sube tus cambios",
     "step3Desc": "Pide a Claude Code lo siguiente",
     "step3Prompt": "Primero ejecuta `git pull` para traer los archivos más recientes, luego haz commit de los cambios y push a GitHub",
@@ -1316,6 +1313,81 @@
     "copiedButton": "Copiado",
     "doneButton": "Listo",
     "undoButton": "Deshacer",
-    "doneLabel": "¡Listo!"
+    "doneLabel": "¡Listo!",
+    "step2Categories": {
+      "text": {
+        "label": "Texto",
+        "prompt": "Cambia el título grande de la página principal a 'Mi Primer Sitio' y el subtítulo a 'Construido con IA'."
+      },
+      "color": {
+        "label": "Color",
+        "prompt": "Cambia el fondo del sitio a un gradiente azul suave y unifica todos los botones en morado."
+      },
+      "section": {
+        "label": "Nueva sección",
+        "prompt": "Añade una sección 'About Me' debajo del hero. Solo una frase de bio corta y un enlace de email."
+      },
+      "visual": {
+        "label": "Fondo gradiente",
+        "prompt": "Pon un fondo con gradiente morado-azul en el área hero y dispersa 3 decoraciones SVG de estrellas ligeras."
+      },
+      "font": {
+        "label": "Fuente",
+        "prompt": "Cambia todas las fuentes a Inter y aumenta el grosor de los títulos grandes a 800."
+      }
+    },
+    "step1Tools": {
+      "claudeCode": {
+        "label": "Claude Code",
+        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "cd '{'project'}' && code . && claude",
+        "note": "VS Code se abre y Claude Code arranca en la terminal automáticamente."
+      },
+      "cursor": {
+        "label": "Cursor",
+        "macCmd": "cd '{'project'}' && open -a \"Cursor\" .",
+        "winCmd": "cd '{'project'}' && cursor .",
+        "note": "Cursor se abre — pide a la IA desde el panel de chat de la derecha."
+      }
+    },
+    "troubleshoot": {
+      "title": "🆘 Cuando te atascas",
+      "intro": "Tres cosas que bloquean a la gente en M3. Haz clic para expandir.",
+      "items": {
+        "gitConflict": {
+          "title": "git push es rechazado (rejected)",
+          "symptom": "La terminal muestra 'updates were rejected because the remote contains work'.",
+          "fix": "git pull --rebase origin main && git push",
+          "linkLabel": "7 errores de git push resueltos",
+          "linkUrl": "https://1daymillion.com/git-push-error-solutions/"
+        },
+        "aiNoResponse": {
+          "title": "La IA no responde o se cuelga",
+          "symptom": "Claude Code/Cursor no responde o repite 'cannot help with that'.",
+          "fix": "Divide tu prompt en partes más pequeñas. Un cambio a la vez casi siempre lo desbloquea.",
+          "linkLabel": "10 consejos de prompts",
+          "linkUrl": "https://1daymillion.com/ai-coding-prompt-writing-tips/"
+        },
+        "deployFailed": {
+          "title": "El deploy de Vercel falla",
+          "symptom": "Aparece una etiqueta roja 'Failed' o la web no muestra tu cambio.",
+          "fix": "Abre el deploy fallido en Vercel → pestaña 'Build Logs' → lee la primera línea en rojo.",
+          "linkLabel": "Top 10 errores de Vercel",
+          "linkUrl": "https://1daymillion.com/vercel-deploy-failure-top-10/"
+        }
+      }
+    },
+    "step4Verify": {
+      "button": "🔄 Verificar deploy",
+      "checking": "Verificando...",
+      "successFresh": "✅ Deploy nuevo hace '{'minutes'}' min — los cambios están en vivo",
+      "successStale": "⚠️ Último deploy hace '{'minutes'}' min — intenta git push de nuevo",
+      "building": "⏳ Construyendo (iniciado hace '{'seconds'}'s) — revisa en un momento",
+      "errorBuild": "❌ Última build falló. Revisa los logs en el panel de Vercel",
+      "errorNoToken": "Vercel no conectado. Completa la conexión en M1 primero",
+      "errorNoProject": "Sin proyecto Vercel vinculado. Re-ejecuta M1",
+      "errorNoDeploy": "Aún no hay deploy. Haz push de tu código primero",
+      "errorGeneric": "Verificación fallida. Intenta de nuevo más tarde"
+    }
   }
 }

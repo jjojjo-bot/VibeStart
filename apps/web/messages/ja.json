@@ -1292,20 +1292,17 @@
         "m3-s3-git-push": "変更をpushする",
         "m3-s4-verify-deploy": "自動デプロイの結果を確認"
       },
-      "celebrationTitle": "🎉 バイブコーディング ループ完成！",
-      "celebrationDescription": "AIに話しかけ、コードが変わり、自動デプロイ。ループが完成しました。自由に作りましょう！"
+      "celebrationTitle": "🎉 バイブコーディングのループ完成!",
+      "celebrationDescription": "たった今、最初のサイクルを自分で回しました — 一文 → AIコード変更 → git push → ライブ反映。一番早い次のステップは2回目の挑戦です。別のカテゴリ(色・新セクション・フォント)でもう一度回してみて、ライブURLを友達や家族に共有して初めての反応をもらいましょう。📸 ブラウザのスクショやスマホキャプチャがビフォー/アフター比較に最適です。"
     }
   },
   "VibeCoding": {
     "title": "バイブコーディング開始",
     "description": "AIエディターでプロジェクトを開き、自然言語で修正を依頼してpush → 自動デプロイまで完成します",
-    "step1Title": "VS Code + Claude Codeでプロジェクトを開く",
-    "step1Desc": "下の一行をターミナルに貼り付けてください — VS Codeが開いて、Claude Codeまで一度に起動します",
-    "step1VscodeMacCmd": "cd {project} && open -a \"Visual Studio Code\" . && claude",
-    "step1VscodeWinCmd": "cd {project} && code . && claude",
+    "step1Title": "エディタでプロジェクトを開く",
+    "step1Desc": "使用するAIエディタを選んで、下の1行をターミナルに貼り付けてください。",
     "step2Title": "AIに最初の修正をお願いする",
-    "step2Desc": "Claude Codeに以下のようにお願いしてみましょう。自由に変えてもOKです！",
-    "step2Prompt": "メインページのタイトルを「My First Site」に変えて、背景色を青にしてください",
+    "step2Desc": "種類を選んでプロンプトをコピーしてください。自由に変更してもOKです。",
     "step3Title": "変更をpushする",
     "step3Desc": "Claude Codeに以下のように依頼してください",
     "step3Prompt": "まず `git pull` で最新のファイルを取ってきてから、これまでの変更をコミットしてGitHubにpushして",
@@ -1316,6 +1313,81 @@
     "copiedButton": "コピーしました",
     "doneButton": "完了",
     "undoButton": "取消",
-    "doneLabel": "完了しました！"
+    "doneLabel": "完了しました！",
+    "step2Categories": {
+      "text": {
+        "label": "テキスト",
+        "prompt": "メインページの大きな見出しを「私の最初のサイト」に変更し、その下のサブタイトルを「AIと一緒に作りました」にしてください。"
+      },
+      "color": {
+        "label": "カラー",
+        "prompt": "サイト全体の背景を優しい青のグラデーションに変更し、ボタンを紫色で統一してください。"
+      },
+      "section": {
+        "label": "新セクション",
+        "prompt": "ヒーローセクションの下に「About Me」セクションを追加してください。短い自己紹介一文とメールリンク1つだけで結構です。"
+      },
+      "visual": {
+        "label": "グラデ背景",
+        "prompt": "ヒーロー領域に紫から青へのグラデーション背景を入れ、軽い星のSVG装飾3つを散りばめてください。"
+      },
+      "font": {
+        "label": "フォント",
+        "prompt": "全フォントを清潔感のあるInterに変更し、大見出しは太さを800に増やしてください。"
+      }
+    },
+    "step1Tools": {
+      "claudeCode": {
+        "label": "Claude Code",
+        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "cd '{'project'}' && code . && claude",
+        "note": "VS Codeが開き、別ターミナルでClaude Codeが起動します。"
+      },
+      "cursor": {
+        "label": "Cursor",
+        "macCmd": "cd '{'project'}' && open -a \"Cursor\" .",
+        "winCmd": "cd '{'project'}' && cursor .",
+        "note": "Cursorが開いたら、右側のチャットパネルで直接AIに依頼できます。"
+      }
+    },
+    "troubleshoot": {
+      "title": "🆘 詰まったら",
+      "intro": "M3でよく当たる3つ。クリックで展開。",
+      "items": {
+        "gitConflict": {
+          "title": "git pushが拒否される (rejected)",
+          "symptom": "ターミナルに 'updates were rejected because the remote contains work' のようなメッセージが出るとき。",
+          "fix": "git pull --rebase origin main && git push",
+          "linkLabel": "git pushエラー7選",
+          "linkUrl": "https://1daymillion.com/git-push-error-solutions/"
+        },
+        "aiNoResponse": {
+          "title": "AIが返事しない/止まる",
+          "symptom": "Claude Code/Cursorが応答せずに止まる、または 'cannot help with that' を繰り返すとき。",
+          "fix": "プロンプトをもっと細かく分けてください。1回に1つの変更だけにすればほぼ解決します。",
+          "linkLabel": "AIプロンプト作成法10選",
+          "linkUrl": "https://1daymillion.com/ai-coding-prompt-writing-tips/"
+        },
+        "deployFailed": {
+          "title": "Vercelデプロイが失敗する",
+          "symptom": "デプロイ画面に赤い 'Failed' が出る、またはサイトに変更が反映されない。",
+          "fix": "Vercelダッシュボード → 対象デプロイ → 'Build Logs' タブの赤い1行目を確認。",
+          "linkLabel": "Vercelデプロイ失敗Top 10",
+          "linkUrl": "https://1daymillion.com/vercel-deploy-failure-top-10/"
+        }
+      }
+    },
+    "step4Verify": {
+      "button": "🔄 デプロイ確認",
+      "checking": "確認中...",
+      "successFresh": "✅ '{'minutes'}'分前に新しいデプロイ完了 — サイトに反映されました",
+      "successStale": "⚠️ 最後のデプロイは'{'minutes'}'分前 — git pushを再実行してください",
+      "building": "⏳ ビルド中 ('{'seconds'}'秒前に開始) — 少し待ってから再確認",
+      "errorBuild": "❌ 最後のビルド失敗。Vercelダッシュボードでログを確認",
+      "errorNoToken": "Vercel未接続。M1でVercel接続を完了してください",
+      "errorNoProject": "Vercelプロジェクト情報がありません。M1を再実行してください",
+      "errorNoDeploy": "デプロイ履歴がありません。先にgit pushしてください",
+      "errorGeneric": "確認失敗。少し待ってから再試行してください"
+    }
   }
 }

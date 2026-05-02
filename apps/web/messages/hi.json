@@ -1292,20 +1292,17 @@
         "m3-s3-git-push": "अपने बदलाव push करें",
         "m3-s4-verify-deploy": "ऑटो-डिप्लॉय का नतीजा जांचें"
       },
-      "celebrationTitle": "🎉 वाइब कोडिंग लूप पूरा!",
-      "celebrationDescription": "AI से बात करो, कोड बदले, ऑटो-डिप्लॉय — लूप पूरा हो गया। अब आज़ादी से बनाओ!"
+      "celebrationTitle": "🎉 पहला वाइब कोडिंग लूप पूरा!",
+      "celebrationDescription": "आपने अभी पूरा साइकल खुद चलाया — एक वाक्य → AI कोड बदलाव → git push → लाइव। सबसे तेज़ अगला कदम आपकी दूसरी कोशिश है। अलग कैटेगरी (रंग, नया सेक्शन, फ़ॉन्ट) से एक और चक्र चलाएं, और लाइव URL दोस्त या परिवार को भेजकर पहली प्रतिक्रिया लें। 📸 ब्राउज़र स्क्रीनशॉट या फ़ोन कैप्चर पहले/बाद की तुलना के लिए सबसे आसान हैं।"
     }
   },
   "VibeCoding": {
     "title": "वाइब कोडिंग शुरू करें",
     "description": "AI एडिटर में प्रोजेक्ट खोलें, प्राकृतिक भाषा में बदलाव का अनुरोध करें, फिर push करें — ऑटो-डिप्लॉय बाकी सब संभाल लेगा",
-    "step1Title": "VS Code + Claude Code में प्रोजेक्ट खोलें",
-    "step1Desc": "नीचे वाली एक लाइन टर्मिनल में पेस्ट कीजिए — VS Code भी खुलेगा और Claude Code भी एक साथ शुरू हो जाएगा",
-    "step1VscodeMacCmd": "cd {project} && open -a \"Visual Studio Code\" . && claude",
-    "step1VscodeWinCmd": "cd {project} && code . && claude",
+    "step1Title": "एडिटर में प्रोजेक्ट खोलें",
+    "step1Desc": "अपना AI एडिटर चुनें और नीचे दी गई लाइन को टर्मिनल में पेस्ट करें।",
     "step2Title": "AI से पहला बदलाव करवाएं",
-    "step2Desc": "Claude Code से नीचे दिए गए जैसा अनुरोध करके देखें। आप इसे अपनी मर्ज़ी से बदल सकते हैं!",
-    "step2Prompt": "मुख्य पेज का शीर्षक 'My First Site' में बदलो और बैकग्राउंड रंग नीला कर दो",
+    "step2Desc": "एक श्रेणी चुनें और प्रॉम्प्ट कॉपी करें। इसे संशोधित करने में संकोच न करें।",
     "step3Title": "अपने बदलाव push करें",
     "step3Desc": "Claude Code से ऐसे कहें",
     "step3Prompt": "पहले `git pull` चलाकर latest files ले आओ, फिर अब तक के बदलावों को commit करके GitHub पर push कर दो",
@@ -1316,6 +1313,81 @@
     "copiedButton": "कॉपी हो गया",
     "doneButton": "पूर्ण",
     "undoButton": "पूर्ववत करें",
-    "doneLabel": "हो गया!"
+    "doneLabel": "हो गया!",
+    "step2Categories": {
+      "text": {
+        "label": "टेक्स्ट",
+        "prompt": "मुख्य पेज के बड़े शीर्षक को 'मेरी पहली साइट' में और नीचे के उपशीर्षक को 'AI के साथ बनाया गया' में बदलें।"
+      },
+      "color": {
+        "label": "रंग",
+        "prompt": "पूरी साइट की पृष्ठभूमि को नरम नीले ग्रेडिएंट में बदलें, और सभी बटन को बैंगनी रंग में एकीकृत करें।"
+      },
+      "section": {
+        "label": "नया सेक्शन",
+        "prompt": "हीरो सेक्शन के नीचे एक 'About Me' सेक्शन जोड़ें। बस एक छोटा परिचय वाक्य और एक ईमेल लिंक।"
+      },
+      "visual": {
+        "label": "ग्रेडिएंट bg",
+        "prompt": "हीरो क्षेत्र में बैंगनी-नीला ग्रेडिएंट पृष्ठभूमि लगाएं, और 3 हल्के तारों के SVG सजावट बिखेरें।"
+      },
+      "font": {
+        "label": "फ़ॉन्ट",
+        "prompt": "सभी फ़ॉन्ट को साफ Inter में बदलें, और बड़े शीर्षकों का वज़न 800 करके मोटा बनाएं।"
+      }
+    },
+    "step1Tools": {
+      "claudeCode": {
+        "label": "Claude Code",
+        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "cd '{'project'}' && code . && claude",
+        "note": "VS Code खुलेगा और टर्मिनल में Claude Code एक साथ शुरू होगा।"
+      },
+      "cursor": {
+        "label": "Cursor",
+        "macCmd": "cd '{'project'}' && open -a \"Cursor\" .",
+        "winCmd": "cd '{'project'}' && cursor .",
+        "note": "Cursor खुलने के बाद दाईं ओर के चैट पैनल से सीधे AI से पूछ सकते हैं।"
+      }
+    },
+    "troubleshoot": {
+      "title": "🆘 जब अटक जाएं",
+      "intro": "M3 में अक्सर मिलने वाले 3 केस। विस्तार के लिए क्लिक करें।",
+      "items": {
+        "gitConflict": {
+          "title": "git push अस्वीकार (rejected) हो रहा है",
+          "symptom": "टर्मिनल में 'updates were rejected because the remote contains work' जैसा संदेश।",
+          "fix": "git pull --rebase origin main && git push",
+          "linkLabel": "git push की 7 त्रुटियां",
+          "linkUrl": "https://1daymillion.com/git-push-error-solutions/"
+        },
+        "aiNoResponse": {
+          "title": "AI जवाब नहीं देता या रुक जाता है",
+          "symptom": "Claude Code/Cursor बिना जवाब रुक जाता है या 'cannot help with that' दोहराता है।",
+          "fix": "प्रॉम्प्ट को छोटे टुकड़ों में बांटें। एक बार में एक बदलाव से आमतौर पर हल हो जाता है।",
+          "linkLabel": "10 प्रॉम्प्ट टिप्स",
+          "linkUrl": "https://1daymillion.com/ai-coding-prompt-writing-tips/"
+        },
+        "deployFailed": {
+          "title": "Vercel डिप्लॉय फेल हो रहा है",
+          "symptom": "लाल 'Failed' लेबल दिखता है या साइट पर बदलाव नहीं दिख रहा।",
+          "fix": "Vercel डैशबोर्ड → फेल्ड डिप्लॉय → 'Build Logs' टैब → पहली लाल लाइन पढ़ें।",
+          "linkLabel": "Vercel डिप्लॉय Top 10",
+          "linkUrl": "https://1daymillion.com/vercel-deploy-failure-top-10/"
+        }
+      }
+    },
+    "step4Verify": {
+      "button": "🔄 डिप्लॉय जाँचें",
+      "checking": "जाँच रहे हैं...",
+      "successFresh": "✅ '{'minutes'}' मिनट पहले नई डिप्लॉय पूरी — साइट पर लाइव",
+      "successStale": "⚠️ आखिरी डिप्लॉय '{'minutes'}' मिनट पहले — git push फिर से करें",
+      "building": "⏳ बिल्ड चल रही है ('{'seconds'}'s पहले शुरू) — थोड़ी देर बाद जाँचें",
+      "errorBuild": "❌ आखिरी बिल्ड फेल। Vercel डैशबोर्ड में लॉग देखें",
+      "errorNoToken": "Vercel कनेक्ट नहीं है। पहले M1 में Vercel कनेक्शन पूरा करें",
+      "errorNoProject": "कोई Vercel प्रोजेक्ट नहीं। M1 दोबारा चलाएं",
+      "errorNoDeploy": "अभी कोई डिप्लॉय नहीं। पहले git push करें",
+      "errorGeneric": "जाँच विफल। बाद में पुनः प्रयास करें"
+    }
   }
 }
