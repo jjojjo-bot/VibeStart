@@ -274,7 +274,8 @@
           "title": "無料で始められます",
           "description": "インストール後すぐに使えます。コーディング経験がなくても大丈夫です"
         }
-      }
+      },
+      "alternativeNote": "Cursorも同じ役割です。後のM3ステップでClaude Code・Cursorのどちらかを選べます。"
     },
     "projectName": {
       "label": "プロジェクト名",
@@ -657,8 +658,8 @@
       "dataAi": "📁 ~/{projectName}/\n├── 📂 data/                   ← データファイル\n├── 📂 notebooks/              ← Jupyter Notebook\n├── 📂 src/\n│   ├── loaders/               ← データ読み込み\n│   ├── analyzers/             ← 分析ロジック\n│   └── visualizers/           ← 可視化\n├── 📂 venv/                   ← Python仮想環境\n└── 📄 CLAUDE.md               ← AIプロジェクトルール"
     },
     "firstPrompt": {
-      "heading": "Claude Codeに最初の一言を投げかけよう",
-      "subtitle": "一度で完璧に書けなくても大丈夫です。会話を続けながら修正していけます。",
+      "heading": "AIに最初のひと言を投げる",
+      "subtitle": "Claude CodeまたはCursorのどちらでもOK。一発で完璧じゃなくて大丈夫。会話を続けながら直していけばいいです。",
       "templateLabel": "空欄を埋めてみましょう",
       "exampleLabel": "こんな感じで書けばOKです"
     },
@@ -685,7 +686,8 @@
         "エラーが出るんだけど助けて（エラーメッセージを貼り付け）",
         "今まで作ったものを説明して"
       ],
-      "reassurance": "うまく言えなくても大丈夫です。「さっきのやつ取り消してやり直して」と言えばOKです。"
+      "reassurance": "うまく言えなくても大丈夫です。「さっきのやつ取り消してやり直して」と言えばOKです。",
+      "forwardNote": "💡 次のステップでサイトを公開すると、5つのカテゴリ(テキスト・色・新セクション・グラデーション・フォント)に整理されたガイドがまた登場します。"
     },
     "claudeDesign": {
       "heading": "デザインに困ったら",

@@ -274,7 +274,8 @@
           "title": "可以免费开始使用",
           "description": "安装后马上就能用。没有编程经验也没关系"
         }
-      }
+      },
+      "alternativeNote": "Cursor也是同样的角色。后面的M3步骤里可以在Claude Code和Cursor中自己选。"
     },
     "projectName": {
       "label": "项目名称",
@@ -657,8 +658,8 @@
       "dataAi": "📁 ~/{projectName}/\n├── 📂 data/                   ← 数据文件\n├── 📂 notebooks/              ← Jupyter Notebook\n├── 📂 src/\n│   ├── loaders/               ← 数据加载\n│   ├── analyzers/             ← 分析逻辑\n│   └── visualizers/           ← 可视化\n├── 📂 venv/                   ← Python 虚拟环境\n└── 📄 CLAUDE.md               ← AI 项目规则"
     },
     "firstPrompt": {
-      "heading": "向Claude Code说第一句话",
-      "subtitle": "不用一次写得完美。边对话边修改就行。",
+      "heading": "向AI说出第一句话",
+      "subtitle": "Claude Code或Cursor都可以。第一次不用写得完美,边对话边改就行。",
       "templateLabel": "填写空白处",
       "exampleLabel": "可以这样写"
     },
@@ -685,7 +686,8 @@
         "报错了，帮我看看（粘贴错误信息）",
         "给我解释一下现在做的东西"
       ],
-      "reassurance": "说错了也没关系。说「把刚才的撤销重来」就行。"
+      "reassurance": "说错了也没关系。说「把刚才的撤销重来」就行。",
+      "forwardNote": "💡 下一步把网站上线之后,还会有一份分5类(文本·颜色·新模块·渐变·字体)整理过的指南。"
     },
     "claudeDesign": {
       "heading": "不知道怎么设计？",

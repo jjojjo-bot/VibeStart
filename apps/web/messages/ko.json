@@ -274,7 +274,8 @@
           "title": "무료로 시작할 수 있어요",
           "description": "설치 후 바로 사용 가능합니다. 코딩 경험이 없어도 괜찮아요"
         }
-      }
+      },
+      "alternativeNote": "Cursor도 같은 역할이에요. 나중에 M3 단계에서 Claude Code · Cursor 중 직접 고르실 수 있어요."
     },
     "projectName": {
       "label": "프로젝트 이름",
@@ -657,8 +658,8 @@
       "dataAi": "📁 ~/{projectName}/\n├── 📂 data/                   ← 데이터 파일\n├── 📂 notebooks/              ← Jupyter Notebook\n├── 📂 src/\n│   ├── loaders/               ← 데이터 로딩\n│   ├── analyzers/             ← 분석 로직\n│   └── visualizers/           ← 시각화\n├── 📂 venv/                   ← Python 가상환경\n└── 📄 CLAUDE.md               ← AI 프로젝트 규칙"
     },
     "firstPrompt": {
-      "heading": "Claude Code에 첫 마디 던지기",
-      "subtitle": "한 번에 완벽하게 안 써도 괜찮아요. 대화를 이어가면서 고치면 돼요.",
+      "heading": "AI에 첫 마디 던지기",
+      "subtitle": "Claude Code 또는 Cursor 어느 쪽이든 OK. 한 번에 완벽하게 안 써도 괜찮아요. 대화를 이어가면서 고치면 돼요.",
       "templateLabel": "빈칸을 채워보세요",
       "exampleLabel": "이런 식으로 쓰면 돼요"
     },
@@ -685,7 +686,8 @@
         "에러가 나는데 도와줘 (에러 메시지 붙여넣기)",
         "지금까지 만든 거 설명해줘"
       ],
-      "reassurance": "잘못 말해도 괜찮아요. \"아까 거 취소하고 다시 해줘\"라고 하면 돼요."
+      "reassurance": "잘못 말해도 괜찮아요. \"아까 거 취소하고 다시 해줘\"라고 하면 돼요.",
+      "forwardNote": "💡 다음 단계에서 사이트를 인터넷에 올리시면 더 다양한 시도(텍스트·색상·새 섹션·그라디언트·폰트 5가지 카테고리)로 정리된 가이드가 또 나와요."
     },
     "claudeDesign": {
       "heading": "디자인이 막막하다면",

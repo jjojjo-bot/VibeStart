@@ -274,7 +274,8 @@
           "title": "Free to start",
           "description": "Ready to use right after installation. No coding experience needed"
         }
-      }
+      },
+      "alternativeNote": "Cursor plays the same role. You'll pick between Claude Code and Cursor later in the M3 step."
     },
     "projectName": {
       "label": "Project Name",
@@ -657,8 +658,8 @@
       "dataAi": "📁 ~/{projectName}/\n├── 📂 data/                   ← Data files\n├── 📂 notebooks/              ← Jupyter Notebook\n├── 📂 src/\n│   ├── loaders/               ← Data loading\n│   ├── analyzers/             ← Analysis logic\n│   └── visualizers/           ← Visualization\n├── 📂 venv/                   ← Python virtual environment\n└── 📄 CLAUDE.md               ← AI project rules"
     },
     "firstPrompt": {
-      "heading": "Your First Message to Claude Code",
-      "subtitle": "It doesn't have to be perfect. You can keep the conversation going and refine as you go.",
+      "heading": "Throw your first line at the AI",
+      "subtitle": "Claude Code or Cursor — either one works. It doesn't have to be perfect on the first try. Keep iterating in conversation.",
       "templateLabel": "Fill in the blanks",
       "exampleLabel": "Here's what it could look like"
     },
@@ -685,7 +686,8 @@
         "I'm getting an error, can you help? (paste the error message)",
         "Explain what we've built so far"
       ],
-      "reassurance": "Don't worry about saying the wrong thing. You can always say \"Undo that and try again.\""
+      "reassurance": "Don't worry about saying the wrong thing. You can always say \"Undo that and try again.\"",
+      "forwardNote": "💡 After you deploy your site in the next step, you'll get a richer guide organized into 5 categories (text · color · new section · gradient · font)."
     },
     "claudeDesign": {
       "heading": "Stuck on the Design?",

@@ -42,6 +42,10 @@ export function StepAIIntro() {
           </p>
         </div>
       </div>
+
+      <p className="text-center text-xs text-muted-foreground">
+        {t("aiIntro.alternativeNote")}
+      </p>
     </div>
   );
 }

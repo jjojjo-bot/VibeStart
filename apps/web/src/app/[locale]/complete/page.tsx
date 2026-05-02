@@ -250,6 +250,9 @@ function CompleteContent() {
           <p className="mt-3 text-xs text-muted-foreground/60">
             {t("followUp.reassurance")}
           </p>
+          <p className="mt-2 text-xs text-primary/80">
+            {t("followUp.forwardNote")}
+          </p>
         </div>
 
         {/* Claude Design 팁 (웹 프로젝트만) */}

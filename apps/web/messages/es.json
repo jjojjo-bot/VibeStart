@@ -274,7 +274,8 @@
           "title": "Puedes empezar gratis",
           "description": "Disponible inmediatamente después de instalar. No necesitas experiencia en programación"
         }
-      }
+      },
+      "alternativeNote": "Cursor cumple el mismo rol. Podrás elegir entre Claude Code y Cursor más adelante en el paso M3."
     },
     "projectName": {
       "label": "Nombre del proyecto",
@@ -657,8 +658,8 @@
       "dataAi": "📁 ~/{projectName}/\n├── 📂 data/                   ← Archivos de datos\n├── 📂 notebooks/              ← Jupyter Notebook\n├── 📂 src/\n│   ├── loaders/               ← Carga de datos\n│   ├── analyzers/             ← Lógica de análisis\n│   └── visualizers/           ← Visualización\n├── 📂 venv/                   ← Entorno virtual de Python\n└── 📄 CLAUDE.md               ← Reglas del proyecto para IA"
     },
     "firstPrompt": {
-      "heading": "Tu primera frase para Claude Code",
-      "subtitle": "No tienes que escribirlo perfecto a la primera. Puedes ir mejorándolo mientras conversas.",
+      "heading": "Lánzale tu primera frase a la IA",
+      "subtitle": "Claude Code o Cursor — cualquiera funciona. No tiene que ser perfecto al primer intento; seguí mejorándolo en conversación.",
       "templateLabel": "Llena los espacios en blanco",
       "exampleLabel": "Así puedes escribirlo"
     },
@@ -685,7 +686,8 @@
         "Me sale un error, ¿puedes ayudarme? (pega el mensaje de error)",
         "Explícame lo que hemos hecho hasta ahora"
       ],
-      "reassurance": "No te preocupes si no lo dices perfecto. Puedes decir \"Cancela lo anterior y hazlo de nuevo\" y listo."
+      "reassurance": "No te preocupes si no lo dices perfecto. Puedes decir \"Cancela lo anterior y hazlo de nuevo\" y listo.",
+      "forwardNote": "💡 Tras desplegar tu sitio en el próximo paso, aparece otra guía organizada en 5 categorías (texto · color · nueva sección · gradiente · fuente)."
     },
     "claudeDesign": {
       "heading": "Si no sabes cómo diseñar",
