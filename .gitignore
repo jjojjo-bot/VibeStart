@@ -38,6 +38,9 @@ temp/
 # 내부 콘텐츠 플랜 (전략·타겟 키워드 노출 방지)
 apps/web/content/blog/BLOG_CONTENT_PLAN.md
 
+# Product Hunt 런칭 playbook (전략·런칭일 노출 방지)
+PRODUCT_HUNT_LAUNCH.md
+
 # 로컬 WP HTML 작업본 (월 단위 일괄 삭제, public 노출 X)
 apps/web/content/blog/wp/D*.html
 apps/web/content/blog/wp/assets/D*.svg
