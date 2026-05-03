@@ -79,6 +79,8 @@ export async function generateMetadata({
       title: t("twitter.title"),
       description: t("twitter.description"),
       images: [ogImageUrl],
+      creator: "@vibestartdev",
+      site: "@vibestartdev",
     },
     robots: {
       index: true,

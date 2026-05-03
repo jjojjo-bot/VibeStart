@@ -13,6 +13,8 @@ const personSchema = {
     "Building tools that lower the entry barrier for non-developers stepping into AI-assisted coding. Hexagonal architecture · pnpm monorepo · Next.js obsessed.",
   sameAs: [
     "https://github.com/jjojjo-bot",
+    "https://x.com/vibestartdev",
+    "https://www.linkedin.com/in/brandon-vibestart",
     "https://1daymillion.com",
     "https://vibe-start.com",
   ],
@@ -38,6 +40,7 @@ const organizationSchema = {
   },
   sameAs: [
     "https://github.com/jjojjo-bot/VibeStart",
+    "https://x.com/vibestartdev",
     "https://1daymillion.com/category/vibe-coding/",
   ],
 };
@@ -113,6 +116,35 @@ export default function AboutPage() {
             </a>
             , star the repo, or build something and share it. Every story makes
             the next non-developer&apos;s onboarding a little easier to design.
+          </p>
+          <p className="mt-6 text-sm text-white/50">
+            Find me on{" "}
+            <a
+              href="https://x.com/vibestartdev"
+              target="_blank"
+              rel="noopener"
+              className="text-[#9d85ff] underline underline-offset-4 hover:text-[#b8a5ff]"
+            >
+              X
+            </a>
+            {" · "}
+            <a
+              href="https://www.linkedin.com/in/brandon-vibestart"
+              target="_blank"
+              rel="noopener"
+              className="text-[#9d85ff] underline underline-offset-4 hover:text-[#b8a5ff]"
+            >
+              LinkedIn
+            </a>
+            {" · "}
+            <a
+              href="https://github.com/jjojjo-bot"
+              target="_blank"
+              rel="noopener"
+              className="text-[#9d85ff] underline underline-offset-4 hover:text-[#b8a5ff]"
+            >
+              GitHub
+            </a>
           </p>
         </div>
       </section>
