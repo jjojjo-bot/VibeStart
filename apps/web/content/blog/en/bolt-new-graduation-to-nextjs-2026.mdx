@@ -1,0 +1,215 @@
+---
+title: "When to Graduate From Bolt.new to Your Own Next.js Project — 5 Signals and a Migration Checklist (2026)"
+description: "You built a working prototype in Bolt.new in 30 minutes. Now what? Five concrete signals that say it's time to graduate to your own Next.js project, plus an 8-step migration checklist covering GitHub export, Vercel deployment, env vars, custom backend, and CI."
+date: "2026-05-05"
+tags: ["Bolt.new", "Next.js App Router", "Vercel", "WebContainer", "AI Coding Workflow", "Production Migration", "Supabase Auth", "AI Prototype", "AI App Builder", "Developer Workflow"]
+---
+
+## 🤔 The Real Question After Your Bolt Prototype Works
+
+The most common question after building a working prototype in Bolt.new in 30 minutes: "Can I take this to production as-is, or do I need to move it to my own project?" The answer is "depends on which signals you're seeing." Move too early and you waste the time Bolt was supposed to save you on infrastructure setup. Move too late and you hit Bolt's limits while monthly token costs spiral.
+
+This article breaks down five concrete signals that quantitatively tell you it's graduation time, plus the migration checklist for when those signals appear. The companion piece on the Korean blog — [Bolt.new Complete Guide for Non-Developers](https://1daymillion.com/bolt-new-vibe-coding-guide/) — covers "how do you start." This article covers "when do you leave." For comparison, the integration flow for v0 output was covered in [v0 → Production Next.js Integration in 6 Steps](https://vibe-start.com/en/blog/v0-to-production-nextjs-integration), but Bolt is a "whole project relocation" decision, not an integration one — different framing.
+
+## 📋 The 5 Graduation Signals
+
+| # | Signal | Why graduate |
+|---|--------|--------------|
+| 1 | Performance: LCP > 3s | WebContainer overhead vs real production builds |
+| 2 | Custom backend needed | Real DB connections, queues, cron don't fit Bolt's sandbox |
+| 3 | Auth complexity grows | OAuth providers, custom session, SSO exceed Bolt defaults |
+| 4 | Team collaboration | Multi-dev branching, PR reviews need standard workflow |
+| 5 | Token bill > $50/mo | Project growth makes self-hosted cheaper |
+
+If even one signal is clearly visible, it's graduation time. Two or more simultaneous → migrate immediately. Zero signals → stay on Bolt. Graduating isn't a virtue. Graduating at the right time is.
+
+## 🔍 Signal 1 — Performance: LCP Over 3 Seconds
+
+Bolt runs in WebContainer, an in-browser Node.js environment. Strong for fast prototyping, but different from the production environment your real users experience. Drop your Bolt prototype URL into PageSpeed Insights — if LCP exceeds 3 seconds, that's a graduation signal. Moving to your own Next.js + Vercel pulls in Edge Network, CDN, and automatic image optimization, dropping average LCP to 1-2 seconds. Once 100+ daily visitors come in, this gap directly affects SEO and conversion.
+
+## 🔧 Signal 2 — Custom Backend Required
+
+Bolt is frontend-centric, so the moment your needs include database connections, background jobs, or webhooks, the limits become clear. When Supabase Auth, Stripe webhooks, AWS S3 uploads, cron jobs, or queues enter the picture — don't try to solve them inside Bolt. Move to your own project. Vercel Functions + Supabase is effectively the standard combo, and step 4 of the migration checklist covers this setup.
+
+## 🔐 Signal 3 — Auth Complexity Grows
+
+Bolt's built-in auth is fine for demos but breaks down with 3+ OAuth providers, custom session storage, SSO, or role-based access control. Full-featured solutions like NextAuth.js or Supabase Auth have standard patterns in your own Next.js project that integrate quickly post-graduation.
+
+## 👥 Signal 4 — Team Collaboration
+
+Bolt is fast solo but limited the moment a team enters. Multiple devs editing the same project simultaneously requires Git branches, PR reviews, and CI workflows — Bolt is single-session by design. The moment a second developer joins, that's graduation time. Standard GitHub-based workflow shows benefits within five minutes of switching.
+
+## 💰 Signal 5 — Token Bill Over $50/month
+
+Bolt Pro is $25/month for 10M tokens, but a sizable project can burn 1-2M tokens per refactor prompt, draining the monthly limit fast. Once you exceed $50/month, Vercel Hobby (free) + your own IDE (Cursor free or $20) becomes cheaper. Cost equation: if (Bolt monthly cost) - (Vercel cost + your dev time cost) > 0, graduate.
+
+## 🛠 Migration Checklist (8 Steps)
+
+When signals appear, move immediately. Average 1-2 hours total.
+
+### 1. Bolt → GitHub export
+
+Bolt UI top-right → Connect to GitHub → create new repo or connect existing. Bolt auto-creates commits and pushes. **Note the export commit hash for rollback reference.**
+
+```bash
+# Clone locally
+git clone https://github.com/your-org/your-bolt-project.git
+cd your-bolt-project
+pnpm install
+```
+
+### 2. Migrate environment variables
+
+Bolt secrets don't ship with the export. Move them manually.
+
+```bash
+# Create .env.local
+cp .env.example .env.local
+# Copy each line from Bolt → Settings → Secrets
+```
+
+For Vercel deployment, register the same in Project Settings → Environment Variables.
+
+### 3. Dependency audit
+
+Bolt auto-includes packages that may not fit your project.
+
+```bash
+# Find unused packages
+pnpm dlx depcheck
+
+# Remove Bolt-specific packages (typically @bolt prefix)
+pnpm remove @bolt/runtime @bolt/devtools
+```
+
+### 4. Backend setup
+
+If signal 2 (custom backend) or signal 3 (auth) drove graduation, this step is the core.
+
+```bash
+# Create Supabase project (db + auth)
+pnpm dlx supabase init
+pnpm dlx supabase link --project-ref your-project-ref
+
+# Vercel Functions setup
+mkdir -p app/api
+# Create route handlers
+```
+
+Replace mock data from Bolt with real DB connections.
+
+### 5. TypeScript strict mode
+
+Bolt outputs often have implicit types. Enable `strict: true` in `tsconfig.json` and resolve type errors. Average 5-15 errors emerge — fix them once and they don't accumulate.
+
+### 6. Vercel deployment
+
+```bash
+pnpm dlx vercel
+# Connect project, verify deployment
+```
+
+After getting the deploy URL, measure LCP/CLS via PageSpeed Insights. Compare against the Bolt URL to confirm improvement.
+
+### 7. CI setup
+
+GitHub Actions or Vercel built-in for PR-triggered preview deploys + tests. 5-minute setup.
+
+```yaml
+# .github/workflows/ci.yml
+name: CI
+on: [pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+      - run: pnpm install
+      - run: pnpm typecheck
+      - run: pnpm lint
+      - run: pnpm test
+```
+
+### 8. Custom domain
+
+Vercel Project → Settings → Domains, add your domain. Set DNS A record or CNAME — SSL auto-provisions in 5-15 minutes.
+
+## ⚠️ What Happens If You Graduate Too Early
+
+Graduating before prototype validation creates five losses. First, you spend 1-2 hours on infrastructure instead of product validation. Second, if validation pivots, the infrastructure you built becomes useless. Third, you lose Bolt's fast iteration speed. Fourth, with 0 signals present, your production infra ends up heavier and slower than the prototype. Fifth, your code quality solidifies too early in prototype phase, forcing rewrites later.
+
+Standard: validation done (5+ daily users on prototype) + 1+ of the 5 signals clearly present. Both conditions met → graduate.
+
+## ⚖️ When NOT to Graduate
+
+**1. Demo/showcase projects.** Portfolio or presentation demos can stay on Bolt forever. No traffic, low cost.
+
+**2. Internal tools (5 or fewer users).** Small in-house tools are production-ready inside Bolt. Graduation cost exceeds benefit.
+
+**3. 1-week sprint hackathons.** Projects that just need to demo working in a week — Bolt has the highest ROI.
+
+**4. Zero validation.** Prototypes with under 5 users haven't validated yet — validate first, graduate later.
+
+## 🧩 Four Common Migration Pitfalls
+
+**Pitfall 1 — Lost Git history.** During Bolt → GitHub export, the first commit sometimes bundles all changes into one. Happens when Bolt's commit history preservation option isn't enabled. Check Settings → Git options before export.
+
+**Pitfall 2 — Missing env vars.** Bolt secrets include both build-time and runtime variables. Move only one type and you'll hit build failure or runtime crash on production. Move all secrets at once and commit only the keys to `.env.example`.
+
+**Pitfall 3 — Bolt-specific dependencies left in.** `@bolt/*` packages only work inside WebContainer. Vercel deployment fails on these — wastes time. Don't skip Step 3 dependency audit.
+
+**Pitfall 4 — DB schema migration unprepared.** Mock DB schemas built in Bolt don't 1:1 transfer to real Supabase. Bolt mocks usually skip nullability and relation constraints, but real prod needs NOT NULL and foreign keys. Write Supabase migration files first, then move data.
+
+> **Disclaimer**: This article references Bolt.new v2, Next.js 16, Vercel CLI 53.x, and Supabase JS 3.x as of May 2026. Bolt's export feature, token pricing, and WebContainer limits update monthly — verify current state in Bolt's official documentation before deciding to graduate. The 5 signals and 8-step checklist describe general graduation patterns; not all projects will follow them identically.
+
+Thanks for reading. Bolt is a strong tool for the prototype phase, but missing the graduation timing makes the decision cost much larger. When 1+ of the 5 signals appears, invest 1-2 hours moving to your own Next.js + Vercel infrastructure — every subsequent task's ROI improves.
+
+## ❓ Frequently Asked Questions
+
+**Q. Which of the 5 signals appears earliest?**
+
+For most teams, signal 5 (token bill > $50/month) appears first. Even small prototypes can burn 1-2M tokens on a single major refactor, exhausting the monthly limit in a week. Signal 2 (custom backend) typically follows.
+
+**Q. Can I deploy directly to production from Bolt?**
+
+Not on the base plan. Bolt is designed for prototypes and sharing. For custom domains and production-grade hosting, you need to move to standard hosting like Vercel or Netlify.
+
+**Q. Should I keep using Bolt after graduation?**
+
+Recommended. Even after graduation, prototyping new features in Bolt and integrating validated ones into your Next.js project — that hybrid flow is most efficient. Same pattern as using v0.
+
+**Q. What if a non-developer can't spend 1-2 hours on graduation?**
+
+If graduation timing has arrived but you can't migrate yourself, hiring a freelancer for 1-2 hours is reasonable. Vercel + Supabase setup is standard work, billed at $50-100/hour. Cost equals two months of Bolt tokens.
+
+**Q. Can I delete the Bolt project after migration?**
+
+Recommend keeping it for 1-2 weeks after GitHub export. If you discover something missed during migration, you can verify against Bolt. After 1-2 weeks of stability, delete it.
+
+**Q. Can I use a backend other than Supabase?**
+
+Vercel Postgres, PlanetScale, Neon, Convex, Firebase — all work. Supabase combines Auth + DB in one place, making it most non-developer-friendly, hence the default recommendation. Choose what fits your domain.
+
+**Q. How do I preserve Bolt's design after graduation?**
+
+Bolt's output (React + Tailwind CSS) works as-is in your Next.js project. If design tokens differ from your project's shadcn/ui or design system, token alignment is needed — same pattern as Step 3 of [v0 → Production Next.js Integration](https://vibe-start.com/en/blog/v0-to-production-nextjs-integration).
+
+**Q. What if only one graduation signal appears?**
+
+Recommend graduating with even one clear signal. Waiting until all 5 appear usually means signal 5 (cost) explodes, making decision cost higher. One signal is the smoothest graduation timing.
+
+## 🔗 Related Posts
+
+- [Bolt.new Complete Guide for Non-Developers](https://1daymillion.com/bolt-new-vibe-coding-guide/)
+- [v0 Output to Production Next.js — 6-Step Integration Workflow](https://vibe-start.com/en/blog/v0-to-production-nextjs-integration)
+- [Beyond McKinsey's 46% — 5 Workflow Patterns for AI Coding](https://vibe-start.com/en/blog/ai-coding-productivity-patterns-2026)
+- [Vercel Free Plan Complete Guide (2026)](https://1daymillion.com/vercel-free-plan-guide/)
+- [Supabase Free Plan Backend Setup for Non-Developers (2026)](https://1daymillion.com/supabase-free-plan-backend/)
+
+## 📚 References
+
+- [Bolt.new Official Docs](https://support.bolt.new/)
+- [Vercel CLI Official Docs](https://vercel.com/docs/cli)
+- [Supabase Official Docs](https://supabase.com/docs)
+- [Next.js 16 App Router](https://nextjs.org/docs/app)
