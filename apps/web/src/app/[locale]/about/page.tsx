@@ -117,6 +117,16 @@ export default function AboutPage() {
             , star the repo, or build something and share it. Every story makes
             the next non-developer&apos;s onboarding a little easier to design.
           </p>
+          <div className="mt-8">
+            <iframe
+              title="Disquiet vote badge"
+              src="https://badge.disquiet.io/vote-badge?productUrlSlug=vibe-start&mode=dark"
+              width={240}
+              height={60}
+              style={{ border: 0, borderRadius: 8, display: "block" }}
+              loading="lazy"
+            />
+          </div>
           <p className="mt-6 text-sm text-white/50">
             Find me on{" "}
             <a
