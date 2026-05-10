@@ -7,27 +7,27 @@ tags: ["micro-saas", "stripe integration", "supabase auth", "vercel deploy", "ne
 
 ## 🤔 The Real Question Behind the 90-Day Micro-SaaS Build
 
-Can you actually build a micro-SaaS in 90 days and reach 5 paying users? The answer is yes — but only when the build flow and integration patterns are decided in advance. The market median for micro-SaaS reaches roughly $1,200 MRR (about 48 paying users × $25) by day 90, and that trajectory has effectively standardized around the Stripe checkout + Supabase Auth + Vercel Functions stack. If you follow the same pattern, the actual code you'll write across 90 days fits in 30~50 lines; the rest of the time goes to user interviews, UX polish, and external marketing.
+Can you actually build a micro-SaaS in 90 days and reach 5 paying users? The answer is yes — but only when the build flow and integration patterns are decided in advance. The market median for micro-SaaS reaches roughly $1,200 MRR (about 48 paying users × $25) by day 90, and that trajectory has effectively standardized around the Stripe checkout + Supabase Auth + Vercel Functions stack. If you follow the same pattern, the actual code you'll write across 90 days fits in 30-50 lines; the rest of the time goes to user interviews, UX polish, and external marketing.
 
 This post is the developer-facing companion to the non-technical sister piece [AI Side Hustle $1,500/Month? Vibe Coding Revenue Distribution (2026)](https://1daymillion.com/ai-side-hustle-vibe-coding-2026/), which walked through the income distribution and 5 revenue paths. Here we walk through the code and integration patterns from a developer's lens, phase by phase. For graduating from Bolt to your own Next.js project, see [When to Graduate from Bolt.new to Your Own Next.js Project](https://vibe-start.com/blog/bolt-new-graduation-to-nextjs-2026) — the two together cover the full prototype-to-production arc.
 
-## 📋 90-Day Build Flow — Phase 1~3
+## 📋 90-Day Build Flow — Phase 1-3
 
 | Phase | Days | Outcome | Core code |
 |-------|------|---------|-----------|
-| 1 | Day 1~30 | MVP + 5 free users | Supabase schema·Auth, Bolt or Next.js scaffold |
-| 2 | Day 31~60 | Payment integration + 5 paid ($125 MRR) | Stripe checkout session + webhook handler |
-| 3 | Day 61~90 | 48 users + $1,200 MRR | Email automation, Product Hunt launch, ops automation |
+| 1 | Day 1-30 | MVP + 5 free users | Supabase schema·Auth, Bolt or Next.js scaffold |
+| 2 | Day 31-60 | Payment integration + 5 paid ($125 MRR) | Stripe checkout session + webhook handler |
+| 3 | Day 61-90 | 48 users + $1,200 MRR | Email automation, Product Hunt launch, ops automation |
 
 The three phases differ both in duration and in what gets shipped, but Phase 2 (payment integration) is the decisive turning point. Crossing from free to paid users is what reclassifies you as someone who actually receives money — and that mental shift matters as much as the technical one.
 
-## 🏗 Phase 1 — MVP Build (Day 1~30)
+## 🏗 Phase 1 — MVP Build (Day 1-30)
 
-The first decision is which build tool to use. There are two paths: build a prototype quickly with an AI builder like Bolt or Lovable and graduate later, or start directly with your own Next.js + Supabase setup. In a 90-day flow, the first 1~2 weeks usually go faster on Bolt for user feedback, and the standard move is to graduate to Next.js when you start integrating payments.
+The first decision is which build tool to use. There are two paths: build a prototype quickly with an AI builder like Bolt or Lovable and graduate later, or start directly with your own Next.js + Supabase setup. In a 90-day flow, the first 1-2 weeks usually go faster on Bolt for user feedback, and the standard move is to graduate to Next.js when you start integrating payments.
 
 ### 🗄 First Supabase Schema
 
-If you're targeting one specific role with a small tool, the data model usually fits in 3~4 tables: users (`profiles`), subscription state (`subscriptions`), one core domain entity, and event logs (`events`). Stripe webhooks land in `subscriptions` as the single source of truth, so getting that right early makes Phase 2 much faster.
+If you're targeting one specific role with a small tool, the data model usually fits in 3-4 tables: users (`profiles`), subscription state (`subscriptions`), one core domain entity, and event logs (`events`). Stripe webhooks land in `subscriptions` as the single source of truth, so getting that right early makes Phase 2 much faster.
 
 ```sql
 -- supabase/migrations/0001_init.sql
@@ -80,7 +80,7 @@ export async function GET(request: Request) {
 
 Register your domain's `/auth/callback` URL in Supabase Auth Providers as the last setup step. By Day 14 a user should be able to sign up and land on the dashboard.
 
-## 💳 Phase 2 — Stripe Payment Integration (Day 31~60)
+## 💳 Phase 2 — Stripe Payment Integration (Day 31-60)
 
 Phase 2 is the decisive segment of the 90-day flow. You move from 5 free users to 5 paying users ($125 MRR), and from this point you're classified as someone who receives payments. If your market is Korea-first, TossPayments is the standard; if you're going global, Stripe is. Both integration patterns are compared in the companion piece [Accepting Payments with Stripe and TossPayments](https://1daymillion.com/stripe-toss-payment-integration/).
 
@@ -157,9 +157,9 @@ export async function POST(req: Request) {
 
 Three patterns trip up almost everyone the first time they integrate payments. First, mixing webhook secrets across environments — you push the production secret into `.env.local` and verification breaks. Second, forgetting `metadata.user_id`, which leaves the webhook with no way to match users. Third, the handler doesn't respond within 5 seconds, Stripe retries, and without idempotency you end up with duplicate rows. The fix: use `upsert`, return 200 immediately, and push heavy work to a background job.
 
-## 📈 Phase 3 — User Acquisition and Automation (Day 61~90)
+## 📈 Phase 3 — User Acquisition and Automation (Day 61-90)
 
-Phase 3 leans heavier on external marketing and automation than on building. Day 61~75 is for a Product Hunt launch or contacting 3 influencers to bring in 30~50 new users. Day 76~90 is converting some of those into paying users to reach the 48-user, $1,200 MRR target.
+Phase 3 leans heavier on external marketing and automation than on building. Day 61-75 is for a Product Hunt launch or contacting 3 influencers to bring in 30-50 new users. Day 76-90 is converting some of those into paying users to reach the 48-user, $1,200 MRR target.
 
 ### 📮 Email Automation — Resend in 30 Lines
 
@@ -185,11 +185,11 @@ Two patterns: subscribe to Supabase Auth's `signed_up` event via webhook, or cal
 
 ### 🚀 Product Hunt Launch Checklist
 
-A Product Hunt launch is a one-time event but it's the single most efficient channel for pulling in 100~300 new users in a day. Standard moves: launch Tuesday-Thursday at midnight PT and surface 5 times across your own channels in the next 24 hours. Your checklist: a strong first-impression screenshot, a 30-second demo video, 5 gallery images, a tagline under 60 characters, and a response cadence for user comments. Confirmation 24 hours later: the page has 100+ users and your MAKER comment response rate is 90%+.
+A Product Hunt launch is a one-time event but it's the single most efficient channel for pulling in 100-300 new users in a day. Standard moves: launch Tuesday-Thursday at midnight PT and surface 5 times across your own channels in the next 24 hours. Your checklist: a strong first-impression screenshot, a 30-second demo video, 5 gallery images, a tagline under 60 characters, and a response cadence for user comments. Confirmation 24 hours later: the page has 100+ users and your MAKER comment response rate is 90%+.
 
 ### 🔁 Automation — Reducing Operational Load
 
-By Day 90 you want a setup where the tool runs without your daily attention. Resend email automation, Stripe billing portal (so users change cards and cancel themselves), Supabase RLS for data isolation, and Sentry for error tracking — together those four cover ~95% of operational cases. When only 5% of users actually need your direct attention, you have room at the end of Phase 3 to start the next 90 days.
+By Day 90 you want a setup where the tool runs without your daily attention. Resend email automation, Stripe billing portal (so users change cards and cancel themselves), Supabase RLS for data isolation, and Sentry for error tracking — together those four cover -95% of operational cases. When only 5% of users actually need your direct attention, you have room at the end of Phase 3 to start the next 90 days.
 
 ## 🚨 Five Common Mistakes
 
@@ -213,7 +213,7 @@ When choosing payment infrastructure, Stripe and Lemon Squeezy are the two main 
 |-----------|--------|---------------|
 | Korean card payments | ✅ Direct onboarding | ❌ Global cards only |
 | Auto Tax/VAT handling | ❌ DIY (Stripe Tax separate) | ✅ Merchant of Record |
-| Integration code | ~50 lines | ~30 lines |
+| Integration code | -50 lines | -30 lines |
 | Fees | 2.9% + $0.30 | 5% + $0.50 |
 | Operational load | Medium (tax filing required) | Low (LMSY files) |
 
@@ -235,23 +235,23 @@ Cost monitoring: 5 minutes a week on Vercel Dashboard's Usage tab and Supabase's
 
 **Q. Is $1,200 MRR really achievable in 90 days?**
 
-That's the median estimate for the micro-SaaS pattern, meaning half of normal trajectories reach it and half fall short. The actual range moves ±50% depending on category fit, marketing consistency, and how fast you absorb user feedback. The 70% who stay in the $0~500 band during their first 90 days are also normal — what matters more is whether the next 90 days show movement up the curve.
+That's the median estimate for the micro-SaaS pattern, meaning half of normal trajectories reach it and half fall short. The actual range moves ±50% depending on category fit, marketing consistency, and how fast you absorb user feedback. The 70% who stay in the $0-500 band during their first 90 days are also normal — what matters more is whether the next 90 days show movement up the curve.
 
 **Q. Is starting on Bolt faster, or going straight to Next.js?**
 
-In a 90-day flow, the standard is Bolt or Lovable for the first 1~2 weeks (fast user feedback), then graduate to your own Next.js project at the Phase 2 payment integration point. Going straight to Next.js means Day 1~7 disappear into environment setup and boilerplate, and user validation slips.
+In a 90-day flow, the standard is Bolt or Lovable for the first 1-2 weeks (fast user feedback), then graduate to your own Next.js project at the Phase 2 payment integration point. Going straight to Next.js means Day 1-7 disappear into environment setup and boilerplate, and user validation slips.
 
 **Q. How long does Stripe onboarding take in Korea?**
 
-Average 5~10 business days. Submit business registration, bank statement, and ID; Stripe reviews. Sole proprietors are eligible; corporations clear faster. If Korean card usage is over 50% of your market, Stripe + TossPayments is right; under 20%, Lemon Squeezy's lower operational load wins.
+Average 5-10 business days. Submit business registration, bank statement, and ID; Stripe reviews. Sole proprietors are eligible; corporations clear faster. If Korean card usage is over 50% of your market, Stripe + TossPayments is right; under 20%, Lemon Squeezy's lower operational load wins.
 
 **Q. What if my webhook handler can't respond in under 5 seconds?**
 
-Stripe starts retrying. The same event lands 3~5 times, and without idempotency your DB gets corrupted. Move heavy work (email sends, external API calls) into background jobs and return 200 immediately from the webhook. That's the standard pattern.
+Stripe starts retrying. The same event lands 3-5 times, and without idempotency your DB gets corrupted. Move heavy work (email sends, external API calls) into background jobs and return 200 immediately from the webhook. That's the standard pattern.
 
 **Q. What if free-to-paid conversion is low?**
 
-Common situation. The typical pattern is 1~2 of every 5 free users converting; if you have 0, check two things. First: is the tool actually solving a real problem for them? Second: is the price aligned with their perceived value? Thirty-minute interviews with 5 users surface the answer quickly.
+Common situation. The typical pattern is 1-2 of every 5 free users converting; if you have 0, check two things. First: is the tool actually solving a real problem for them? Second: is the price aligned with their perceived value? Thirty-minute interviews with 5 users surface the answer quickly.
 
 **Q. Why Supabase over Firebase or PlanetScale?**
 
@@ -263,7 +263,7 @@ Late Phase 1 to early Phase 2 is the right window. With 5 users in Phase 1 you c
 
 **Q. Can I really sell the tool after 90 days?**
 
-If MRR is over $1,000, yes — marketplaces like Acquire and MicroAcquire accept listings. Typical multiples are 24~48× MRR, so $1,200 MRR maps to roughly $28K~58K in sale price. Multiples vary with category, growth rate, and churn. If selling is the goal, build with sale-readiness in mind from the start: separable user data, clean code, written ops manual.
+If MRR is over $1,000, yes — marketplaces like Acquire and MicroAcquire accept listings. Typical multiples are 24-48× MRR, so $1,200 MRR maps to roughly $28K-58K in sale price. Multiples vary with category, growth rate, and churn. If selling is the goal, build with sale-readiness in mind from the start: separable user data, clean code, written ops manual.
 
 > **Note**: The code in this post targets Stripe Node.js SDK v15, `@supabase/ssr` v0.5, and Next.js 15 App Router as of May 2026. Library updates or API changes may shift import paths and method signatures, so verify against the latest official docs before applying to production. Payment integration also depends on your business registration status and the payment provider's onboarding policies — go through it alongside official Stripe and TossPayments guides for safety.
 
