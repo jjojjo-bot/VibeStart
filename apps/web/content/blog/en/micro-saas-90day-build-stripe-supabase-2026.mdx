@@ -1,0 +1,285 @@
+---
+title: "Micro-SaaS 90-Day Build — Stripe·Supabase·Vercel Free Plan to $1,200 MRR (2026)"
+description: "Building a micro-SaaS in 90 days using Stripe checkout, Supabase Auth, and Vercel Functions on free plans. Code-level guide covering Phase 1 MVP, Phase 2 payment integration with webhooks, and Phase 3 reaching 48 paying users at $1,200 MRR."
+date: "2026-05-10"
+tags: ["micro-saas", "stripe integration", "supabase auth", "vercel deploy", "next.js app router", "MRR", "indie dev", "AI build", "payment webhook", "production migration"]
+---
+
+## 🤔 The Real Question Behind the 90-Day Micro-SaaS Build
+
+Can you actually build a micro-SaaS in 90 days and reach 5 paying users? The answer is yes — but only when the build flow and integration patterns are decided in advance. The market median for micro-SaaS reaches roughly $1,200 MRR (about 48 paying users × $25) by day 90, and that trajectory has effectively standardized around the Stripe checkout + Supabase Auth + Vercel Functions stack. If you follow the same pattern, the actual code you'll write across 90 days fits in 30~50 lines; the rest of the time goes to user interviews, UX polish, and external marketing.
+
+This post is the developer-facing companion to the non-technical sister piece [AI Side Hustle $1,500/Month? Vibe Coding Revenue Distribution (2026)](https://1daymillion.com/ai-side-hustle-vibe-coding-2026/), which walked through the income distribution and 5 revenue paths. Here we walk through the code and integration patterns from a developer's lens, phase by phase. For graduating from Bolt to your own Next.js project, see [When to Graduate from Bolt.new to Your Own Next.js Project](https://vibe-start.com/blog/bolt-new-graduation-to-nextjs-2026) — the two together cover the full prototype-to-production arc.
+
+## 📋 90-Day Build Flow — Phase 1~3
+
+| Phase | Days | Outcome | Core code |
+|-------|------|---------|-----------|
+| 1 | Day 1~30 | MVP + 5 free users | Supabase schema·Auth, Bolt or Next.js scaffold |
+| 2 | Day 31~60 | Payment integration + 5 paid ($125 MRR) | Stripe checkout session + webhook handler |
+| 3 | Day 61~90 | 48 users + $1,200 MRR | Email automation, Product Hunt launch, ops automation |
+
+The three phases differ both in duration and in what gets shipped, but Phase 2 (payment integration) is the decisive turning point. Crossing from free to paid users is what reclassifies you as someone who actually receives money — and that mental shift matters as much as the technical one.
+
+## 🏗 Phase 1 — MVP Build (Day 1~30)
+
+The first decision is which build tool to use. There are two paths: build a prototype quickly with an AI builder like Bolt or Lovable and graduate later, or start directly with your own Next.js + Supabase setup. In a 90-day flow, the first 1~2 weeks usually go faster on Bolt for user feedback, and the standard move is to graduate to Next.js when you start integrating payments.
+
+### 🗄 First Supabase Schema
+
+If you're targeting one specific role with a small tool, the data model usually fits in 3~4 tables: users (`profiles`), subscription state (`subscriptions`), one core domain entity, and event logs (`events`). Stripe webhooks land in `subscriptions` as the single source of truth, so getting that right early makes Phase 2 much faster.
+
+```sql
+-- supabase/migrations/0001_init.sql
+create table profiles (
+  id uuid primary key references auth.users on delete cascade,
+  email text unique not null,
+  created_at timestamptz default now()
+);
+
+create table subscriptions (
+  user_id uuid primary key references profiles on delete cascade,
+  stripe_customer_id text unique,
+  stripe_subscription_id text unique,
+  status text check (status in ('active','trialing','past_due','canceled')),
+  current_period_end timestamptz,
+  updated_at timestamptz default now()
+);
+
+create index subscriptions_status_idx on subscriptions(status);
+```
+
+Because `profiles` references `auth.users`, the standard pattern is to create the `profiles` row via a trigger when Supabase Auth creates the user. The `handle_new_user` trigger from the official Supabase docs works as-is. Confirmation: Supabase Studio shows three tables and RLS (Row Level Security) is enabled.
+
+### 🔐 Sign-Up Flow with Supabase Auth
+
+For a 90-day flow, start with email magic link or OAuth (Google/GitHub) — whatever has the lowest signup friction. Your goal is 5 external users fast, not perfect auth. In Next.js App Router the standard package is `@supabase/ssr`, and reading sessions from server components has a stable pattern.
+
+```typescript
+// app/auth/callback/route.ts
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
+
+export async function GET(request: Request) {
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get('code');
+
+  if (code) {
+    const cookieStore = cookies();
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      { cookies: { /* ssr cookie adapter */ } }
+    );
+    await supabase.auth.exchangeCodeForSession(code);
+  }
+  return NextResponse.redirect(`${origin}/dashboard`);
+}
+```
+
+Register your domain's `/auth/callback` URL in Supabase Auth Providers as the last setup step. By Day 14 a user should be able to sign up and land on the dashboard.
+
+## 💳 Phase 2 — Stripe Payment Integration (Day 31~60)
+
+Phase 2 is the decisive segment of the 90-day flow. You move from 5 free users to 5 paying users ($125 MRR), and from this point you're classified as someone who receives payments. If your market is Korea-first, TossPayments is the standard; if you're going global, Stripe is. Both integration patterns are compared in the companion piece [Accepting Payments with Stripe and TossPayments](https://1daymillion.com/stripe-toss-payment-integration/).
+
+### 🛒 Creating a Stripe Checkout Session
+
+Stripe Checkout provides a hosted payment page, so you don't have to build payment UI yourself. The simplest pattern is to create a session in a Server Action or Route Handler in Next.js App Router and redirect the user.
+
+```typescript
+// app/api/checkout/route.ts
+import Stripe from 'stripe';
+import { NextResponse } from 'next/server';
+import { getCurrentUser } from '@/lib/auth';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
+export async function POST(req: Request) {
+  const user = await getCurrentUser();
+  if (!user) return new NextResponse('Unauthorized', { status: 401 });
+
+  const session = await stripe.checkout.sessions.create({
+    mode: 'subscription',
+    customer_email: user.email,
+    line_items: [{ price: process.env.STRIPE_PRICE_ID_PRO!, quantity: 1 }],
+    success_url: `${process.env.NEXT_PUBLIC_URL}/dashboard?success=1`,
+    cancel_url: `${process.env.NEXT_PUBLIC_URL}/pricing?canceled=1`,
+    metadata: { user_id: user.id },
+  });
+
+  return NextResponse.json({ url: session.url });
+}
+```
+
+Don't skip `metadata.user_id` — it's the key the webhook uses to match the user back. Confirmation: in Stripe Dashboard's Test mode, complete a checkout with the test card `4242 4242 4242 4242` and verify the `checkout.session.completed` event lands in Stripe events.
+
+### 🪝 Webhook Handler — The Single Source of Truth
+
+The flow from "payment completed" to "subscriptions table updated" is the webhook's responsibility. Stripe sends events, you reflect them in your DB. A Vercel Edge Function or Node Function handles this lightly.
+
+```typescript
+// app/api/webhooks/stripe/route.ts
+import Stripe from 'stripe';
+import { NextResponse } from 'next/server';
+import { createServiceClient } from '@/lib/supabase-admin';
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+
+export async function POST(req: Request) {
+  const body = await req.text();
+  const sig = req.headers.get('stripe-signature')!;
+  const event = stripe.webhooks.constructEvent(body, sig, webhookSecret);
+
+  const supabase = createServiceClient();
+
+  if (event.type === 'checkout.session.completed' ||
+      event.type === 'customer.subscription.updated') {
+    const sub = event.data.object as Stripe.Subscription;
+    await supabase.from('subscriptions').upsert({
+      user_id: sub.metadata.user_id,
+      stripe_customer_id: sub.customer as string,
+      stripe_subscription_id: sub.id,
+      status: sub.status,
+      current_period_end: new Date(sub.current_period_end * 1000),
+      updated_at: new Date(),
+    });
+  }
+  return NextResponse.json({ received: true });
+}
+```
+
+`stripe.webhooks.constructEvent` handles signature verification automatically, blocking arbitrary requests. Use `stripe listen --forward-to localhost:3000/api/webhooks/stripe` for local testing. Confirmation: after one successful payment, your DB shows `subscriptions.status = 'active'`.
+
+### 🚧 Three Recurring First-Time Mistakes
+
+Three patterns trip up almost everyone the first time they integrate payments. First, mixing webhook secrets across environments — you push the production secret into `.env.local` and verification breaks. Second, forgetting `metadata.user_id`, which leaves the webhook with no way to match users. Third, the handler doesn't respond within 5 seconds, Stripe retries, and without idempotency you end up with duplicate rows. The fix: use `upsert`, return 200 immediately, and push heavy work to a background job.
+
+## 📈 Phase 3 — User Acquisition and Automation (Day 61~90)
+
+Phase 3 leans heavier on external marketing and automation than on building. Day 61~75 is for a Product Hunt launch or contacting 3 influencers to bring in 30~50 new users. Day 76~90 is converting some of those into paying users to reach the 48-user, $1,200 MRR target.
+
+### 📮 Email Automation — Resend in 30 Lines
+
+Transactional emails like signup welcome, trial-ending D-3 reminder, and post-payment receipts are easy with Resend or Postmark. Both integrate cleanly with Vercel, and Resend's free plan covers 3,000 emails/month — plenty for early Phase 3.
+
+```typescript
+// lib/email.ts
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY!);
+
+export async function sendWelcome(email: string) {
+  return resend.emails.send({
+    from: 'hello@yoursaas.com',
+    to: email,
+    subject: 'Welcome — your 3-minute first-step guide',
+    html: '<p>Hi there...</p>',
+  });
+}
+```
+
+Two patterns: subscribe to Supabase Auth's `signed_up` event via webhook, or call directly from the Server Action right after signup. With low traffic, direct calls keep things simple.
+
+### 🚀 Product Hunt Launch Checklist
+
+A Product Hunt launch is a one-time event but it's the single most efficient channel for pulling in 100~300 new users in a day. Standard moves: launch Tuesday-Thursday at midnight PT and surface 5 times across your own channels in the next 24 hours. Your checklist: a strong first-impression screenshot, a 30-second demo video, 5 gallery images, a tagline under 60 characters, and a response cadence for user comments. Confirmation 24 hours later: the page has 100+ users and your MAKER comment response rate is 90%+.
+
+### 🔁 Automation — Reducing Operational Load
+
+By Day 90 you want a setup where the tool runs without your daily attention. Resend email automation, Stripe billing portal (so users change cards and cancel themselves), Supabase RLS for data isolation, and Sentry for error tracking — together those four cover ~95% of operational cases. When only 5% of users actually need your direct attention, you have room at the end of Phase 3 to start the next 90 days.
+
+## 🚨 Five Common Mistakes
+
+Some mistakes show up almost every time on a first 90-day build.
+
+| # | Mistake | Result | Prevention |
+|---|---------|--------|------------|
+| 1 | Tool too generic (every audience) | Free→paid conversion 0% | Pick one specific role |
+| 2 | Trying payment integration in Phase 1 | MVP launch delayed by a month | Validate with free users first |
+| 3 | No webhook idempotency | Duplicate rows, status corruption | upsert + event-ID dedup |
+| 4 | Free-only forever, never tries paid | $0 MRR after 90 days | Price + integrate by Day 30 |
+| 5 | Underprepared Product Hunt launch | Fewer than 30 new users | 5 assets + 24-hour response plan |
+
+Most first-time builders trip on at least one or two of these. Print this table and tape it next to your monitor before Phase 1 starts — the same mistakes happen less often when they're staring back at you.
+
+## 🔍 Comparison — Stripe vs Lemon Squeezy
+
+When choosing payment infrastructure, Stripe and Lemon Squeezy are the two main forks for indie devs.
+
+| Criterion | Stripe | Lemon Squeezy |
+|-----------|--------|---------------|
+| Korean card payments | ✅ Direct onboarding | ❌ Global cards only |
+| Auto Tax/VAT handling | ❌ DIY (Stripe Tax separate) | ✅ Merchant of Record |
+| Integration code | ~50 lines | ~30 lines |
+| Fees | 2.9% + $0.30 | 5% + $0.50 |
+| Operational load | Medium (tax filing required) | Low (LMSY files) |
+
+For most indie developers, Lemon Squeezy is faster to start because of low operational load. But if your market has heavy Korean card usage, Stripe + TossPayments is the right pick. Decide based on your market within the first week.
+
+## 🛠 Operational Tips — Vercel + Supabase Free Plan Limits
+
+There's a clean pattern for staying under both Vercel and Supabase free limits across 90 days.
+
+- Vercel Hobby plan: 100GB bandwidth/month, 100 hours of function execution, 100k Edge Requests. The free plan handles your first 1,000 users without strain.
+- Supabase Free plan: 500MB DB, 50,000 MAU on Auth, 1GB Storage. Free plan stays viable through the end of Phase 3.
+- When traffic hits 80% of free limits, move to Pro. Vercel Pro is $20/month, Supabase Pro is $25/month — together $45/month. By the time you cross that, your MRR is already past $1,200, so cost is under 4%.
+
+Cost monitoring: 5 minutes a week on Vercel Dashboard's Usage tab and Supabase's Project Settings → Usage covers it.
+
+> ⚠️ **Caution**: Exchange rates and pricing change quarterly. The cost figures here are accurate as of May 2026 — verify current prices on official pages before billing. And never bypass or disable webhook signature verification in production: it's the layer that blocks arbitrary requests.
+
+## ❓ Frequently Asked Questions
+
+**Q. Is $1,200 MRR really achievable in 90 days?**
+
+That's the median estimate for the micro-SaaS pattern, meaning half of normal trajectories reach it and half fall short. The actual range moves ±50% depending on category fit, marketing consistency, and how fast you absorb user feedback. The 70% who stay in the $0~500 band during their first 90 days are also normal — what matters more is whether the next 90 days show movement up the curve.
+
+**Q. Is starting on Bolt faster, or going straight to Next.js?**
+
+In a 90-day flow, the standard is Bolt or Lovable for the first 1~2 weeks (fast user feedback), then graduate to your own Next.js project at the Phase 2 payment integration point. Going straight to Next.js means Day 1~7 disappear into environment setup and boilerplate, and user validation slips.
+
+**Q. How long does Stripe onboarding take in Korea?**
+
+Average 5~10 business days. Submit business registration, bank statement, and ID; Stripe reviews. Sole proprietors are eligible; corporations clear faster. If Korean card usage is over 50% of your market, Stripe + TossPayments is right; under 20%, Lemon Squeezy's lower operational load wins.
+
+**Q. What if my webhook handler can't respond in under 5 seconds?**
+
+Stripe starts retrying. The same event lands 3~5 times, and without idempotency your DB gets corrupted. Move heavy work (email sends, external API calls) into background jobs and return 200 immediately from the webhook. That's the standard pattern.
+
+**Q. What if free-to-paid conversion is low?**
+
+Common situation. The typical pattern is 1~2 of every 5 free users converting; if you have 0, check two things. First: is the tool actually solving a real problem for them? Second: is the price aligned with their perceived value? Thirty-minute interviews with 5 users surface the answer quickly.
+
+**Q. Why Supabase over Firebase or PlanetScale?**
+
+Each has strengths. Supabase combines Postgres + Auth + Storage with strong RLS — ideal for solo devs. Firebase's NoSQL is fast when the data model is simple. PlanetScale fits when MySQL compatibility matters. For 95% of 90-day builds, Supabase has the lowest friction.
+
+**Q. Should I integrate email automation from day one?**
+
+Late Phase 1 to early Phase 2 is the right window. With 5 users in Phase 1 you can email them yourself, but transactional emails (receipts, renewal alerts) become required at the payment integration point — automation pays off then. Resend's 3,000-emails/month free tier covers early Phase 3.
+
+**Q. Can I really sell the tool after 90 days?**
+
+If MRR is over $1,000, yes — marketplaces like Acquire and MicroAcquire accept listings. Typical multiples are 24~48× MRR, so $1,200 MRR maps to roughly $28K~58K in sale price. Multiples vary with category, growth rate, and churn. If selling is the goal, build with sale-readiness in mind from the start: separable user data, clean code, written ops manual.
+
+> **Note**: The code in this post targets Stripe Node.js SDK v15, `@supabase/ssr` v0.5, and Next.js 15 App Router as of May 2026. Library updates or API changes may shift import paths and method signatures, so verify against the latest official docs before applying to production. Payment integration also depends on your business registration status and the payment provider's onboarding policies — go through it alongside official Stripe and TossPayments guides for safety.
+
+## 🔗 Related Articles
+
+- [AI Side Hustle $1,500/Month? Vibe Coding Revenue Distribution (2026)](https://1daymillion.com/ai-side-hustle-vibe-coding-2026/)
+- [Accepting Payments with Stripe and TossPayments (2026)](https://1daymillion.com/stripe-toss-payment-integration/)
+- [When to Graduate from Bolt.new to Your Own Next.js Project](https://vibe-start.com/blog/bolt-new-graduation-to-nextjs-2026)
+- [Korea AI Market 2026 Comprehensive Guide — Hiring·Law·Stats at a Glance](https://1daymillion.com/korea-ai-market-2026-guide/)
+- [Vibe Coding 2026 Market Stats — 13 Key Numbers](https://1daymillion.com/vibe-coding-2026-market-stats-13-numbers/)
+
+Once you've worked through the 90-day pattern once — Phase 1 build, Phase 2 payment integration, Phase 3 user acquisition — Phase 2 takes roughly half the time on your second tool. The code and operational notes from your first micro-SaaS become the strongest asset for the next one.
+
+## 📚 References
+
+- [Stripe Checkout Documentation](https://docs.stripe.com/checkout)
+- [Supabase Auth Helpers for Next.js](https://supabase.com/docs/guides/auth/server-side/nextjs)
+- [Vercel Functions Documentation](https://vercel.com/docs/functions)
+- [Resend Node.js SDK](https://resend.com/docs/send-with-nodejs)
