@@ -19,6 +19,10 @@ interface PageProps {
 
 const SITE_URL = "https://vibe-start.com";
 
+// OG article 카드 렌더 버전. 카드 레이아웃/폰트를 바꾸면 이 숫자를 올려
+// og:image URL을 변경 → 소셜 스크래퍼가 옛 이미지 캐시를 버리고 새로 가져온다.
+const OG_VERSION = 2;
+
 function blogPostUrl(locale: string, slug: string): string {
   const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
   return `${SITE_URL}${prefix}/blog/${slug}`;
@@ -31,7 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const wpCanonical = getWpCanonicalUrl(locale, slug);
   const selfUrl = blogPostUrl(locale, slug);
-  const ogImageUrl = `${SITE_URL}/api/og?type=article&title=${encodeURIComponent(
+  const ogImageUrl = `${SITE_URL}/api/og?type=article&v=${OG_VERSION}&title=${encodeURIComponent(
     post.title,
   )}`;
 
