@@ -1,0 +1,198 @@
+---
+title: "Claude Advisor API in Practice — Cut Cost 73% with the Executor/Advisor Pattern (2026)"
+description: "Wire Anthropic's Advisor tool into the Messages API so a Sonnet/Haiku Executor consults Opus 4.6 only when stuck. Beta header, max_uses, prompt caching combo, and a billing-ratio measurement script — real Python and TypeScript code for a 73–87% cost cut, step by step."
+date: "2026-05-18"
+tags: ["Claude API", "Anthropic SDK", "Advisor tool", "Executor Advisor pattern", "prompt caching", "max_uses", "Claude Code", "API cost reduction", "Sonnet Haiku Opus", "TypeScript"]
+---
+
+## 🤔 One-Line Change, 73% Cheaper — Really?
+
+Does adding the Claude Advisor tool truly cut coding-agent cost by 73% with a one-line change? The answer is yes — but only when the Executor/Advisor split and the call cap are set correctly in code. Anthropic shipped the Advisor tool as a public beta on April 9, 2026, and it works inside a single Messages API call with no separate orchestration layer. When Sonnet or Haiku (the Executor) gets stuck, it asks Opus 4.6 (the Advisor) for a 400–700 token piece of advice and resumes. On Anthropic's official 25-turn simulation, Sonnet+Advisor is 73% cheaper than Opus alone and Haiku+Advisor is 87% cheaper, while SWE-bench Multilingual rises from 72.1% to 74.8%.
+
+This is the developer-deep companion to the non-developer-tone piece [Claude Advisor Tool — 5 Ways to Cut Opus Cost 12% (2026)](https://1daymillion.com/claude-advisor-pattern-cost-cut/), which covers the "why and when." Here we work through the SDK code, the prompt-caching combination, and a billing-measurement script from a developer's view. If you want to treat the same pattern as a margin lever for your own side-project SaaS, read it alongside [Micro-SaaS 90-Day Build — Stripe, Supabase, Vercel](https://vibe-start.com/blog/micro-saas-90day-build-stripe-supabase-2026).
+
+## 📋 Pattern Structure — Two Models in One Call
+
+| Role | Model | Token share | Job |
+|------|-------|-------------|-----|
+| Executor | Sonnet 4.6 or Haiku 4.5 | ~88% | Code generation, tool calls, file edits — the main work |
+| Advisor | Opus 4.6 (beta-fixed) | ~12% | 400–700 token strategy/design advice on hard decisions only |
+
+The key point is that the client never orchestrates the two models directly. You hand the Executor one extra `advisor` tool, and the Executor itself decides "I'm not confident here," calls the Advisor, takes the answer, and continues. The two API round-trips and context-sync code move server-side, which is why the client change is effectively one line. That is also why cost drops: the expensive Opus emits few tokens while the cheap Executor emits many, so the per-token price gap flows straight into the bill.
+
+## 🏗 Python SDK — Basic Pairing Code
+
+The simplest application adds a beta header and the `advisor` tool to an existing `messages.create` call. The model stays Sonnet or Haiku, and one advisor entry is added to the tools array. Capping Opus calls with `max_uses` is the core of cost control, so start at 3.
+
+```python
+# pip install anthropic
+from anthropic import Anthropic
+
+client = Anthropic()
+
+resp = client.beta.messages.create(
+    model="claude-sonnet-4-6",
+    max_tokens=4096,
+    extra_headers={"anthropic-beta": "advisor-tool-2026-03-01"},
+    tools=[
+        {
+            "type": "advisor_20260301",
+            "name": "consult_opus",
+            "model": "claude-opus-4-6",
+            "max_uses": 3,
+        }
+    ],
+    system="When unsure on hard design or debugging decisions, use consult_opus proactively.",
+    messages=[{"role": "user", "content": "Design the payment webhook retry logic for this repo."}],
+)
+
+print(resp.content)
+```
+
+There is a reason to put a one-line "use the advisor when unsure" instruction in the `system` prompt. `max_uses` is a ceiling, not a forced count, so without this guidance the Executor often never calls the Advisor and the savings drop to zero. The healthy signal is seeing Advisor (Opus) tokens land at 10–15% of the total on the console usage page after the response.
+
+## 🧩 TypeScript SDK — Same Pattern
+
+In Node, port the same structure with `@anthropic-ai/sdk`. The beta header value and the tool `type` string must match the Python ones exactly. A typo silently ignores the advisor tool with no clear error, so confirm it works by checking the token ratio right after applying.
+
+```typescript
+// npm i @anthropic-ai/sdk
+import Anthropic from "@anthropic-ai/sdk";
+
+const client = new Anthropic();
+
+const resp = await client.beta.messages.create({
+  model: "claude-haiku-4-5",
+  max_tokens: 4096,
+  // @ts-expect-error beta advisor tool (2026-03-01)
+  extra_headers: { "anthropic-beta": "advisor-tool-2026-03-01" },
+  tools: [
+    {
+      type: "advisor_20260301",
+      name: "consult_opus",
+      model: "claude-opus-4-6",
+      max_uses: 4,
+    },
+  ],
+  system:
+    "Call consult_opus only on stuck design/debug decisions; handle simple work directly.",
+  messages: [
+    { role: "user", content: "Fix the type error in this Next.js route handler." },
+  ],
+});
+
+console.log(resp.content);
+```
+
+When Haiku is the Executor, set `max_uses` a notch or two higher (4–5) than for Sonnet. Haiku has a lower solo difficulty ceiling, so Advisor call frequency rises naturally. The BrowseComp benchmark shows this: Haiku alone at 19.7% more than doubles to 41.2% with the Advisor attached.
+
+## ⚡ Combine with Prompt Caching — Push Savings Further
+
+If the Advisor pattern lowered your output token price, handle input tokens separately with prompt caching. The system prompt and tool definitions are resent every turn; adding `cache_control` drops the price of those cached input tokens sharply. The longer the agent (a 25-turn run with a repeated system/tools), the more the effect compounds.
+
+```python
+resp = client.beta.messages.create(
+    model="claude-sonnet-4-6",
+    max_tokens=4096,
+    extra_headers={"anthropic-beta": "advisor-tool-2026-03-01"},
+    system=[
+        {
+            "type": "text",
+            "text": "Long-running coding agent system prompt ...",
+            "cache_control": {"type": "ephemeral"},
+        }
+    ],
+    tools=[
+        {
+            "type": "advisor_20260301",
+            "name": "consult_opus",
+            "model": "claude-opus-4-6",
+            "max_uses": 3,
+            "cache_control": {"type": "ephemeral"},
+        }
+    ],
+    messages=[{"role": "user", "content": "..."}],
+)
+```
+
+Placing `cache_control` on the last system block and on tools makes that span a cache hit from the next turn on. The two techniques are independent, so the Advisor's output savings (73–87%) and caching's input savings multiply. The finishing check is whether `cache_read_input_tokens` in the response `usage` is greater than zero from the second turn onward.
+
+## 📊 Billing-Ratio Measurement Script
+
+Savings swing widely — from 11.9% to 73% — depending on the workload. So instead of estimating, measure your own Executor:Advisor token ratio directly. A small wrapper that accumulates usage per response and prints the ratio is enough.
+
+```python
+totals = {"exec_out": 0, "advisor_out": 0}
+
+def track(resp):
+    u = resp.usage
+    totals["exec_out"] += u.output_tokens
+    # advisor call tokens are exposed as a usage sub-field
+    totals["advisor_out"] += getattr(u, "advisor_output_tokens", 0)
+    exec_t, adv_t = totals["exec_out"], totals["advisor_out"]
+    ratio = adv_t / (exec_t + adv_t) if (exec_t + adv_t) else 0
+    print(f"Advisor ratio {ratio:.1%}  (10-15% is balanced)")
+```
+
+If the Advisor ratio exceeds 20%, lower `max_uses` or move the Executor up a model tier. Below 5% means the Advisor is barely called, so strengthen the system guidance or raise `max_uses`. This single metric is your basis for finding the optimum for your workload.
+
+## 🔁 Extending to Claude Code and Automation Agents
+
+The longer the automation flow, the larger the Advisor effect. A 5-minute one-shot query rarely calls the Advisor, so savings stay near 11.9%; an agent running 30+ minutes or a cron-style automation hits hard decisions often and approaches 73%. The flow for combining this with Claude Code automation lines up with the automation patterns in [Claude Code Routines — A Beginner's Guide to Cron Jobs in English (2026)](https://1daymillion.com/claude-code-routines-guide-2026/). For attaching your own tools to external systems, start from the [MCP Beginner's Guide for Non-Developers (2026)](https://1daymillion.com/mcp-beginner-guide/).
+
+## 🧯 Field Traps and Diagnosis Order
+
+Being a beta, a few constraints matter before you write code. First, the Advisor slot currently takes only Opus 4.6. Even though Opus 4.7 is GA, Advisor compatibility is not there yet, and slotting Sonnet as Haiku's Advisor is also blocked. Next, if the beta header `advisor-tool-2026-03-01` is missing the tool is silently ignored, so when savings don't appear, check the header for typos first.
+
+The most common mistake is setting `max_uses` to 0 or omitting the system guidance, leaving the Executor never calling the Advisor. In that case both the SWE-bench gain and the cost cut are zero. The diagnosis order is simple: if console Advisor tokens are zero, check header, max_uses, and system guidance in turn; if they're above zero but savings are small, look at whether the task is too short or the Executor is carrying too much difficulty.
+
+## ❓ Frequently Asked Questions
+
+**Q. What exactly are the beta header and tool type strings?**
+
+The header `anthropic-beta: advisor-tool-2026-03-01` and the tools array `"type": "advisor_20260301"`. If either value differs by a single character, the advisor tool is ignored and the call is treated as ordinary. The values may change when the beta goes GA, so confirm the latest identifiers in the official docs at apply time.
+
+**Q. What should max_uses start at?**
+
+For general coding work, start at 3 with a Sonnet Executor and 4–5 with a Haiku Executor. After finishing one task, check the Advisor token ratio in the console and tune it into the 10–15% range — lower it if high, raise it if low.
+
+**Q. Do prompt caching and Advisor multiply the savings?**
+
+The two work independently. Advisor reduces output tokens and caching reduces repeated input tokens, so the effects add up. But caching only hits when system/tools are identical each turn, so dynamically changing prompts see little benefit.
+
+**Q. Can I see the Advisor's response in logs directly?**
+
+By default the Advisor response enters only the Executor's internal context, and the end user sees only the Executor's response. To debug it you must enable separate logging; the console exposes only call count and token counts.
+
+**Q. I'm not getting 73% — is it a code problem?**
+
+Usually it's workload length, not code. One-shot tasks of five turns or fewer rarely call the Advisor, so 11.9% is normal. 73% is for 25-turn-class long agents, so don't anchor expectations on short tasks.
+
+**Q. Do OpenAI or Google have the same pattern?**
+
+Client-side orchestration of two models is possible anywhere, but a server-integrated Executor/Advisor split inside a single API call is, for now, first from Anthropic.
+
+**Q. Is there a slash command to turn this on in Claude Code?**
+
+There is no explicit toggle in the general UI yet. It's increasingly used inside automation flows like Routines and hooks, and applying it at the code level via the API is the current standard.
+
+**Q. Does cost measurement have to be done in code?**
+
+The console usage page can split Executor and Advisor tokens too. But to find the optimal `max_uses` per workload, a wrapper that accumulates the ratio per response is faster and reproducible.
+
+> ⚠️ **Note**: The Advisor tool is in beta as of May 2026. The beta header value, the compatible model (Opus 4.6 fixed), `max_uses` behavior, and usage sub-field names may change at GA. The cost figures (73%, 87%, 11.9%) are from Anthropic's official simulation; your actual bill varies with workload pattern, call frequency, and Executor choice. Verify the latest spec in Anthropic's official docs before production use.
+
+Follow this through and you'll have a feel for cutting output cost with a near one-line change while also catching input cost with prompt caching. Optimization starts by measuring the Advisor ratio of your own workload once.
+
+## 🔗 Related Posts
+
+- [Claude Advisor Tool — 5 Ways to Cut Opus Cost 12% (2026)](https://1daymillion.com/claude-advisor-pattern-cost-cut/)
+- [Claude Code Routines — A Beginner's Guide to Cron Jobs in English (2026)](https://1daymillion.com/claude-code-routines-guide-2026/)
+- [MCP (Model Context Protocol) Beginner's Guide for Non-Developers (2026)](https://1daymillion.com/mcp-beginner-guide/)
+- [Micro-SaaS 90-Day Build — Stripe, Supabase, Vercel Free Plan to $1,200 MRR](https://vibe-start.com/blog/micro-saas-90day-build-stripe-supabase-2026)
+
+## 📚 References
+
+- [Claude Models Overview — Anthropic official docs](https://platform.claude.com/docs/en/about-claude/models/overview)
+- [What's new in Claude Opus 4.7 — Anthropic official docs](https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-7)
+- [Anthropic SDK (Python/TypeScript) — official reference](https://docs.claude.com/en/api/client-sdks)

@@ -1,0 +1,198 @@
+---
+title: "Claude Advisor API 실전 — Executor/Advisor 패턴으로 비용 73% 줄이는 코드 (2026)"
+description: "Anthropic Advisor tool을 Messages API에 붙여 Sonnet·Haiku Executor가 막힐 때만 Opus 4.6에 묻는 패턴. 베타 헤더·max_uses·prompt caching 결합·청구서 비율 측정 스크립트까지 Python·TypeScript 실제 코드로 비용 73~87% 절감 흐름을 단계별로 정리한다."
+date: "2026-05-18"
+tags: ["Claude API", "Anthropic SDK", "Advisor tool", "Executor Advisor 패턴", "prompt caching", "max_uses", "Claude Code", "API 비용 절감", "Sonnet Haiku Opus", "TypeScript"]
+---
+
+## 🤔 한 줄 변경으로 73% 절감, 진짜인가
+
+Claude Advisor tool을 붙이면 코딩 에이전트 비용이 정말 한 줄 변경으로 73% 떨어지는가. 답은 "그렇다, 단 Executor·Advisor 역할 분리와 호출 한도를 코드에서 정확히 잡았을 때"이다. Anthropic이 2026년 4월 9일 베타로 공개한 Advisor tool은 별도 오케스트레이션 레이어 없이 단일 Messages API 호출 안에서 작동한다. Sonnet이나 Haiku(Executor)가 일하다 막히면 Opus 4.6(Advisor)에게 400~700 토큰짜리 조언만 받고 다시 일을 잇는 구조다. Anthropic 공식 25턴 시뮬레이션 기준 Sonnet+Advisor는 Opus 단독 대비 73%, Haiku+Advisor는 87% 저렴하고, SWE-bench Multilingual은 72.1%에서 74.8%로 오른다.
+
+이 글은 비개발자 톤의 짝꿍 글 [Claude Advisor 도구 — Opus 비용 12% 절감하는 5가지 사용법](https://1daymillion.com/claude-advisor-pattern-cost-cut/)이 "왜·언제 쓰나"를 다뤘다면, 이쪽은 개발자 시각으로 SDK 코드·prompt caching 결합·청구서 측정 스크립트를 단계별로 푼다. 같은 패턴을 자기 부업 SaaS의 마진 변수로 쓰는 흐름은 별도 정리한 [마이크로 SaaS 90일 빌드 — Stripe·Supabase·Vercel](https://vibe-start.com/blog/micro-saas-90day-build-stripe-supabase-2026) 글과 함께 보면 비용 구조가 잡힌다.
+
+## 📋 패턴 구조 — 단일 호출 안의 두 모델
+
+| 역할 | 모델 | 토큰 비중 | 하는 일 |
+|------|------|-----------|---------|
+| Executor | Sonnet 4.6 또는 Haiku 4.5 | 약 88% | 코드 생성·도구 호출·파일 조작, 작업 본진 |
+| Advisor | Opus 4.6 (베타 고정) | 약 12% | 막힌 결정에 400~700토큰 전략·설계 조언만 |
+
+핵심은 두 모델을 클라이언트가 직접 오케스트레이션하지 않는다는 점이다. Executor에게 `advisor` tool 하나를 더 주면, Executor가 스스로 "이 결정은 확신이 없다"고 판단할 때 Advisor를 호출하고 답을 받아 작업을 잇는다. 두 번의 API 왕복과 컨텍스트 동기화 코드가 서버 쪽으로 사라지기 때문에 클라이언트 변경이 사실상 한 줄에 가깝다. 비용이 떨어지는 이유도 여기 있다. 비싼 Opus가 출력하는 토큰이 적고, 싼 Executor가 출력하는 토큰이 많은 분업 구조라 토큰 단가 차이가 그대로 청구서에 반영된다.
+
+## 🏗 Python SDK — 기본 페어링 코드
+
+가장 단순한 적용은 기존 `messages.create` 호출에 베타 헤더와 `advisor` tool을 추가하는 것이다. 모델은 그대로 Sonnet이나 Haiku를 쓰고, tools 배열에 advisor 항목 하나가 더해진다. `max_uses`로 Opus 호출 상한을 두는 게 비용 통제의 핵심이라 처음에는 3으로 시작한다.
+
+```python
+# pip install anthropic
+from anthropic import Anthropic
+
+client = Anthropic()
+
+resp = client.beta.messages.create(
+    model="claude-sonnet-4-6",
+    max_tokens=4096,
+    extra_headers={"anthropic-beta": "advisor-tool-2026-03-01"},
+    tools=[
+        {
+            "type": "advisor_20260301",
+            "name": "consult_opus",
+            "model": "claude-opus-4-6",
+            "max_uses": 3,
+        }
+    ],
+    system="어려운 설계·디버깅 결정에서 확신이 없으면 consult_opus를 적극적으로 사용하라.",
+    messages=[{"role": "user", "content": "이 레포의 결제 webhook 재시도 로직을 설계해줘."}],
+)
+
+print(resp.content)
+```
+
+`system` 프롬프트에 "확신이 없으면 advisor를 적극 사용하라"는 한 줄을 넣는 이유가 있다. `max_uses`는 호출 상한일 뿐 강제 횟수가 아니라서, 이 가이드가 없으면 Executor가 Advisor를 한 번도 안 부르고 절감 효과가 0이 되는 경우가 자주 나온다. 정상 신호는 응답 후 콘솔 사용량 페이지에서 Advisor(Opus) 토큰이 전체의 10~15%로 잡히는 것이다.
+
+## 🧩 TypeScript SDK — 동일 패턴
+
+Node 환경에서는 `@anthropic-ai/sdk`로 같은 구조를 그대로 옮긴다. 베타 헤더 값과 tool `type` 문자열은 Python과 동일하게 정확히 맞춰야 한다. 오타가 나면 에러 메시지가 명확하지 않은 채 advisor tool이 그냥 무시되므로, 적용 직후 토큰 비율로 작동을 확인하는 게 안전하다.
+
+```typescript
+// npm i @anthropic-ai/sdk
+import Anthropic from "@anthropic-ai/sdk";
+
+const client = new Anthropic();
+
+const resp = await client.beta.messages.create({
+  model: "claude-haiku-4-5",
+  max_tokens: 4096,
+  // @ts-expect-error beta advisor tool (2026-03-01)
+  extra_headers: { "anthropic-beta": "advisor-tool-2026-03-01" },
+  tools: [
+    {
+      type: "advisor_20260301",
+      name: "consult_opus",
+      model: "claude-opus-4-6",
+      max_uses: 4,
+    },
+  ],
+  system:
+    "막힌 설계·디버깅 결정에서만 consult_opus를 호출하고, 단순 작업은 직접 처리하라.",
+  messages: [
+    { role: "user", content: "Next.js route handler의 타입 에러를 고쳐줘." },
+  ],
+});
+
+console.log(resp.content);
+```
+
+Haiku를 Executor로 쓸 때는 `max_uses`를 Sonnet보다 한두 단계 높게(4~5) 잡는 게 보통이다. Haiku는 단독 난도 한계가 낮아 Advisor 호출 빈도가 자연히 올라가기 때문이다. BrowseComp 벤치마크에서 Haiku 단독 19.7%가 Advisor 결합 시 41.2%로 두 배 넘게 오르는 게 이 효과다.
+
+## ⚡ prompt caching 결합 — 절감 폭을 더 키운다
+
+Advisor 패턴만으로 출력 토큰 단가를 낮췄다면, 입력 토큰은 prompt caching으로 따로 잡는다. system 프롬프트와 tools 정의는 매 턴 반복 전송되는데, `cache_control`을 붙이면 캐시된 입력 토큰 단가가 크게 떨어진다. 25턴 에이전트처럼 같은 system·tools가 반복되는 작업일수록 효과가 누적된다.
+
+```python
+resp = client.beta.messages.create(
+    model="claude-sonnet-4-6",
+    max_tokens=4096,
+    extra_headers={"anthropic-beta": "advisor-tool-2026-03-01"},
+    system=[
+        {
+            "type": "text",
+            "text": "장기 코딩 에이전트 system 프롬프트 ...",
+            "cache_control": {"type": "ephemeral"},
+        }
+    ],
+    tools=[
+        {
+            "type": "advisor_20260301",
+            "name": "consult_opus",
+            "model": "claude-opus-4-6",
+            "max_uses": 3,
+            "cache_control": {"type": "ephemeral"},
+        }
+    ],
+    messages=[{"role": "user", "content": "..."}],
+)
+```
+
+`cache_control`을 system 마지막 블록과 tools에 두면 다음 턴부터 그 구간이 캐시 적중으로 처리된다. 두 기법은 독립적으로 작동하므로 Advisor의 출력 절감(73~87%)과 caching의 입력 절감이 곱해진다. 마무리 확인은 응답 객체의 `usage`에서 `cache_read_input_tokens`가 두 번째 턴부터 0보다 큰지 보는 것이다.
+
+## 📊 청구서 비율 측정 스크립트
+
+절감 폭은 작업 패턴에 따라 11.9%에서 73%까지 크게 갈린다. 그래서 추정 대신 본인 워크로드의 Executor:Advisor 토큰 비율을 직접 재는 게 가장 정확하다. 응답마다 usage를 누적해 비율을 찍는 작은 래퍼면 충분하다.
+
+```python
+totals = {"exec_out": 0, "advisor_out": 0}
+
+def track(resp):
+    u = resp.usage
+    totals["exec_out"] += u.output_tokens
+    # advisor 호출 토큰은 usage 세부 항목으로 분리 제공
+    totals["advisor_out"] += getattr(u, "advisor_output_tokens", 0)
+    exec_t, adv_t = totals["exec_out"], totals["advisor_out"]
+    ratio = adv_t / (exec_t + adv_t) if (exec_t + adv_t) else 0
+    print(f"Advisor 비율 {ratio:.1%}  (10~15%면 균형)")
+```
+
+Advisor 비율이 20%를 넘으면 `max_uses`를 낮추거나 Executor를 한 단계 위 모델로 올린다. 5% 미만이면 Advisor를 거의 안 부른다는 뜻이라 system 가이드를 강화하거나 `max_uses`를 키운다. 이 한 지표가 본인 워크로드에서 최적값을 찾는 기준이 된다.
+
+## 🔁 Claude Code·자동화 에이전트로 확장
+
+장기 자동화 흐름일수록 Advisor 효과가 커진다. 5분짜리 단발 질의는 Advisor 호출이 거의 없어 절감이 11.9% 수준에 머물지만, 30분 이상 도는 에이전트나 cron형 자동화는 어려운 결정이 자주 나와 73%에 근접한다. Claude Code 자동화에 결합하는 흐름은 별도 정리한 [Claude Code Routines 입문](https://1daymillion.com/claude-code-routines-guide-2026/) 글의 자동화 패턴과 맞물린다. 본인 도구를 외부 시스템에 붙이는 단계는 [MCP 비개발자 입문 가이드](https://1daymillion.com/mcp-beginner-guide/)에서 출발점을 잡으면 된다.
+
+## 🧯 실전 함정과 진단 순서
+
+베타 단계라 코드 작성 전에 알아둘 제약이 몇 개 있다. 먼저 Advisor 슬롯에는 현재 Opus 4.6만 들어간다. Opus 4.7이 GA로 풀렸어도 Advisor 호환은 아직 안 되고, Sonnet을 Haiku의 Advisor로 끼우는 것도 막혀 있다. 다음으로 베타 헤더 `advisor-tool-2026-03-01`이 빠지면 tool이 조용히 무시되므로, 절감이 안 될 때 가장 먼저 헤더 오타부터 확인한다.
+
+가장 흔한 실수는 `max_uses`를 0으로 두거나 system 가이드를 빼서 Executor가 Advisor를 한 번도 안 부르는 경우다. 이때는 SWE-bench 점수 향상도 비용 절감도 0이다. 진단 순서는 단순하다. 콘솔에서 Advisor 토큰이 0이면 헤더·max_uses·system 가이드 셋을 차례로 점검하고, 0보다 크지만 절감이 작으면 작업이 너무 짧거나 Executor가 과한 난도를 떠안고 있는지 본다.
+
+## ❓ 자주 묻는 질문
+
+**Q. 베타 헤더와 tool type 문자열은 정확히 무엇인가?**
+
+`anthropic-beta: advisor-tool-2026-03-01` 헤더와 tools 배열의 `"type": "advisor_20260301"`이다. 두 값이 한 글자라도 다르면 advisor tool이 무시된 채 일반 호출로 처리된다. 베타가 GA로 전환되면 값이 바뀔 수 있으니 적용 시점에 공식 문서로 최신 식별자를 확인한다.
+
+**Q. max_uses는 몇으로 시작해야 하나?**
+
+일반 코딩 작업은 Sonnet Executor 기준 3, Haiku Executor 기준 4~5에서 시작한다. 한 작업을 끝낸 뒤 콘솔에서 Advisor 토큰 비율을 보고 10~15% 범위에 들도록 조정한다. 비율이 높으면 낮추고 낮으면 키운다.
+
+**Q. prompt caching과 Advisor를 같이 쓰면 절감이 곱해지나?**
+
+두 기법은 독립적으로 작동한다. Advisor는 출력 토큰을, caching은 반복되는 입력 토큰을 줄이므로 효과가 합쳐진다. 단 caching은 system·tools가 턴마다 동일할 때만 적중하므로 동적으로 바뀌는 프롬프트에는 효과가 작다.
+
+**Q. Advisor 응답을 로그로 직접 보고 싶다.**
+
+기본적으로 Advisor 응답은 Executor 내부 컨텍스트로만 들어가고 최종 사용자에게는 Executor 응답만 노출된다. 디버깅하려면 별도 로깅을 켜야 하며, 콘솔은 호출 횟수와 토큰 수까지만 제공한다.
+
+**Q. 절감 73%가 안 나오는데 코드 문제인가?**
+
+대개 코드보다 워크로드 길이 문제다. 5턴 이하 단발 작업은 Advisor 호출이 거의 없어 11.9% 수준이 정상이다. 73%는 25턴급 장기 에이전트 기준이라, 짧은 작업에 기대치를 맞추면 안 된다.
+
+**Q. OpenAI·Google에도 같은 패턴이 있나?**
+
+클라이언트가 두 모델을 직접 오케스트레이션하는 방식은 어디서나 가능하지만, 단일 API 호출 안에서 Executor·Advisor 분업이 서버 쪽에 통합된 형태는 현재 Anthropic이 처음이다.
+
+**Q. Claude Code에서 직접 켜는 슬래시 명령이 있나?**
+
+일반 UI에는 명시적 토글이 아직 없다. Routines·hooks 같은 자동화 흐름 안에서 활용되는 사례가 늘고 있고, API를 직접 다루는 코드 레벨에서 적용하는 게 현재 표준이다.
+
+**Q. 비용 측정은 꼭 코드로 해야 하나?**
+
+콘솔 사용량 페이지로도 Executor·Advisor 토큰을 분리해 볼 수 있다. 다만 워크로드별 최적 `max_uses`를 찾으려면 응답마다 비율을 누적하는 래퍼가 더 빠르고 재현 가능하다.
+
+> ⚠️ **주의**: Advisor tool은 2026년 5월 기준 베타 상태다. 베타 헤더 값·호환 모델(Opus 4.6 고정)·`max_uses` 동작·usage 세부 필드명은 GA 전환 시 변경될 수 있다. 비용 절감 수치(73%·87%·11.9%)는 Anthropic 공식 시뮬레이션 기준이며 실제 청구액은 작업 패턴·호출 빈도·Executor 선택에 따라 달라진다. 운영 적용 전 Anthropic 공식 문서로 최신 사양을 확인하기 바란다.
+
+여기까지 따라오면 한 줄에 가까운 변경으로 출력 비용을 줄이고, prompt caching으로 입력 비용까지 함께 잡는 흐름이 손에 잡힐 것이다. 본인 워크로드의 Advisor 비율을 한 번 재보는 것에서 최적화가 시작된다.
+
+## 🔗 관련 글
+
+- [Claude Advisor 도구 — Opus 비용 12% 절감하는 5가지 사용법 (2026)](https://1daymillion.com/claude-advisor-pattern-cost-cut/)
+- [Claude Code Routines 입문 — 영어로 쓰는 cron job 자동화 가이드 (2026)](https://1daymillion.com/claude-code-routines-guide-2026/)
+- [MCP(Model Context Protocol) 비개발자 입문 가이드 (2026)](https://1daymillion.com/mcp-beginner-guide/)
+- [마이크로 SaaS 90일 빌드 — Stripe·Supabase·Vercel 무료 plan으로 $1,200 MRR](https://vibe-start.com/blog/micro-saas-90day-build-stripe-supabase-2026)
+
+## 📚 참고 자료
+
+- [Claude Models Overview — Anthropic 공식 문서](https://platform.claude.com/docs/en/about-claude/models/overview)
+- [What's new in Claude Opus 4.7 — Anthropic 공식 문서](https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-7)
+- [Anthropic SDK (Python/TypeScript) — 공식 레퍼런스](https://docs.claude.com/en/api/client-sdks)
