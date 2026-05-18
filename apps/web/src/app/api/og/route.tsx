@@ -128,13 +128,13 @@ async function renderArticleCard(
         {/* 글 제목 */}
         <div
           style={{
-            fontSize: 60,
+            fontSize: 52,
             fontWeight: 800,
             color: "#ffffff",
             letterSpacing: "-2px",
-            lineHeight: 1.28,
+            lineHeight: 1.3,
             display: "flex",
-            maxWidth: 1020,
+            maxWidth: 1060,
           }}
         >
           {title}
