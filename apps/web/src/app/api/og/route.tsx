@@ -41,7 +41,138 @@ export async function GET(req: NextRequest): Promise<ImageResponse> {
   if (type === "share") {
     return renderShareCard(searchParams);
   }
+  if (type === "article") {
+    return renderArticleCard(searchParams);
+  }
   return renderDefaultCard();
+}
+
+/**
+ * 블로그 글 카드 — 글 제목 + "VibeStart 블로그" 라벨.
+ * 쿼리: title (필수, 누락 시 기본 문구)
+ * 제목은 동적이므로 폰트는 실제 제목 텍스트만 서브셋해서 경량 로딩.
+ */
+async function renderArticleCard(
+  searchParams: URLSearchParams,
+): Promise<ImageResponse> {
+  const title = truncate(
+    searchParams.get("title") ?? "VibeStart 블로그",
+    80,
+  );
+
+  const label = "VibeStart 블로그";
+  const latinText = `VibeStart vibe-start.com ${title}`;
+  const koreanText = `블로그${title}`;
+
+  const [geistBold, geistMedium, notoKrBold, notoKrMedium] = await Promise.all([
+    loadGoogleFont("Geist", 800, latinText),
+    loadGoogleFont("Geist", 500, latinText),
+    loadGoogleFont("Noto Sans KR", 800, koreanText),
+    loadGoogleFont("Noto Sans KR", 500, koreanText),
+  ]);
+
+  return new ImageResponse(
+    (
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          fontFamily: "Geist, 'Noto Sans KR'",
+          position: "relative",
+          background:
+            "linear-gradient(135deg, #0f0820 0%, #1f1347 50%, #0f0820 100%)",
+          padding: "80px 84px",
+        }}
+      >
+        {/* 중앙 글로우 */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            display: "flex",
+            background:
+              "radial-gradient(circle at 30% 35%, rgba(124,58,237,0.4) 0%, rgba(124,58,237,0.12) 32%, transparent 62%)",
+          }}
+        />
+
+        {/* 상단 라벨 락업 */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 16,
+            marginBottom: 36,
+          }}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={LOGO_DATA_URL} width={52} height={52} alt="" />
+          <div
+            style={{
+              fontSize: 28,
+              fontWeight: 800,
+              color: "#c4b5fd",
+              letterSpacing: "-0.5px",
+              display: "flex",
+            }}
+          >
+            {label}
+          </div>
+        </div>
+
+        {/* 글 제목 */}
+        <div
+          style={{
+            fontSize: 60,
+            fontWeight: 800,
+            color: "#ffffff",
+            letterSpacing: "-2px",
+            lineHeight: 1.28,
+            display: "flex",
+            maxWidth: 1020,
+          }}
+        >
+          {title}
+        </div>
+
+        {/* 도메인 */}
+        <div
+          style={{
+            position: "absolute",
+            bottom: 44,
+            right: 84,
+            fontSize: 22,
+            color: "rgba(196,181,253,0.6)",
+            display: "flex",
+            letterSpacing: "0.5px",
+            fontWeight: 500,
+          }}
+        >
+          vibe-start.com
+        </div>
+      </div>
+    ),
+    {
+      width: 1200,
+      height: 630,
+      fonts: [
+        { name: "Geist", data: geistBold, weight: 800, style: "normal" },
+        { name: "Geist", data: geistMedium, weight: 500, style: "normal" },
+        { name: "Noto Sans KR", data: notoKrBold, weight: 800, style: "normal" },
+        {
+          name: "Noto Sans KR",
+          data: notoKrMedium,
+          weight: 500,
+          style: "normal",
+        },
+      ],
+    },
+  );
 }
 
 /**

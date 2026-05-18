@@ -31,6 +31,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const wpCanonical = getWpCanonicalUrl(locale, slug);
   const selfUrl = blogPostUrl(locale, slug);
+  const ogImageUrl = `${SITE_URL}/api/og?type=article&title=${encodeURIComponent(
+    post.title,
+  )}`;
 
   // hreflang alternates: 실제 MDX가 존재하는 locale만 가리킨다.
   const availableLocales = getAvailableBlogLocales(slug, routing.locales);
@@ -56,6 +59,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       type: "article",
       publishedTime: post.date,
       tags: post.tags,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.description,
+      images: [ogImageUrl],
     },
   };
 }
