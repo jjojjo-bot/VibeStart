@@ -1,0 +1,264 @@
+---
+title: "Zero Language Deep Dive — The AI-Native JSON Compiler (2026)"
+description: "Vercel Labs Zero, hands-on. Core syntax (pub fun, World, check), zero check --json schema, Claude Code/Cursor integration, and how it compares with Rust error parsing."
+date: "2026-05-20"
+tags: ["Zero language", "Vercel Labs", "AI native compiler", "agent-first language", "JSON diagnostics", "systems programming", "Claude Code", "Cursor", "Rust comparison", "agent integration"]
+---
+
+## 🤔 What "the compiler speaks JSON" actually means
+
+The fastest way to grok Vercel Labs Zero, released on May 15, 2026, is to run `zero check --json` once. Instead of the human-targeted `error[E0425]: cannot find value 'foo'` text that Rust and Clang emit, Zero drops a JSON object whose fields carry stable identifiers from the start. A coding agent consumes that object directly — no text parsing, no LLM-based classification — and dispatches a fix. That one decision is what makes Zero the first compiler to put AI agents in the primary-reader seat, not humans.
+
+This article is the developer companion to the non-developer post [The First AI-Native Coding Language Just Shipped — 5 Changes Zero Brings](https://1daymillion.com/ai-only-coding-language-zero-2026/). That one answered "why and what's changing." This one walks through `.0` syntax, the CLI, JSON output shape, and agent integration end to end. For a different axis of the same agent-first shift, see [Claude Advisor API in Practice — 73% Executor/Advisor Cost Cut](https://vibe-start.com/blog/claude-advisor-api-executor-pattern-2026).
+
+## 📋 One-table summary — what Zero swaps out
+
+| Axis | Traditional systems languages (C·Rust·Swift) | Zero |
+|------|----------------------------------------------|------|
+| Primary reader | Humans (readability) | AI agents (parseability) |
+| Diagnostic output | Natural-language text (`error: ...`) | JSON object with stable codes |
+| Backend | LLVM-dependent | Self-hosted compiler (no LLVM) |
+| Binary size | Hundreds of KB to MB | Sub-10 KiB target |
+| Error handling | `Result<T,E>` or exceptions | `raises` + `check` keyword |
+| Side effects | Implicit (global IO) | Explicit `World` capability |
+| Stability | Stable major releases | Pre-1.0, intentionally unstable |
+
+Strip the last two rows away and almost nothing here is new. What Zero invented is not a type system or a memory model — it is the direction the compiler speaks toward. So this post stays on two axes: the diagnostic output, and the agent integration loop.
+
+## ⚡ 5-minute install — from install.sh to first run
+
+Install is one line. macOS and Linux go through `curl`; Windows lands via WSL or PowerShell. `zero --version` confirms PATH is set.
+
+```bash
+curl -fsSL https://zerolang.ai/install.sh | bash
+zero --version
+```
+
+First sanity check is running the repository's `examples/hello.0`. `.0` is the Zero source extension. `zero run` compiles and executes in one step.
+
+```bash
+git clone https://github.com/vercel-labs/zero.git
+cd zero
+zero check examples/hello.0
+zero run examples/hello.0
+# → hello from zero
+```
+
+If something is off, `zero doctor --json` dumps environment diagnostics as JSON. That command alone already signals Zero's design philosophy — its diagnostic is meant for a script to consume and dispatch a fix, not for a human to scroll through.
+
+## 🧩 The first `.0` file — pub fun, World, check at a glance
+
+Zero's hello world looks like this. Five things stand out in one function, each setting Zero apart from neighboring systems languages.
+
+```rust
+// examples/hello.0
+pub fun main(world: World) -> Void raises {
+    check world.out.write("hello from zero\n")
+}
+```
+
+Three points to flag. First, `pub fun` declares a publicly exported function; private functions inside a module are plain `fun`. Second, `main` receives a `World` capability object as an explicit parameter. No global IO — the signature alone tells you which effects this function can touch. Third, `raises` on the return type marks the function as error-throwing, and `check` is the propagation keyword (think Rust's `?` or Swift's `try`). When `world.out.write` fails, the error bubbles up at that point.
+
+A slightly larger sample, `add.0`, shows function decomposition and branching together.
+
+```rust
+// examples/add.0
+fun answer() -> i32 {
+    return 40 + 2
+}
+
+pub fun main(world: World) -> Void raises {
+    let value = answer()
+    if value == 42 {
+        check world.out.write("math works\n")
+    } else {
+        check world.out.write("math broke\n")
+    }
+}
+```
+
+A Rust developer will read 90% of this on first glance. The differences are the `World` capability replacing implicit IO and the diagnostic format being machine-targeted. The syntax surface is deliberately small and regular — "agents pick it up from a handful of examples" is a stated design goal.
+
+## 🤖 `zero check --json` — diagnostics designed for an agent
+
+The single most important command. `zero check` alone prints human-readable diagnostics, but adding `--json` produces a structure agents consume verbatim. The output object, per the launch material, includes the following fields.
+
+```bash
+zero check --json examples/broken.0
+```
+
+```json
+{
+  "version": 1,
+  "file": "examples/broken.0",
+  "diagnostics": [
+    {
+      "code": "NAM003",
+      "severity": "error",
+      "message": "name 'bar' not found in scope",
+      "line": 7,
+      "column": 13,
+      "span": { "start": 78, "end": 81 },
+      "repair": {
+        "kind": "suggest_rename",
+        "candidates": ["foo", "baz"]
+      }
+    }
+  ],
+  "ok": false
+}
+```
+
+Five things to flag. First, `code` is a stable identifier; `NAM003` is the bucket for name-resolution failures, and that meaning is expected to hold across versions. Second, `span` carries byte offsets so agents do not have to recompute positions from text. Third, the `repair` object classifies fix candidates as typed shapes — `suggest_rename`, `add_import`, `change_return_type` and so on — usable directly as dispatch keys. Fourth, `severity` cleanly partitions errors, warnings, and info. Last, the top-level `ok` boolean is the simplest "did this pass" signal.
+
+The schema above reflects launch-time material. Zero is pre-1.0, so the exact field set and naming may drift between patches. Integration code should explicitly check for key presence and use a forward-compatible parser that ignores unknown fields.
+
+## ⚙ Claude Code / Cursor integration pattern — the self-repair loop
+
+The simplest way to consume the diagnostic JSON is to expose it to an agent as a tool function. Registered as a Claude Code or Cursor custom command, the snippet below lets the agent call it the moment it gets stuck.
+
+```typescript
+// scripts/zero-check.ts — register as a Claude Code/Cursor tool
+import { execFileSync } from "node:child_process";
+
+interface ZeroDiagnostic {
+  code: string;
+  severity: "error" | "warning" | "info";
+  message: string;
+  line: number;
+  column: number;
+  repair?: {
+    kind: string;
+    candidates?: string[];
+  };
+}
+
+interface ZeroCheckResult {
+  version: number;
+  file: string;
+  diagnostics: ZeroDiagnostic[];
+  ok: boolean;
+}
+
+export function checkZero(file: string): ZeroCheckResult {
+  const out = execFileSync("zero", ["check", "--json", file], {
+    encoding: "utf8",
+  });
+  return JSON.parse(out);
+}
+
+// Auto-repair dispatcher the agent calls directly
+export function autoRepair(result: ZeroCheckResult): string[] {
+  return result.diagnostics
+    .filter((d) => d.severity === "error" && d.repair)
+    .map((d) => {
+      switch (d.repair!.kind) {
+        case "suggest_rename":
+          return `${d.line}:${d.column} ${d.code} → rename to ${d.repair!.candidates?.[0]}`;
+        case "add_import":
+          return `${d.line}:${d.column} ${d.code} → insert missing import`;
+        default:
+          return `${d.line}:${d.column} ${d.code} → manual review (${d.repair!.kind})`;
+      }
+    });
+}
+```
+
+The heart is `switch (d.repair!.kind)`. Existing Rust or Clang integrations need agents to classify a natural-language message — via regex or an LLM call. Zero deletes that step. `kind` is a stable identifier that lives directly in the dispatch table. The five minutes and tokens an agent used to spend on parsing English go to zero.
+
+The same shape extends to `zero graph --json` and `zero size --json`. Pull a dependency graph to feed the agent "blast radius if this function changes," or track post-build binary size to catch regressions automatically.
+
+## 📐 Compared with Rust/C error parsing — the steps that disappear
+
+Anyone who has wired an agent into Rust or Clang knows this dance.
+
+```typescript
+// Traditional Rust/C integration — natural language parsing required
+const stderr = execFileSync("rustc", [file], { encoding: "utf8", stdio: "pipe" });
+
+// Step 1: pull the error line (regex)
+const errorLine = stderr.match(/error\[([A-Z]\d+)\]: (.+)/);
+
+// Step 2: pull the location (more regex)
+const location = stderr.match(/--> (.+?):(\d+):(\d+)/);
+
+// Step 3: classify intent (LLM call or rule-based)
+const category = classifyByLLM(errorLine?.[2]);
+
+// Step 4: pull the help suggestion (more regex)
+const help = stderr.match(/help: (.+)/);
+```
+
+Every step is restructuring natural language. Regexes break the next time the compiler tweaks wording. LLM classification costs tokens. With Zero those four steps collapse to one.
+
+```typescript
+const result = checkZero(file);
+const errors = result.diagnostics.filter((d) => d.severity === "error");
+```
+
+Compounded across agent runs, this shaves the debug cycle by an order of magnitude. METR's measurement that "the task length an agent finishes with 50% success rate" doubles every seven months gets a direct accelerant. Whether Zero becomes the standard or not, "compiler with the agent as primary reader" is a category likely to settle inside the next five years.
+
+## 🛠 Build and ship — the sub-10 KiB binary flow
+
+The clearest payoff of skipping LLVM is binary size. The same hello world, built with Rust and with Zero, typically differs by an order of magnitude.
+
+```bash
+zero build \
+  --emit exe \
+  --target linux-musl-x64 \
+  examples/hello.0 \
+  --out .zero/out/hello
+
+ls -lah .zero/out/hello
+# → ~8–9 KiB
+```
+
+Sub-10 KiB binaries matter in two scenarios. First, agents producing one-off tools at speed: a CLI helper, a quick data transformer, a single-purpose validator — compiled and run in place without a heavy runtime. Second, function-grain deployment: Vercel Functions and similar environments see directly faster cold starts and lower memory footprints.
+
+Cross-compilation support is still narrow. Launch-time stable targets are `linux-musl-x64`, `darwin-arm64`, `darwin-x64`; anything else needs the docs to confirm. Pre-1.0 means build flags and target names can shift between patches.
+
+## 🧯 Practical traps and diagnostics checklist
+
+Five traps that hit teams trying Zero even as an experiment.
+
+Trap 1. **Using pre-1.0 as a production dependency.** The README is explicit: "Security vulnerabilities should be expected. Zero is not ready for production systems, sensitive data, or trusted infrastructure." Internal experiments and tooling automation are the safe perimeter.
+
+Trap 2. **Treating the JSON schema as frozen.** The announced fields (`code`, `line`, `repair.kind`) are stability candidates, but pre-1.0 may add or rename keys. Integration code must check key existence explicitly and route unknown `kind` values through a fallback branch.
+
+Trap 3. **Treating the `World` capability as decoration.** `World` looks like a parameter, but it is the effect type system in disguise. Whether a function touches IO, time, or env vars must show up in the signature. Smuggling capabilities through globals breaks the compiler's diagnostic accuracy too.
+
+Trap 4. **Missing the unknown-kind fallback in the dispatcher.** A `switch` or `match` without a default arm fails silently when a new `kind` lands in the next patch. The full pattern is: unknown → mark as manual review → surface to the user.
+
+Trap 5. **Reading the news without actually running anything.** Whether Zero becomes the standard is uncertain. But "compiler with the agent as primary reader" is a category likely to settle inside one to two years. The hour spent running hello.0, add.0, and `zero check --json` today is what separates the people who pivot smoothly from those who read about it.
+
+## ❓ FAQ
+
+**Q. Production-safe yet?** No. The README is explicit. Internal experiments and tooling automation are the safe perimeter.
+
+**Q. Is the JSON schema frozen?** Core fields look stable, but pre-1.0 leaves room for change. Use a forward-compatible parser.
+
+**Q. Does Zero replace Rust or Go?** No. Same systems-language category, but Zero's seat is "small tools an agent generates fast," not the existing language footprint.
+
+**Q. Windows support?** Stable inside WSL at launch. Native Windows builds depend on what the docs currently list.
+
+**Q. Cursor instead of Claude Code?** The `zero check --json` output is tool-agnostic — it is just JSON on stdout, so any agent framework can integrate the same way.
+
+**Q. Where to learn from?** The `examples` folder in `vercel-labs/zero` is the best entry point — close to 70 `.0` files organized by category. Running each through `zero run` once is the fastest path in.
+
+**Q. What language is the Zero compiler itself written in?** Zig. Skipping LLVM is the main reason, and that decision drives the small binary output directly.
+
+**Q. Can the pattern port to existing Rust codebases?** Rust already ships `cargo --message-format json`, but the output still wraps human messages in a JSON envelope rather than offering stable `code` and `repair.kind` semantics. Partial portability — natural-language parsing returns, just on a thinner layer.
+
+## 🔗 Related posts
+
+- Non-developer companion: [The First AI-Native Coding Language Just Shipped — 5 Changes Zero Brings](https://1daymillion.com/ai-only-coding-language-zero-2026/)
+- Different axis of the agent-first shift: [Claude Advisor API in Practice — 73% Executor/Advisor Cost Cut](https://vibe-start.com/blog/claude-advisor-api-executor-pattern-2026)
+- Wiring the same pattern into a side-project SaaS margin: [Micro-SaaS 90-Day Build — Stripe, Supabase, Vercel](https://vibe-start.com/blog/micro-saas-90day-build-stripe-supabase-2026)
+- Industry zoom-out: [What Is Vibe Shipping — From Code Generation to Live Products](https://1daymillion.com/vibe-shipping-explained-2026/)
+
+## 📚 References
+
+- [vercel-labs/zero — GitHub Repository](https://github.com/vercel-labs/zero)
+- [Vercel Labs Introduces Zero — MarkTechPost (2026-05-17)](https://www.marktechpost.com/2026/05/17/vercel-labs-introduces-zero-a-systems-programming-language-designed-so-ai-agents-can-read-repair-and-ship-native-programs/)
+- [Vercel Labs' Zero Compiler Speaks JSON to AI Agents — Techtimes (2026-05-18)](https://www.techtimes.com/articles/316793/20260518/vercel-labs-zero-compiler-speaks-json-ai-agents-closing-human-translation-gap-agentic-coding.htm)
+- [Vercel soft-launches machine-friendly language Zero — The Stack](https://www.thestack.technology/next-js-creators-vercel-launch-ai-language-zero/)
