@@ -1,0 +1,169 @@
+---
+title: "Claude Opus 4.8 API 마이그레이션 — effort와 adaptive thinking (2026)"
+description: "claude-opus-4-8로 올릴 때 바뀌는 것: output_config.effort 5단계, adaptive thinking 전환(budget_tokens는 400 에러), fast mode, Claude Code dynamic workflows를 Python·TypeScript 코드로 정리."
+date: "2026-05-30"
+tags: ["Claude Opus 4.8", "Claude API", "Anthropic SDK", "effort parameter", "adaptive thinking", "output_config", "dynamic workflows", "Claude Code", "fast mode", "TypeScript"]
+---
+
+## 🤔 4.7에서 4.8로, 코드에서 진짜 바뀌는 건 무엇인가
+
+`claude-opus-4-7`을 쓰던 코드를 `claude-opus-4-8`로 올릴 때 모델 ID만 바꾸면 끝나는가. 대체로 그렇지만, 한 가지 깨질 수 있는 지점이 있다. Opus 4.8은 추론 깊이를 `thinking.budget_tokens`로 수동 지정하는 방식을 더 받지 않고, `output_config.effort`와 adaptive thinking으로 일원화했다. 기존 코드에 `thinking: {type: "enabled", budget_tokens: N}`이 박혀 있으면 4.8에서 400 에러가 난다. 이 글은 그 마이그레이션을 포함해, 2026년 5월 28일 공개된 Opus 4.8에서 개발자가 실제로 손대야 할 지점만 코드로 정리한다.
+
+비개발자 톤의 짝꿍 글 [Claude Opus 4.8 출시 — 꼭 알아야 할 5가지 변화](https://1daymillion.com/claude-opus-4-8-new-features-2026/)가 "무엇이 달라졌나"를 다뤘다면, 이쪽은 Messages API·effort 튜닝·Claude Code dynamic workflows를 단계별로 푼다.
+
+## 📋 한눈에 — 4.8에서 바뀐 API 표면
+
+| 항목 | 4.7 | 4.8 |
+|------|-----|-----|
+| 모델 ID | `claude-opus-4-7` | `claude-opus-4-8` |
+| 추론 제어 | `thinking.budget_tokens` 수동 | `output_config.effort` + adaptive thinking |
+| effort 기본값 | (없음) | `high` (전 플랜·API·Claude Code 공통) |
+| 토큰 단가 | $5 / $25 (input/output, 100만 토큰당) | 동일 |
+| fast mode | 제한적 | 2.5배 속도, 예전 fast 대비 3배 저렴 |
+
+가격이 그대로라 같은 작업이면 청구액은 비슷하거나 낮아진다. 변경의 핵심은 비용이 아니라 추론 깊이를 제어하는 방식이 `effort` 하나로 모인 것이다.
+
+## 🏗 드롭인 마이그레이션 — 모델 ID와 effort
+
+가장 단순한 형태는 모델 ID만 바꾸고 `output_config.effort`를 명시하는 것이다. 명시하지 않으면 `high`가 기본으로 잡힌다. coding·agentic 워크로드는 `xhigh`에서 시작하라는 게 공식 권장이다.
+
+```python
+# pip install anthropic
+from anthropic import Anthropic
+
+client = Anthropic()
+
+resp = client.messages.create(
+    model="claude-opus-4-8",
+    max_tokens=8192,
+    output_config={"effort": "xhigh"},  # low | medium | high(기본) | xhigh | max
+    messages=[
+        {"role": "user", "content": "이 레포의 결제 webhook 재시도 로직을 설계하고 구현해줘."}
+    ],
+)
+
+print(resp.content)
+```
+
+`effort`는 텍스트·도구 호출·추론에 걸쳐 모델이 쓰는 토큰 총량을 조절하는 노브다. `low`는 빠르고 단순한 응답, `high`는 4.7 토큰 예산과 비슷한 균형점, `xhigh`는 어려운 작업에 더 깊게, `max`는 최고 성능·최고 비용이다. 올릴수록 답이 좋아지지만 rate limit과 청구 토큰을 더 빨리 소모하므로, 내려서 쓸 거면 본인 eval로 품질이 유지되는지 먼저 재고 내린다.
+
+## 🧩 깨지는 지점 — adaptive thinking 전환
+
+4.7에서 `budget_tokens`로 추론 예산을 직접 잡던 코드는 4.8에서 그대로 두면 안 된다. 4.8은 adaptive thinking(`thinking: {type: "adaptive"}`)을 쓰고, 깊이 제어는 `effort`가 담당한다. 수동 budget 방식은 400을 던진다.
+
+```python
+# ❌ 4.7 스타일 — 4.8에서 400 에러
+resp = client.messages.create(
+    model="claude-opus-4-8",
+    thinking={"type": "enabled", "budget_tokens": 10000},  # 더는 지원 안 함
+    max_tokens=8192,
+    messages=[...],
+)
+
+# ✅ 4.8 스타일 — effort로 깊이를 제어
+resp = client.messages.create(
+    model="claude-opus-4-8",
+    thinking={"type": "adaptive"},
+    output_config={"effort": "high"},
+    max_tokens=8192,
+    messages=[...],
+)
+```
+
+정리하면 마이그레이션 체크리스트는 셋이다. 첫째, 모델 ID를 `claude-opus-4-8`로. 둘째, `thinking.budget_tokens`를 쓰던 곳을 `thinking: {type: "adaptive"}` + `output_config.effort`로 교체. 셋째, coding 경로는 `xhigh`, 일반 지능 작업은 `high`에서 시작해 eval로 조정.
+
+## ⚡ TypeScript SDK — 동일 구조와 fast mode
+
+Node 환경도 같은 패턴이다. fast mode는 2.5배 빠른 응답을 같은 모델로 제공하고, 예전 fast 대비 3배 저렴하다. 호출 지연이 사용자 경험을 좌우하는 경로(채팅 UI 등)에서 effort를 낮추는 대신 fast mode를 켜는 선택지가 생긴 셈이다.
+
+```typescript
+// npm i @anthropic-ai/sdk
+import Anthropic from "@anthropic-ai/sdk";
+
+const client = new Anthropic();
+
+const resp = await client.messages.create({
+  model: "claude-opus-4-8",
+  max_tokens: 8192,
+  thinking: { type: "adaptive" },
+  output_config: { effort: "medium" }, // 지연이 중요한 경로는 낮게
+  messages: [
+    { role: "user", content: "Next.js route handler의 타입 에러를 고쳐줘." },
+  ],
+});
+
+console.log(resp.content);
+```
+
+fast mode는 SDK·플랫폼마다 켜는 방식이 다르므로(헤더·서비스 티어·콘솔 설정 등) 적용 시점에 공식 문서로 활성화 경로를 확인한다. 핵심 판단은 단순하다. 품질이 필요하면 effort를 올리고, 응답 속도가 필요하면 fast mode를 켜며, 둘 다 필요 없으면 effort를 내려 토큰을 아낀다.
+
+## 🔀 Claude Code dynamic workflows — 멘탈 모델
+
+4.8과 함께 Claude Code에 들어온 dynamic workflows는 Messages API 파라미터가 아니라 Claude Code 안의 연구 프리뷰 기능이다(Max·Team·Enterprise). 큰 작업을 주면 Claude가 직접 오케스트레이션 스크립트를 작성해, 한 세션에서 수십~수백 개의 서브에이전트를 병렬로 띄우고, 일부러 결과를 반박하는 적대적 검증 에이전트까지 붙여 답이 수렴할 때까지 돌린 뒤 정리한다. 동시 실행과 누적 에이전트 수에는 상한이 있고(세션당 누적 1,000 에이전트), 이 상한은 폭주 방지용 백스톱이다.
+
+개발자가 기억할 점은 이 스크립트를 사람이 직접 import해서 호출하는 SDK가 아니라는 것이다. Claude가 작업 구조에 맞춰 fan-out·pipeline·검증 단계를 스스로 짜고 백그라운드에서 실행한다. 사람의 역할은 "무엇을 시킬지"와 "수렴 기준(테스트·스키마)"을 명확히 주는 쪽으로 옮겨간다. 코드베이스 규모 마이그레이션을 기존 테스트 통과를 합격선으로 삼아 맡길 수 있다는 발표가 이 흐름의 대표 사례다.
+
+여러 에이전트가 동시에 일하는 패턴의 시장·산업 맥락은 별도 정리한 [에이전틱 AI 시장 신호](https://1daymillion.com/agentic-ai-market-signals-2026/)에서, 자동화를 cron형으로 거는 흐름은 [Claude Code Routines 입문](https://1daymillion.com/claude-code-routines-guide-2026/)에서 함께 보면 그림이 잡힌다.
+
+## 🧯 정직성 개선이 검증 코드에 주는 영향
+
+4.8의 간판 변화는 자기가 쓴 코드의 결함을 짚지 않고 넘어갈 확률이 4.7보다 약 4배 낮아진 점이다. 실무에서 이건 "모델이 불확실성을 더 자주 신고한다"로 나타난다. 그동안 그럴듯하지만 틀린 출력을 거르려고 후처리 검증·재질의 루프를 두껍게 쌓아온 파이프라인이라면, 그 레이어를 조금 얇게 가져갈 여지가 생긴다.
+
+다만 "검증을 빼라"는 뜻은 아니다. AI가 만든 코드의 보안 결함은 여전히 사람 코드보다 자주 보고되므로, 자동 테스트와 보안 점검은 유지하는 게 맞다. 어떤 항목을 기계적으로 점검할지는 별도 정리한 [마이크로 SaaS 90일 빌드 — Stripe·Supabase·Vercel](https://vibe-start.com/blog/micro-saas-90day-build-stripe-supabase-2026)의 배포 전 체크 흐름과 맞물린다. 정직성 개선은 검증을 없애는 게 아니라, 거짓 양성을 줄여 검증 비용을 낮추는 쪽으로 읽는 게 정확하다.
+
+## 🩺 마이그레이션 함정과 진단 순서
+
+가장 흔한 사고는 `budget_tokens`가 남은 코드가 4.8에서 400을 던지는 것이다. 에러 메시지에 thinking 설정이 언급되면 adaptive 전환부터 확인한다. 다음으로 effort를 명시하지 않아 전 경로가 `high`로 돌면, 채팅처럼 지연이 중요한 경로에서 응답이 느리고 토큰이 더 나갈 수 있다. 경로별로 effort를 분리하는 게 안전하다.
+
+진단 순서는 단순하다. 400이 나면 `thinking`·`output_config` 스키마부터, 비용이 예상보다 크면 경로별 effort 값과 fast mode 적용 여부를, 품질이 부족하면 coding 경로의 effort를 `xhigh`로 올리는 것을 차례로 본다. 모든 변경은 본인 eval 셋으로 전후를 비교한 뒤 확정한다.
+
+## ❓ 자주 묻는 질문
+
+**Q. 모델 ID 말고 꼭 바꿔야 하는 코드가 있나?**
+
+`thinking.budget_tokens`를 쓰던 코드다. 4.8은 수동 budget을 지원하지 않고 adaptive thinking + effort로 일원화했다. 이 패턴이 없던 코드는 모델 ID 교체만으로 대체로 동작한다.
+
+**Q. effort는 어떤 값에서 시작해야 하나?**
+
+coding·agentic 워크로드는 `xhigh`, 그 외 지능 민감 작업은 기본값 `high`에서 시작한다. `medium`·`low`는 본인 eval에서 품질이 유지되는지 확인한 뒤에만 내린다. 올릴수록 품질이 오르지만 토큰과 rate limit 소모가 커진다.
+
+**Q. effort는 유료 플랜에서만 되나?**
+
+effort 컨트롤은 모든 플랜에서 동작한다. API뿐 아니라 claude.ai UI와 Claude Code의 effort 메뉴에서도 같은 노브를 노출한다.
+
+**Q. budget_tokens로 정밀하게 토큰을 묶던 워크로드는 어떻게 하나?**
+
+깊이를 토큰 수로 직접 묶는 대신 effort 단계로 근사한다. 상한이 꼭 필요하면 `max_tokens`로 출력 상한을 잡고, 추론 깊이는 effort로 제어하는 조합을 쓴다. 정밀 budget 제어가 핵심이던 파이프라인은 effort 단계별로 토큰 분포를 측정해 매핑 테이블을 만들어두면 재현성이 생긴다.
+
+**Q. dynamic workflows를 API에서 직접 부를 수 있나?**
+
+아니다. dynamic workflows는 Claude Code 안의 기능이고 Max·Team·Enterprise 대상 연구 프리뷰다. Messages API 파라미터로 노출되지 않으며, 오케스트레이션 스크립트는 Claude가 작업 구조에 맞춰 생성·실행한다.
+
+**Q. fast mode는 코드에서 어떻게 켜나?**
+
+SDK·플랫폼마다 활성화 경로가 다르다(서비스 티어·헤더·콘솔 설정 등). 2.5배 속도·예전 fast 대비 3배 저렴이라는 특성은 공통이지만, 켜는 방법은 적용 시점 공식 문서로 확인하는 게 안전하다.
+
+**Q. GitHub Copilot·Bedrock에서도 4.8을 쓰나?**
+
+출시일 기준 GitHub Copilot에 GA로 올라갔고 Amazon Bedrock에서도 제공된다. 다만 effort·fast mode 같은 세부 컨트롤의 노출 범위는 surface마다 다를 수 있어, 해당 플랫폼 문서를 함께 본다.
+
+**Q. 4.7로 롤백해야 할 상황은?**
+
+adaptive thinking 전환이 특정 워크로드의 깊이 제어를 어렵게 만들거나, effort 매핑이 아직 안 잡혀 비용 예측이 흔들릴 때다. 가격이 같으니 비용 때문에 4.7에 머물 이유는 적고, 대개 effort 값을 본인 eval로 고정하면 해결된다.
+
+> ⚠️ **주의**: 이 글의 API 사양(`output_config.effort` 단계명·adaptive thinking 동작·budget_tokens 400 에러·fast mode 활성화 경로)은 2026년 5월 28일 출시 시점 기준이며 빠르게 바뀔 수 있다. 성능·비용 수치(코드 결함 미표시 4배 감소·fast 2.5배·3배 저렴·$5/$25)는 Anthropic 발표 기준이고 실제 결과는 워크로드·측정 방식에 따라 달라진다. 운영 적용 전 Anthropic 공식 문서로 최신 스키마와 식별자를 확인하기 바란다.
+
+여기까지면 `claude-opus-4-8`로 올릴 때 깨지는 지점(budget_tokens)을 미리 막고, effort를 경로별로 분리해 비용과 품질을 동시에 잡는 흐름이 손에 잡힌다. 시작은 본인 eval 셋으로 effort 한 단계의 전후를 재보는 것이다.
+
+## 🔗 관련 글
+
+- [Claude Opus 4.8 출시 — 꼭 알아야 할 5가지 변화 (2026)](https://1daymillion.com/claude-opus-4-8-new-features-2026/)
+- [Claude Advisor API 실전 — Executor/Advisor 비용 73% 절감 (2026)](https://vibe-start.com/blog/claude-advisor-api-executor-pattern-2026)
+- [에이전틱 AI 2조→61조 — 지금 해두면 좋은 5가지 (2026)](https://1daymillion.com/agentic-ai-market-signals-2026/)
+- [Claude Code Routines 입문 — 영어로 쓰는 cron job 자동화 가이드 (2026)](https://1daymillion.com/claude-code-routines-guide-2026/)
+
+## 📚 참고 자료
+
+- [What's new in Claude Opus 4.8 — Anthropic 공식 문서](https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-8)
+- [Effort — Claude API 공식 문서](https://platform.claude.com/docs/en/build-with-claude/effort)
+- [Migration guide — Claude API 공식 문서](https://platform.claude.com/docs/en/about-claude/models/migration-guide)

@@ -1,0 +1,169 @@
+---
+title: "Claude Opus 4.8 API Migration — Effort & Adaptive Thinking (2026)"
+description: "What changes when you move to claude-opus-4-8: the 5-level output_config.effort knob, the adaptive thinking switch (budget_tokens now 400s), fast mode, and Claude Code dynamic workflows — in Python and TypeScript."
+date: "2026-05-30"
+tags: ["Claude Opus 4.8", "Claude API", "Anthropic SDK", "effort parameter", "adaptive thinking", "output_config", "dynamic workflows", "Claude Code", "fast mode", "TypeScript"]
+---
+
+## 🤔 Moving 4.7 to 4.8 — what actually breaks in code
+
+When you bump code from `claude-opus-4-7` to `claude-opus-4-8`, is swapping the model ID enough? Mostly yes — with one thing that can break. Opus 4.8 no longer accepts a manually pinned reasoning budget via `thinking.budget_tokens`; depth control is unified under `output_config.effort` and adaptive thinking. If your code still carries `thinking: {type: "enabled", budget_tokens: N}`, 4.8 returns a 400. This guide covers that migration and the few places a developer actually needs to touch on Opus 4.8, released May 28, 2026.
+
+Its non-developer companion, [Claude Opus 4.8 — 5 Key Changes](https://1daymillion.com/claude-opus-4-8-new-features-2026/), covers "what changed." This piece works through the Messages API, effort tuning, and Claude Code dynamic workflows step by step.
+
+## 📋 At a glance — the API surface that changed in 4.8
+
+| Item | 4.7 | 4.8 |
+|------|-----|-----|
+| Model ID | `claude-opus-4-7` | `claude-opus-4-8` |
+| Reasoning control | manual `thinking.budget_tokens` | `output_config.effort` + adaptive thinking |
+| Effort default | (none) | `high` (all plans, API, Claude Code) |
+| Token pricing | $5 / $25 (input/output, per 1M) | unchanged |
+| Fast mode | limited | 2.5x speed, 3x cheaper than old fast |
+
+Pricing is unchanged, so the same workload costs the same or less. The real change is not cost — it is that reasoning depth is now controlled through a single `effort` knob.
+
+## 🏗 Drop-in migration — model ID and effort
+
+The simplest form swaps the model ID and sets `output_config.effort` explicitly. Leave it out and `high` is the default. The official recommendation is to start coding and agentic workloads at `xhigh`.
+
+```python
+# pip install anthropic
+from anthropic import Anthropic
+
+client = Anthropic()
+
+resp = client.messages.create(
+    model="claude-opus-4-8",
+    max_tokens=8192,
+    output_config={"effort": "xhigh"},  # low | medium | high(default) | xhigh | max
+    messages=[
+        {"role": "user", "content": "Design and implement the payment webhook retry logic in this repo."}
+    ],
+)
+
+print(resp.content)
+```
+
+`effort` is a single knob over the total tokens the model spends across text, tool calls, and reasoning. `low` is fast and simple, `high` lands near 4.7 token budgets as the balanced default, `xhigh` thinks deeper on hard tasks, and `max` is best performance at highest cost. Turning it up improves answers but burns rate limits and billed tokens faster, so if you plan to step down, measure first that quality holds on your own evals.
+
+## 🧩 The breaking change — switching to adaptive thinking
+
+Code that pinned a reasoning budget with `budget_tokens` on 4.7 cannot stay as-is on 4.8. The model uses adaptive thinking (`thinking: {type: "adaptive"}`), and depth is governed by `effort`. The manual budget form throws a 400.
+
+```python
+# ❌ 4.7 style — 400 on 4.8
+resp = client.messages.create(
+    model="claude-opus-4-8",
+    thinking={"type": "enabled", "budget_tokens": 10000},  # no longer supported
+    max_tokens=8192,
+    messages=[...],
+)
+
+# ✅ 4.8 style — control depth via effort
+resp = client.messages.create(
+    model="claude-opus-4-8",
+    thinking={"type": "adaptive"},
+    output_config={"effort": "high"},
+    max_tokens=8192,
+    messages=[...],
+)
+```
+
+So the migration checklist is three items. First, model ID to `claude-opus-4-8`. Second, replace any `thinking.budget_tokens` with `thinking: {type: "adaptive"}` plus `output_config.effort`. Third, start coding paths at `xhigh` and general intelligence work at `high`, then tune with evals.
+
+## ⚡ TypeScript SDK — same shape, plus fast mode
+
+Node follows the same pattern. Fast mode serves 2.5x faster responses from the same model, at 3x lower cost than the old fast tier. That gives you a new lever on latency-sensitive paths (chat UIs and the like): turn fast mode on instead of dropping effort.
+
+```typescript
+// npm i @anthropic-ai/sdk
+import Anthropic from "@anthropic-ai/sdk";
+
+const client = new Anthropic();
+
+const resp = await client.messages.create({
+  model: "claude-opus-4-8",
+  max_tokens: 8192,
+  thinking: { type: "adaptive" },
+  output_config: { effort: "medium" }, // lower on latency-sensitive paths
+  messages: [
+    { role: "user", content: "Fix the type error in this Next.js route handler." },
+  ],
+});
+
+console.log(resp.content);
+```
+
+Fast mode is enabled differently across SDKs and platforms (header, service tier, console setting), so confirm the activation path in the official docs at integration time. The judgment is simple: raise effort when you need quality, switch on fast mode when you need speed, and lower effort to save tokens when you need neither.
+
+## 🔀 Claude Code dynamic workflows — the mental model
+
+Dynamic workflows, shipped into Claude Code alongside 4.8, is not a Messages API parameter — it is a research preview feature inside Claude Code (Max, Team, Enterprise). Hand it a large task and Claude writes its own orchestration script, spins up tens to hundreds of subagents in one session, attaches adversarial agents that try to refute the findings, and iterates until answers converge before reporting back. Concurrency and lifetime agent counts are capped (a cumulative 1,000 agents per session), and that cap is a runaway backstop.
+
+The thing to remember as a developer: this is not an SDK you import and call. Claude authors the fan-out, pipeline, and verification stages itself, matched to the task, and runs them in the background. Your role shifts toward stating "what to do" and "the convergence bar" (tests, schemas) clearly. The headline example is handing it a codebase-scale migration with the existing test suite as the pass bar.
+
+For the market and industry context behind many agents working at once, see [agentic AI market signals](https://1daymillion.com/agentic-ai-market-signals-2026/); for wiring automation on a cron-like trigger, see [Claude Code Routines](https://1daymillion.com/claude-code-routines-guide-2026/).
+
+## 🧯 What the honesty gains mean for your verification code
+
+The headline change in 4.8 is that it is roughly 4x less likely than 4.7 to let flaws in its own code pass unflagged. In practice this shows up as the model reporting uncertainty more often. If your pipeline has stacked thick post-hoc verification and re-ask loops to catch plausible-but-wrong output, there is now room to thin that layer a little.
+
+That does not mean "drop verification." Security flaws in AI-written code are still reported more often than in human code, so keep automated tests and security checks. Which items to check mechanically lines up with the pre-deploy checklist in [Micro-SaaS 90-day build — Stripe, Supabase, Vercel](https://vibe-start.com/blog/micro-saas-90day-build-stripe-supabase-2026). Read the honesty gain as lowering verification cost by cutting false positives — not as removing verification.
+
+## 🩺 Migration pitfalls and a diagnosis order
+
+The most common incident is leftover `budget_tokens` code throwing a 400 on 4.8. If the error mentions the thinking setting, check the adaptive switch first. Next, leaving effort unset runs every path at `high`, which can make latency-sensitive paths slow and burn extra tokens. Splitting effort per path is safer.
+
+The diagnosis order is simple. On a 400, check the `thinking` and `output_config` schema first; on higher-than-expected cost, check per-path effort values and whether fast mode is on; on weak quality, raise the coding path to `xhigh`. Confirm every change by comparing before and after on your own eval set.
+
+## ❓ Frequently asked questions
+
+**Q. Beyond the model ID, what code must change?**
+
+Code that used `thinking.budget_tokens`. 4.8 drops manual budgets and unifies on adaptive thinking plus effort. Code without that pattern generally works on an ID swap alone.
+
+**Q. What effort value should I start at?**
+
+`xhigh` for coding and agentic workloads, the default `high` for other intelligence-sensitive work. Only step down to `medium` or `low` after confirming quality holds on your evals. Higher effort means better answers but more tokens and faster rate-limit burn.
+
+**Q. Is effort only on paid plans?**
+
+Effort control works on every plan. The same knob is exposed in the API, the claude.ai UI, and the Claude Code effort menu.
+
+**Q. What about workloads that pinned tokens precisely with budget_tokens?**
+
+Approximate depth with effort levels instead. If you need a hard ceiling, cap output with `max_tokens` and control reasoning depth with effort. For pipelines where precise budget control mattered, measure the token distribution per effort level and build a mapping table for reproducibility.
+
+**Q. Can I call dynamic workflows from the API?**
+
+No. Dynamic workflows is a Claude Code feature, a research preview for Max, Team, and Enterprise. It is not exposed as a Messages API parameter; the orchestration script is generated and run by Claude, matched to the task.
+
+**Q. How do I enable fast mode in code?**
+
+Activation differs across SDKs and platforms (service tier, header, console setting). The 2.5x speed and 3x-cheaper-than-old-fast characteristics are consistent, but confirm the enable path in the docs at integration time.
+
+**Q. Is 4.8 on GitHub Copilot and Bedrock?**
+
+As of launch it went GA on GitHub Copilot and is available on Amazon Bedrock. How fine-grained controls like effort and fast mode are exposed can vary by surface, so check that platform's docs too.
+
+**Q. When would I roll back to 4.7?**
+
+When the adaptive switch makes depth control hard for a specific workload, or when effort mapping is not yet pinned and cost prediction wobbles. Since pricing matches, there is little cost reason to stay on 4.7 — pinning effort values with your evals usually resolves it.
+
+> ⚠️ **Note**: The API specifics here (`output_config.effort` level names, adaptive thinking behavior, the budget_tokens 400, fast-mode enable path) are accurate as of the May 28, 2026 launch and can change quickly. Performance and cost figures (4x fewer unflagged code flaws, fast mode 2.5x, 3x cheaper, $5/$25) are per Anthropic's announcement, and real results vary with workload and measurement. Verify the latest schema and identifiers in Anthropic's official docs before production use.
+
+Get this far and you have headed off the breaking point (`budget_tokens`) on the move to `claude-opus-4-8`, and split effort per path to control cost and quality at once. Start by measuring one effort step, before and after, on your own eval set.
+
+## 🔗 Related
+
+- [Claude Opus 4.8 — 5 Key Changes (2026)](https://1daymillion.com/claude-opus-4-8-new-features-2026/)
+- [Claude Advisor API in Practice — 73% Cost Cut with Executor/Advisor (2026)](https://vibe-start.com/blog/claude-advisor-api-executor-pattern-2026)
+- [Agentic AI Market Signals — 5 Things to Do Now (2026)](https://1daymillion.com/agentic-ai-market-signals-2026/)
+- [Claude Code Routines — Cron Automation in Plain English (2026)](https://1daymillion.com/claude-code-routines-guide-2026/)
+
+## 📚 References
+
+- [What's new in Claude Opus 4.8 — Anthropic docs](https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-8)
+- [Effort — Claude API docs](https://platform.claude.com/docs/en/build-with-claude/effort)
+- [Migration guide — Claude API docs](https://platform.claude.com/docs/en/about-claude/models/migration-guide)
