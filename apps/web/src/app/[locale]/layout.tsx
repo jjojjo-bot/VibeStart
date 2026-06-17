@@ -46,6 +46,9 @@ export async function generateMetadata({
       google: "KRpn29rCSZ7cSBZ-Q_al_8GqvENUm2q3aqiXthtQN8U",
       other: {
         "naver-site-verification": "efcb55e9bb398a742f5c66fb09bcf0c4fd8cc6e1",
+        // AdSense "메타 태그" 소유권 확인 방식. 서버 렌더링되는 정적 메타라
+        // JS 없이도 크롤러가 확인 가능 — 코드 스니펫 방식의 백업.
+        "google-adsense-account": "ca-pub-9388755711448095",
       },
     },
     title: {
