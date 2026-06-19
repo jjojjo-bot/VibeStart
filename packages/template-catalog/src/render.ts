@@ -24,14 +24,19 @@ background:
  radial-gradient(620px 480px at 18% 90%, rgba(129,140,248,.16), transparent 62%)}
 h1{font-family:"Nanum Myeongjo",Georgia,serif;color:#fff;letter-spacing:-.01em;word-break:keep-all;text-wrap:balance}
 .tagline{font-family:"Nanum Myeongjo",Georgia,serif;word-break:keep-all;text-wrap:balance}
-.body{white-space:pre-line;word-break:keep-all}`;
+.body{white-space:pre-line;word-break:keep-all}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.18);border-radius:999px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.3);background-clip:padding-box}
+::-webkit-scrollbar-track{background:transparent}
+html{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.2) transparent}`;
 
 /**
  * 템플릿 + 값 → 완성된 한 페이지 HTML(문자열). 결정론적·이스케이프.
  *
  * 카테고리마다 **골격(실루엣)이 완전히 다른** 글래스 레이아웃:
  *  intro       = 모노그램 원 + 좌측 비대칭(카드 없음)
- *  shop        = 카드 + 솔리드 컬러 헤더 밴드(간판)
+ *  shop        = 멀티섹션 랜딩(풀스크린 히어로 + 소개 패널 + CTA 밴드, 스크롤)
  *  invitation  = 각진 얇은 프레임 + 중앙 의례 + 장식
  * 작은 미리보기에서도 구분되도록 상단 히어로 요소를 강하게 둔다.
  */
@@ -48,20 +53,22 @@ export function renderTemplate(template: TemplateDefinition, values: TemplateVal
   let css: string;
 
   if (template.category === 'shop') {
-    // 카드 + 솔리드 컬러 헤더 밴드(간판)
-    inner = `<div class="wrap shop"><div class="s-card">
-<div class="s-head"><h1>${title}</h1>${tagline()}</div>
-<div class="s-body">${body()}${has('contact') ? `<a class="s-cta">${v('contact')}</a>` : ''}</div>
-</div></div>`;
+    // 멀티섹션 랜딩 — 풀스크린 히어로 + 소개 패널 + CTA 밴드(스크롤)
+    inner = `<div class="wrap shop">
+<section class="hero"><h1>${title}</h1>${tagline()}</section>
+${has('body') ? `<section class="info"><div class="panel">${body()}</div></section>` : ''}
+${has('contact') ? `<section class="cta-band"><a class="cta">${v('contact')}</a></section>` : ''}
+</div>`;
     css = `
-.wrap.shop{min-height:100vh;display:grid;place-items:center;padding:clamp(24px,5vw,56px);position:relative;z-index:1}
-.s-card{max-width:420px;width:100%;border-radius:24px;overflow:hidden;background:rgba(255,255,255,.06);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 60px -16px rgba(0,0,0,.55)}
-.s-head{background:linear-gradient(145deg,var(--accent),color-mix(in srgb,var(--accent) 60%,#000));padding:clamp(32px,6vw,44px) 32px clamp(28px,5vw,36px);text-align:center}
-.s-head h1{font-weight:800;font-size:clamp(1.9rem,5vw,2.5rem)}
-.s-head .tagline{color:rgba(255,255,255,.9);margin-top:10px;font-size:1.05rem}
-.s-body{padding:clamp(28px,5vw,36px) 32px;text-align:center}
-.s-body .body{font-size:1.02rem;color:rgba(232,237,245,.85);line-height:1.95}
-.s-cta{display:inline-block;margin-top:24px;background:var(--accent);color:#fff;padding:13px 30px;border-radius:999px;font-weight:700;font-size:.95rem;box-shadow:0 12px 28px -8px var(--accent)}`;
+.wrap.shop{position:relative;z-index:1}
+.shop .hero{min-height:64vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(56px,10vw,96px) 28px clamp(40px,7vw,56px)}
+.shop .hero h1{font-weight:800;font-size:clamp(2.6rem,8vw,4rem);line-height:1.12}
+.shop .hero .tagline{color:rgba(232,237,245,.8);font-size:clamp(1.1rem,3.4vw,1.5rem);margin-top:16px}
+.shop .info{max-width:580px;margin:0 auto;padding:0 24px clamp(40px,7vw,64px)}
+.shop .panel{background:rgba(255,255,255,.06);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:clamp(32px,6vw,44px) clamp(28px,5vw,40px);box-shadow:0 24px 60px -16px rgba(0,0,0,.5)}
+.shop .panel .body{font-size:1.05rem;line-height:2;color:rgba(232,237,245,.86);text-align:center}
+.shop .cta-band{text-align:center;padding:clamp(48px,9vw,88px) 28px clamp(64px,10vw,100px);background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--accent) 16%,transparent))}
+.shop .cta-band .cta{display:inline-block;background:var(--accent);color:#fff;padding:16px 38px;border-radius:999px;font-weight:700;font-size:1.05rem;box-shadow:0 16px 36px -10px var(--accent)}`;
   } else if (template.category === 'invitation') {
     // 각진 얇은 프레임 + 중앙 의례 + 장식
     inner = `<div class="wrap invite"><div class="v-inner">
