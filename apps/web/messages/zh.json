@@ -48,6 +48,46 @@
       "network-kind": "你现在用的网络是公司/学校网络，还是家庭网络？"
     }
   },
+  "Start": {
+    "heroTitle": "无需安装、无需注册，5 分钟做出第一个网页",
+    "heroSub": "选一选、填一填、看预览。完全不用懂代码。",
+    "categoryTitle": "想做点什么呢？",
+    "build": {
+      "back": "← 换个类型",
+      "previewLabel": "预览",
+      "publishSoon": "发布到网上即将上线——现在先用预览做做看。"
+    },
+    "templates": {
+      "intro": { "title": "自我介绍页", "desc": "简历 · 个人资料 · 链接" },
+      "shop": { "title": "店铺·工作室介绍", "desc": "菜单 · 位置 · 预约" },
+      "invitation": { "title": "邀请函", "desc": "婚礼 · 生日 · 乔迁" }
+    },
+    "fields": {
+      "title": { "label": "标题", "placeholder": "例：智英的周末烘焙" },
+      "tagline": { "label": "一句话介绍", "placeholder": "例：欢迎新手！一起烤温暖的面包" },
+      "body": { "label": "详细介绍", "placeholder": "自由填写" },
+      "contact": { "label": "联系方式·链接", "placeholder": "例：Instagram @id、群聊" }
+    },
+    "samples": {
+      "intro": {
+        "title": "金智英",
+        "tagline": "连接人与故事的内容营销人",
+        "body": "你好，我是有 5 年经验的内容营销人金智英。\n寻找品牌的声音，创作能打动人的故事。",
+        "contact": "邮箱 jiyeong@example.com"
+      },
+      "shop": {
+        "title": "暖意烘焙坊",
+        "tagline": "每天清晨现烤的小小街角面包店",
+        "body": "用天然酵母每天烤两次。\n营业：周二–周日 10:00–19:00（周一休）\n首尔某条小巷里",
+        "contact": "预约 Instagram @ongi.bakery"
+      },
+      "invitation": {
+        "title": "智英 ♥ 敏秀 结婚啦",
+        "tagline": "在两人结为夫妻的日子，请来见证",
+        "body": "2026 年 9 月 12 日 周六 下午 2 点\n某某婚礼厅 3 楼\n心意可直接转交新人"
+      }
+    }
+  },
   "Metadata": {
     "title": {
       "default": "VibeStart — 编程入门指南 | Git、Node.js、VS Code安装教程",

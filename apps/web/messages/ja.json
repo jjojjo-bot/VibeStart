@@ -48,6 +48,46 @@
       "network-kind": "今使っているインターネットは、会社・学校のネットワークですか、それとも自宅のネットワークですか？"
     }
   },
+  "Start": {
+    "heroTitle": "インストールも登録もなし、5分で最初のページを",
+    "heroSub": "選んで、書いて、プレビュー。コーディングは一切不要。",
+    "categoryTitle": "何を作ってみますか？",
+    "build": {
+      "back": "← 別の種類にする",
+      "previewLabel": "プレビュー",
+      "publishSoon": "インターネットへの公開は近日追加予定 — 今はプレビューで作ってみてください。"
+    },
+    "templates": {
+      "intro": { "title": "自己紹介ページ", "desc": "経歴・プロフィール・リンク" },
+      "shop": { "title": "お店・工房の紹介", "desc": "メニュー・場所・予約案内" },
+      "invitation": { "title": "招待状", "desc": "結婚式・誕生日・新居祝い" }
+    },
+    "fields": {
+      "title": { "label": "タイトル", "placeholder": "例: ジヨンの週末ベーキング" },
+      "tagline": { "label": "ひとこと紹介", "placeholder": "例: 初心者歓迎！温かいパンを焼く時間" },
+      "body": { "label": "詳しい紹介", "placeholder": "自由に書いてください" },
+      "contact": { "label": "連絡先・リンク", "placeholder": "例: インスタ @id、オープンチャット" }
+    },
+    "samples": {
+      "intro": {
+        "title": "キム・ジヨン",
+        "tagline": "人と物語をつなぐコンテンツマーケター",
+        "body": "こんにちは。5年目のコンテンツマーケター、キム・ジヨンです。\nブランドの声を見つけ、人に届く物語を作ります。",
+        "contact": "メール jiyeong@example.com"
+      },
+      "shop": {
+        "title": "オンギ ベーカリー",
+        "tagline": "毎朝焼く小さな街のパン屋",
+        "body": "天然酵母で1日2回焼いています。\n営業: 火–日 10:00–19:00（月休）\nソウルのどこかの路地裏",
+        "contact": "予約はインスタ @ongi.bakery"
+      },
+      "invitation": {
+        "title": "ジヨン ♥ ミンス 結婚します",
+        "tagline": "二人が夫婦になる日、ぜひご一緒に",
+        "body": "2026年9月12日（土）午後2時\nどこかウェディングホール 3階\nお祝いは新郎新婦へ直接"
+      }
+    }
+  },
   "Metadata": {
     "title": {
       "default": "VibeStart — プログラミングの始め方 | Git・Node.js・VS Codeセットアップガイド",

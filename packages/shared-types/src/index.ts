@@ -5,6 +5,9 @@ export * from './plan.types';
 // D′ — 무실패 로컬 셋업 진단 루프
 export * from './diagnosis.types';
 
+// B′ — 첫성공 브라우저 페이지 빌더
+export * from './template.types';
+
 // Phase 2 — 사용자/프로젝트 도메인
 export * from './auth.types';
 export * from './project.types';

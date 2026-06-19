@@ -21,6 +21,7 @@
     "@vibestart/ports": "workspace:^",
     "@vibestart/shared-types": "workspace:*",
     "@vibestart/task-catalog": "workspace:*",
+    "@vibestart/template-catalog": "workspace:*",
     "@vibestart/track-catalog": "workspace:^",
     "canvas-confetti": "^1.9.4",
     "class-variance-authority": "^0.7.1",

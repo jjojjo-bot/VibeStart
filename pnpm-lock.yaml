@@ -41,6 +41,9 @@ importers:
       '@vibestart/task-catalog':
         specifier: workspace:*
         version: link:../../packages/task-catalog
+      '@vibestart/template-catalog':
+        specifier: workspace:*
+        version: link:../../packages/template-catalog
       '@vibestart/track-catalog':
         specifier: workspace:^
         version: link:../../packages/track-catalog
@@ -190,6 +193,12 @@ importers:
   packages/shared-types: {}
 
   packages/task-catalog:
+    dependencies:
+      '@vibestart/shared-types':
+        specifier: workspace:*
+        version: link:../shared-types
+
+  packages/template-catalog:
     dependencies:
       '@vibestart/shared-types':
         specifier: workspace:*

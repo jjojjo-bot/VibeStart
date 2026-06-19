@@ -48,6 +48,46 @@
       "network-kind": "¿La conexión que usas es una red de trabajo/escuela o una red doméstica?"
     }
   },
+  "Start": {
+    "heroTitle": "Sin instalar, sin registrarte: tu primera página en 5 minutos",
+    "heroSub": "Elige, rellena y previsualiza. No necesitas saber programar.",
+    "categoryTitle": "¿Qué te gustaría crear?",
+    "build": {
+      "back": "← Elegir otro tipo",
+      "previewLabel": "Vista previa",
+      "publishSoon": "Publicar en internet llegará pronto: por ahora, créala en la vista previa."
+    },
+    "templates": {
+      "intro": { "title": "Una página sobre mí", "desc": "CV · perfil · enlaces" },
+      "shop": { "title": "Tienda o taller", "desc": "Menú · ubicación · reservas" },
+      "invitation": { "title": "Invitación", "desc": "Boda · cumpleaños · inauguración" }
+    },
+    "fields": {
+      "title": { "label": "Título", "placeholder": "ej.: Repostería de fin de semana de Jiyeong" },
+      "tagline": { "label": "Presentación en una línea", "placeholder": "ej.: Principiantes bienvenidos: pan calentito y buen rato" },
+      "body": { "label": "Detalles", "placeholder": "Escribe libremente" },
+      "contact": { "label": "Contacto / enlace", "placeholder": "ej.: Instagram @id, chat abierto" }
+    },
+    "samples": {
+      "intro": {
+        "title": "Jiyeong Kim",
+        "tagline": "Marketing de contenidos que conecta personas e historias",
+        "body": "Hola, soy Jiyeong, especialista en contenidos con 5 años de experiencia.\nEncuentro la voz de cada marca y creo historias que llegan a la gente.",
+        "contact": "Correo jiyeong@example.com"
+      },
+      "shop": {
+        "title": "Panadería Ongi",
+        "tagline": "Una pequeña panadería de barrio, recién horneada cada mañana",
+        "body": "Horneamos dos veces al día con masa madre natural.\nHorario: mar–dom 10:00–19:00 (lun cerrado)\nEn un callejón de algún lugar de Seúl",
+        "contact": "Reservas por Instagram @ongi.bakery"
+      },
+      "invitation": {
+        "title": "Jiyeong ♥ Minsu se casan",
+        "tagline": "Acompáñanos el día en que dos se vuelven uno",
+        "body": "Sábado 12 de septiembre de 2026, 14:00\nSalón de bodas Algún Lugar, 3.ª planta\nDetalles: directamente a la pareja"
+      }
+    }
+  },
   "Metadata": {
     "title": {
       "default": "VibeStart — Cómo empezar a programar | Guía de instalación de Git, Node.js y VS Code",

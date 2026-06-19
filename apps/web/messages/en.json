@@ -48,6 +48,46 @@
       "network-kind": "Is the internet you're using a work/school network, or a home network?"
     }
   },
+  "Start": {
+    "heroTitle": "No install, no signup — your first page in 5 minutes",
+    "heroSub": "Pick, fill in, preview. No coding needed at all.",
+    "categoryTitle": "What would you like to make?",
+    "build": {
+      "back": "← Pick another type",
+      "previewLabel": "Preview",
+      "publishSoon": "Publishing to the web is coming soon — for now, build it in the preview."
+    },
+    "templates": {
+      "intro": { "title": "A page about me", "desc": "Resume · profile · links" },
+      "shop": { "title": "Shop or studio", "desc": "Menu · location · booking" },
+      "invitation": { "title": "Invitation", "desc": "Wedding · birthday · housewarming" }
+    },
+    "fields": {
+      "title": { "label": "Title", "placeholder": "e.g. Jiyeong's Weekend Baking" },
+      "tagline": { "label": "One-line intro", "placeholder": "e.g. Beginners welcome — warm bread, good time" },
+      "body": { "label": "Details", "placeholder": "Write freely" },
+      "contact": { "label": "Contact / link", "placeholder": "e.g. Instagram @id, open chat" }
+    },
+    "samples": {
+      "intro": {
+        "title": "Jiyeong Kim",
+        "tagline": "Content marketer connecting people and stories",
+        "body": "Hi, I'm Jiyeong, a content marketer with 5 years of experience.\nI find a brand's voice and craft stories that reach people.",
+        "contact": "Email jiyeong@example.com"
+      },
+      "shop": {
+        "title": "Ongi Bakery",
+        "tagline": "A small neighborhood bakery, baked fresh every morning",
+        "body": "Baked twice a day with natural sourdough.\nHours: Tue–Sun 10:00–19:00 (closed Mon)\nIn an alley somewhere in Seoul",
+        "contact": "Book via Instagram @ongi.bakery"
+      },
+      "invitation": {
+        "title": "Jiyeong ♥ Minsu are getting married",
+        "tagline": "Please join us on the day two become one",
+        "body": "Saturday, September 12, 2026, 2:00 PM\nSomewhere Wedding Hall, 3rd floor\nGifts: directly to the couple"
+      }
+    }
+  },
   "Metadata": {
     "title": {
       "default": "VibeStart — How to Start Coding | Git, Node.js, VS Code Setup Guide",
