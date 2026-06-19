@@ -17,6 +17,7 @@
     "@supabase/ssr": "^0.10.0",
     "@supabase/supabase-js": "^2.100.1",
     "@tailwindcss/typography": "^0.5.19",
+    "@vibestart/diagnosis-catalog": "workspace:*",
     "@vibestart/ports": "workspace:^",
     "@vibestart/shared-types": "workspace:*",
     "@vibestart/task-catalog": "workspace:*",

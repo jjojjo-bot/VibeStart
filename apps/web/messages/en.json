@@ -1,4 +1,28 @@
 {
+  "Diagnosis": {
+    "stuckButton": "😟 Something went wrong",
+    "pasteTitle": "Copy the whole last screen from your terminal and paste it here",
+    "pastePlaceholder": "Paste here…",
+    "pasteHelp": "To copy: drag the text in the terminal, then right-click (or Ctrl+Shift+C)",
+    "submit": "Paste and get help",
+    "cancel": "Cancel",
+    "foundProblem": "Here's what likely went wrong",
+    "chooseTitle": "It's probably one of these. Pick the closest:",
+    "recheck": "Check again",
+    "stillBroken": "Still not working",
+    "resolvedTitle": "✅ Fixed!",
+    "resolvedBody": "You can move on to the next step now.",
+    "unknownTitle": "We'll help you with this one directly",
+    "unknownBody": "Copy the text below and send it to us, and we'll get you an answer. You're not stuck here — your progress is saved.",
+    "copyBundle": "Copy the details",
+    "remedy": {
+      "scriptInstruction": "Copy this and paste it into your terminal:",
+      "guidePlaceholder": "A visual guide is coming soon. (guide: {key})",
+      "reboot": "Restart your computer, then press [Check again].",
+      "newShell": "Fully close the terminal and open a new window, then [Check again].",
+      "askPrompt": "Which of these is closer to your case?"
+    }
+  },
   "Metadata": {
     "title": {
       "default": "VibeStart — How to Start Coding | Git, Node.js, VS Code Setup Guide",

@@ -6,7 +6,9 @@ import { useRouter } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScriptBlock } from "@/components/onboarding/script-block";
+import { StuckHelper } from "@/components/diagnosis/stuck-helper";
 import { getSetupSteps, type SetupGroup } from "@/lib/setup-steps";
+import type { DiagnosisStep } from "@vibestart/shared-types";
 import {
   type OS,
   type Goal,
@@ -15,6 +17,15 @@ import { useTranslations } from "next-intl";
 import { trackSetupStart, trackSetupComplete } from "@/lib/ga";
 
 const GROUP_ORDER: SetupGroup[] = ["envPrep", "toolInstall", "aiSetup", "projectCreate"];
+
+// 셋업 그룹 → D′ 진단 단계 매핑 (StuckHelper에 전달).
+const GROUP_TO_DIAGNOSIS_STEP: Record<SetupGroup, DiagnosisStep> = {
+  envPrep: "wsl-install",
+  toolInstall: "tools-install",
+  aiSetup: "claude-install",
+  projectCreate: "clone-project",
+};
+
 function SetupContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -346,6 +357,12 @@ function SetupContent() {
                   >
                     {done ? t("undoCompleteButton") : t("completeButton")}
                   </Button>
+                )}
+
+                {active && (
+                  <div className="mt-3 border-t border-border/30 pt-3">
+                    <StuckHelper step={GROUP_TO_DIAGNOSIS_STEP[step.group]} />
+                  </div>
                 )}
               </div>
               </div>

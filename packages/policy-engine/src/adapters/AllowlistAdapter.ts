@@ -2,22 +2,7 @@ import { TaskDefinition } from '@vibestart/shared-types';
 import { TaskRegistry } from '@vibestart/task-catalog';
 import { PolicyPort, PolicyResult, PolicyViolation } from '../ports/PolicyPort';
 import { VariableMap } from '../ports/types';
-
-/** 셸 인젝션에 사용될 수 있는 위험 패턴 */
-const DANGEROUS_PATTERNS = [
-  /;\s*rm\s/,
-  /&&\s*rm\s/,
-  /\|\s*rm\s/,
-  /`[^`]*`/,
-  /\$\([^)]*\)/,
-  />\s*\/etc\//,
-  />\s*\/usr\//,
-  />\s*\/bin\//,
-  /\brm\s+-rf?\s+\//,
-  /\bsudo\s/,
-  /\bcurl\b.*\|\s*\bbash\b/,
-  /\bwget\b.*\|\s*\bbash\b/,
-];
+import { DANGEROUS_PATTERNS } from '../dangerous-patterns';
 
 /**
  * Task Catalog에 등록된 명령만 허용하는 allowlist 검증 어댑터.
@@ -53,8 +38,6 @@ export class AllowlistAdapter implements PolicyPort {
       }
     }
 
-    return violations.length === 0
-      ? { valid: true }
-      : { valid: false, violations };
+    return violations.length === 0 ? { valid: true } : { valid: false, violations };
   }
 }

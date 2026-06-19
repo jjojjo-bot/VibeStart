@@ -1,4 +1,28 @@
 {
+  "Diagnosis": {
+    "stuckButton": "😟 うまくいかないようです",
+    "pasteTitle": "ターミナルに出た最後の画面をそのままコピーして貼り付けてください",
+    "pastePlaceholder": "ここに貼り付け…",
+    "pasteHelp": "コピー方法：ターミナルで文字をドラッグし、右クリック（または Ctrl+Shift+C）",
+    "submit": "貼り付けて助けを得る",
+    "cancel": "キャンセル",
+    "foundProblem": "おそらくこれが原因です",
+    "chooseTitle": "おそらく次のいずれかです。近いものを選んでください：",
+    "recheck": "もう一度確認",
+    "stillBroken": "それでもうまくいきません",
+    "resolvedTitle": "✅ 解決しました！",
+    "resolvedBody": "次のステップに進んでください。",
+    "unknownTitle": "これは私たちが直接お手伝いします",
+    "unknownBody": "下の内容をコピーして送っていただければお答えします。ここで止まりません — 進捗は保存されています。",
+    "copyBundle": "内容をコピー",
+    "remedy": {
+      "scriptInstruction": "これをコピーしてターミナルに貼り付けてください：",
+      "guidePlaceholder": "図解ガイドは近日追加予定です。（ガイド：{key}）",
+      "reboot": "パソコンを再起動してから、[もう一度確認] を押してください。",
+      "newShell": "ターミナルを完全に閉じて新しいウィンドウで開き直し、その後 [もう一度確認]。",
+      "askPrompt": "次のうち、どちらに近いですか？"
+    }
+  },
   "Metadata": {
     "title": {
       "default": "VibeStart — プログラミングの始め方 | Git・Node.js・VS Codeセットアップガイド",

@@ -1,4 +1,5 @@
 export { PolicyEngine } from './policy-engine';
+export { DANGEROUS_PATTERNS } from './dangerous-patterns';
 
 export type { PolicyPort, PolicyResult, PolicyViolation } from './ports/PolicyPort';
 export type { VariableMap } from './ports/types';

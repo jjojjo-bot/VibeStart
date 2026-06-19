@@ -1,0 +1,245 @@
+'use client';
+
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { Button } from '@/components/ui/button';
+import { ScriptBlock } from '@/components/onboarding/script-block';
+import {
+  defaultDiagnosisMatcher,
+  getRemedy,
+  diagnosisRules,
+  parseMarkers,
+} from '@vibestart/diagnosis-catalog';
+import type { DiagnosisOutcome, DiagnosisRule, DiagnosisStep } from '@vibestart/shared-types';
+
+interface StuckHelperProps {
+  step: DiagnosisStep;
+}
+
+type Phase = 'idle' | 'paste' | 'result' | 'resolved';
+
+const ruleById = new Map<string, DiagnosisRule>(diagnosisRules.map((r) => [r.id, r]));
+
+async function copyText(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * "안 됐어요?" 진단 루프 — D′ 무실패 셋업의 복구 UI(어댑터).
+ * 매칭·복구 정의는 @vibestart/diagnosis-catalog(도메인)에 있고, 여기선 렌더만 한다.
+ * 붙여넣은 출력은 신뢰 불가 — 매칭에만 쓰고 명령을 합성하지 않는다.
+ */
+export function StuckHelper({ step }: StuckHelperProps) {
+  const t = useTranslations('Diagnosis');
+  const c = useTranslations('Common');
+  const [phase, setPhase] = useState<Phase>('idle');
+  const [output, setOutput] = useState('');
+  const [outcome, setOutcome] = useState<DiagnosisOutcome | null>(null);
+  const [activeRuleId, setActiveRuleId] = useState<string | null>(null);
+  const [bundleCopied, setBundleCopied] = useState(false);
+
+  function reset() {
+    setOutput('');
+    setOutcome(null);
+    setActiveRuleId(null);
+  }
+
+  function bundleText() {
+    return `[VibeStart 진단 요청]\nstep: ${step}\n---\n${output}`;
+  }
+
+  function handleSubmit() {
+    const markers = parseMarkers(output);
+    const hasOk = markers.some((m) => m.result === 'ok');
+    const hasFail = markers.some((m) => m.result === 'fail');
+    if (hasOk && !hasFail) {
+      setPhase('resolved');
+      return;
+    }
+    setOutcome(defaultDiagnosisMatcher.diagnose({ output, step }));
+    setActiveRuleId(null);
+    setPhase('result');
+  }
+
+  async function handleCopyBundle() {
+    if (await copyText(bundleText())) {
+      setBundleCopied(true);
+      setTimeout(() => setBundleCopied(false), 2000);
+    }
+  }
+
+  function renderRemedy(rule: DiagnosisRule) {
+    const remedy = rule.remedy;
+    switch (remedy.kind) {
+      case 'script': {
+        const script = getRemedy(remedy.remedyKey);
+        return (
+          <div className="flex flex-col gap-3">
+            <p className="text-sm text-muted-foreground">{t('remedy.scriptInstruction')}</p>
+            {script?.actions.map((a, i) => (
+              <ScriptBlock key={i} script={a.command} />
+            ))}
+          </div>
+        );
+      }
+      case 'guide':
+        return (
+          <p className="text-sm text-muted-foreground">
+            {t('remedy.guidePlaceholder', { key: remedy.guideKey })}
+          </p>
+        );
+      case 'reboot':
+        return <p className="text-sm text-muted-foreground">{t('remedy.reboot')}</p>;
+      case 'newShell':
+        return <p className="text-sm text-muted-foreground">{t('remedy.newShell')}</p>;
+      case 'ask':
+        return (
+          <div className="flex flex-col gap-3">
+            <p className="text-sm text-muted-foreground">{t('remedy.askPrompt')}</p>
+            <div className="flex flex-wrap gap-2">
+              {remedy.branchRuleIds.map((bid) => (
+                <Button key={bid} variant="outline" size="sm" onClick={() => setActiveRuleId(bid)}>
+                  {bid}
+                </Button>
+              ))}
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  }
+
+  function renderRecognized(rule: DiagnosisRule) {
+    return (
+      <div className="flex flex-col gap-4">
+        <div>
+          <p className="text-sm font-medium text-foreground">{t('foundProblem')}</p>
+          <p className="mt-0.5 font-mono text-xs text-muted-foreground/60">{rule.id}</p>
+        </div>
+        {renderRemedy(rule)}
+        <div className="flex flex-wrap items-center gap-3">
+          <Button
+            size="sm"
+            onClick={() => {
+              reset();
+              setPhase('paste');
+            }}
+          >
+            {t('recheck')}
+          </Button>
+          <button
+            className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+            onClick={() => {
+              setActiveRuleId(null);
+              setOutcome({ kind: 'unknown' });
+            }}
+          >
+            {t('stillBroken')}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  function renderUnknown() {
+    return (
+      <div className="flex flex-col gap-3">
+        <p className="text-sm font-medium text-foreground">{t('unknownTitle')}</p>
+        <p className="text-sm text-muted-foreground">{t('unknownBody')}</p>
+        <pre className="max-h-40 overflow-auto whitespace-pre-wrap rounded-lg border border-zinc-800 bg-zinc-950 p-3 text-xs text-zinc-400">
+          {bundleText()}
+        </pre>
+        <Button size="sm" onClick={handleCopyBundle}>
+          {bundleCopied ? c('copied') : t('copyBundle')}
+        </Button>
+      </div>
+    );
+  }
+
+  function renderResult() {
+    if (!outcome) return null;
+    if (activeRuleId) {
+      const r = ruleById.get(activeRuleId);
+      return r ? renderRecognized(r) : renderUnknown();
+    }
+    if (outcome.kind === 'recognized') return renderRecognized(outcome.hit.rule);
+    if (outcome.kind === 'ambiguous') {
+      const [only] = outcome.hits;
+      if (outcome.hits.length === 1 && only) return renderRecognized(only.rule);
+      return (
+        <div className="flex flex-col gap-3">
+          <p className="text-sm text-muted-foreground">{t('chooseTitle')}</p>
+          <div className="flex flex-wrap gap-2">
+            {outcome.hits.map((h) => (
+              <Button
+                key={h.rule.id}
+                variant="outline"
+                size="sm"
+                onClick={() => setActiveRuleId(h.rule.id)}
+              >
+                {h.rule.id}
+              </Button>
+            ))}
+          </div>
+        </div>
+      );
+    }
+    return renderUnknown();
+  }
+
+  if (phase === 'idle') {
+    return (
+      <button
+        className="text-xs text-amber-400/70 hover:text-amber-400 transition-colors"
+        onClick={() => setPhase('paste')}
+      >
+        {t('stuckButton')}
+      </button>
+    );
+  }
+
+  return (
+    <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4">
+      {phase === 'paste' && (
+        <div className="flex flex-col gap-3">
+          <p className="text-sm font-medium text-foreground">{t('pasteTitle')}</p>
+          <textarea
+            value={output}
+            onChange={(e) => setOutput(e.target.value)}
+            rows={6}
+            placeholder={t('pastePlaceholder')}
+            className="w-full rounded-lg border border-border/50 bg-background/80 p-3 font-mono text-xs text-muted-foreground"
+          />
+          <p className="text-xs text-muted-foreground/60">{t('pasteHelp')}</p>
+          <div className="flex items-center gap-3">
+            <Button size="sm" disabled={output.trim().length === 0} onClick={handleSubmit}>
+              {t('submit')}
+            </Button>
+            <button
+              className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+              onClick={() => {
+                reset();
+                setPhase('idle');
+              }}
+            >
+              {t('cancel')}
+            </button>
+          </div>
+        </div>
+      )}
+      {phase === 'result' && renderResult()}
+      {phase === 'resolved' && (
+        <div className="flex flex-col gap-2">
+          <p className="text-sm font-medium text-foreground">{t('resolvedTitle')}</p>
+          <p className="text-sm text-muted-foreground">{t('resolvedBody')}</p>
+        </div>
+      )}
+    </div>
+  );
+}

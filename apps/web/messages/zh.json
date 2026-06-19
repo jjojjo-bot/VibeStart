@@ -1,4 +1,28 @@
 {
+  "Diagnosis": {
+    "stuckButton": "😟 好像出错了",
+    "pasteTitle": "把终端里最后显示的整屏内容复制并粘贴到这里",
+    "pastePlaceholder": "在此粘贴…",
+    "pasteHelp": "复制方法：在终端中拖选文字后右键（或 Ctrl+Shift+C）",
+    "submit": "粘贴并获取帮助",
+    "cancel": "取消",
+    "foundProblem": "可能是这个问题",
+    "chooseTitle": "可能是以下之一，请选择最接近的：",
+    "recheck": "再次检查",
+    "stillBroken": "还是不行",
+    "resolvedTitle": "✅ 已解决！",
+    "resolvedBody": "现在可以进入下一步了。",
+    "unknownTitle": "这个我们直接帮你",
+    "unknownBody": "复制下面的内容发给我们，我们会给你答复。你不会卡在这里——进度已保存。",
+    "copyBundle": "复制内容",
+    "remedy": {
+      "scriptInstruction": "复制这段并粘贴到终端：",
+      "guidePlaceholder": "图文指南即将上线。（指南：{key}）",
+      "reboot": "重启电脑后，点击 [再次检查]。",
+      "newShell": "完全关闭终端并打开新窗口，然后 [再次检查]。",
+      "askPrompt": "以下哪种更接近你的情况？"
+    }
+  },
   "Metadata": {
     "title": {
       "default": "VibeStart — 编程入门指南 | Git、Node.js、VS Code安装教程",

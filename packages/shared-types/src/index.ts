@@ -2,6 +2,9 @@
 export * from './task.types';
 export * from './plan.types';
 
+// D′ — 무실패 로컬 셋업 진단 루프
+export * from './diagnosis.types';
+
 // Phase 2 — 사용자/프로젝트 도메인
 export * from './auth.types';
 export * from './project.types';

@@ -1,4 +1,28 @@
 {
+  "Diagnosis": {
+    "stuckButton": "😟 Algo salió mal",
+    "pasteTitle": "Copia toda la última pantalla de tu terminal y pégala aquí",
+    "pastePlaceholder": "Pega aquí…",
+    "pasteHelp": "Para copiar: selecciona el texto en la terminal y haz clic derecho (o Ctrl+Shift+C)",
+    "submit": "Pegar y obtener ayuda",
+    "cancel": "Cancelar",
+    "foundProblem": "Esto es lo que probablemente falló",
+    "chooseTitle": "Probablemente sea uno de estos. Elige el más parecido:",
+    "recheck": "Comprobar de nuevo",
+    "stillBroken": "Sigue sin funcionar",
+    "resolvedTitle": "✅ ¡Resuelto!",
+    "resolvedBody": "Ya puedes pasar al siguiente paso.",
+    "unknownTitle": "Con esto te ayudamos directamente",
+    "unknownBody": "Copia el texto de abajo y envíanoslo, y te daremos una respuesta. No te quedas atascado aquí: tu progreso está guardado.",
+    "copyBundle": "Copiar los detalles",
+    "remedy": {
+      "scriptInstruction": "Copia esto y pégalo en tu terminal:",
+      "guidePlaceholder": "Pronto habrá una guía visual. (guía: {key})",
+      "reboot": "Reinicia tu computadora y luego pulsa [Comprobar de nuevo].",
+      "newShell": "Cierra la terminal por completo y ábrela en una ventana nueva, luego [Comprobar de nuevo].",
+      "askPrompt": "¿Cuál de estos se acerca más a tu caso?"
+    }
+  },
   "Metadata": {
     "title": {
       "default": "VibeStart — Cómo empezar a programar | Guía de instalación de Git, Node.js y VS Code",
