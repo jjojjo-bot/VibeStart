@@ -28,6 +28,21 @@ export interface SetupStep {
   troubleshooting?: TroubleshootingItem[];
   /** 이 도구가 왜 필요한지 비전공자용 한줄 설명 */
   whyNeeded?: string;
+  /** 진단 단계 — 그룹 기본값과 다를 때만 지정(예: mac brew는 envPrep지만 tools-install). */
+  diagnosisStep?: DiagnosisStep;
+}
+
+/** 셋업 그룹 → 진단 단계 기본 매핑. per-step diagnosisStep으로 덮어쓸 수 있다. */
+export const GROUP_TO_DIAGNOSIS_STEP: Record<SetupGroup, DiagnosisStep> = {
+  envPrep: "wsl-install",
+  toolInstall: "tools-install",
+  aiSetup: "claude-install",
+  projectCreate: "clone-project",
+};
+
+/** 한 단계의 진단 단계(마커 step·StuckHelper 둘 다 이걸 단일 출처로 쓴다). */
+export function diagnosisStepFor(step: SetupStep): DiagnosisStep {
+  return step.diagnosisStep ?? GROUP_TO_DIAGNOSIS_STEP[step.group];
 }
 
 /** Translation function type for SetupSteps namespace */
@@ -416,6 +431,8 @@ function brewStep(t: T): SetupStep {
     description: t("brew.description"),
     whyNeeded: t("brew.whyNeeded"),
     group: "envPrep",
+    // brew 실패(네트워크·권한 등)는 도구설치 진단 규칙에 해당 → 그룹 기본값을 덮어쓴다.
+    diagnosisStep: "tools-install",
     environment: t("environments.macTerminal"),
     detailedGuide: t("brew.detailedGuide"),
     script: '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
@@ -988,26 +1005,22 @@ function appendProjectSteps(
 // ─── 메인 ───
 
 /**
- * D′ 하드닝 대상 — 진단 규칙이 있는 단계(wsl-install·tools-install·claude-install)에만
- * 마커를 심는다. 셸은 Windows의 wsl/editor만 powershell, 나머지는 bash(WSL/mac).
- * 균형 모드: 무거운 캡처 없이 한 줄 result 마커(상세 코드는 도구 출력 signature가 잡음).
+ * D′ 하드닝 셸 — 진단 규칙이 있는 단계에만 마커를 심는다(null = 하드닝 안 함).
+ * Windows의 wsl/editor만 powershell, 나머지는 bash(WSL/mac). 진단 step은
+ * diagnosisStepFor로 따로 구한다(마커 step·StuckHelper 단일 출처).
  */
-function hardenConfigFor(
-  stepId: string,
-  os: OS,
-): { step: DiagnosisStep; shell: HardenShell } | null {
+function hardenShellFor(stepId: string, os: OS): HardenShell | null {
   switch (stepId) {
     case "wsl":
-      return { step: "wsl-install", shell: "powershell" };
+      return "powershell";
+    case "editor":
+      return os === "windows" ? "powershell" : "bash";
     case "dev-tools-basic":
     case "dev-tools-nodejs":
     case "dev-tools":
     case "brew":
-      return { step: "tools-install", shell: "bash" };
-    case "editor":
-      return { step: "tools-install", shell: os === "windows" ? "powershell" : "bash" };
     case "ai-setup":
-      return { step: "claude-install", shell: "bash" };
+      return "bash";
     default:
       return null;
   }
@@ -1057,8 +1070,8 @@ export function getSetupSteps(
 
   // 진단 마커 하드닝 — 실패-진단 규칙이 있는 단계의 스크립트에만 적용.
   return steps.map((step) => {
-    const cfg = hardenConfigFor(step.id, os);
-    if (!cfg || step.script.trim().length === 0) return step;
-    return { ...step, script: hardenScript(step.script, cfg) };
+    const shell = hardenShellFor(step.id, os);
+    if (!shell || step.script.trim().length === 0) return step;
+    return { ...step, script: hardenScript(step.script, { step: diagnosisStepFor(step), shell }) };
   });
 }

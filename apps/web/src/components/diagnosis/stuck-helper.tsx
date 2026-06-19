@@ -9,6 +9,7 @@ import {
   getRemedy,
   diagnosisRules,
   parseMarkers,
+  maskSensitive,
 } from '@vibestart/diagnosis-catalog';
 import type { DiagnosisOutcome, DiagnosisRule, DiagnosisStep } from '@vibestart/shared-types';
 
@@ -49,8 +50,9 @@ export function StuckHelper({ step }: StuckHelperProps) {
     setActiveRuleId(null);
   }
 
+  // 도움 요청 번들은 외부로 전송될 수 있으므로 홈 경로·이메일·IP를 가린다.
   function bundleText() {
-    return `[VibeStart 진단 요청]\nstep: ${step}\n---\n${output}`;
+    return `[VibeStart 진단 요청]\nstep: ${step}\n---\n${maskSensitive(output)}`;
   }
 
   function handleSubmit() {

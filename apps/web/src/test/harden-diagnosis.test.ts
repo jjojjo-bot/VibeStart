@@ -14,7 +14,7 @@
 import { describe, expect, it } from 'vitest';
 import { hardenScript, MARKER_PREFIX } from '@vibestart/script-generator';
 import { defaultDiagnosisMatcher, parseMarkers } from '@vibestart/diagnosis-catalog';
-import { getSetupSteps } from '../lib/setup-steps';
+import { getSetupSteps, diagnosisStepFor } from '../lib/setup-steps';
 
 // i18n t 스텁 — 키를 그대로 돌려준다(스크립트 리터럴은 t에 의존하지 않음).
 const tStub = (key: string): string => key;
@@ -76,24 +76,25 @@ describe('라운드트립: 하드닝 마커 → DiagnosisMatcher', () => {
     });
   });
 
-  // 실제 WSL 0x80370102 에러는 "WslRegisterDistribution failed ... 0x80370102"라서
-  // virtualization-off(0x80370102)와 wsl-features-missing(wslregisterdistribution)
-  // 둘 다 signature 매칭 → signature만으로는 모호하다. (이 겹침은 #10에서 보강)
+  // 실제 WSL 0x80370102 에러("WslRegisterDistribution failed ... 0x80370102").
+  // #10에서 wsl-features-missing의 과넓은 'wslregisterdistribution' 시그니처를 제거해
+  // 이제 signature만으로도 virtualization-off로 확정된다(겹침 해소).
   const REAL_WSL_VIRT_ERROR =
     'WslRegisterDistribution failed with error: 0x80370102\n' +
     'Please enable the Virtual Machine Platform and BIOS virtualization.';
 
-  it('signature만으로는 실제 가상화 에러가 모호하다(겹치는 시그니처)', () => {
+  it('시그니처 정교화로 실제 가상화 에러가 virtualization-off로 확정된다(겹침 해소)', () => {
     const outcome = defaultDiagnosisMatcher.diagnose({
       output: `${REAL_WSL_VIRT_ERROR}\n${MARKER_PREFIX}::step=wsl-install::result=fail::code=1`,
       step: 'wsl-install',
     });
-    expect(outcome.kind).toBe('ambiguous');
+    expect(outcome.kind).toBe('recognized');
+    if (outcome.kind === 'recognized') {
+      expect(outcome.hit.rule.id).toBe('virtualization-off');
+    }
   });
 
-  it('hex 코드 마커가 모호성을 해소한다 → virtualization-off 고신뢰 인식', () => {
-    // 향후 래퍼/자가개선 루프가 hex를 마커로 심으면, 매처가 marker를 우선해
-    // 단일 규칙으로 확정한다(겹치는 signature가 있어도).
+  it('hex 코드 마커도 같은 결론으로 인식한다(marker 경로)', () => {
     const outcome = defaultDiagnosisMatcher.diagnose({
       output: `${REAL_WSL_VIRT_ERROR}\n${MARKER_PREFIX}::step=wsl-install::result=fail::code=0x80370102`,
       step: 'wsl-install',
@@ -133,5 +134,12 @@ describe('getSetupSteps — 하드닝 배선', () => {
       (s) => s.id === 'terminal',
     );
     expect(terminal?.script).toBe('');
+  });
+
+  it('brew(envPrep)는 per-step 오버라이드로 tools-install 진단·마커를 쓴다', () => {
+    const brew = getSetupSteps('macos', 'web-nextjs', 'myapp', tStub).find((s) => s.id === 'brew');
+    expect(brew && diagnosisStepFor(brew)).toBe('tools-install');
+    expect(brew?.script).toContain(`${MARKER_PREFIX}::step=tools-install::result=ok`);
+    expect(brew?.script).not.toContain('step=wsl-install');
   });
 });

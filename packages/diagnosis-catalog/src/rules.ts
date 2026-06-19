@@ -36,11 +36,13 @@ export const diagnosisRules: DiagnosisRule[] = [
     verifyStep: 'wsl-install',
   },
   // R3 · WSL 기능 미활성
+  // ⚠️ 'wslregisterdistribution'는 모든 등록 실패의 공통 래퍼라 가상화(0x80370102)
+  //    에러와도 겹쳐 모호성을 유발 → 구체 코드만 시그니처로 둔다(R1과 분리).
   {
     id: 'wsl-features-missing',
     match: {
       markerCodes: ['0x80004005', '0x80070002'],
-      signatures: ['wslregisterdistribution', '0x80004005', '0x80070002'],
+      signatures: ['0x80004005', '0x80070002'],
       steps: ['wsl-install'],
     },
     confidence: 'high',
@@ -95,9 +97,12 @@ export const diagnosisRules: DiagnosisRule[] = [
       signatures: [
         'curl: \\(6\\)',
         'curl: \\(7\\)',
+        'curl: \\(28\\)',
         'enotfound',
         'etimedout',
         'could not resolve host',
+        'temporary failure in name resolution',
+        'network is unreachable',
       ],
     },
     confidence: 'medium',
@@ -131,7 +136,7 @@ export const diagnosisRules: DiagnosisRule[] = [
   {
     id: 'permission-eacces',
     match: {
-      signatures: ['eacces', 'permission denied'],
+      signatures: ['eacces', 'permission denied', 'operation not permitted'],
       steps: ['tools-install', 'claude-install'],
     },
     confidence: 'high',
@@ -147,6 +152,8 @@ export const diagnosisRules: DiagnosisRule[] = [
         'requires administrator',
         'run this command as an administrator',
         'elevated permissions',
+        'requires elevation',
+        'the requested operation requires elevation',
       ],
       steps: ['wsl-install'],
     },
