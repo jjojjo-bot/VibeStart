@@ -15,8 +15,12 @@
     "resolvedTitle": "✅ 已解决！",
     "resolvedBody": "现在可以进入下一步了。",
     "unknownTitle": "这个我们直接帮你",
-    "unknownBody": "复制下面的内容发给我们，我们会给你答复。你不会卡在这里——进度已保存。",
+    "unknownBody": "把这些发给我们，我们会改进，让类似问题下次能被识别。你没有卡住 —— 进度已保存。",
     "copyBundle": "复制内容",
+    "sendReport": "发送求助",
+    "reportSending": "发送中…",
+    "reportSent": "✅ 已发送 —— 我们会改进识别。谢谢！",
+    "reportFailed": "发送失败，请稍后再试。",
     "editAgain": "重新输入",
     "startOver": "从头开始",
     "remedy": {

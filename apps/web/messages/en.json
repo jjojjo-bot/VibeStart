@@ -15,8 +15,12 @@
     "resolvedTitle": "✅ Fixed!",
     "resolvedBody": "You can move on to the next step now.",
     "unknownTitle": "We'll help you with this one directly",
-    "unknownBody": "Copy the text below and send it to us, and we'll get you an answer. You're not stuck here — your progress is saved.",
+    "unknownBody": "Send this and we will improve so it gets caught next time. You are not stuck — your progress is saved.",
     "copyBundle": "Copy the details",
+    "sendReport": "Send a help request",
+    "reportSending": "Sending…",
+    "reportSent": "✅ Sent — we will improve detection. Thanks!",
+    "reportFailed": "Could not send. Please try again in a moment.",
     "editAgain": "Edit and retry",
     "startOver": "Start over",
     "remedy": {

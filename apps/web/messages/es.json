@@ -15,8 +15,12 @@
     "resolvedTitle": "✅ ¡Resuelto!",
     "resolvedBody": "Ya puedes pasar al siguiente paso.",
     "unknownTitle": "Con esto te ayudamos directamente",
-    "unknownBody": "Copia el texto de abajo y envíanoslo, y te daremos una respuesta. No te quedas atascado aquí: tu progreso está guardado.",
+    "unknownBody": "Envíanoslo y mejoraremos para detectarlo la próxima vez. No estás atascado — tu progreso está guardado.",
     "copyBundle": "Copiar los detalles",
+    "sendReport": "Enviar ayuda",
+    "reportSending": "Enviando…",
+    "reportSent": "✅ Enviado — mejoraremos la detección. ¡Gracias!",
+    "reportFailed": "No se pudo enviar. Inténtalo de nuevo en un momento.",
     "editAgain": "Editar y reintentar",
     "startOver": "Empezar de nuevo",
     "remedy": {

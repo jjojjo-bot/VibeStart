@@ -43,11 +43,29 @@ export function StuckHelper({ step }: StuckHelperProps) {
   const [outcome, setOutcome] = useState<DiagnosisOutcome | null>(null);
   const [activeRuleId, setActiveRuleId] = useState<string | null>(null);
   const [bundleCopied, setBundleCopied] = useState(false);
+  const [reportStatus, setReportStatus] = useState<'idle' | 'sending' | 'sent' | 'failed'>('idle');
 
   function reset() {
     setOutput('');
     setOutcome(null);
     setActiveRuleId(null);
+    setReportStatus('idle');
+  }
+
+  // '모름' 상태에서 (마스킹된) 출력을 서버로 보내 미인식 실패를 수집한다.
+  async function sendReport() {
+    setReportStatus('sending');
+    try {
+      const res = await fetch('/api/diagnosis-report', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ step, output: maskSensitive(output) }),
+      });
+      const data = (await res.json()) as { ok?: boolean };
+      setReportStatus(data.ok ? 'sent' : 'failed');
+    } catch {
+      setReportStatus('failed');
+    }
   }
 
   // 도움 요청 번들은 외부로 전송될 수 있으므로 홈 경로·이메일·IP를 가린다.
@@ -196,12 +214,27 @@ export function StuckHelper({ step }: StuckHelperProps) {
         <pre className="max-h-40 overflow-auto whitespace-pre-wrap rounded-lg border border-zinc-800 bg-zinc-950 p-3 text-xs text-zinc-400">
           {bundleText()}
         </pre>
-        <div className="flex flex-wrap items-center gap-3">
-          <Button size="sm" onClick={handleCopyBundle}>
-            {bundleCopied ? c('copied') : t('copyBundle')}
-          </Button>
-          {renderRetryNav()}
-        </div>
+        {reportStatus === 'sent' ? (
+          <p className="text-sm font-medium text-emerald-400">{t('reportSent')}</p>
+        ) : (
+          <>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button size="sm" disabled={reportStatus === 'sending'} onClick={sendReport}>
+                {reportStatus === 'sending' ? t('reportSending') : t('sendReport')}
+              </Button>
+              <button
+                className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+                onClick={handleCopyBundle}
+              >
+                {bundleCopied ? c('copied') : t('copyBundle')}
+              </button>
+            </div>
+            {reportStatus === 'failed' && (
+              <p className="text-xs text-red-400">{t('reportFailed')}</p>
+            )}
+          </>
+        )}
+        {renderRetryNav()}
       </div>
     );
   }

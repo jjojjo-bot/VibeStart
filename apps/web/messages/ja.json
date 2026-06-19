@@ -15,8 +15,12 @@
     "resolvedTitle": "✅ 解決しました！",
     "resolvedBody": "次のステップに進んでください。",
     "unknownTitle": "これは私たちが直接お手伝いします",
-    "unknownBody": "下の内容をコピーして送っていただければお答えします。ここで止まりません — 進捗は保存されています。",
+    "unknownBody": "これを送っていただくと、似た問題をより的確に検知できるよう改善します。ここで止まりません — 進捗は保存されています。",
     "copyBundle": "内容をコピー",
+    "sendReport": "ヘルプを送る",
+    "reportSending": "送信中…",
+    "reportSent": "✅ 送信しました — 検知を改善します。ありがとう！",
+    "reportFailed": "送信できませんでした。少し待って再試行してください。",
     "editAgain": "もう一度入力",
     "startOver": "最初から",
     "remedy": {
