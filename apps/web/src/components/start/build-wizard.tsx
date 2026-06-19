@@ -45,9 +45,13 @@ export function BuildWizard() {
       <div className="mx-auto flex max-w-3xl flex-col gap-8 py-10">
         <header className="text-center">
           <h1 className="text-3xl font-bold tracking-tight">{t('heroTitle')}</h1>
-          <p className="card-sub mt-3">{t('heroSub')}</p>
+          <p className="mt-3 text-base text-[color:var(--txt-2,#9aa6b8)] md:text-lg">
+            {t('heroSub')}
+          </p>
         </header>
-        <h2 className="field-label text-center">{t('categoryTitle')}</h2>
+        <h2 className="mt-2 text-center text-lg font-medium text-[color:var(--txt-2,#9aa6b8)] md:text-xl">
+          {t('categoryTitle')}
+        </h2>
         <div className="grid gap-4 sm:grid-cols-3">
           {templates.map((tpl) => (
             <button
@@ -66,7 +70,7 @@ export function BuildWizard() {
   }
 
   return (
-    <div className="mx-auto grid max-w-5xl gap-5 py-10 md:grid-cols-2">
+    <div className="mx-auto grid max-w-6xl gap-5 py-10 md:grid-cols-[340px_1fr]">
       <section className="card">
         <div className="card-head">
           <div>
@@ -111,7 +115,7 @@ export function BuildWizard() {
           <iframe
             title={t('build.previewLabel')}
             srcDoc={previewHtml(template)}
-            className="h-[520px] w-full rounded-lg border-0 bg-white"
+            className="h-[680px] w-full rounded-lg border-0 bg-[#0a0d15]"
           />
           <p className="field-hint">{t('build.publishSoon')}</p>
         </div>
