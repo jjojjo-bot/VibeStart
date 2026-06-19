@@ -70,7 +70,7 @@ export function BuildWizard() {
   }
 
   return (
-    <div className="mx-auto grid max-w-7xl items-start gap-5 py-10 lg:grid-cols-[320px_1fr]">
+    <div className="mx-auto grid max-w-7xl items-start gap-5 px-4 py-10 sm:px-6 xl:grid-cols-[300px_1fr]">
       <section className="card">
         <div className="card-head">
           <div>
