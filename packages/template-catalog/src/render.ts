@@ -36,7 +36,7 @@ html{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.2) transparent}`;
  *
  * 카테고리마다 **골격(실루엣)이 완전히 다른** 글래스 레이아웃:
  *  intro       = 모노그램 원 + 좌측 비대칭(카드 없음)
- *  shop        = 멀티섹션 랜딩(풀스크린 히어로 + 소개 패널 + CTA 밴드, 스크롤)
+ *  shop        = 가게 랜딩(히어로[타이틀+태그라인+CTA] + 소개 패널, 콘텐츠 기준 높이)
  *  invitation  = 각진 얇은 프레임 + 중앙 의례 + 장식
  * 작은 미리보기에서도 구분되도록 상단 히어로 요소를 강하게 둔다.
  */
@@ -53,22 +53,20 @@ export function renderTemplate(template: TemplateDefinition, values: TemplateVal
   let css: string;
 
   if (template.category === 'shop') {
-    // 멀티섹션 랜딩 — 풀스크린 히어로 + 소개 패널 + CTA 밴드(스크롤)
+    // 가게 랜딩 — 히어로(타이틀+태그라인+CTA) + 소개 패널. 콘텐츠 기준 높이(휑한 여백 방지)
     inner = `<div class="wrap shop">
-<section class="hero"><h1>${title}</h1>${tagline()}</section>
+<section class="hero"><h1>${title}</h1>${tagline()}${has('contact') ? `<a class="cta">${v('contact')}</a>` : ''}</section>
 ${has('body') ? `<section class="info"><div class="panel">${body()}</div></section>` : ''}
-${has('contact') ? `<section class="cta-band"><a class="cta">${v('contact')}</a></section>` : ''}
 </div>`;
     css = `
 .wrap.shop{position:relative;z-index:1}
-.shop .hero{min-height:64vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:clamp(56px,10vw,96px) 28px clamp(40px,7vw,56px)}
+.shop .hero{text-align:center;padding:clamp(72px,15vh,150px) 28px clamp(48px,8vh,84px)}
 .shop .hero h1{font-weight:800;font-size:clamp(2.6rem,8vw,4rem);line-height:1.12}
 .shop .hero .tagline{color:rgba(232,237,245,.8);font-size:clamp(1.1rem,3.4vw,1.5rem);margin-top:16px}
-.shop .info{max-width:580px;margin:0 auto;padding:0 24px clamp(40px,7vw,64px)}
+.shop .hero .cta{display:inline-block;margin-top:32px;background:var(--accent);color:#fff;padding:15px 36px;border-radius:999px;font-weight:700;font-size:1.02rem;box-shadow:0 16px 36px -10px var(--accent)}
+.shop .info{max-width:600px;margin:0 auto;padding:0 24px clamp(72px,12vh,120px)}
 .shop .panel{background:rgba(255,255,255,.06);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:clamp(32px,6vw,44px) clamp(28px,5vw,40px);box-shadow:0 24px 60px -16px rgba(0,0,0,.5)}
-.shop .panel .body{font-size:1.05rem;line-height:2;color:rgba(232,237,245,.86);text-align:center}
-.shop .cta-band{text-align:center;padding:clamp(48px,9vw,88px) 28px clamp(64px,10vw,100px);background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--accent) 16%,transparent))}
-.shop .cta-band .cta{display:inline-block;background:var(--accent);color:#fff;padding:16px 38px;border-radius:999px;font-weight:700;font-size:1.05rem;box-shadow:0 16px 36px -10px var(--accent)}`;
+.shop .panel .body{font-size:1.05rem;line-height:2;color:rgba(232,237,245,.86);text-align:center}`;
   } else if (template.category === 'invitation') {
     // 각진 얇은 프레임 + 중앙 의례 + 장식
     inner = `<div class="wrap invite"><div class="v-inner">
