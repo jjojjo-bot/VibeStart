@@ -35,6 +35,9 @@ importers:
       '@vibestart/ports':
         specifier: workspace:^
         version: link:../../packages/ports
+      '@vibestart/script-generator':
+        specifier: workspace:*
+        version: link:../../packages/script-generator
       '@vibestart/shared-types':
         specifier: workspace:*
         version: link:../../packages/shared-types

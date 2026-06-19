@@ -19,6 +19,7 @@
     "@tailwindcss/typography": "^0.5.19",
     "@vibestart/diagnosis-catalog": "workspace:*",
     "@vibestart/ports": "workspace:^",
+    "@vibestart/script-generator": "workspace:*",
     "@vibestart/shared-types": "workspace:*",
     "@vibestart/task-catalog": "workspace:*",
     "@vibestart/template-catalog": "workspace:*",

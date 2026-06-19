@@ -1,3 +1,5 @@
+import { hardenScript, type HardenShell } from "@vibestart/script-generator";
+import type { DiagnosisStep } from "@vibestart/shared-types";
 import type { OS, Goal } from "./onboarding";
 
 export type SetupGroup = "envPrep" | "toolInstall" | "aiSetup" | "projectCreate";
@@ -985,6 +987,32 @@ function appendProjectSteps(
 
 // ─── 메인 ───
 
+/**
+ * D′ 하드닝 대상 — 진단 규칙이 있는 단계(wsl-install·tools-install·claude-install)에만
+ * 마커를 심는다. 셸은 Windows의 wsl/editor만 powershell, 나머지는 bash(WSL/mac).
+ * 균형 모드: 무거운 캡처 없이 한 줄 result 마커(상세 코드는 도구 출력 signature가 잡음).
+ */
+function hardenConfigFor(
+  stepId: string,
+  os: OS,
+): { step: DiagnosisStep; shell: HardenShell } | null {
+  switch (stepId) {
+    case "wsl":
+      return { step: "wsl-install", shell: "powershell" };
+    case "dev-tools-basic":
+    case "dev-tools-nodejs":
+    case "dev-tools":
+    case "brew":
+      return { step: "tools-install", shell: "bash" };
+    case "editor":
+      return { step: "tools-install", shell: os === "windows" ? "powershell" : "bash" };
+    case "ai-setup":
+      return { step: "claude-install", shell: "bash" };
+    default:
+      return null;
+  }
+}
+
 export function getSetupSteps(
   os: OS,
   goal: Goal,
@@ -1027,5 +1055,10 @@ export function getSetupSteps(
     appendProjectSteps(steps, goal, projectName, "mac", t);
   }
 
-  return steps;
+  // 진단 마커 하드닝 — 실패-진단 규칙이 있는 단계의 스크립트에만 적용.
+  return steps.map((step) => {
+    const cfg = hardenConfigFor(step.id, os);
+    if (!cfg || step.script.trim().length === 0) return step;
+    return { ...step, script: hardenScript(step.script, cfg) };
+  });
 }
