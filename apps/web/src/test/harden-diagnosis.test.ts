@@ -118,6 +118,22 @@ describe('라운드트립: 하드닝 마커 → DiagnosisMatcher', () => {
     }
   });
 
+  it('한국어 에러 문자열도 매칭한다 (locale 시그니처 보강)', () => {
+    const cnf = defaultDiagnosisMatcher.diagnose({
+      output: 'bash: node: 명령을 찾을 수 없습니다',
+      step: 'tools-install',
+    });
+    expect(cnf.kind).toBe('recognized');
+    if (cnf.kind === 'recognized') expect(cnf.hit.rule.id).toBe('command-not-found');
+
+    const ws = defaultDiagnosisMatcher.diagnose({
+      output: "apt : 'apt' 용어가 cmdlet, 함수, 스크립트 파일 또는 실행할 수 있는 프로그램 이름으로 인식되지 않습니다.",
+      step: 'tools-install',
+    });
+    expect(ws.kind).toBe('recognized');
+    if (ws.kind === 'recognized') expect(ws.hit.rule.id).toBe('wrong-shell');
+  });
+
   it('ok 마커는 실패 코드가 없어 어떤 실패 규칙에도 걸리지 않는다', () => {
     const outcome = defaultDiagnosisMatcher.diagnose({
       output: `${MARKER_PREFIX}::step=wsl-install::result=ok`,

@@ -55,7 +55,10 @@ function toSlug(name: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
-  return slug || "untitled";
+  // 한글 등 비라틴 이름은 전부 빈 슬러그가 된다. 고정 "untitled"로 떨어뜨리면
+  // slug=GitHub repo명이라 두 번째 프로젝트에서 repo 충돌로 생성 실패한다.
+  // 시간 기반 짧은 접미사로 고유화한다.
+  return slug || `site-${Date.now().toString(36).slice(-5)}`;
 }
 
 /** DB snake_case row → 앱 camelCase Project */

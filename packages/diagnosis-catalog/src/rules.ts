@@ -58,7 +58,8 @@ export const diagnosisRules: DiagnosisRule[] = [
   {
     id: 'command-not-found',
     match: {
-      signatures: ['command not found'],
+      // 한국어 Ubuntu/WSL: "bash: xxx: 명령을 찾을 수 없습니다"
+      signatures: ['command not found', '명령을 찾을 수 없습니다'],
       steps: ['tools-install', 'claude-install'],
     },
     confidence: 'high',
@@ -74,6 +75,8 @@ export const diagnosisRules: DiagnosisRule[] = [
         'is not recognized as the name of a cmdlet',
         "'apt' is not recognized",
         "'sudo' is not recognized",
+        // 한국어 PowerShell: "'apt' 용어가 cmdlet, 함수, 스크립트 파일 ... 인식되지 않습니다"
+        'cmdlet, 함수, 스크립트',
       ],
       steps: ['tools-install', 'claude-install'],
     },
