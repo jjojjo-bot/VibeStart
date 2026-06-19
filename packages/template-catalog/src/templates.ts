@@ -33,4 +33,16 @@ export const invitationTemplate: TemplateDefinition = {
   accent: '#8a5a9e',
 };
 
-export const templates: TemplateDefinition[] = [introTemplate, shopTemplate, invitationTemplate];
+export const todoTemplate: TemplateDefinition = {
+  id: 'todo',
+  category: 'todo',
+  fields: ['title', 'tagline', 'body'],
+  accent: '#4f46e5',
+};
+
+export const templates: TemplateDefinition[] = [
+  introTemplate,
+  shopTemplate,
+  todoTemplate,
+  invitationTemplate,
+];

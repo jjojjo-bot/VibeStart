@@ -5,7 +5,7 @@
  * 구조는 카탈로그(신뢰)에서, 내용은 사용자(신뢰 불가)에서 온다.
  */
 
-export type TemplateCategory = 'intro' | 'shop' | 'invitation';
+export type TemplateCategory = 'intro' | 'shop' | 'invitation' | 'todo';
 
 export type TemplateFieldKey = 'title' | 'tagline' | 'body' | 'contact';
 

@@ -7,6 +7,7 @@ export {
   introTemplate,
   shopTemplate,
   invitationTemplate,
+  todoTemplate,
 } from './templates';
 export { renderTemplate, escapeHtml, contactHref } from './render';
 
