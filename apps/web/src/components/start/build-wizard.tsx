@@ -70,7 +70,7 @@ export function BuildWizard() {
   }
 
   return (
-    <div className="mx-auto grid max-w-6xl gap-5 py-10 md:grid-cols-[340px_1fr]">
+    <div className="mx-auto grid max-w-7xl items-start gap-5 py-10 lg:grid-cols-[320px_1fr]">
       <section className="card">
         <div className="card-head">
           <div>
@@ -115,7 +115,7 @@ export function BuildWizard() {
           <iframe
             title={t('build.previewLabel')}
             srcDoc={previewHtml(template)}
-            className="h-[680px] w-full rounded-lg border-0 bg-[#0a0d15]"
+            className="h-[640px] w-full rounded-lg border-0 bg-[#0a0d15]"
           />
           <p className="field-hint">{t('build.publishSoon')}</p>
         </div>
