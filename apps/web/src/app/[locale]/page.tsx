@@ -3,7 +3,6 @@ import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { LandingStats } from "@/components/landing-stats";
 import { LandingHeroTerminal } from "@/components/landing-hero-terminal";
-import { HeroVideoLazy } from "@/components/hero-video-lazy";
 
 const STEPS = [
   { num: "1", gradient: "from-sky-500 to-cyan-400" },
@@ -85,13 +84,6 @@ export default function LandingPage() {
 
         <div className="lg:order-last">
           <LandingHeroTerminal />
-        </div>
-      </section>
-
-      {/* ───── Hero Video (제품 스토리) ───── */}
-      <section className="w-full max-w-5xl pb-16">
-        <div className="aspect-video w-full overflow-hidden rounded-xl border border-border/50 bg-black shadow-2xl shadow-primary/10">
-          <HeroVideoLazy />
         </div>
       </section>
 
