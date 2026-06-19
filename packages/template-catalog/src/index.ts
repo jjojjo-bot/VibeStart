@@ -8,7 +8,7 @@ export {
   shopTemplate,
   invitationTemplate,
 } from './templates';
-export { renderTemplate, escapeHtml } from './render';
+export { renderTemplate, escapeHtml, contactHref } from './render';
 
 export const templateRegistry: ReadonlyMap<string, TemplateDefinition> = new Map(
   templates.map((t) => [t.id, t]),

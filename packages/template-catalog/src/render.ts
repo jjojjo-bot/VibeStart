@@ -10,6 +10,22 @@ export function escapeHtml(input: string): string {
     .replace(/'/g, '&#39;');
 }
 
+/**
+ * 연락처 자유텍스트에서 안전한 href를 추출한다(없으면 null).
+ * 스킴(mailto/tel/https)을 코드가 직접 구성하고 사용자 문자열을 스킴 자리에 쓰지 않으므로
+ * `javascript:` 등 주입이 원천 불가능하다. 우선순위: 이메일 → URL → 전화.
+ */
+export function contactHref(raw: string): string | null {
+  const s = raw.trim();
+  const email = s.match(/[\w.+-]+@[\w-]+\.[\w-]{2,}/);
+  if (email) return `mailto:${email[0]}`;
+  const url = s.match(/https?:\/\/[^\s<>"']+/i);
+  if (url) return url[0];
+  const digits = s.replace(/\D/g, '');
+  if (digits.length >= 9 && digits.length <= 11) return `tel:${digits}`;
+  return null;
+}
+
 type Key = keyof TemplateValues;
 
 /** 다크 + accent 앰비언트 블롭 + 명조 헤딩(실 브라우저) 공통 베이스. */
@@ -48,6 +64,18 @@ export function renderTemplate(template: TemplateDefinition, values: TemplateVal
   const title = v('title');
   const tagline = (): string => (has('tagline') ? `<p class="tagline">${v('tagline')}</p>` : '');
   const body = (): string => (has('body') ? `<div class="body">${v('body')}</div>` : '');
+  // 연락처 CTA: 전화/이메일/URL이면 실제 링크(href), 아니면 비활성 표시. href는 코드 구성+이스케이프.
+  const contactCta = (cls: string): string => {
+    if (!has('contact')) return '';
+    const raw = (values.contact ?? '').trim();
+    const href = contactHref(raw);
+    let attr = '';
+    if (href) {
+      attr = ` href="${escapeHtml(href)}"`;
+      if (href.startsWith('http')) attr += ' target="_blank" rel="noopener noreferrer"';
+    }
+    return `<a class="${cls}"${attr}>${escapeHtml(raw)}</a>`;
+  };
 
   let inner: string;
   let css: string;
@@ -55,7 +83,7 @@ export function renderTemplate(template: TemplateDefinition, values: TemplateVal
   if (template.category === 'shop') {
     // 가게 랜딩 — 히어로(타이틀+태그라인+CTA) + 소개 패널. 콘텐츠 기준 높이(휑한 여백 방지)
     inner = `<div class="wrap shop">
-<section class="hero"><h1>${title}</h1>${tagline()}${has('contact') ? `<a class="cta">${v('contact')}</a>` : ''}</section>
+<section class="hero"><h1>${title}</h1>${tagline()}${contactCta('cta')}</section>
 ${has('body') ? `<section class="info"><div class="panel">${body()}</div></section>` : ''}
 </div>`;
     css = `
@@ -64,6 +92,8 @@ ${has('body') ? `<section class="info"><div class="panel">${body()}</div></secti
 .shop .hero h1{font-weight:800;font-size:clamp(2.6rem,8vw,4rem);line-height:1.12}
 .shop .hero .tagline{color:rgba(232,237,245,.8);font-size:clamp(1.1rem,3.4vw,1.5rem);margin-top:16px}
 .shop .hero .cta{display:inline-block;margin-top:32px;background:var(--accent);color:#fff;padding:15px 36px;border-radius:999px;font-weight:700;font-size:1.02rem;box-shadow:0 16px 36px -10px var(--accent)}
+.shop .cta[href]{cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.shop .cta[href]:hover{transform:translateY(-2px);box-shadow:0 22px 46px -10px var(--accent)}
 .shop .info{max-width:600px;margin:0 auto;padding:0 24px clamp(72px,12vh,120px)}
 .shop .panel{background:rgba(255,255,255,.06);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:clamp(32px,6vw,44px) clamp(28px,5vw,40px);box-shadow:0 24px 60px -16px rgba(0,0,0,.5)}
 .shop .panel .body{font-size:1.05rem;line-height:2;color:rgba(232,237,245,.86);text-align:center}`;
@@ -92,7 +122,7 @@ ${body()}
 <h1>${title}</h1>
 ${tagline()}
 ${body()}
-${has('contact') ? `<a class="contact">${v('contact')}</a>` : ''}
+${contactCta('contact')}
 </div>`;
     css = `
 .wrap.intro{max-width:600px;margin:0 auto;padding:clamp(56px,10vw,96px) clamp(28px,6vw,40px) 90px;position:relative;z-index:1}
@@ -101,7 +131,9 @@ ${has('contact') ? `<a class="contact">${v('contact')}</a>` : ''}
 .intro .tagline{color:rgba(232,237,245,.78);font-size:clamp(1.05rem,3vw,1.4rem);margin-top:14px}
 .intro .body{margin-top:30px;font-size:1.06rem;color:rgba(232,237,245,.85)}
 .intro .contact{display:inline-flex;align-items:center;gap:9px;margin-top:32px;padding:12px 24px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);color:#fff;border-radius:999px;font-weight:600;font-size:.95rem;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
-.intro .contact::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}`;
+.intro .contact::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}
+.intro .contact[href]{cursor:pointer;transition:transform .15s ease,border-color .15s ease,background .15s ease}
+.intro .contact[href]:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.1)}`;
   }
 
   return `<!doctype html>
