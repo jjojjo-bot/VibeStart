@@ -60,7 +60,8 @@
     "templates": {
       "intro": { "title": "Una página sobre mí", "desc": "CV · perfil · enlaces" },
       "shop": { "title": "Tienda o taller", "desc": "Menú · ubicación · reservas" },
-      "invitation": { "title": "Invitación", "desc": "Boda · cumpleaños · inauguración" }
+      "invitation": { "title": "Invitación", "desc": "Boda · cumpleaños · inauguración" },
+      "todo": { "title": "Tareas · Lista", "desc": "App de tareas diarias" }
     },
     "fields": {
       "title": { "label": "Título", "placeholder": "ej.: Repostería de fin de semana de Jiyeong" },
@@ -85,6 +86,11 @@
         "title": "Jiyeong ♥ Minsu se casan",
         "tagline": "Acompáñanos el día en que dos se vuelven uno",
         "body": "Sábado 12 de septiembre de 2026, 14:00\nSalón de bodas Algún Lugar, 3.ª planta\nDetalles: directamente a la pareja"
+      },
+      "todo": {
+        "title": "Tareas de hoy",
+        "tagline": "Organiza tu día con ligereza",
+        "body": "✓ Estiramiento matutino (10 min)\n✓ Revisar el correo\nCompra (leche, huevos, pan)\nEjercicio 30 min\nLeer 30 páginas\nLlamar a un amigo"
       }
     }
   },

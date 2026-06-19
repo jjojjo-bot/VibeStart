@@ -60,7 +60,8 @@
     "templates": {
       "intro": { "title": "A page about me", "desc": "Resume · profile · links" },
       "shop": { "title": "Shop or studio", "desc": "Menu · location · booking" },
-      "invitation": { "title": "Invitation", "desc": "Wedding · birthday · housewarming" }
+      "invitation": { "title": "Invitation", "desc": "Wedding · birthday · housewarming" },
+      "todo": { "title": "To-Do · Checklist", "desc": "Daily task app" }
     },
     "fields": {
       "title": { "label": "Title", "placeholder": "e.g. Jiyeong's Weekend Baking" },
@@ -85,6 +86,11 @@
         "title": "Jiyeong ♥ Minsu are getting married",
         "tagline": "Please join us on the day two become one",
         "body": "Saturday, September 12, 2026, 2:00 PM\nSomewhere Wedding Hall, 3rd floor\nGifts: directly to the couple"
+      },
+      "todo": {
+        "title": "Today's To-Do",
+        "tagline": "Keep your day light and clear",
+        "body": "✓ Morning stretch (10 min)\n✓ Check email\nGroceries (milk, eggs, bread)\n30-min workout\nRead 30 pages\nCall a friend"
       }
     }
   },
