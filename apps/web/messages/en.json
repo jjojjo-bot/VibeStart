@@ -46,13 +46,32 @@
     }
   },
   "Start": {
+    "graduate": {
+      "cta": "Like it? Make it really yours →",
+      "back": "← Back to preview",
+      "title": "Now make it truly yours",
+      "manifesto": "Elsewhere you pay and still can't take it with you. Here, even for free, it's yours — code and all.",
+      "free": {
+        "badge": "🆓 Graduate free",
+        "title": "Publish to your GitHub · your Vercel",
+        "desc": "No install, no terminal — put it online under your own account, right from the browser. Works on your phone too.",
+        "cta": "Start free",
+        "note": "No install · Mobile OK"
+      },
+      "ai": {
+        "badge": "🚀 Accelerate with AI",
+        "title": "Dev tools on your computer + AI coding",
+        "desc": "Install Git · Node · VS Code, then just tell AI (Claude) what to build. Like a real developer.",
+        "cta": "Set up dev tools",
+        "note": "Local install · Claude from $20/mo"
+      }
+    },
     "heroTitle": "No install, no signup — your first page in 5 minutes",
     "heroSub": "Pick, fill in, preview. No coding needed at all.",
     "categoryTitle": "What would you like to make?",
     "build": {
       "back": "← Pick another type",
-      "previewLabel": "Preview",
-      "publishSoon": "Publishing to the web is coming soon — for now, build it in the preview."
+      "previewLabel": "Preview"
     },
     "templates": {
       "intro": { "title": "A page about me", "desc": "Resume · profile · links" },

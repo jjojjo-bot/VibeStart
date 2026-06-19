@@ -46,13 +46,32 @@
     }
   },
   "Start": {
+    "graduate": {
+      "cta": "¿Te gusta? Hazlo de verdad tuyo →",
+      "back": "← Volver a la vista previa",
+      "title": "Ahora hazlo de verdad tuyo",
+      "manifesto": "En otros sitios pagas y aun así no te lo puedes llevar. Aquí, incluso gratis, es tuyo — código incluido.",
+      "free": {
+        "badge": "🆓 Gradúate gratis",
+        "title": "Publica en tu GitHub · tu Vercel",
+        "desc": "Sin instalar nada ni usar terminal: publícalo en internet con tu propia cuenta, desde el navegador. También en el móvil.",
+        "cta": "Empezar gratis",
+        "note": "Sin instalación · Móvil OK"
+      },
+      "ai": {
+        "badge": "🚀 Acelera con IA",
+        "title": "Entorno de desarrollo en tu PC + IA",
+        "desc": "Instala Git · Node · VS Code y dile a la IA (Claude) qué construir. Como un desarrollador de verdad.",
+        "cta": "Instalar entorno",
+        "note": "Instalación local · Claude desde $20/mes"
+      }
+    },
     "heroTitle": "Sin instalar, sin registrarte: tu primera página en 5 minutos",
     "heroSub": "Elige, rellena y previsualiza. No necesitas saber programar.",
     "categoryTitle": "¿Qué te gustaría crear?",
     "build": {
       "back": "← Elegir otro tipo",
-      "previewLabel": "Vista previa",
-      "publishSoon": "Publicar en internet llegará pronto: por ahora, créala en la vista previa."
+      "previewLabel": "Vista previa"
     },
     "templates": {
       "intro": { "title": "Una página sobre mí", "desc": "CV · perfil · enlaces" },

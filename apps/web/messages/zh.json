@@ -46,13 +46,32 @@
     }
   },
   "Start": {
+    "graduate": {
+      "cta": "喜欢的话，做成真正属于你的 →",
+      "back": "← 返回预览",
+      "title": "现在，做成真正属于你的",
+      "manifesto": "别处付了钱也带不走。在这里，哪怕免费，连代码都完全是你的。",
+      "free": {
+        "badge": "🆓 免费毕业",
+        "title": "发布到我的 GitHub · 我的 Vercel",
+        "desc": "无需安装、无需终端，在浏览器里用自己的账号发布到网上。手机也能用。",
+        "cta": "免费开始",
+        "note": "无需安装 · 手机可用"
+      },
+      "ai": {
+        "badge": "🚀 用 AI 加速",
+        "title": "在我的电脑装开发环境 + AI 编程",
+        "desc": "装好 Git·Node·VS Code，用嘴对 AI（Claude）说就能做更大的。像真正的开发者一样。",
+        "cta": "安装开发环境",
+        "note": "本地安装 · Claude 每月 $20 起"
+      }
+    },
     "heroTitle": "无需安装、无需注册，5 分钟做出第一个网页",
     "heroSub": "选一选、填一填、看预览。完全不用懂代码。",
     "categoryTitle": "想做点什么呢？",
     "build": {
       "back": "← 换个类型",
-      "previewLabel": "预览",
-      "publishSoon": "发布到网上即将上线——现在先用预览做做看。"
+      "previewLabel": "预览"
     },
     "templates": {
       "intro": { "title": "自我介绍页", "desc": "简历 · 个人资料 · 链接" },

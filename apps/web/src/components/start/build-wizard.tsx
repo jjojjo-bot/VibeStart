@@ -4,8 +4,9 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { templates, getTemplate, renderTemplate, FIELD_KINDS } from '@vibestart/template-catalog';
 import type { TemplateDefinition, TemplateFieldKey, TemplateValues } from '@vibestart/shared-types';
+import { Link } from '@/i18n/navigation';
 
-type Step = 'category' | 'build';
+type Step = 'category' | 'build' | 'graduate';
 
 /**
  * B′ 첫성공 빌더 — 카테고리 선택 → 빈칸 채우기 → 라이브 미리보기.
@@ -80,6 +81,50 @@ export function BuildWizard() {
     );
   }
 
+  // 화면 5 — 졸업 브릿지: 미리보기로 첫 성공 → 진짜 '내 것'으로 가는 두 갈래.
+  // 🆓 무료(브라우저 GitHub+Vercel, /dashboard) / 🚀 AI(로컬 설치, /onboarding).
+  if (step === 'graduate' && template) {
+    return (
+      <div className="mx-auto flex max-w-4xl flex-col gap-8 px-4 py-10 sm:px-6">
+        <div>
+          <button className="btn-ghost" onClick={() => setStep('build')}>
+            {t('graduate.back')}
+          </button>
+        </div>
+        <header className="text-center">
+          <h1 className="text-3xl font-bold tracking-tight">{t('graduate.title')}</h1>
+          <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-relaxed text-[color:var(--txt-2,#c7d0de)] sm:text-lg">
+            {t('graduate.manifesto')}
+          </p>
+        </header>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Link href="/dashboard" className="card text-left transition hover:-translate-y-0.5">
+            <span className="chip self-start">{t('graduate.free.badge')}</span>
+            <h2 className="text-lg font-semibold tracking-tight">{t('graduate.free.title')}</h2>
+            <p className="flex-1 text-sm leading-relaxed text-[color:var(--txt-2,#9aa6b8)]">
+              {t('graduate.free.desc')}
+            </p>
+            <span className="btn-primary w-full justify-center py-2.5">
+              {t('graduate.free.cta')}
+            </span>
+            <span className="field-hint text-center">{t('graduate.free.note')}</span>
+          </Link>
+          <Link href="/onboarding" className="card text-left transition hover:-translate-y-0.5">
+            <span className="chip self-start">{t('graduate.ai.badge')}</span>
+            <h2 className="text-lg font-semibold tracking-tight">{t('graduate.ai.title')}</h2>
+            <p className="flex-1 text-sm leading-relaxed text-[color:var(--txt-2,#9aa6b8)]">
+              {t('graduate.ai.desc')}
+            </p>
+            <span className="btn-ghost w-full justify-center py-2.5">
+              {t('graduate.ai.cta')}
+            </span>
+            <span className="field-hint text-center">{t('graduate.ai.note')}</span>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto grid max-w-7xl items-start gap-5 px-4 py-10 sm:px-6 xl:grid-cols-[300px_1fr]">
       <section className="card">
@@ -128,7 +173,13 @@ export function BuildWizard() {
             srcDoc={previewHtml(template)}
             className="h-[640px] w-full rounded-lg border-0 bg-[#0a0d15]"
           />
-          <p className="field-hint">{t('build.publishSoon')}</p>
+          <button
+            type="button"
+            className="btn-primary w-full justify-center py-2.5 text-sm"
+            onClick={() => setStep('graduate')}
+          >
+            {t('graduate.cta')}
+          </button>
         </div>
       </section>
     </div>
