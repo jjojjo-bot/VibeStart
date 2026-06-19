@@ -163,6 +163,23 @@ describe('getSetupSteps — 하드닝 배선', () => {
     expect(pf.script).not.toContain('$LASTEXITCODE');
   });
 
+  it('windows: 재시작 체크포인트가 wsl 설치와 wsl-open 사이에 있다', () => {
+    const steps = getSetupSteps('windows', 'web-nextjs', 'myapp', tStub);
+    const wslIdx = steps.findIndex((s) => s.id === 'wsl');
+    const rebootIdx = steps.findIndex((s) => s.id === 'reboot');
+    const openIdx = steps.findIndex((s) => s.id === 'wsl-open');
+    expect(rebootIdx).toBeGreaterThan(wslIdx);
+    expect(rebootIdx).toBeLessThan(openIdx);
+    const reboot = steps[rebootIdx]!;
+    expect(reboot.requiresReboot).toBe(true);
+    expect(reboot.script).toBe(''); // 명령 없는 안내 전용 → 하드닝 대상 아님
+  });
+
+  it('mac 플로우엔 재시작 체크포인트가 없다', () => {
+    const steps = getSetupSteps('macos', 'web-nextjs', 'myapp', tStub);
+    expect(steps.some((s) => s.id === 'reboot')).toBe(false);
+  });
+
   it('Windows editor(내부 exit 분기)는 하드닝하지 않는다 — 마커 미부착', () => {
     const editor = getSetupSteps('windows', 'web-nextjs', 'myapp', tStub).find(
       (s) => s.id === 'editor',

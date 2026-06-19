@@ -243,6 +243,23 @@ function SetupContent() {
                   </div>
                 </div>
 
+                {/* 재시작 체크포인트 — 이탈 1순위 지점, "진행상황 저장됨" 안심 배너 */}
+                {active && step.requiresReboot && (
+                  <div className="mb-4 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4">
+                    <div className="flex items-start gap-3">
+                      <span className="text-2xl" aria-hidden>
+                        🔄
+                      </span>
+                      <div>
+                        <p className="font-semibold text-amber-200">{step.title}</p>
+                        <p className="mt-1 text-sm leading-relaxed text-amber-100/80">
+                          {ts("reboot.safeNote")}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 {/* 이게 뭔가요? */}
                 {active && step.whyNeeded && (
                   <div className="mb-3">

@@ -526,6 +526,13 @@
     }
   },
   "SetupSteps": {
+    "reboot": {
+      "title": "Restart your computer",
+      "description": "One restart finishes the WSL install",
+      "whyNeeded": "The WSL (Linux) you just installed needs one restart to fully turn on. Like a Windows update — just once.",
+      "detailedGuide": "Save anything unsaved, then restart your computer.\n\nAfter the restart, an Ubuntu (black) window may pop up asking you to set a username and password. Set them if it appears — it's fine if it doesn't (the next step shows how to open it yourself).\n\nWhen you're back, press 'Done' below to continue.",
+      "safeNote": "No worries — your progress so far is saved automatically. After restarting, come back to this page (same address) and you pick up right here."
+    },
     "preflight": {
       "title": "Check your PC is ready",
       "description": "Before installing, a 30-second check that this PC is ready",

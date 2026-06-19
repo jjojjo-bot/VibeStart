@@ -30,6 +30,8 @@ export interface SetupStep {
   whyNeeded?: string;
   /** 진단 단계 — 그룹 기본값과 다를 때만 지정(예: mac brew는 envPrep지만 tools-install). */
   diagnosisStep?: DiagnosisStep;
+  /** 재시작 체크포인트 — 켜면 /setup이 "진행상황 저장됨" 안심 배너를 강조 렌더. */
+  requiresReboot?: boolean;
 }
 
 /** 셋업 그룹 → 진단 단계 기본 매핑. per-step diagnosisStep으로 덮어쓸 수 있다. */
@@ -131,6 +133,23 @@ Please restart your computer.`,
       { symptom: t("wsl.troubleshooting.2.symptom"), solution: t("wsl.troubleshooting.2.solution") },
       { symptom: t("wsl.troubleshooting.3.symptom"), solution: t("wsl.troubleshooting.3.solution") },
     ],
+  };
+}
+
+/**
+ * 재시작 체크포인트 — wsl --install 직후. 비전공자 이탈 1순위 지점이라
+ * 명령 없이 "재시작 + 진행상황 저장됨" 안심 메시지를 전담하는 단계로 분리한다.
+ */
+function windowsRebootStep(t: T): SetupStep {
+  return {
+    id: "reboot",
+    title: t("reboot.title"),
+    description: t("reboot.description"),
+    whyNeeded: t("reboot.whyNeeded"),
+    group: "envPrep",
+    requiresReboot: true,
+    detailedGuide: t("reboot.detailedGuide"),
+    script: "",
   };
 }
 
@@ -1072,6 +1091,7 @@ export function getSetupSteps(
     // 환경 준비
     steps.push(windowsPreflightStep(t));
     steps.push(wslInstallStep(t));
+    steps.push(windowsRebootStep(t));
     steps.push(wslOpenStep(t));
 
     // 도구 설치 — Basic(Git+Python/Java)과 Node.js를 분리 (실패 시 재시도 용이)

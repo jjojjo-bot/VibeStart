@@ -526,6 +526,13 @@
     }
   },
   "SetupSteps": {
+    "reboot": {
+      "title": "Reinicia el ordenador",
+      "description": "Un reinicio termina la instalación de WSL",
+      "whyNeeded": "El WSL (Linux) que acabas de instalar necesita un reinicio para activarse del todo. Como una actualización de Windows — solo una vez.",
+      "detailedGuide": "Guarda lo que tengas sin guardar y reinicia el ordenador.\n\nTras el reinicio puede aparecer una ventana de Ubuntu (negra) pidiéndote un usuario y contraseña. Defínelos si aparece — no pasa nada si no (el siguiente paso te enseña a abrirla).\n\nCuando vuelvas, pulsa 'Hecho' abajo para continuar.",
+      "safeNote": "Tranquilo — tu progreso se guarda automáticamente. Tras reiniciar, vuelve a esta página (misma dirección) y sigues justo aquí."
+    },
     "preflight": {
       "title": "Comprueba que tu PC está listo",
       "description": "Antes de instalar, una comprobación de 30 segundos de que este PC está listo",
