@@ -46,8 +46,31 @@
     }
   },
   "Start": {
+    "publish": {
+      "enterCta": "Publícalo online →",
+      "back": "← Volver a la vista previa",
+      "title": "Elige tu dirección y publícalo",
+      "slugLabel": "Dirección de tu página",
+      "slugHint": "minúsculas, números, guiones · 3–32 caracteres",
+      "invalid": "Revisa el formato de la dirección",
+      "reserved": "Esta dirección no se puede usar",
+      "tooShort": "Muy corta (mín. 3)",
+      "tooLong": "Muy larga (máx. 32)",
+      "publishBtn": "Publícalo online",
+      "publishing": "Publicando…",
+      "errorTaken": "Esa dirección ya está en uso. Prueba otra.",
+      "errorGeneric": "Algo salió mal. Inténtalo de nuevo.",
+      "errorRate": "Demasiado rápido — inténtalo en un momento.",
+      "successTitle": "🎉 ¡Está en línea!",
+      "liveLabel": "Dirección de tu página",
+      "copy": "Copiar enlace",
+      "copied": "¡Copiado!",
+      "open": "Abrir en pestaña nueva",
+      "tempNote": "Está en línea 24 horas. Regístrate para conservarla para siempre.",
+      "keepCta": "Regístrate para conservarla",
+      "growCta": "Hazla crecer →"
+    },
     "graduate": {
-      "cta": "¿Te gusta? Hazlo de verdad tuyo →",
       "back": "← Volver a la vista previa",
       "title": "Ahora hazlo de verdad tuyo",
       "manifesto": "En otros sitios pagas y aun así no te lo puedes llevar. Aquí, incluso gratis, es tuyo — código incluido.",

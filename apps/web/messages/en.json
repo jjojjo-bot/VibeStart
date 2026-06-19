@@ -46,8 +46,31 @@
     }
   },
   "Start": {
+    "publish": {
+      "enterCta": "Put it online →",
+      "back": "← Back to preview",
+      "title": "Pick your address and go live",
+      "slugLabel": "Your page address",
+      "slugHint": "lowercase letters, numbers, hyphens · 3–32 chars",
+      "invalid": "Check the address format",
+      "reserved": "This address can't be used",
+      "tooShort": "Too short (3+ chars)",
+      "tooLong": "Too long (32 chars max)",
+      "publishBtn": "Put it online",
+      "publishing": "Publishing…",
+      "errorTaken": "That address is taken. Try another one.",
+      "errorGeneric": "Something went wrong. Please try again.",
+      "errorRate": "Too fast — please try again in a moment.",
+      "successTitle": "🎉 It's live!",
+      "liveLabel": "Your page address",
+      "copy": "Copy link",
+      "copied": "Copied!",
+      "open": "Open in new tab",
+      "tempNote": "It's live for 24 hours. Sign up to keep it forever.",
+      "keepCta": "Sign up to keep it",
+      "growCta": "Grow it →"
+    },
     "graduate": {
-      "cta": "Like it? Make it really yours →",
       "back": "← Back to preview",
       "title": "Now make it truly yours",
       "manifesto": "Elsewhere you pay and still can't take it with you. Here, even for free, it's yours — code and all.",

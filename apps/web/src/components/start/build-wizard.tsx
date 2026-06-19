@@ -5,8 +5,18 @@ import { useTranslations } from 'next-intl';
 import { templates, getTemplate, renderTemplate, FIELD_KINDS } from '@vibestart/template-catalog';
 import type { TemplateDefinition, TemplateFieldKey, TemplateValues } from '@vibestart/shared-types';
 import { Link } from '@/i18n/navigation';
+import { validateSlug, normalizeSlug } from '@/lib/publish/slug';
 
-type Step = 'category' | 'build' | 'graduate';
+type Step = 'category' | 'build' | 'publish' | 'graduate';
+type PubStatus = 'idle' | 'publishing' | 'done' | 'error';
+
+// 슬러그 거부 사유 → i18n 키.
+const SLUG_MSG: Record<string, string> = {
+  'too-short': 'tooShort',
+  'too-long': 'tooLong',
+  'invalid-chars': 'invalid',
+  reserved: 'reserved',
+};
 
 /**
  * B′ 첫성공 빌더 — 카테고리 선택 → 빈칸 채우기 → 라이브 미리보기.
@@ -18,6 +28,13 @@ export function BuildWizard() {
   const [step, setStep] = useState<Step>('category');
   const [templateId, setTemplateId] = useState<string | null>(null);
   const [values, setValues] = useState<TemplateValues>({});
+
+  // 발행 상태
+  const [slug, setSlug] = useState('');
+  const [pubStatus, setPubStatus] = useState<PubStatus>('idle');
+  const [pubPath, setPubPath] = useState<string | null>(null);
+  const [pubError, setPubError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const template = templateId ? getTemplate(templateId) : undefined;
 
@@ -42,14 +59,66 @@ export function BuildWizard() {
     return t.has(override) ? t(override) : t(`fields.${key}.${part}`);
   }
 
-  // 빈 칸은 샘플로 채워 미리보기가 항상 그럴듯하게 보이도록 한다.
-  function previewHtml(tpl: TemplateDefinition): string {
+  // 빈 칸은 샘플로 채운다 — 미리보기와 발행이 동일하게 보이도록.
+  function mergedValues(tpl: TemplateDefinition): TemplateValues {
     const merged: TemplateValues = {};
     for (const key of tpl.fields) {
       const v = (values[key] ?? '').trim();
       merged[key] = v.length > 0 ? v : t(`samples.${tpl.id}.${key}`);
     }
-    return renderTemplate(tpl, merged);
+    return merged;
+  }
+
+  function previewHtml(tpl: TemplateDefinition): string {
+    return renderTemplate(tpl, mergedValues(tpl));
+  }
+
+  // 미리보기 → 발행 화면. 슬러그를 제목에서 추정해 미리 채운다.
+  function goPublish(): void {
+    if (template && slug === '') {
+      const base = (values.title ?? '').trim() || t(`samples.${template.id}.title`);
+      setSlug(normalizeSlug(base));
+    }
+    setPubStatus('idle');
+    setPubError(null);
+    setStep('publish');
+  }
+
+  async function publish(): Promise<void> {
+    if (!template) return;
+    const v = validateSlug(slug);
+    if (!v.ok) {
+      setPubError(t(`publish.${SLUG_MSG[v.reason]}`));
+      return;
+    }
+    setPubStatus('publishing');
+    setPubError(null);
+    try {
+      const res = await fetch('/api/publish', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ slug, templateId: template.id, values: mergedValues(template) }),
+      });
+      const data = (await res.json()) as { ok: boolean; path?: string; reason?: string };
+      if (data.ok && data.path) {
+        setPubPath(data.path);
+        setPubStatus('done');
+      } else {
+        setPubStatus('error');
+        setPubError(
+          t(
+            data.reason === 'slug-taken'
+              ? 'publish.errorTaken'
+              : data.reason === 'rate-limited'
+                ? 'publish.errorRate'
+                : 'publish.errorGeneric',
+          ),
+        );
+      }
+    } catch {
+      setPubStatus('error');
+      setPubError(t('publish.errorGeneric'));
+    }
   }
 
   if (step === 'category' || !template) {
@@ -77,6 +146,103 @@ export function BuildWizard() {
             </button>
           ))}
         </div>
+      </div>
+    );
+  }
+
+  // 화면 4 — 퍼블리시: 슬러그 선택 → 익명 발행(TTL) → 라이브 URL + 가입 유도.
+  if (step === 'publish' && template) {
+    const slugCheck = slug ? validateSlug(slug) : null;
+    const fullUrl = pubPath
+      ? (typeof window !== 'undefined' ? window.location.origin : 'https://vibe-start.com') + pubPath
+      : '';
+    return (
+      <div className="mx-auto flex max-w-xl flex-col gap-6 px-4 py-10 sm:px-6">
+        <div>
+          <button className="btn-ghost" onClick={() => setStep('build')}>
+            {t('publish.back')}
+          </button>
+        </div>
+
+        {pubStatus !== 'done' ? (
+          <>
+            <header className="text-center">
+              <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t('publish.title')}</h1>
+            </header>
+            <div className="card">
+              <label className="field">
+                <span className="field-label">{t('publish.slugLabel')}</span>
+                <div className="flex items-center gap-1 rounded-lg border border-[color:var(--glass-ctl-border,#2a3550)] bg-[color:var(--glass-ctl-bg,#0e1422)] px-3 py-2">
+                  <span className="shrink-0 text-sm text-[color:var(--txt-3,#7c8aa5)]">
+                    vibe-start.com/p/
+                  </span>
+                  <input
+                    className="min-w-0 flex-1 bg-transparent text-sm outline-none"
+                    value={slug}
+                    spellCheck={false}
+                    autoCapitalize="none"
+                    placeholder="my-page"
+                    onChange={(e) =>
+                      setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))
+                    }
+                  />
+                </div>
+                <span className="field-hint">{t('publish.slugHint')}</span>
+                {slugCheck && !slugCheck.ok && (
+                  <span className="text-xs text-red-400">
+                    {t(`publish.${SLUG_MSG[slugCheck.reason]}`)}
+                  </span>
+                )}
+              </label>
+              <button
+                className="btn-primary w-full justify-center py-2.5"
+                disabled={pubStatus === 'publishing' || slug.length === 0}
+                onClick={publish}
+              >
+                {pubStatus === 'publishing' ? t('publish.publishing') : t('publish.publishBtn')}
+              </button>
+              {pubError && <p className="text-center text-xs text-red-400">{pubError}</p>}
+            </div>
+          </>
+        ) : (
+          <div className="card text-center">
+            <h1 className="text-2xl font-bold tracking-tight">{t('publish.successTitle')}</h1>
+            <div className="mt-2 rounded-lg border border-[color:var(--glass-ctl-border,#2a3550)] bg-[color:var(--glass-ctl-bg,#0e1422)] px-3 py-3">
+              <span className="field-label">{t('publish.liveLabel')}</span>
+              <code className="mt-1 block break-all text-sm text-[color:#bae6fd]">{fullUrl}</code>
+            </div>
+            <div className="mt-3 flex gap-2">
+              <button
+                className="btn-ghost flex-1 justify-center py-2"
+                onClick={() => {
+                  void navigator.clipboard?.writeText(fullUrl);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 1500);
+                }}
+              >
+                {copied ? t('publish.copied') : t('publish.copy')}
+              </button>
+              <a
+                className="btn-ghost flex-1 justify-center py-2"
+                href={pubPath ?? '#'}
+                target="_blank"
+                rel="noopener"
+              >
+                {t('publish.open')}
+              </a>
+            </div>
+            <p className="field-hint mt-3">{t('publish.tempNote')}</p>
+            <Link href="/login" className="btn-primary mt-3 w-full justify-center py-2.5">
+              {t('publish.keepCta')}
+            </Link>
+            <button
+              className="btn-ghost mt-2 w-full justify-center py-2"
+              onClick={() => setStep('graduate')}
+            >
+              {t('publish.growCta')}
+            </button>
+          </div>
+        )}
       </div>
     );
   }
@@ -176,9 +342,9 @@ export function BuildWizard() {
           <button
             type="button"
             className="btn-primary w-full justify-center py-2.5 text-sm"
-            onClick={() => setStep('graduate')}
+            onClick={goPublish}
           >
-            {t('graduate.cta')}
+            {t('publish.enterCta')}
           </button>
         </div>
       </section>

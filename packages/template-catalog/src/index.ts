@@ -10,6 +10,7 @@ export {
   todoTemplate,
 } from './templates';
 export { renderTemplate, escapeHtml, contactHref } from './render';
+export { sanitizeTemplateValues, MAX_FIELD_LEN } from './sanitize';
 
 export const templateRegistry: ReadonlyMap<string, TemplateDefinition> = new Map(
   templates.map((t) => [t.id, t]),

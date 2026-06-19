@@ -46,8 +46,31 @@
     }
   },
   "Start": {
+    "publish": {
+      "enterCta": "发布到网上 →",
+      "back": "← 返回预览",
+      "title": "定好地址，发布上线",
+      "slugLabel": "我的页面地址",
+      "slugHint": "小写字母·数字·连字符，3–32 个字符",
+      "invalid": "请检查地址格式",
+      "reserved": "该地址不可用",
+      "tooShort": "太短了（至少3个字符）",
+      "tooLong": "太长了（最多32个字符）",
+      "publishBtn": "发布到网上",
+      "publishing": "发布中…",
+      "errorTaken": "该地址已被占用，请换一个。",
+      "errorGeneric": "出了点问题，请重试。",
+      "errorRate": "太快了，请稍后再试。",
+      "successTitle": "🎉 已经上线啦！",
+      "liveLabel": "我的页面地址",
+      "copy": "复制链接",
+      "copied": "已复制！",
+      "open": "在新标签页打开",
+      "tempNote": "现在只保留24小时。注册后就不会消失，永久保存。",
+      "keepCta": "注册以永久保存",
+      "growCta": "继续做大 →"
+    },
     "graduate": {
-      "cta": "喜欢的话，做成真正属于你的 →",
       "back": "← 返回预览",
       "title": "现在，做成真正属于你的",
       "manifesto": "别处付了钱也带不走。在这里，哪怕免费，连代码都完全是你的。",

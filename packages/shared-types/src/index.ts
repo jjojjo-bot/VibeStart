@@ -7,6 +7,7 @@ export * from './diagnosis.types';
 
 // B′ — 첫성공 브라우저 페이지 빌더
 export * from './template.types';
+export * from './published-page.types';
 
 // Phase 2 — 사용자/프로젝트 도메인
 export * from './auth.types';
