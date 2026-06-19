@@ -92,7 +92,9 @@ export function BuildWizard() {
 
   async function publish(): Promise<void> {
     if (!template) return;
-    const v = validateSlug(slug);
+    const clean = normalizeSlug(slug); // 대문자·공백·잘못된 문자 정리
+    if (clean !== slug) setSlug(clean);
+    const v = validateSlug(clean);
     if (!v.ok) {
       setPubError(t(`publish.${SLUG_MSG[v.reason]}`));
       return;
@@ -103,13 +105,13 @@ export function BuildWizard() {
       const res = await fetch('/api/publish', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ slug, templateId: template.id, values: mergedValues(template) }),
+        body: JSON.stringify({ slug: clean, templateId: template.id, values: mergedValues(template) }),
       });
       const data = (await res.json()) as { ok: boolean; path?: string; reason?: string };
       if (data.ok && data.path) {
         setPubPath(data.path);
         setPubStatus('done');
-        setPendingClaimCookie(slug);
+        setPendingClaimCookie(clean);
       } else {
         setPubStatus('error');
         setPubError(
@@ -189,9 +191,10 @@ export function BuildWizard() {
                     spellCheck={false}
                     autoCapitalize="none"
                     placeholder="my-page"
-                    onChange={(e) =>
-                      setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, ''))
-                    }
+                    // 매 키마다 strip하면 한글 IME 조합이 깨져 숫자만 남는다.
+                    // 소문자화만 하고(영문은 IME 비대상이라 안전), 정리는 onBlur·발행 시 normalize.
+                    onChange={(e) => setSlug(e.target.value.toLowerCase())}
+                    onBlur={(e) => setSlug(normalizeSlug(e.target.value))}
                   />
                 </div>
                 <span className="field-hint">{t('publish.slugHint')}</span>

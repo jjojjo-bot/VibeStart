@@ -14,6 +14,8 @@
     "unknownTitle": "We'll help you with this one directly",
     "unknownBody": "Copy the text below and send it to us, and we'll get you an answer. You're not stuck here — your progress is saved.",
     "copyBundle": "Copy the details",
+    "editAgain": "Edit and retry",
+    "startOver": "Start over",
     "remedy": {
       "scriptInstruction": "Copy this and paste it into your terminal:",
       "reboot": "Restart your computer, then press [Check again].",

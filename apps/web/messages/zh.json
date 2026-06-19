@@ -14,6 +14,8 @@
     "unknownTitle": "这个我们直接帮你",
     "unknownBody": "复制下面的内容发给我们，我们会给你答复。你不会卡在这里——进度已保存。",
     "copyBundle": "复制内容",
+    "editAgain": "重新输入",
+    "startOver": "从头开始",
     "remedy": {
       "scriptInstruction": "复制这段并粘贴到终端：",
       "reboot": "重启电脑后，点击 [再次检查]。",

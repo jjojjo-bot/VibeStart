@@ -14,6 +14,8 @@
     "unknownTitle": "Con esto te ayudamos directamente",
     "unknownBody": "Copia el texto de abajo y envíanoslo, y te daremos una respuesta. No te quedas atascado aquí: tu progreso está guardado.",
     "copyBundle": "Copiar los detalles",
+    "editAgain": "Editar y reintentar",
+    "startOver": "Empezar de nuevo",
     "remedy": {
       "scriptInstruction": "Copia esto y pégalo en tu terminal:",
       "reboot": "Reinicia tu computadora y luego pulsa [Comprobar de nuevo].",

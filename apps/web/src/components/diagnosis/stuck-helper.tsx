@@ -154,6 +154,29 @@ export function StuckHelper({ step }: StuckHelperProps) {
     );
   }
 
+  // 막다른 길 방지 — 붙여넣은 글을 유지한 채 수정/재시도하거나 처음으로 돌아간다.
+  function renderRetryNav() {
+    return (
+      <div className="flex flex-wrap items-center gap-3">
+        <button
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+          onClick={() => setPhase('paste')}
+        >
+          {t('editAgain')}
+        </button>
+        <button
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors"
+          onClick={() => {
+            reset();
+            setPhase('idle');
+          }}
+        >
+          {t('startOver')}
+        </button>
+      </div>
+    );
+  }
+
   function renderUnknown() {
     return (
       <div className="flex flex-col gap-3">
@@ -162,9 +185,12 @@ export function StuckHelper({ step }: StuckHelperProps) {
         <pre className="max-h-40 overflow-auto whitespace-pre-wrap rounded-lg border border-zinc-800 bg-zinc-950 p-3 text-xs text-zinc-400">
           {bundleText()}
         </pre>
-        <Button size="sm" onClick={handleCopyBundle}>
-          {bundleCopied ? c('copied') : t('copyBundle')}
-        </Button>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button size="sm" onClick={handleCopyBundle}>
+            {bundleCopied ? c('copied') : t('copyBundle')}
+          </Button>
+          {renderRetryNav()}
+        </div>
       </div>
     );
   }
@@ -194,6 +220,7 @@ export function StuckHelper({ step }: StuckHelperProps) {
               </Button>
             ))}
           </div>
+          {renderRetryNav()}
         </div>
       );
     }

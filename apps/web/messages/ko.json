@@ -14,6 +14,8 @@
     "unknownTitle": "이건 저희가 직접 도와드릴게요",
     "unknownBody": "아래 내용을 복사해서 보내주시면 답을 드릴게요. 여기서 안 멈춰요 — 진행상황은 저장돼 있어요.",
     "copyBundle": "내용 복사하기",
+    "editAgain": "다시 입력하기",
+    "startOver": "처음으로",
     "remedy": {
       "scriptInstruction": "이걸 복사해서 터미널에 붙여넣으세요:",
       "reboot": "컴퓨터를 껐다 켠 다음, [다시 확인]을 눌러주세요.",
