@@ -503,6 +503,12 @@
     }
   },
   "SetupSteps": {
+    "preflight": {
+      "title": "내 PC 준비 확인",
+      "description": "설치를 시작하기 전에, 이 PC가 준비됐는지 30초만 확인해요",
+      "whyNeeded": "WSL 설치는 관리자 권한과 비교적 최신 Windows가 필요해요. 미리 확인하면 중간에 막히는 일을 크게 줄일 수 있어요.",
+      "detailedGuide": "아래를 복사해 PowerShell에 붙여넣으세요. [OK]가 모두 뜨면 다음 단계로 가세요.\n[X] 관리자 아님 → PowerShell을 닫고, 시작 메뉴에서 PowerShell을 마우스 오른쪽 → '관리자 권한으로 실행'으로 다시 연 뒤 붙여넣으세요.\n[X] Windows 버전 → 설정 → Windows 업데이트에서 최신으로 업데이트한 뒤 다시 확인하세요."
+    },
     "terminal": {
       "title": "터미널 열기",
       "description": "명령어를 실행할 창을 열어주세요",

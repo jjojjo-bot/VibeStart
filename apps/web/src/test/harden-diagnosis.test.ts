@@ -106,6 +106,18 @@ describe('라운드트립: 하드닝 마커 → DiagnosisMatcher', () => {
     }
   });
 
+  it('pre-flight 관리자 실패 마커(code=needs-admin) → needs-admin 인식', () => {
+    const outcome = defaultDiagnosisMatcher.diagnose({
+      output: `[X] Not Administrator\n${MARKER_PREFIX}::step=preflight::result=fail::code=needs-admin`,
+      step: 'preflight',
+    });
+    expect(outcome.kind).toBe('recognized');
+    if (outcome.kind === 'recognized') {
+      expect(outcome.hit.rule.id).toBe('needs-admin');
+      expect(outcome.hit.matchedOn).toBe('marker');
+    }
+  });
+
   it('ok 마커는 실패 코드가 없어 어떤 실패 규칙에도 걸리지 않는다', () => {
     const outcome = defaultDiagnosisMatcher.diagnose({
       output: `${MARKER_PREFIX}::step=wsl-install::result=ok`,
@@ -134,6 +146,21 @@ describe('getSetupSteps — 하드닝 배선', () => {
       (s) => s.id === 'terminal',
     );
     expect(terminal?.script).toBe('');
+  });
+
+  it('windows: pre-flight가 wsl보다 먼저이고 self-emit 마커를 가진다(이중 하드닝 없음)', () => {
+    const steps = getSetupSteps('windows', 'web-nextjs', 'myapp', tStub);
+    const pfIdx = steps.findIndex((s) => s.id === 'preflight');
+    const wslIdx = steps.findIndex((s) => s.id === 'wsl');
+    expect(pfIdx).toBeGreaterThanOrEqual(0);
+    expect(pfIdx).toBeLessThan(wslIdx); // wsl --install 전에 점검
+    const pf = steps[pfIdx]!;
+    expect(diagnosisStepFor(pf)).toBe('preflight');
+    expect(pf.script).toContain(`${MARKER_PREFIX}::step=preflight::result=ok`);
+    expect(pf.script).toContain('"needs-admin"'); // 관리자 실패 시 마커 code
+    expect(pf.script).toContain(`${MARKER_PREFIX}::step=preflight::result=fail::code=$code`);
+    // self-emit이므로 하드닝 래퍼($LASTEXITCODE 한 줄)가 덧붙지 않아야 한다
+    expect(pf.script).not.toContain('$LASTEXITCODE');
   });
 
   it('Windows editor(내부 exit 분기)는 하드닝하지 않는다 — 마커 미부착', () => {

@@ -144,18 +144,20 @@ export const diagnosisRules: DiagnosisRule[] = [
     remedy: { kind: 'script', remedyKey: 'npm-user-prefix' },
     verifyStep: 'claude-install',
   },
-  // R8-b · 관리자 권한 필요 (PowerShell)
+  // R8-b · 관리자 권한 필요 (PowerShell) — pre-flight 사전점검 포함
   {
     id: 'needs-admin',
     match: {
+      markerCodes: ['needs-admin'],
       signatures: [
         'requires administrator',
         'run this command as an administrator',
         'elevated permissions',
         'requires elevation',
         'the requested operation requires elevation',
+        'not administrator - reopen powershell as administrator',
       ],
-      steps: ['wsl-install'],
+      steps: ['preflight', 'wsl-install'],
     },
     confidence: 'high',
     causeKey: 'cause.needs-admin',

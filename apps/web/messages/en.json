@@ -503,6 +503,12 @@
     }
   },
   "SetupSteps": {
+    "preflight": {
+      "title": "Check your PC is ready",
+      "description": "Before installing, a 30-second check that this PC is ready",
+      "whyNeeded": "Installing WSL needs Administrator rights and a fairly recent Windows. Checking first avoids getting stuck midway.",
+      "detailedGuide": "Copy the script below into PowerShell. If you see all [OK], move to the next step.\n[X] Not Administrator → close PowerShell, then in the Start menu right-click PowerShell → 'Run as administrator' and paste again.\n[X] Windows build → update via Settings → Windows Update, then re-check."
+    },
     "terminal": {
       "title": "Open Terminal",
       "description": "Open a window to run commands",

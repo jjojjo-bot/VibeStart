@@ -503,6 +503,12 @@
     }
   },
   "SetupSteps": {
+    "preflight": {
+      "title": "检查电脑是否就绪",
+      "description": "开始安装前，用30秒确认这台电脑是否就绪",
+      "whyNeeded": "安装 WSL 需要管理员权限和较新的 Windows。先检查可以大大减少中途卡住。",
+      "detailedGuide": "把下面的脚本复制到 PowerShell。若全部显示 [OK]，进入下一步。\n[X] 非管理员 → 关闭 PowerShell，在开始菜单右键 PowerShell →“以管理员身份运行”，再粘贴。\n[X] Windows 版本 → 在 设置 → Windows 更新 中更新到最新，然后重新检查。"
+    },
     "terminal": {
       "title": "打开终端",
       "description": "打开执行命令的窗口",

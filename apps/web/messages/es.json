@@ -503,6 +503,12 @@
     }
   },
   "SetupSteps": {
+    "preflight": {
+      "title": "Comprueba que tu PC está listo",
+      "description": "Antes de instalar, una comprobación de 30 segundos de que este PC está listo",
+      "whyNeeded": "Instalar WSL necesita permisos de Administrador y un Windows bastante reciente. Comprobarlo antes evita quedarte atascado a mitad.",
+      "detailedGuide": "Copia el script de abajo en PowerShell. Si ves todos [OK], pasa al siguiente paso.\n[X] No Administrador → cierra PowerShell y, en el menú Inicio, clic derecho en PowerShell → 'Ejecutar como administrador' y pega de nuevo.\n[X] Versión de Windows → actualiza en Configuración → Windows Update y vuelve a comprobar."
+    },
     "terminal": {
       "title": "Abrir la terminal",
       "description": "Abre la ventana donde ejecutarás los comandos",

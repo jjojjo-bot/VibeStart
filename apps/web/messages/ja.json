@@ -503,6 +503,12 @@
     }
   },
   "SetupSteps": {
+    "preflight": {
+      "title": "PCの準備チェック",
+      "description": "インストール前に、このPCが準備OKか30秒だけ確認します",
+      "whyNeeded": "WSLのインストールには管理者権限と比較的新しいWindowsが必要です。先に確認すると途中で詰まるのを防げます。",
+      "detailedGuide": "下をコピーしてPowerShellに貼り付けてください。すべて[OK]なら次へ進みます。\n[X] 管理者でない → PowerShellを閉じ、スタートメニューでPowerShellを右クリック →「管理者として実行」で開き直して貼り付けてください。\n[X] Windowsバージョン → 設定 → Windows Updateで最新に更新してから再確認してください。"
+    },
     "terminal": {
       "title": "ターミナルを開く",
       "description": "コマンドを実行するウィンドウを開いてください",

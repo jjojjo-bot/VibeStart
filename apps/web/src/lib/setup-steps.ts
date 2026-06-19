@@ -81,6 +81,36 @@ function terminalGuide(os: OS, t: T): SetupStep {
 
 // ─── Windows (WSL2) 플로우 ───
 
+/**
+ * pre-flight — wsl --install 전에 막힐 요인을 먼저 잡는다(관리자 권한·Windows 버전).
+ * 스스로 preflight 마커를 방출하므로 하드닝 대상이 아니다(hardenShellFor에서 제외).
+ * 관리자 실패는 code=needs-admin → 진단의 needs-admin 규칙(run-as-admin 가이드)으로 연결.
+ */
+function windowsPreflightStep(t: T): SetupStep {
+  const script = [
+    "$ok = $true; $code = ''",
+    'if (([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) { Write-Host "[OK] Administrator" } else { Write-Host "[X] Not Administrator - reopen PowerShell as Administrator"; $ok = $false; $code = "needs-admin" }',
+    "$build = [int][Environment]::OSVersion.Version.Build",
+    'if ($build -ge 19041) { Write-Host "[OK] Windows build $build" } else { Write-Host "[X] Windows build $build - need 19041+, run Windows Update"; $ok = $false; if (-not $code) { $code = "winver" } }',
+    'if ($ok) { Write-Output "VIBESTART::step=preflight::result=ok" } else { Write-Output "VIBESTART::step=preflight::result=fail::code=$code" }',
+  ].join("\n");
+
+  return {
+    id: "preflight",
+    title: t("preflight.title"),
+    description: t("preflight.description"),
+    whyNeeded: t("preflight.whyNeeded"),
+    group: "envPrep",
+    diagnosisStep: "preflight",
+    environment: t("environments.windowsCmd"),
+    detailedGuide: t("preflight.detailedGuide"),
+    script,
+    resultPreview: `[OK] Administrator
+[OK] Windows build 22631
+VIBESTART::step=preflight::result=ok`,
+  };
+}
+
 function wslInstallStep(t: T): SetupStep {
   return {
     id: "wsl",
@@ -1040,6 +1070,7 @@ export function getSetupSteps(
 
   if (os === "windows") {
     // 환경 준비
+    steps.push(windowsPreflightStep(t));
     steps.push(wslInstallStep(t));
     steps.push(wslOpenStep(t));
 

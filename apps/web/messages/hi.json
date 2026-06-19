@@ -503,6 +503,12 @@
     }
   },
   "SetupSteps": {
+    "preflight": {
+      "title": "जाँचें कि आपका PC तैयार है",
+      "description": "इंस्टॉल से पहले, 30 सेकंड की जाँच कि यह PC तैयार है",
+      "whyNeeded": "WSL इंस्टॉल के लिए Administrator अधिकार और अपेक्षाकृत नया Windows चाहिए। पहले जाँचने से बीच में अटकना कम होता है।",
+      "detailedGuide": "नीचे का स्क्रिप्ट कॉपी करके PowerShell में पेस्ट करें। सभी [OK] दिखें तो अगले चरण पर जाएँ।\n[X] Administrator नहीं → PowerShell बंद करें, Start मेनू में PowerShell पर राइट-क्लिक → 'Run as administrator' से खोलकर फिर पेस्ट करें।\n[X] Windows वर्शन → Settings → Windows Update में अपडेट करके फिर जाँचें।"
+    },
     "terminal": {
       "title": "टर्मिनल खोलें",
       "description": "कमांड चलाने के लिए विंडो खोलें",
