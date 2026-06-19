@@ -18,6 +18,7 @@ import { cookies } from "next/headers";
 import { createSupabaseAuthAdapter } from "@/lib/auth/supabase-auth.adapter";
 import { routing } from "@/i18n/routing";
 import { PHASE1_DATA_COOKIE } from "@/lib/auth/phase1-cookie";
+import { claimPendingPublishForUser } from "@/lib/publish/claim-pending";
 
 const VALID_GOALS = [
   "web-nextjs",
@@ -50,7 +51,9 @@ export async function GET(request: NextRequest): Promise<Response> {
 
   try {
     const adapter = createSupabaseAuthAdapter();
-    await adapter.exchangeCode(code);
+    const user = await adapter.exchangeCode(code);
+    // 익명 발행해 둔 페이지가 있으면 이 사용자로 영구 claim(실패는 조용히 무시).
+    await claimPendingPublishForUser(user.id);
   } catch (err) {
     errorUrl.searchParams.set(
       "error",

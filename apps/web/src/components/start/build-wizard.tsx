@@ -103,6 +103,9 @@ export function BuildWizard() {
       if (data.ok && data.path) {
         setPubPath(data.path);
         setPubStatus('done');
+        // 가입 시 이 페이지를 영구 claim하도록 pending slug를 쿠키에 심는다
+        // (서버: lib/publish/claim-pending.ts의 PENDING_CLAIM_COOKIE와 동일 이름).
+        document.cookie = `vs_pending_claim=${slug}; path=/; max-age=1800; SameSite=Lax`;
       } else {
         setPubStatus('error');
         setPubError(
