@@ -30,6 +30,17 @@ export function BuildWizard() {
     setValues((prev) => ({ ...prev, [key]: v }));
   }
 
+  // 라벨/placeholder는 템플릿별 오버라이드(templates.{id}.fields.{key})가 있으면 그걸,
+  // 없으면 전역(fields.{key})을 쓴다. (예: 투두 body = "할 일 목록", "자세한 소개" 아님)
+  function fieldText(
+    tpl: TemplateDefinition,
+    key: TemplateFieldKey,
+    part: 'label' | 'placeholder',
+  ): string {
+    const override = `templates.${tpl.id}.fields.${key}.${part}`;
+    return t.has(override) ? t(override) : t(`fields.${key}.${part}`);
+  }
+
   // 빈 칸은 샘플로 채워 미리보기가 항상 그럴듯하게 보이도록 한다.
   function previewHtml(tpl: TemplateDefinition): string {
     const merged: TemplateValues = {};
@@ -83,12 +94,12 @@ export function BuildWizard() {
         <div className="card-body flex flex-col gap-4">
           {template.fields.map((key) => (
             <label key={key} className="field">
-              <span className="field-label">{t(`fields.${key}.label`)}</span>
+              <span className="field-label">{fieldText(template, key, 'label')}</span>
               {FIELD_KINDS[key] === 'textarea' ? (
                 <textarea
                   className="textarea"
                   value={values[key] ?? ''}
-                  placeholder={t(`fields.${key}.placeholder`)}
+                  placeholder={fieldText(template, key, 'placeholder')}
                   onChange={(e) => setField(key, e.target.value)}
                 />
               ) : (
@@ -96,7 +107,7 @@ export function BuildWizard() {
                   className="input"
                   type="text"
                   value={values[key] ?? ''}
-                  placeholder={t(`fields.${key}.placeholder`)}
+                  placeholder={fieldText(template, key, 'placeholder')}
                   onChange={(e) => setField(key, e.target.value)}
                 />
               )}

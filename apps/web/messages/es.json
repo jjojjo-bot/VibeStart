@@ -6,7 +6,6 @@
     "pasteHelp": "Para copiar: selecciona el texto en la terminal y haz clic derecho (o Ctrl+Shift+C)",
     "submit": "Pegar y obtener ayuda",
     "cancel": "Cancelar",
-    "foundProblem": "Esto es lo que probablemente falló",
     "chooseTitle": "Probablemente sea uno de estos. Elige el más parecido:",
     "recheck": "Comprobar de nuevo",
     "stillBroken": "Sigue sin funcionar",
@@ -17,10 +16,8 @@
     "copyBundle": "Copiar los detalles",
     "remedy": {
       "scriptInstruction": "Copia esto y pégalo en tu terminal:",
-      "guidePlaceholder": "Pronto habrá una guía visual. (guía: {key})",
       "reboot": "Reinicia tu computadora y luego pulsa [Comprobar de nuevo].",
-      "newShell": "Cierra la terminal por completo y ábrela en una ventana nueva, luego [Comprobar de nuevo].",
-      "askPrompt": "¿Cuál de estos se acerca más a tu caso?"
+      "newShell": "Cierra la terminal por completo y ábrela en una ventana nueva, luego [Comprobar de nuevo]."
     },
     "cause": {
       "virtualization-off": "La función de 'virtualización' de tu computadora está desactivada. Solo tienes que activarla una vez en la configuración.",
@@ -60,8 +57,24 @@
     "templates": {
       "intro": { "title": "Una página sobre mí", "desc": "CV · perfil · enlaces" },
       "shop": { "title": "Tienda o taller", "desc": "Menú · ubicación · reservas" },
-      "invitation": { "title": "Invitación", "desc": "Boda · cumpleaños · inauguración" },
-      "todo": { "title": "Tareas · Lista", "desc": "App de tareas diarias" }
+      "invitation": {
+        "title": "Invitación",
+        "desc": "Boda · cumpleaños · inauguración",
+        "fields": {
+          "title": { "label": "Título", "placeholder": "Ej.: Jiyeong ♥ Minsu" },
+          "tagline": { "label": "Saludo", "placeholder": "Ej.: Acompáñanos el día en que nos unimos" },
+          "body": { "label": "Fecha · lugar · detalles", "placeholder": "Ej.: Sáb, 12 sep 2026, 14:00\nSalón ○○" }
+        }
+      },
+      "todo": {
+        "title": "Tareas · Lista",
+        "desc": "App de tareas diarias",
+        "fields": {
+          "title": { "label": "Nombre de la lista", "placeholder": "Ej.: Tareas de hoy" },
+          "tagline": { "label": "Subtítulo", "placeholder": "Ej.: Organiza el día sin agobios" },
+          "body": { "label": "Tareas (una por línea)", "placeholder": "Comprar víveres\nEntrenar 30 min\nLeer un libro" }
+        }
+      }
     },
     "fields": {
       "title": { "label": "Título", "placeholder": "ej.: Repostería de fin de semana de Jiyeong" },
@@ -83,7 +96,7 @@
         "contact": "Reservas por Instagram @ongi.bakery"
       },
       "invitation": {
-        "title": "Jiyeong ♥ Minsu se casan",
+        "title": "Jiyeong ♥ Minsu",
         "tagline": "Acompáñanos el día en que dos se vuelven uno",
         "body": "Sábado 12 de septiembre de 2026, 14:00\nSalón de bodas Algún Lugar, 3.ª planta\nDetalles: directamente a la pareja"
       },

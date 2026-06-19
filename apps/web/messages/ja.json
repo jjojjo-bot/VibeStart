@@ -6,7 +6,6 @@
     "pasteHelp": "コピー方法：ターミナルで文字をドラッグし、右クリック（または Ctrl+Shift+C）",
     "submit": "貼り付けて助けを得る",
     "cancel": "キャンセル",
-    "foundProblem": "おそらくこれが原因です",
     "chooseTitle": "おそらく次のいずれかです。近いものを選んでください：",
     "recheck": "もう一度確認",
     "stillBroken": "それでもうまくいきません",
@@ -17,10 +16,8 @@
     "copyBundle": "内容をコピー",
     "remedy": {
       "scriptInstruction": "これをコピーしてターミナルに貼り付けてください：",
-      "guidePlaceholder": "図解ガイドは近日追加予定です。（ガイド：{key}）",
       "reboot": "パソコンを再起動してから、[もう一度確認] を押してください。",
-      "newShell": "ターミナルを完全に閉じて新しいウィンドウで開き直し、その後 [もう一度確認]。",
-      "askPrompt": "次のうち、どちらに近いですか？"
+      "newShell": "ターミナルを完全に閉じて新しいウィンドウで開き直し、その後 [もう一度確認]。"
     },
     "cause": {
       "virtualization-off": "パソコンの「仮想化」機能がオフになっています。設定で一度オンにするだけです。",
@@ -60,8 +57,24 @@
     "templates": {
       "intro": { "title": "自己紹介ページ", "desc": "経歴・プロフィール・リンク" },
       "shop": { "title": "お店・工房の紹介", "desc": "メニュー・場所・予約案内" },
-      "invitation": { "title": "招待状", "desc": "結婚式・誕生日・新居祝い" },
-      "todo": { "title": "To-Do・チェックリスト", "desc": "タスク管理アプリ" }
+      "invitation": {
+        "title": "招待状",
+        "desc": "結婚式・誕生日・新居祝い",
+        "fields": {
+          "title": { "label": "タイトル", "placeholder": "例: ジヨン ♥ ミンス" },
+          "tagline": { "label": "ひとことご挨拶", "placeholder": "例: 二人が夫婦になる日、ぜひお越しください" },
+          "body": { "label": "日時・場所・ご案内", "placeholder": "例: 2026年9月12日（土）午後2時\n○○ウェディングホール" }
+        }
+      },
+      "todo": {
+        "title": "To-Do・チェックリスト",
+        "desc": "タスク管理アプリ",
+        "fields": {
+          "title": { "label": "リスト名", "placeholder": "例: 今日のやること" },
+          "tagline": { "label": "サブタイトル", "placeholder": "例: 一日を軽く整理しましょう" },
+          "body": { "label": "やること（1行に1つ）", "placeholder": "買い物\n運動30分\n読書" }
+        }
+      }
     },
     "fields": {
       "title": { "label": "タイトル", "placeholder": "例: ジヨンの週末ベーキング" },
@@ -83,7 +96,7 @@
         "contact": "予約はインスタ @ongi.bakery"
       },
       "invitation": {
-        "title": "ジヨン ♥ ミンス 結婚します",
+        "title": "ジヨン ♥ ミンス",
         "tagline": "二人が夫婦になる日、ぜひご一緒に",
         "body": "2026年9月12日（土）午後2時\nどこかウェディングホール 3階\nお祝いは新郎新婦へ直接"
       },

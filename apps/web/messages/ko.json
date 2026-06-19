@@ -6,7 +6,6 @@
     "pasteHelp": "복사: 터미널에서 글자를 드래그한 뒤 마우스 우클릭 (또는 Ctrl+Shift+C)",
     "submit": "붙여넣고 도움받기",
     "cancel": "취소",
-    "foundProblem": "이 문제인 것 같아요",
     "chooseTitle": "이 중 하나일 거예요. 가까운 걸 골라주세요:",
     "recheck": "다시 확인",
     "stillBroken": "그래도 안 돼요",
@@ -17,10 +16,8 @@
     "copyBundle": "내용 복사하기",
     "remedy": {
       "scriptInstruction": "이걸 복사해서 터미널에 붙여넣으세요:",
-      "guidePlaceholder": "그림 가이드가 곧 추가됩니다. (가이드: {key})",
       "reboot": "컴퓨터를 껐다 켠 다음, [다시 확인]을 눌러주세요.",
-      "newShell": "터미널을 완전히 닫고 새 창으로 다시 열어주세요. 그다음 [다시 확인].",
-      "askPrompt": "둘 중 어느 쪽에 가까운가요?"
+      "newShell": "터미널을 완전히 닫고 새 창으로 다시 열어주세요. 그다음 [다시 확인]."
     },
     "cause": {
       "virtualization-off": "컴퓨터의 '가상화' 기능이 꺼져 있어요. 설정에서 한 번만 켜면 돼요.",
@@ -60,8 +57,24 @@
     "templates": {
       "intro": { "title": "나를 소개하는 페이지", "desc": "이력·프로필·링크" },
       "shop": { "title": "가게·공방 소개", "desc": "메뉴·위치·예약 안내" },
-      "invitation": { "title": "초대장", "desc": "청첩장·생일·집들이" },
-      "todo": { "title": "투두 · 체크리스트", "desc": "할 일 관리 앱" }
+      "invitation": {
+        "title": "초대장",
+        "desc": "청첩장·생일·집들이",
+        "fields": {
+          "title": { "label": "제목", "placeholder": "예: 지영 ♥ 민수" },
+          "tagline": { "label": "인사 한 줄", "placeholder": "예: 두 사람이 부부가 되는 날, 함께해 주세요" },
+          "body": { "label": "날짜·장소·안내", "placeholder": "예: 2026년 9월 12일 토요일 오후 2시\n○○ 웨딩홀" }
+        }
+      },
+      "todo": {
+        "title": "투두 · 체크리스트",
+        "desc": "할 일 관리 앱",
+        "fields": {
+          "title": { "label": "목록 이름", "placeholder": "예: 오늘 할 일" },
+          "tagline": { "label": "부제", "placeholder": "예: 하루를 가볍게 정리해요" },
+          "body": { "label": "할 일 (한 줄에 하나씩)", "placeholder": "장보기\n운동 30분\n책 읽기" }
+        }
+      }
     },
     "fields": {
       "title": { "label": "제목", "placeholder": "예: 지영의 주말 베이킹" },
@@ -83,7 +96,7 @@
         "contact": "예약 인스타 @ongi.bakery"
       },
       "invitation": {
-        "title": "지영 ♥ 민수 결혼합니다",
+        "title": "지영 ♥ 민수",
         "tagline": "두 사람이 부부가 되는 날, 함께해 주세요",
         "body": "2026년 9월 12일 토요일 오후 2시\n어딘가 웨딩홀 3층\n마음 전하실 곳: 신랑신부에게 직접"
       },

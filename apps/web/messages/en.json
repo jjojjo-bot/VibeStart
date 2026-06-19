@@ -6,7 +6,6 @@
     "pasteHelp": "To copy: drag the text in the terminal, then right-click (or Ctrl+Shift+C)",
     "submit": "Paste and get help",
     "cancel": "Cancel",
-    "foundProblem": "Here's what likely went wrong",
     "chooseTitle": "It's probably one of these. Pick the closest:",
     "recheck": "Check again",
     "stillBroken": "Still not working",
@@ -17,10 +16,8 @@
     "copyBundle": "Copy the details",
     "remedy": {
       "scriptInstruction": "Copy this and paste it into your terminal:",
-      "guidePlaceholder": "A visual guide is coming soon. (guide: {key})",
       "reboot": "Restart your computer, then press [Check again].",
-      "newShell": "Fully close the terminal and open a new window, then [Check again].",
-      "askPrompt": "Which of these is closer to your case?"
+      "newShell": "Fully close the terminal and open a new window, then [Check again]."
     },
     "cause": {
       "virtualization-off": "Your computer's 'virtualization' feature is turned off. You just need to turn it on once in the settings.",
@@ -60,8 +57,24 @@
     "templates": {
       "intro": { "title": "A page about me", "desc": "Resume · profile · links" },
       "shop": { "title": "Shop or studio", "desc": "Menu · location · booking" },
-      "invitation": { "title": "Invitation", "desc": "Wedding · birthday · housewarming" },
-      "todo": { "title": "To-Do · Checklist", "desc": "Daily task app" }
+      "invitation": {
+        "title": "Invitation",
+        "desc": "Wedding · birthday · housewarming",
+        "fields": {
+          "title": { "label": "Title", "placeholder": "e.g. Jiyeong ♥ Minsu" },
+          "tagline": { "label": "Greeting line", "placeholder": "e.g. Join us on the day we become one" },
+          "body": { "label": "Date · place · details", "placeholder": "e.g. Sat, Sep 12, 2026, 2:00 PM\n○○ Wedding Hall" }
+        }
+      },
+      "todo": {
+        "title": "To-Do · Checklist",
+        "desc": "Daily task app",
+        "fields": {
+          "title": { "label": "List name", "placeholder": "e.g. Today's tasks" },
+          "tagline": { "label": "Subtitle", "placeholder": "e.g. A light plan for the day" },
+          "body": { "label": "To-dos (one per line)", "placeholder": "Buy groceries\nWork out 30 min\nRead a book" }
+        }
+      }
     },
     "fields": {
       "title": { "label": "Title", "placeholder": "e.g. Jiyeong's Weekend Baking" },
@@ -83,7 +96,7 @@
         "contact": "Book via Instagram @ongi.bakery"
       },
       "invitation": {
-        "title": "Jiyeong ♥ Minsu are getting married",
+        "title": "Jiyeong ♥ Minsu",
         "tagline": "Please join us on the day two become one",
         "body": "Saturday, September 12, 2026, 2:00 PM\nSomewhere Wedding Hall, 3rd floor\nGifts: directly to the couple"
       },
