@@ -1,5 +1,8 @@
 {
   "Diagnosis": {
+    "guideImage": {
+      "bios-virtualization": "BIOS 설정 화면 예시 — Virtualization Technology를 Enabled로 바꾸는 위치를 강조한 그림"
+    },
     "stuckButton": "😟 안 된 것 같아요",
     "pasteTitle": "터미널에 나온 마지막 화면을 통째로 복사해서 붙여넣어 주세요",
     "pastePlaceholder": "여기에 붙여넣기…",

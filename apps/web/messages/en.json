@@ -1,5 +1,8 @@
 {
   "Diagnosis": {
+    "guideImage": {
+      "bios-virtualization": "BIOS setup screen example — highlighting where to set Virtualization Technology to Enabled"
+    },
     "stuckButton": "😟 Something went wrong",
     "pasteTitle": "Copy the whole last screen from your terminal and paste it here",
     "pastePlaceholder": "Paste here…",

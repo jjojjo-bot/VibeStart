@@ -33,9 +33,15 @@ export interface DiagnosisMatch {
  * 복구 방법. 어느 경우든 '사전 작성된' 것만 가리킨다.
  * 붙여넣은 텍스트로 명령을 합성하지 않는다(allowlist).
  */
+/** 그림 가이드 참고 이미지(텍스트만으론 부족한 BIOS 등). alt는 i18n 키. */
+export interface GuideImage {
+  src: string;
+  altKey: string;
+}
+
 export type DiagnosisRemedy =
   | { kind: 'script'; remedyKey: string }
-  | { kind: 'guide'; guideKey: string }
+  | { kind: 'guide'; guideKey: string; image?: GuideImage }
   | { kind: 'reboot' }
   | { kind: 'newShell' }
   | { kind: 'ask'; questionKey: string; branchRuleIds: string[] };

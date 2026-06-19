@@ -1,5 +1,8 @@
 {
   "Diagnosis": {
+    "guideImage": {
+      "bios-virtualization": "Ejemplo de pantalla de BIOS — dónde poner Virtualization Technology en Enabled"
+    },
     "stuckButton": "😟 Algo salió mal",
     "pasteTitle": "Copia toda la última pantalla de tu terminal y pégala aquí",
     "pastePlaceholder": "Pega aquí…",

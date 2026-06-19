@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 520" role="img" font-family="'Courier New',ui-monospace,monospace">
+  <!-- 모니터 베젤 -->
+  <rect x="0" y="0" width="820" height="520" rx="14" fill="#0b1020"/>
+  <rect x="18" y="18" width="784" height="484" rx="6" fill="#0a2472"/>
+
+  <!-- 상단 타이틀 바 -->
+  <rect x="18" y="18" width="784" height="46" rx="6" fill="#143a9e"/>
+  <text x="40" y="48" fill="#e8eeff" font-size="20" font-weight="bold">BIOS / UEFI Setup &#8212; Advanced</text>
+  <text x="660" y="46" fill="#aac0ff" font-size="13">CPU Configuration</text>
+
+  <!-- 설정 행들 -->
+  <g font-size="18" fill="#cfe0ff">
+    <text x="46" y="118">Hyper-Threading</text>           <text x="560" y="118" fill="#9fb6e6">[Enabled]</text>
+    <text x="46" y="156">Intel(R) SpeedStep</text>         <text x="560" y="156" fill="#9fb6e6">[Enabled]</text>
+  </g>
+
+  <!-- 가상화 행: 강조(반전 막대 — 클래식 BIOS 선택 스타일) -->
+  <rect x="34" y="176" width="752" height="40" fill="#f4c430"/>
+  <text x="46" y="203" font-size="18" font-weight="bold" fill="#10204f">Intel(R) Virtualization Technology</text>
+  <text x="555" y="203" font-size="18" font-weight="bold" fill="#0a6b1f">[Enabled]</text>
+
+  <g font-size="18" fill="#cfe0ff">
+    <text x="46" y="254">VT-d</text>                       <text x="560" y="254" fill="#9fb6e6">[Enabled]</text>
+    <text x="46" y="292">Secure Boot</text>                <text x="560" y="292" fill="#9fb6e6">[Enabled]</text>
+  </g>
+
+  <!-- 콜아웃: 화살표 + 동그라미 + 한 줄 안내(언어중립 기호 위주) -->
+  <ellipse cx="600" cy="195" rx="78" ry="26" fill="none" stroke="#ff5a5a" stroke-width="3"/>
+  <path d="M600 250 q10 -25 0 -34" fill="none" stroke="#ff5a5a" stroke-width="3"/>
+  <path d="M600 216 l-7 14 l14 0 z" fill="#ff5a5a"/>
+  <rect x="470" y="300" width="296" height="62" rx="8" fill="#10204f" stroke="#ff5a5a" stroke-width="2"/>
+  <text x="486" y="326" font-size="15" fill="#ffd9d9" font-weight="bold">Set this to [Enabled]</text>
+  <text x="486" y="348" font-size="13" fill="#cfe0ff">AMD: "SVM Mode" &#183; Intel: "VT-x"</text>
+
+  <!-- 하단 내비게이션 힌트(실제 BIOS 푸터) -->
+  <rect x="18" y="448" width="784" height="54" rx="6" fill="#143a9e"/>
+  <text x="40" y="481" fill="#dce7ff" font-size="14">&#8593;&#8595; : Select Item&#160;&#160;&#160;&#160;Enter : Change&#160;&#160;&#160;&#160;F10 : Save &amp; Exit&#160;&#160;&#160;&#160;Esc : Exit</text>
+</svg>

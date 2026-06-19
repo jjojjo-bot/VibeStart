@@ -91,9 +91,20 @@ export function StuckHelper({ step }: StuckHelperProps) {
       }
       case 'guide':
         return (
-          <p className="whitespace-pre-line text-sm text-muted-foreground">
-            {t(`guide.${remedy.guideKey}`)}
-          </p>
+          <div className="flex flex-col gap-3">
+            <p className="whitespace-pre-line text-sm text-muted-foreground">
+              {t(`guide.${remedy.guideKey}`)}
+            </p>
+            {remedy.image && (
+              // 텍스트만으론 부족한 케이스(BIOS 등)의 그림 가이드.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={remedy.image.src}
+                alt={t(remedy.image.altKey)}
+                className="w-full max-w-xl rounded-lg border border-border/40"
+              />
+            )}
+          </div>
         );
       case 'reboot':
         return <p className="text-sm text-muted-foreground">{t('remedy.reboot')}</p>;

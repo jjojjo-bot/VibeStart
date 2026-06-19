@@ -1,5 +1,8 @@
 {
   "Diagnosis": {
+    "guideImage": {
+      "bios-virtualization": "BIOS सेटअप स्क्रीन का उदाहरण — Virtualization Technology को Enabled करने की जगह"
+    },
     "stuckButton": "😟 कुछ गड़बड़ हो गई",
     "pasteTitle": "टर्मिनल में दिखी आखिरी स्क्रीन को पूरा कॉपी करके यहाँ पेस्ट करें",
     "pastePlaceholder": "यहाँ पेस्ट करें…",

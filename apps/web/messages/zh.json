@@ -1,5 +1,8 @@
 {
   "Diagnosis": {
+    "guideImage": {
+      "bios-virtualization": "BIOS 设置界面示例 —— 标出把 Virtualization Technology 设为 Enabled 的位置"
+    },
     "stuckButton": "😟 好像出错了",
     "pasteTitle": "把终端里最后显示的整屏内容复制并粘贴到这里",
     "pastePlaceholder": "在此粘贴…",

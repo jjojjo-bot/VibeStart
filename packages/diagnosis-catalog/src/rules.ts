@@ -20,7 +20,11 @@ export const diagnosisRules: DiagnosisRule[] = [
     },
     confidence: 'high',
     causeKey: 'cause.virtualization-off',
-    remedy: { kind: 'guide', guideKey: 'bios-virtualization' },
+    remedy: {
+      kind: 'guide',
+      guideKey: 'bios-virtualization',
+      image: { src: '/diagnosis/bios-virtualization.svg', altKey: 'guideImage.bios-virtualization' },
+    },
     verifyStep: 'preflight',
   },
   // R2 · WSL 커널 오래됨
