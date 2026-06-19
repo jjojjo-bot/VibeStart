@@ -1014,7 +1014,9 @@ function hardenShellFor(stepId: string, os: OS): HardenShell | null {
     case "wsl":
       return "powershell";
     case "editor":
-      return os === "windows" ? "powershell" : "bash";
+      // Windows editor는 내부 if/elseif/exit(winget 없음 분기)이 있어 trailing 마커가
+      // 항상 실행되지 않고 exit이 붙여넣기 세션을 닫는다 → 하드닝 제외. mac은 깔끔한 체인.
+      return os === "windows" ? null : "bash";
     case "dev-tools-basic":
     case "dev-tools-nodejs":
     case "dev-tools":

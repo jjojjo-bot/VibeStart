@@ -136,6 +136,22 @@ describe('getSetupSteps — 하드닝 배선', () => {
     expect(terminal?.script).toBe('');
   });
 
+  it('Windows editor(내부 exit 분기)는 하드닝하지 않는다 — 마커 미부착', () => {
+    const editor = getSetupSteps('windows', 'web-nextjs', 'myapp', tStub).find(
+      (s) => s.id === 'editor',
+    );
+    expect(editor?.script).not.toContain(MARKER_PREFIX);
+    // 본래 자체 idempotency 가드는 유지
+    expect(editor?.script).toContain('Get-Command code');
+  });
+
+  it('mac editor(깔끔한 체인)는 bash 마커가 박힌다', () => {
+    const editor = getSetupSteps('macos', 'web-nextjs', 'myapp', tStub).find(
+      (s) => s.id === 'editor',
+    );
+    expect(editor?.script).toContain(`${MARKER_PREFIX}::step=tools-install::result=ok`);
+  });
+
   it('brew(envPrep)는 per-step 오버라이드로 tools-install 진단·마커를 쓴다', () => {
     const brew = getSetupSteps('macos', 'web-nextjs', 'myapp', tStub).find((s) => s.id === 'brew');
     expect(brew && diagnosisStepFor(brew)).toBe('tools-install');
