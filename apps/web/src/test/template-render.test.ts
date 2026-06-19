@@ -35,6 +35,7 @@ describe('contact CTA href', () => {
     expect(contactHref('예약·문의 010-1234-5678')).toBe('tel:01012345678');
     expect(contactHref('shop@example.com')).toBe('mailto:shop@example.com');
     expect(contactHref('https://example.com/x')).toBe('https://example.com/x');
+    expect(contactHref('예약 인스타 @ongi.bakery')).toBe('https://instagram.com/ongi.bakery');
     expect(contactHref('javascript:alert(1)')).toBeNull();
     expect(contactHref('놀러오세요')).toBeNull();
   });

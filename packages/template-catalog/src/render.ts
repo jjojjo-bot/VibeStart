@@ -13,7 +13,7 @@ export function escapeHtml(input: string): string {
 /**
  * 연락처 자유텍스트에서 안전한 href를 추출한다(없으면 null).
  * 스킴(mailto/tel/https)을 코드가 직접 구성하고 사용자 문자열을 스킴 자리에 쓰지 않으므로
- * `javascript:` 등 주입이 원천 불가능하다. 우선순위: 이메일 → URL → 전화.
+ * `javascript:` 등 주입이 원천 불가능하다. 우선순위: 이메일 → URL → 전화 → 인스타(@핸들).
  */
 export function contactHref(raw: string): string | null {
   const s = raw.trim();
@@ -23,6 +23,8 @@ export function contactHref(raw: string): string | null {
   if (url) return url[0];
   const digits = s.replace(/\D/g, '');
   if (digits.length >= 9 && digits.length <= 11) return `tel:${digits}`;
+  const ig = s.match(/(?:^|[\s,;])@([A-Za-z0-9._]{2,30})/);
+  if (ig) return `https://instagram.com/${ig[1]}`;
   return null;
 }
 
@@ -91,7 +93,7 @@ ${has('body') ? `<section class="info"><div class="panel">${body()}</div></secti
 .shop .hero{text-align:center;padding:clamp(72px,15vh,150px) 28px clamp(48px,8vh,84px)}
 .shop .hero h1{font-weight:800;font-size:clamp(2.6rem,8vw,4rem);line-height:1.12}
 .shop .hero .tagline{color:rgba(232,237,245,.8);font-size:clamp(1.1rem,3.4vw,1.5rem);margin-top:16px}
-.shop .hero .cta{display:inline-block;margin-top:32px;background:var(--accent);color:#fff;padding:15px 36px;border-radius:999px;font-weight:700;font-size:1.02rem;box-shadow:0 16px 36px -10px var(--accent)}
+.shop .hero .cta{display:inline-block;margin-top:32px;background:var(--accent);color:#fff;text-decoration:none;padding:15px 36px;border-radius:999px;font-weight:700;font-size:1.02rem;box-shadow:0 16px 36px -10px var(--accent)}
 .shop .cta[href]{cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
 .shop .cta[href]:hover{transform:translateY(-2px);box-shadow:0 22px 46px -10px var(--accent)}
 .shop .info{max-width:600px;margin:0 auto;padding:0 24px clamp(72px,12vh,120px)}
@@ -130,7 +132,7 @@ ${contactCta('contact')}
 .intro h1{font-weight:800;font-size:clamp(2.4rem,7vw,3.6rem);line-height:1.12}
 .intro .tagline{color:rgba(232,237,245,.78);font-size:clamp(1.05rem,3vw,1.4rem);margin-top:14px}
 .intro .body{margin-top:30px;font-size:1.06rem;color:rgba(232,237,245,.85)}
-.intro .contact{display:inline-flex;align-items:center;gap:9px;margin-top:32px;padding:12px 24px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);color:#fff;border-radius:999px;font-weight:600;font-size:.95rem;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.intro .contact{display:inline-flex;align-items:center;gap:9px;margin-top:32px;padding:12px 24px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.06);color:#fff;text-decoration:none;border-radius:999px;font-weight:600;font-size:.95rem;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
 .intro .contact::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--accent)}
 .intro .contact[href]{cursor:pointer;transition:transform .15s ease,border-color .15s ease,background .15s ease}
 .intro .contact[href]:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.1)}`;
