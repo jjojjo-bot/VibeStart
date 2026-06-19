@@ -1,4 +1,27 @@
-import type { TemplateDefinition, TemplateValues } from '@vibestart/shared-types';
+import type {
+  TemplateDefinition,
+  TemplatePreviewLabels,
+  TemplateValues,
+} from '@vibestart/shared-types';
+
+/**
+ * 라벨 미주입 시 기본값(한국어). 발행 서빙(/p)·테스트 등 로케일 컨텍스트가 없는
+ * 호출자가 그대로 쓰는 안전한 폴백. 웹 빌더는 활성 로케일 라벨을 주입한다.
+ */
+export const DEFAULT_PREVIEW_LABELS: TemplatePreviewLabels = {
+  lang: 'ko',
+  about: '소개',
+  directions: '오시는 길',
+  gallery: '사진첩',
+  guestbook: '방명록',
+  guestbookPlaceholder: '축하 메시지를 남겨주세요…',
+  guestbookSamples: [
+    { who: '김하늘', msg: '두 분 결혼 진심으로 축하해요! 행복하게 잘 사세요 💕' },
+    { who: '이준호', msg: '늘 지금처럼 서로 아껴주는 부부 되세요 🤍' },
+  ],
+  todoAdd: '할 일 추가',
+  todoProgress: '%total%개 중 %done%개 완료',
+};
 
 /** HTML 특수문자 이스케이프(사용자 값 XSS 방지). */
 export function escapeHtml(input: string): string {
@@ -58,7 +81,11 @@ html{scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.2) transparent}`;
  *  todo        = 투두 앱 UI(밝음): 헤더 + 진행바 + 체크박스 목록 + 추가바
  *  invitation  = 모던 청첩장(밝음): 사진 히어로 + 인사말 + 사진첩 + 오시는 길 + 방명록
  */
-export function renderTemplate(template: TemplateDefinition, values: TemplateValues): string {
+export function renderTemplate(
+  template: TemplateDefinition,
+  values: TemplateValues,
+  labels: TemplatePreviewLabels = DEFAULT_PREVIEW_LABELS,
+): string {
   const accent = template.accent;
   const v = (key: Key): string => escapeHtml((values[key] ?? '').trim());
   const has = (key: Key): boolean =>
@@ -87,13 +114,14 @@ export function renderTemplate(template: TemplateDefinition, values: TemplateVal
     inner = `<div class="wrap store">
 <section class="s-hero"><div class="s-hero-in"><h1>${title}</h1>${tagline()}${contactCta('s-cta')}</div></section>
 <section class="s-gallery"><div class="s-photo g0"></div><div class="s-photo g1"></div><div class="s-photo g2"></div></section>
-${has('body') ? `<section class="s-about"><h2>소개</h2>${body()}</section>` : ''}
-<section class="s-map"><h2>오시는 길</h2><div class="s-mapbox"><span class="pin"><svg viewBox="0 0 24 24" width="34" height="34" fill="currentColor"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></span></div></section>
+${has('body') ? `<section class="s-about"><h2>${labels.about}</h2>${body()}</section>` : ''}
+<section class="s-map"><h2>${labels.directions}</h2><div class="s-mapbox"><span class="pin"><svg viewBox="0 0 24 24" width="34" height="34" fill="currentColor"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></span></div></section>
 </div>`;
     css = `
 body{background:#f4eee4;color:#3a322b}
 body::before{display:none}
-.wrap.store{max-width:600px;margin:0 auto;min-height:100vh;background:#fffdf9;box-shadow:0 0 80px rgba(0,0,0,.06)}
+.wrap.store{max-width:920px;margin:0 auto;min-height:100vh;background:#fffdf9;box-shadow:0 0 80px rgba(0,0,0,.06)}
+.store .s-about .body,.store .s-map .s-mapbox{max-width:680px;margin-left:auto;margin-right:auto}
 .store .s-hero{position:relative;min-height:clamp(260px,44vh,360px);display:flex;align-items:flex-end;background:linear-gradient(135deg,#c8a06a,#8a5a2b)}
 .store .s-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(0,0,0,.5))}
 .store .s-hero-in{position:relative;z-index:1;width:100%;text-align:center;padding:clamp(28px,6vw,44px)}
@@ -118,16 +146,20 @@ body::before{display:none}
     inner = `<div class="wrap card2">
 <section class="c-hero"><div class="c-hero-in"><p class="c-eyebrow">WEDDING INVITATION</p><h1>${title}</h1>${tagline()}</div></section>
 ${has('body') ? `<section class="c-greet">${body()}</section>` : ''}
-<section class="c-gallery"><h2>사진첩</h2><div class="c-grid">${ph}</div></section>
-<section class="c-map"><h2>오시는 길</h2><div class="c-mapbox"><span class="pin"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></span></div></section>
-<section class="c-guest"><h2>방명록</h2><div class="gb-input">축하 메시지를 남겨주세요…</div>
-<div class="gb-msg"><div class="who">김하늘</div><div class="txt">두 분 결혼 진심으로 축하해요! 행복하게 잘 사세요 💕</div></div>
-<div class="gb-msg"><div class="who">이준호</div><div class="txt">늘 지금처럼 서로 아껴주는 부부 되세요 🤍</div></div></section>
+<section class="c-gallery"><h2>${labels.gallery}</h2><div class="c-grid">${ph}</div></section>
+<section class="c-map"><h2>${labels.directions}</h2><div class="c-mapbox"><span class="pin"><svg viewBox="0 0 24 24" width="32" height="32" fill="currentColor"><path d="M12 2C8.1 2 5 5.1 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg></span></div></section>
+<section class="c-guest"><h2>${labels.guestbook}</h2><div class="gb-input">${labels.guestbookPlaceholder}</div>
+${labels.guestbookSamples
+  .map(
+    (g) =>
+      `<div class="gb-msg"><div class="who">${g.who}</div><div class="txt">${g.msg}</div></div>`,
+  )
+  .join('')}</section>
 </div>`;
     css = `
 body{background:#f7f0ec;color:#4a4040}
 body::before{display:none}
-.wrap.card2{max-width:540px;margin:0 auto;min-height:100vh;background:#fff;box-shadow:0 0 80px rgba(0,0,0,.06)}
+.wrap.card2{max-width:720px;margin:0 auto;min-height:100vh;background:#fff;box-shadow:0 0 80px rgba(0,0,0,.06)}
 .card2 .c-hero{position:relative;min-height:clamp(400px,64vh,540px);display:flex;align-items:center;justify-content:center;text-align:center;background:linear-gradient(165deg,#f1d7cf,#cf9aa0 65%,#9c6f7e)}
 .card2 .c-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,0,0,.32))}
 .card2 .c-hero-in{position:relative;z-index:1;padding:30px}
@@ -169,14 +201,14 @@ body::before{display:none}
       )
       .join('');
     inner = `<div class="wrap todo">
-<header class="t-head"><h1>${title}</h1>${tagline()}<div class="t-prog"><div class="bar"><i style="width:${pct}%"></i></div><div class="lbl">${items.length}개 중 ${doneCount}개 완료</div></div></header>
+<header class="t-head"><h1>${title}</h1>${tagline()}<div class="t-prog"><div class="bar"><i style="width:${pct}%"></i></div><div class="lbl">${labels.todoProgress.replace('%total%', String(items.length)).replace('%done%', String(doneCount))}</div></div></header>
 <div class="t-list">${rows}</div>
-<div class="t-add"><span class="plus">+</span><span>할 일 추가</span></div>
+<div class="t-add"><span class="plus">+</span><span>${labels.todoAdd}</span></div>
 </div>`;
     css = `
 body{background:#eef0f6;color:#1f2433}
 body::before{display:none}
-.wrap.todo{max-width:480px;margin:0 auto;min-height:100vh;background:#fff;box-shadow:0 0 80px rgba(0,0,0,.07)}
+.wrap.todo{max-width:640px;margin:0 auto;min-height:100vh;background:#fff;box-shadow:0 0 80px rgba(0,0,0,.07)}
 .todo .t-head{padding:clamp(30px,7vw,42px) 26px 22px;background:linear-gradient(135deg,#4f46e5,#7c74f0);color:#fff}
 .todo .t-head h1{color:#fff;font-family:-apple-system,system-ui,sans-serif;font-weight:800;font-size:clamp(1.5rem,5vw,2rem)}
 .todo .t-head .tagline{color:rgba(255,255,255,.85);font-family:-apple-system,system-ui,sans-serif;margin-top:6px;font-size:1rem}
@@ -213,7 +245,8 @@ ${contactCta('p-link')}
     css = `
 body{background:#fafafa;color:#222}
 body::before{display:none}
-.wrap.profile{max-width:560px;margin:0 auto;min-height:100vh;background:#fff;box-shadow:0 0 80px rgba(0,0,0,.07)}
+.wrap.profile{max-width:860px;margin:0 auto;min-height:100vh;background:#fff;box-shadow:0 0 80px rgba(0,0,0,.07)}
+.profile .bio{max-width:680px}
 .profile .p-head{display:flex;align-items:center;gap:clamp(18px,5vw,30px);padding:clamp(28px,6vw,40px) 28px 16px}
 .profile .avatar{flex:0 0 auto;width:clamp(78px,18vw,96px);height:clamp(78px,18vw,96px);border-radius:50%;padding:3px;background:conic-gradient(from 215deg,#f9ce34,#ee2a7b,#6228d7,#f9ce34)}
 .profile .avatar span{display:grid;place-items:center;width:100%;height:100%;border-radius:50%;background:#fff;color:#222;font-weight:800;font-size:clamp(30px,7vw,38px);font-family:"Nanum Myeongjo",Georgia,serif;border:2px solid #fff}
@@ -240,7 +273,7 @@ body::before{display:none}
   }
 
   return `<!doctype html>
-<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${title}</title>
+<html lang="${labels.lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${title}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;800&display=swap" rel="stylesheet">
 <style>:root{--accent:${accent}}${BASE_CSS}${css}</style></head>

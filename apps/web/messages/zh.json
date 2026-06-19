@@ -106,32 +106,68 @@
       "previewLabel": "预览"
     },
     "templates": {
-      "intro": { "title": "自我介绍页", "desc": "简历 · 个人资料 · 链接" },
-      "shop": { "title": "店铺·工作室介绍", "desc": "菜单 · 位置 · 预约" },
+      "intro": {
+        "title": "自我介绍页",
+        "desc": "简历 · 个人资料 · 链接"
+      },
+      "shop": {
+        "title": "店铺·工作室介绍",
+        "desc": "菜单 · 位置 · 预约"
+      },
       "invitation": {
         "title": "邀请函",
         "desc": "婚礼 · 生日 · 乔迁",
         "fields": {
-          "title": { "label": "标题", "placeholder": "例：智英 ♥ 敏秀" },
-          "tagline": { "label": "问候语", "placeholder": "例：在我们成为夫妻的这天，请来见证" },
-          "body": { "label": "日期·地点·须知", "placeholder": "例：2026年9月12日 周六 下午2点\n○○婚礼厅" }
+          "title": {
+            "label": "标题",
+            "placeholder": "例：智英 ♥ 敏秀"
+          },
+          "tagline": {
+            "label": "问候语",
+            "placeholder": "例：在我们成为夫妻的这天，请来见证"
+          },
+          "body": {
+            "label": "日期·地点·须知",
+            "placeholder": "例：2026年9月12日 周六 下午2点\n○○婚礼厅"
+          }
         }
       },
       "todo": {
         "title": "待办 · 清单",
         "desc": "每日任务应用",
         "fields": {
-          "title": { "label": "清单名称", "placeholder": "例：今天要做的事" },
-          "tagline": { "label": "副标题", "placeholder": "例：轻松规划一天" },
-          "body": { "label": "待办（每行一条）", "placeholder": "买菜\n运动30分钟\n读书" }
+          "title": {
+            "label": "清单名称",
+            "placeholder": "例：今天要做的事"
+          },
+          "tagline": {
+            "label": "副标题",
+            "placeholder": "例：轻松规划一天"
+          },
+          "body": {
+            "label": "待办（每行一条）",
+            "placeholder": "买菜\n运动30分钟\n读书"
+          }
         }
       }
     },
     "fields": {
-      "title": { "label": "标题", "placeholder": "例：智英的周末烘焙" },
-      "tagline": { "label": "一句话介绍", "placeholder": "例：欢迎新手！一起烤温暖的面包" },
-      "body": { "label": "详细介绍", "placeholder": "自由填写" },
-      "contact": { "label": "联系方式·链接", "placeholder": "例：Instagram @id、群聊" }
+      "title": {
+        "label": "标题",
+        "placeholder": "例：智英的周末烘焙"
+      },
+      "tagline": {
+        "label": "一句话介绍",
+        "placeholder": "例：欢迎新手！一起烤温暖的面包"
+      },
+      "body": {
+        "label": "详细介绍",
+        "placeholder": "自由填写"
+      },
+      "contact": {
+        "label": "联系方式·链接",
+        "placeholder": "例：Instagram @id、群聊"
+      }
     },
     "samples": {
       "intro": {
@@ -156,6 +192,19 @@
         "tagline": "轻松整理你的一天",
         "body": "✓ 晨间拉伸10分钟\n✓ 查看邮件\n买菜（牛奶、鸡蛋、面包）\n锻炼30分钟\n阅读30页\n给朋友打电话"
       }
+    },
+    "preview": {
+      "about": "简介",
+      "directions": "位置",
+      "gallery": "相册",
+      "guestbook": "留言板",
+      "guestbookPlaceholder": "留下你的祝福…",
+      "guestbook1Who": "晓敏",
+      "guestbook1Msg": "祝你们百年好合，幸福美满！💕",
+      "guestbook2Who": "俊浩",
+      "guestbook2Msg": "愿你们永远像今天一样珍惜彼此 🤍",
+      "todoAdd": "添加待办",
+      "todoProgress": "%total% 项中已完成 %done% 项"
     }
   },
   "Metadata": {
@@ -262,18 +311,18 @@
     "compare": {
       "title": "自己动手 vs VibeStart",
       "before": {
-        "label": "自己搞的话...",
         "1": "搜索「安装 Git」→ 每个博客说法不一样",
         "2": "不知道该装哪个版本的 Node.js",
         "3": "不知道什么是环境变量 PATH",
-        "4": "报错了不知道卡在哪里"
+        "4": "报错了不知道卡在哪里",
+        "label": "自己搞的话..."
       },
       "after": {
-        "label": "用 VibeStart",
         "1": "根据操作系统直接显示命令",
         "2": "自动推荐经过验证的最新 LTS 版本",
         "3": "复制一次就完成 PATH 设置",
-        "4": "分步骤进行，清楚知道卡在哪里"
+        "4": "分步骤进行，清楚知道卡在哪里",
+        "label": "用 VibeStart"
       }
     },
     "phase2": {
@@ -296,7 +345,6 @@
       }
     },
     "faq": {
-      "title": "常见问题",
       "1": {
         "q": "什么是 Vibe Coding？",
         "a": "不用自己写代码，而是用自然语言告诉 AI 来生成程序。比如说「做一个登录页面」，AI 就会生成代码。"
@@ -329,6 +377,7 @@
         "q": "环境设置完之后做什么？",
         "a": "VibeStart Phase 2 会引导你把代码推到 GitHub、部署到 Vercel、添加 Google 登录——全部分步骤指导。还可以体验对 AI 说话来修改网站的 Vibe Coding 循环。"
       },
+      "title": "常见问题",
       "groups": {
         "start": "🔰 入门",
         "install": "⚙️ 安装与环境",
@@ -941,11 +990,7 @@
           "服务使用记录（选择的OS、目的、进行步骤）"
         ],
         "loginTitle": "通过Google登录收集的项目",
-        "loginItems": [
-          "电子邮箱地址",
-          "显示名称（昵称）",
-          "头像URL"
-        ],
+        "loginItems": ["电子邮箱地址", "显示名称（昵称）", "头像URL"],
         "note": "如果不使用Google登录，则不会收集个人身份信息。"
       },
       "2": {
@@ -965,10 +1010,7 @@
       "4": {
         "title": "4. 向第三方提供及委托处理个人信息",
         "intro": "VibeStart不会将收集的信息提供给第三方。但以下情况除外。",
-        "items": [
-          "法律法规要求的情况",
-          "用户事先同意的情况"
-        ],
+        "items": ["法律法规要求的情况", "用户事先同意的情况"],
         "delegateIntro": "为服务运营，以下外部服务受托处理个人信息。",
         "delegateItems": [
           "Supabase（认证及数据存储）：邮箱、显示名称、头像",
@@ -1098,7 +1140,6 @@
       }
     },
     "myths": {
-      "title": "你是不是这样想的？",
       "1": {
         "wrong": "“这是编程培训网站吧？”",
         "right": "我们不教编程。只是引导你安装工具，仅此而已。"
@@ -1110,7 +1151,8 @@
       "3": {
         "wrong": "“最终还是得会编程吧？”",
         "right": "不需要。AI写代码，你只需要说“帮我做成这样”就行。"
-      }
+      },
+      "title": "你是不是这样想的？"
     },
     "bottomCta": {
       "title": "10分钟后，你也是开发者",

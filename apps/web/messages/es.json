@@ -106,38 +106,74 @@
       "previewLabel": "Vista previa"
     },
     "templates": {
-      "intro": { "title": "Una página sobre mí", "desc": "CV · perfil · enlaces" },
-      "shop": { "title": "Tienda o taller", "desc": "Menú · ubicación · reservas" },
+      "intro": {
+        "title": "Una página sobre mí",
+        "desc": "CV · perfil · enlaces"
+      },
+      "shop": {
+        "title": "Tienda o taller",
+        "desc": "Menú · ubicación · reservas"
+      },
       "invitation": {
         "title": "Invitación",
         "desc": "Boda · cumpleaños · inauguración",
         "fields": {
-          "title": { "label": "Título", "placeholder": "Ej.: Jiyeong ♥ Minsu" },
-          "tagline": { "label": "Saludo", "placeholder": "Ej.: Acompáñanos el día en que nos unimos" },
-          "body": { "label": "Fecha · lugar · detalles", "placeholder": "Ej.: Sáb, 12 sep 2026, 14:00\nSalón ○○" }
+          "title": {
+            "label": "Título",
+            "placeholder": "Ej.: Kkotnim ♥ Minsu"
+          },
+          "tagline": {
+            "label": "Saludo",
+            "placeholder": "Ej.: Acompáñanos el día en que nos unimos"
+          },
+          "body": {
+            "label": "Fecha · lugar · detalles",
+            "placeholder": "Ej.: Sáb, 12 sep 2026, 14:00\nSalón ○○"
+          }
         }
       },
       "todo": {
         "title": "Tareas · Lista",
         "desc": "App de tareas diarias",
         "fields": {
-          "title": { "label": "Nombre de la lista", "placeholder": "Ej.: Tareas de hoy" },
-          "tagline": { "label": "Subtítulo", "placeholder": "Ej.: Organiza el día sin agobios" },
-          "body": { "label": "Tareas (una por línea)", "placeholder": "Comprar víveres\nEntrenar 30 min\nLeer un libro" }
+          "title": {
+            "label": "Nombre de la lista",
+            "placeholder": "Ej.: Tareas de hoy"
+          },
+          "tagline": {
+            "label": "Subtítulo",
+            "placeholder": "Ej.: Organiza el día sin agobios"
+          },
+          "body": {
+            "label": "Tareas (una por línea)",
+            "placeholder": "Comprar víveres\nEntrenar 30 min\nLeer un libro"
+          }
         }
       }
     },
     "fields": {
-      "title": { "label": "Título", "placeholder": "ej.: Repostería de fin de semana de Jiyeong" },
-      "tagline": { "label": "Presentación en una línea", "placeholder": "ej.: Principiantes bienvenidos: pan calentito y buen rato" },
-      "body": { "label": "Detalles", "placeholder": "Escribe libremente" },
-      "contact": { "label": "Contacto / enlace", "placeholder": "ej.: Instagram @id, chat abierto" }
+      "title": {
+        "label": "Título",
+        "placeholder": "ej.: Repostería de fin de semana de Kkotnim"
+      },
+      "tagline": {
+        "label": "Presentación en una línea",
+        "placeholder": "ej.: Principiantes bienvenidos: pan calentito y buen rato"
+      },
+      "body": {
+        "label": "Detalles",
+        "placeholder": "Escribe libremente"
+      },
+      "contact": {
+        "label": "Contacto / enlace",
+        "placeholder": "ej.: Instagram @id, chat abierto"
+      }
     },
     "samples": {
       "intro": {
-        "title": "Jiyeong Kim",
+        "title": "Kkotnim Kim",
         "tagline": "Marketing de contenidos que conecta personas e historias",
-        "body": "Hola, soy Jiyeong, especialista en contenidos con 5 años de experiencia.\nEncuentro la voz de cada marca y creo historias que llegan a la gente.",
+        "body": "Hola, soy Kkotnim, especialista en contenidos con 5 años de experiencia.\nEncuentro la voz de cada marca y creo historias que llegan a la gente.",
         "contact": "Correo jiyeong@example.com"
       },
       "shop": {
@@ -147,7 +183,7 @@
         "contact": "Reservas por Instagram @ongi.bakery"
       },
       "invitation": {
-        "title": "Jiyeong ♥ Minsu",
+        "title": "Kkotnim ♥ Minsu",
         "tagline": "Acompáñanos el día en que dos se vuelven uno",
         "body": "Sábado 12 de septiembre de 2026, 14:00\nSalón de bodas Algún Lugar, 3.ª planta\nDetalles: directamente a la pareja"
       },
@@ -156,6 +192,19 @@
         "tagline": "Organiza tu día con ligereza",
         "body": "✓ Estiramiento matutino (10 min)\n✓ Revisar el correo\nCompra (leche, huevos, pan)\nEjercicio 30 min\nLeer 30 páginas\nLlamar a un amigo"
       }
+    },
+    "preview": {
+      "about": "Acerca de",
+      "directions": "Cómo llegar",
+      "gallery": "Fotos",
+      "guestbook": "Mensajes",
+      "guestbookPlaceholder": "Deja un mensaje…",
+      "guestbook1Who": "Haneul",
+      "guestbook1Msg": "¡Felicidades a los dos! Os deseo una vida llena de felicidad 💕",
+      "guestbook2Who": "Junho",
+      "guestbook2Msg": "Que siempre os cuidéis como hoy 🤍",
+      "todoAdd": "Añadir tarea",
+      "todoProgress": "%done% de %total% completadas"
     }
   },
   "Metadata": {
@@ -262,18 +311,18 @@
     "compare": {
       "title": "Solo vs VibeStart",
       "before": {
-        "label": "Por tu cuenta...",
         "1": "Buscas \"instalar Git\" → cada blog dice algo diferente",
         "2": "No sabes qué versión de Node.js instalar",
         "3": "No sabes qué es la variable de entorno PATH",
-        "4": "Cuando hay errores, no sabes dónde te quedaste"
+        "4": "Cuando hay errores, no sabes dónde te quedaste",
+        "label": "Por tu cuenta..."
       },
       "after": {
-        "label": "Con VibeStart",
         "1": "Comandos específicos para tu OS al instante",
         "2": "Recomienda automáticamente la última versión LTS",
         "3": "Un solo copy-paste configura el PATH",
-        "4": "Progreso paso a paso — sabes exactamente dónde estás"
+        "4": "Progreso paso a paso — sabes exactamente dónde estás",
+        "label": "Con VibeStart"
       }
     },
     "phase2": {
@@ -296,7 +345,6 @@
       }
     },
     "faq": {
-      "title": "Preguntas frecuentes",
       "1": {
         "q": "¿Qué es vibe coding?",
         "a": "En vez de escribir código tú mismo, le pides a la IA en lenguaje natural y ella genera el programa. Por ejemplo, dices 'hazme una página de login' y la IA crea el código."
@@ -329,6 +377,7 @@
         "q": "¿Qué hago después de la configuración?",
         "a": "VibeStart Phase 2 te guía para subir código a GitHub, desplegar en Vercel y añadir login con Google — todo paso a paso. También puedes probar el ciclo de vibe coding: editar tu sitio hablando con IA."
       },
+      "title": "Preguntas frecuentes",
       "groups": {
         "start": "🔰 Comenzar",
         "install": "⚙️ Instalación y entorno",
@@ -1098,7 +1147,6 @@
       }
     },
     "myths": {
-      "title": "¿Pensabas esto?",
       "1": {
         "wrong": "\"¿Es un sitio de cursos de programación?\"",
         "right": "No enseñamos a programar. Solo te guiamos para instalar herramientas."
@@ -1110,7 +1158,8 @@
       "3": {
         "wrong": "\"¿Igual necesito saber programar?\"",
         "right": "No. La IA escribe el código. Tú solo dices \"hazlo así.\""
-      }
+      },
+      "title": "¿Pensabas esto?"
     },
     "bottomCta": {
       "title": "En 10 minutos, serás desarrollador",

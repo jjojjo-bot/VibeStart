@@ -106,38 +106,74 @@
       "previewLabel": "Preview"
     },
     "templates": {
-      "intro": { "title": "A page about me", "desc": "Resume · profile · links" },
-      "shop": { "title": "Shop or studio", "desc": "Menu · location · booking" },
+      "intro": {
+        "title": "A page about me",
+        "desc": "Resume · profile · links"
+      },
+      "shop": {
+        "title": "Shop or studio",
+        "desc": "Menu · location · booking"
+      },
       "invitation": {
         "title": "Invitation",
         "desc": "Wedding · birthday · housewarming",
         "fields": {
-          "title": { "label": "Title", "placeholder": "e.g. Jiyeong ♥ Minsu" },
-          "tagline": { "label": "Greeting line", "placeholder": "e.g. Join us on the day we become one" },
-          "body": { "label": "Date · place · details", "placeholder": "e.g. Sat, Sep 12, 2026, 2:00 PM\n○○ Wedding Hall" }
+          "title": {
+            "label": "Title",
+            "placeholder": "e.g. Kkotnim ♥ Minsu"
+          },
+          "tagline": {
+            "label": "Greeting line",
+            "placeholder": "e.g. Join us on the day we become one"
+          },
+          "body": {
+            "label": "Date · place · details",
+            "placeholder": "e.g. Sat, Sep 12, 2026, 2:00 PM\n○○ Wedding Hall"
+          }
         }
       },
       "todo": {
         "title": "To-Do · Checklist",
         "desc": "Daily task app",
         "fields": {
-          "title": { "label": "List name", "placeholder": "e.g. Today's tasks" },
-          "tagline": { "label": "Subtitle", "placeholder": "e.g. A light plan for the day" },
-          "body": { "label": "To-dos (one per line)", "placeholder": "Buy groceries\nWork out 30 min\nRead a book" }
+          "title": {
+            "label": "List name",
+            "placeholder": "e.g. Today's tasks"
+          },
+          "tagline": {
+            "label": "Subtitle",
+            "placeholder": "e.g. A light plan for the day"
+          },
+          "body": {
+            "label": "To-dos (one per line)",
+            "placeholder": "Buy groceries\nWork out 30 min\nRead a book"
+          }
         }
       }
     },
     "fields": {
-      "title": { "label": "Title", "placeholder": "e.g. Jiyeong's Weekend Baking" },
-      "tagline": { "label": "One-line intro", "placeholder": "e.g. Beginners welcome — warm bread, good time" },
-      "body": { "label": "Details", "placeholder": "Write freely" },
-      "contact": { "label": "Contact / link", "placeholder": "e.g. Instagram @id, open chat" }
+      "title": {
+        "label": "Title",
+        "placeholder": "e.g. Kkotnim's Weekend Baking"
+      },
+      "tagline": {
+        "label": "One-line intro",
+        "placeholder": "e.g. Beginners welcome — warm bread, good time"
+      },
+      "body": {
+        "label": "Details",
+        "placeholder": "Write freely"
+      },
+      "contact": {
+        "label": "Contact / link",
+        "placeholder": "e.g. Instagram @id, open chat"
+      }
     },
     "samples": {
       "intro": {
-        "title": "Jiyeong Kim",
+        "title": "Kkotnim Kim",
         "tagline": "Content marketer connecting people and stories",
-        "body": "Hi, I'm Jiyeong, a content marketer with 5 years of experience.\nI find a brand's voice and craft stories that reach people.",
+        "body": "Hi, I'm Kkotnim, a content marketer with 5 years of experience.\nI find a brand's voice and craft stories that reach people.",
         "contact": "Email jiyeong@example.com"
       },
       "shop": {
@@ -147,7 +183,7 @@
         "contact": "Book via Instagram @ongi.bakery"
       },
       "invitation": {
-        "title": "Jiyeong ♥ Minsu",
+        "title": "Kkotnim ♥ Minsu",
         "tagline": "Please join us on the day two become one",
         "body": "Saturday, September 12, 2026, 2:00 PM\nSomewhere Wedding Hall, 3rd floor\nGifts: directly to the couple"
       },
@@ -156,6 +192,19 @@
         "tagline": "Keep your day light and clear",
         "body": "✓ Morning stretch (10 min)\n✓ Check email\nGroceries (milk, eggs, bread)\n30-min workout\nRead 30 pages\nCall a friend"
       }
+    },
+    "preview": {
+      "about": "About",
+      "directions": "Find us",
+      "gallery": "Photos",
+      "guestbook": "Guestbook",
+      "guestbookPlaceholder": "Leave a message…",
+      "guestbook1Who": "Haneul",
+      "guestbook1Msg": "Congratulations to you both! Wishing you a lifetime of happiness 💕",
+      "guestbook2Who": "Junho",
+      "guestbook2Msg": "May you always cherish each other like today 🤍",
+      "todoAdd": "Add task",
+      "todoProgress": "%done% of %total% done"
     }
   },
   "Metadata": {
@@ -262,18 +311,18 @@
     "compare": {
       "title": "DIY vs VibeStart",
       "before": {
-        "label": "On your own...",
         "1": "Search \"install Git\" → every blog says something different",
         "2": "No idea which Node.js version to install",
         "3": "No idea what PATH environment variable means",
-        "4": "When errors happen, no idea where you got stuck"
+        "4": "When errors happen, no idea where you got stuck",
+        "label": "On your own..."
       },
       "after": {
-        "label": "With VibeStart",
         "1": "OS-specific commands appear instantly",
         "2": "Automatically recommends the latest LTS version",
         "3": "One copy-paste sets up PATH",
-        "4": "Step-by-step progress — you know exactly where you are"
+        "4": "Step-by-step progress — you know exactly where you are",
+        "label": "With VibeStart"
       }
     },
     "phase2": {
@@ -296,7 +345,6 @@
       }
     },
     "faq": {
-      "title": "Frequently Asked Questions",
       "1": {
         "q": "What is vibe coding?",
         "a": "Instead of writing code yourself, you ask AI in natural language and it generates the program. For example, say 'make a login page' and AI creates the code."
@@ -329,6 +377,7 @@
         "q": "What do I do after environment setup?",
         "a": "VibeStart Phase 2 guides you through pushing code to GitHub, deploying to Vercel, and adding Google login — all step by step. You can also try the vibe coding loop: edit your site by talking to AI."
       },
+      "title": "Frequently Asked Questions",
       "groups": {
         "start": "🔰 Getting started",
         "install": "⚙️ Installation & environment",
@@ -941,11 +990,7 @@
           "Service usage records (selected OS, goal, progress steps)"
         ],
         "loginTitle": "Collected via Google Sign-In",
-        "loginItems": [
-          "Email address",
-          "Display name (nickname)",
-          "Profile picture URL"
-        ],
+        "loginItems": ["Email address", "Display name (nickname)", "Profile picture URL"],
         "note": "If you do not use Google Sign-In, no personally identifiable information is collected."
       },
       "2": {
@@ -1098,7 +1143,6 @@
       }
     },
     "myths": {
-      "title": "Common misconceptions",
       "1": {
         "wrong": "\"Is this a coding school?\"",
         "right": "We don't teach coding. We guide you through installing tools — that's it."
@@ -1110,7 +1154,8 @@
       "3": {
         "wrong": "\"Don't I still need to know how to code?\"",
         "right": "Nope. AI writes the code. You just say \"make it like this.\""
-      }
+      },
+      "title": "Common misconceptions"
     },
     "bottomCta": {
       "title": "In 10 minutes, you'll be a developer",
