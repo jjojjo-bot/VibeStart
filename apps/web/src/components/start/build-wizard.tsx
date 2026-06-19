@@ -18,6 +18,12 @@ const SLUG_MSG: Record<string, string> = {
   reserved: 'reserved',
 };
 
+// 발행 후 가입 시 영구 claim하도록 pending slug를 쿠키에 심는다(모듈 레벨 — 컴포넌트
+// 반응형 스코프 밖). 서버: lib/publish/claim-pending.ts의 PENDING_CLAIM_COOKIE와 동일 이름.
+function setPendingClaimCookie(slug: string): void {
+  document.cookie = `vs_pending_claim=${slug}; path=/; max-age=1800; SameSite=Lax`;
+}
+
 /**
  * B′ 첫성공 빌더 — 카테고리 선택 → 빈칸 채우기 → 라이브 미리보기.
  * 빌더 chrome은 liquid-glass, 생성 페이지(iframe)는 별도 에디토리얼 톤.
@@ -103,9 +109,7 @@ export function BuildWizard() {
       if (data.ok && data.path) {
         setPubPath(data.path);
         setPubStatus('done');
-        // 가입 시 이 페이지를 영구 claim하도록 pending slug를 쿠키에 심는다
-        // (서버: lib/publish/claim-pending.ts의 PENDING_CLAIM_COOKIE와 동일 이름).
-        document.cookie = `vs_pending_claim=${slug}; path=/; max-age=1800; SameSite=Lax`;
+        setPendingClaimCookie(slug);
       } else {
         setPubStatus('error');
         setPubError(
