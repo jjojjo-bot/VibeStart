@@ -21,6 +21,31 @@
       "reboot": "Reinicia tu computadora y luego pulsa [Comprobar de nuevo].",
       "newShell": "Cierra la terminal por completo y ábrela en una ventana nueva, luego [Comprobar de nuevo].",
       "askPrompt": "¿Cuál de estos se acerca más a tu caso?"
+    },
+    "cause": {
+      "virtualization-off": "La función de 'virtualización' de tu computadora está desactivada. Solo tienes que activarla una vez en la configuración.",
+      "wsl-kernel-outdated": "Uno de los componentes de WSL está desactualizado. Un solo comando lo actualiza.",
+      "wsl-features-missing": "Una función de Windows que WSL necesita está desactivada. Actívala y reinicia.",
+      "command-not-found": "La terminal aún no encuentra el programa que acabas de instalar. Es algo común.",
+      "wrong-shell": "Ahora estás en una ventana de Windows. Este comando debe ejecutarse en la ventana de Ubuntu.",
+      "reboot-needed": "Para terminar la instalación, necesitas reiniciar la computadora una vez.",
+      "network-blocked": "Tu conexión a internet está bloqueada. Puede ser la red del trabajo/escuela o el antivirus.",
+      "network-corporate": "Parece que una red de trabajo o escuela lo está bloqueando.",
+      "network-home": "Podría ser un problema temporal de conexión.",
+      "permission-eacces": "Los permisos de instalación están bloqueados. Podemos arreglarlo sin sudo.",
+      "needs-admin": "Este comando debe ejecutarse como administrador.",
+      "disk-space": "Te queda poco espacio de almacenamiento."
+    },
+    "guide": {
+      "bios-virtualization": "1) Reinicia tu computadora.\n2) Al encender, pulsa repetidamente la tecla de configuración (normalmente F2, F10 o Del — Lenovo F1/F2, HP F10, Dell F2, ASUS Del).\n3) Busca 'Virtualization', 'SVM Mode' o 'Intel VT-x' y ponlo en 'Enabled'.\n4) Guarda y sal (normalmente F10), luego [Comprobar de nuevo].",
+      "open-ubuntu-terminal": "Busca 'Ubuntu' en el menú Inicio y ábrelo. Pega el comando otra vez en esa ventana negra.",
+      "network-corporate": "El Wi-Fi del trabajo y la escuela suele bloquear instalaciones. Prueba a cambiar al punto de acceso del teléfono o al Wi-Fi de casa e inténtalo de nuevo. Si usas una VPN, apágala un momento.",
+      "network-retry": "Inténtalo de nuevo en un momento. Comprueba que tu internet funcione y, si el antivirus lo bloquea, apágalo brevemente.",
+      "run-as-admin": "En el menú Inicio, haz clic derecho en PowerShell y elige 'Ejecutar como administrador', luego pega el comando otra vez.",
+      "free-disk-space": "Libera algo de espacio. Vaciar la Papelera y ejecutar el 'Liberador de espacio en disco' de Windows ayuda. Luego [Comprobar de nuevo]."
+    },
+    "ask": {
+      "network-kind": "¿La conexión que usas es una red de trabajo/escuela o una red doméstica?"
     }
   },
   "Metadata": {

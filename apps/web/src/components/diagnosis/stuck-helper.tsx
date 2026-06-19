@@ -89,8 +89,8 @@ export function StuckHelper({ step }: StuckHelperProps) {
       }
       case 'guide':
         return (
-          <p className="text-sm text-muted-foreground">
-            {t('remedy.guidePlaceholder', { key: remedy.guideKey })}
+          <p className="whitespace-pre-line text-sm text-muted-foreground">
+            {t(`guide.${remedy.guideKey}`)}
           </p>
         );
       case 'reboot':
@@ -100,13 +100,21 @@ export function StuckHelper({ step }: StuckHelperProps) {
       case 'ask':
         return (
           <div className="flex flex-col gap-3">
-            <p className="text-sm text-muted-foreground">{t('remedy.askPrompt')}</p>
+            <p className="text-sm text-muted-foreground">{t(remedy.questionKey)}</p>
             <div className="flex flex-wrap gap-2">
-              {remedy.branchRuleIds.map((bid) => (
-                <Button key={bid} variant="outline" size="sm" onClick={() => setActiveRuleId(bid)}>
-                  {bid}
-                </Button>
-              ))}
+              {remedy.branchRuleIds.map((bid) => {
+                const branch = ruleById.get(bid);
+                return (
+                  <Button
+                    key={bid}
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setActiveRuleId(bid)}
+                  >
+                    {branch ? t(branch.causeKey) : bid}
+                  </Button>
+                );
+              })}
             </div>
           </div>
         );
@@ -118,10 +126,7 @@ export function StuckHelper({ step }: StuckHelperProps) {
   function renderRecognized(rule: DiagnosisRule) {
     return (
       <div className="flex flex-col gap-4">
-        <div>
-          <p className="text-sm font-medium text-foreground">{t('foundProblem')}</p>
-          <p className="mt-0.5 font-mono text-xs text-muted-foreground/60">{rule.id}</p>
-        </div>
+        <p className="text-sm font-medium text-foreground">{t(rule.causeKey)}</p>
         {renderRemedy(rule)}
         <div className="flex flex-wrap items-center gap-3">
           <Button
@@ -183,7 +188,7 @@ export function StuckHelper({ step }: StuckHelperProps) {
                 size="sm"
                 onClick={() => setActiveRuleId(h.rule.id)}
               >
-                {h.rule.id}
+                {t(h.rule.causeKey)}
               </Button>
             ))}
           </div>

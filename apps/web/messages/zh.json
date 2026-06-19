@@ -21,6 +21,31 @@
       "reboot": "重启电脑后，点击 [再次检查]。",
       "newShell": "完全关闭终端并打开新窗口，然后 [再次检查]。",
       "askPrompt": "以下哪种更接近你的情况？"
+    },
+    "cause": {
+      "virtualization-off": "电脑的“虚拟化”功能被关闭了。只需在设置里打开一次即可。",
+      "wsl-kernel-outdated": "WSL 的一个组件版本太旧。一行命令即可更新。",
+      "wsl-features-missing": "WSL 需要的 Windows 功能被关闭了。开启后重启即可。",
+      "command-not-found": "终端还没找到你刚安装的程序。这很常见。",
+      "wrong-shell": "你现在在 Windows 窗口里。这条命令要在 Ubuntu 窗口里运行。",
+      "reboot-needed": "要完成安装，需要重启一次电脑。",
+      "network-blocked": "网络连接被拦截了。可能是公司/学校网络或杀毒软件。",
+      "network-corporate": "看起来是公司或学校网络在拦截。",
+      "network-home": "可能是暂时的连接问题。",
+      "permission-eacces": "安装权限被拦截了。我们可以不用 sudo 来修复。",
+      "needs-admin": "这条命令需要“以管理员身份”运行。",
+      "disk-space": "存储空间不足。"
+    },
+    "guide": {
+      "bios-virtualization": "1) 重启电脑。\n2) 开机时连续按设置键（通常是 F2、F10 或 Del / Lenovo F1·F2，HP F10，Dell F2，ASUS Del）。\n3) 找到 “Virtualization”“SVM Mode” 或 “Intel VT-x”，设为 “启用(Enabled)”。\n4) 保存并退出（通常 F10），然后 [再次检查]。",
+      "open-ubuntu-terminal": "在开始菜单搜索 “Ubuntu” 并打开。在那个黑色窗口里重新粘贴命令即可。",
+      "network-corporate": "公司和学校的 Wi-Fi 经常拦截安装。试着切换到手机热点或家里的 Wi-Fi 再试一次。如果在用 VPN，先暂时关闭。",
+      "network-retry": "稍后再试一次。确认网络正常，如果杀毒软件在拦截，先暂时关闭。",
+      "run-as-admin": "在开始菜单右键点击 PowerShell，选择 “以管理员身份运行”，然后重新粘贴命令。",
+      "free-disk-space": "请清理一些存储空间。清空回收站并运行 Windows “磁盘清理” 会有帮助。然后 [再次检查]。"
+    },
+    "ask": {
+      "network-kind": "你现在用的网络是公司/学校网络，还是家庭网络？"
     }
   },
   "Metadata": {

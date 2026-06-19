@@ -21,6 +21,31 @@
       "reboot": "컴퓨터를 껐다 켠 다음, [다시 확인]을 눌러주세요.",
       "newShell": "터미널을 완전히 닫고 새 창으로 다시 열어주세요. 그다음 [다시 확인].",
       "askPrompt": "둘 중 어느 쪽에 가까운가요?"
+    },
+    "cause": {
+      "virtualization-off": "컴퓨터의 '가상화' 기능이 꺼져 있어요. 설정에서 한 번만 켜면 돼요.",
+      "wsl-kernel-outdated": "WSL의 부품 하나가 옛날 버전이에요. 한 줄로 업데이트하면 돼요.",
+      "wsl-features-missing": "WSL이 쓰는 Windows 기능이 꺼져 있어요. 켜고 다시 시작하면 돼요.",
+      "command-not-found": "방금 설치한 프로그램을 터미널이 아직 못 찾고 있어요. 흔한 일이에요.",
+      "wrong-shell": "지금은 Windows 창이에요. 이 명령은 Ubuntu 창에서 해야 해요.",
+      "reboot-needed": "설치를 끝내려면 컴퓨터를 한 번 껐다 켜야 해요.",
+      "network-blocked": "인터넷 연결이 막혀 있어요. 회사·학교 망이나 백신 때문일 수 있어요.",
+      "network-corporate": "회사·학교 네트워크가 막고 있는 것 같아요.",
+      "network-home": "일시적인 연결 문제일 수 있어요.",
+      "permission-eacces": "설치 권한이 막혀 있어요. sudo 없이 고칠 수 있어요.",
+      "needs-admin": "이 명령은 '관리자 권한'으로 실행해야 해요.",
+      "disk-space": "저장 공간이 부족해요."
+    },
+    "guide": {
+      "bios-virtualization": "1) 컴퓨터를 다시 시작하세요.\n2) 켜질 때 설정 키를 연타하세요 (보통 F2·F10·Del / Lenovo F1·F2, HP F10, Dell F2, ASUS Del).\n3) 'Virtualization' 또는 'SVM Mode', 'Intel VT-x' 항목을 찾아 '사용(Enabled)'으로 바꾸세요.\n4) 저장하고 나가기(보통 F10) → [다시 확인].",
+      "open-ubuntu-terminal": "시작 메뉴에서 'Ubuntu'를 검색해 여세요. 그 검은 창에서 명령을 다시 붙여넣으면 돼요.",
+      "network-corporate": "회사·학교 와이파이는 설치를 막는 경우가 많아요. 휴대폰 핫스팟이나 집 와이파이로 바꿔서 다시 시도해보세요. VPN을 쓰고 있다면 잠시 꺼보세요.",
+      "network-retry": "잠시 후 다시 시도해보세요. 인터넷이 잘 되는지 확인하고, 백신이 막고 있다면 잠시 꺼보세요.",
+      "run-as-admin": "시작 메뉴에서 PowerShell을 마우스 오른쪽 버튼으로 누르고 '관리자 권한으로 실행'을 선택한 뒤, 명령을 다시 붙여넣으세요.",
+      "free-disk-space": "저장 공간을 좀 비워주세요. 휴지통을 비우고 Windows '디스크 정리'를 실행하면 도움이 돼요. 그다음 [다시 확인]."
+    },
+    "ask": {
+      "network-kind": "지금 쓰는 인터넷이 회사·학교 네트워크인가요, 집 네트워크인가요?"
     }
   },
   "Metadata": {

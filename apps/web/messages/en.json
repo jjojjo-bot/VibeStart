@@ -21,6 +21,31 @@
       "reboot": "Restart your computer, then press [Check again].",
       "newShell": "Fully close the terminal and open a new window, then [Check again].",
       "askPrompt": "Which of these is closer to your case?"
+    },
+    "cause": {
+      "virtualization-off": "Your computer's 'virtualization' feature is turned off. You just need to turn it on once in the settings.",
+      "wsl-kernel-outdated": "One of WSL's components is out of date. A single command updates it.",
+      "wsl-features-missing": "A Windows feature that WSL needs is turned off. Turn it on and restart.",
+      "command-not-found": "The terminal can't find the program you just installed yet. This is common.",
+      "wrong-shell": "You're in a Windows window right now. This command needs to run in the Ubuntu window.",
+      "reboot-needed": "To finish installing, you need to restart your computer once.",
+      "network-blocked": "Your internet connection is blocked. It may be your work/school network or antivirus.",
+      "network-corporate": "It looks like a work or school network is blocking it.",
+      "network-home": "It might be a temporary connection problem.",
+      "permission-eacces": "Install permissions are blocked. We can fix this without sudo.",
+      "needs-admin": "This command needs to run as an administrator.",
+      "disk-space": "You're low on storage space."
+    },
+    "guide": {
+      "bios-virtualization": "1) Restart your computer.\n2) As it boots, tap the settings key repeatedly (usually F2, F10, or Del — Lenovo F1/F2, HP F10, Dell F2, ASUS Del).\n3) Find 'Virtualization', 'SVM Mode', or 'Intel VT-x' and set it to 'Enabled'.\n4) Save and exit (usually F10), then [Check again].",
+      "open-ubuntu-terminal": "Search for 'Ubuntu' in the Start menu and open it. Paste the command again in that black window.",
+      "network-corporate": "Work and school Wi-Fi often block installs. Try switching to a phone hotspot or home Wi-Fi and try again. If you're on a VPN, turn it off for a moment.",
+      "network-retry": "Try again in a moment. Check that your internet works, and if antivirus is blocking it, turn it off briefly.",
+      "run-as-admin": "In the Start menu, right-click PowerShell and choose 'Run as administrator', then paste the command again.",
+      "free-disk-space": "Free up some storage. Emptying the Recycle Bin and running Windows 'Disk Cleanup' helps. Then [Check again]."
+    },
+    "ask": {
+      "network-kind": "Is the internet you're using a work/school network, or a home network?"
     }
   },
   "Metadata": {
