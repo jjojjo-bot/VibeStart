@@ -161,7 +161,8 @@ export function BuildWizard() {
 
   // 화면 4 — 퍼블리시: 슬러그 선택 → 익명 발행(TTL) → 라이브 URL + 가입 유도.
   if (step === 'publish' && template) {
-    const slugCheck = slug ? validateSlug(slug) : null;
+    // 정규화한 슬러그로 검증 — 공백·대문자는 정리돼 통과, 예약어·짧음·비라틴은 거부.
+    const slugCheck = slug ? validateSlug(normalizeSlug(slug)) : null;
     const fullUrl = pubPath
       ? (typeof window !== 'undefined' ? window.location.origin : 'https://vibe-start.com') + pubPath
       : '';
@@ -206,7 +207,7 @@ export function BuildWizard() {
               </label>
               <button
                 className="btn-primary w-full justify-center py-2.5"
-                disabled={pubStatus === 'publishing' || slug.length === 0}
+                disabled={pubStatus === 'publishing' || !slugCheck?.ok}
                 onClick={publish}
               >
                 {pubStatus === 'publishing' ? t('publish.publishing') : t('publish.publishBtn')}
