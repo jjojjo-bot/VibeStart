@@ -152,6 +152,8 @@
     "heroHighlight": "どこから始めればいい？",
     "heroDescription": "開発ツールのインストールが難しくて諦めていませんか？\nVibeStartが一つずつご案内します。",
     "ctaButton": "始める",
+    "startCta": "インストール不要・5分で体験",
+    "fullSetupCta": "開発環境を設定",
     "secondaryCta": {
       "prefix": "もう環境のインストールは終わりましたか？",
       "link": "自分のサイトを作る →"

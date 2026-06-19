@@ -152,6 +152,8 @@
     "heroHighlight": "don't know where to start?",
     "heroDescription": "Gave up because setting up dev tools was too hard?\nVibeStart walks you through it one step at a time.",
     "ctaButton": "Get Started",
+    "startCta": "Try in 5 min — no install",
+    "fullSetupCta": "Set up dev environment",
     "secondaryCta": {
       "prefix": "Already finished setup?",
       "link": "Build my site →"

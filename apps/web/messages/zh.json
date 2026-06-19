@@ -152,6 +152,8 @@
     "heroHighlight": "不知道从哪开始？",
     "heroDescription": "开发工具安装太难放弃了？\nVibeStart手把手教你。",
     "ctaButton": "开始",
+    "startCta": "免安装 · 5 分钟体验",
+    "fullSetupCta": "搭建开发环境",
     "secondaryCta": {
       "prefix": "已经完成环境安装了？",
       "link": "创建我的网站 →"

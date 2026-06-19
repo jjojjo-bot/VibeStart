@@ -152,6 +152,8 @@
     "heroHighlight": "¿por dónde empiezo?",
     "heroDescription": "¿Renunciaste porque instalar herramientas de desarrollo era muy difícil?\nVibeStart te guía uno a uno.",
     "ctaButton": "Empezar",
+    "startCta": "Pruébalo en 5 min — sin instalar",
+    "fullSetupCta": "Configurar entorno de desarrollo",
     "secondaryCta": {
       "prefix": "¿Ya terminaste la instalación?",
       "link": "Crear mi sitio →"
