@@ -167,6 +167,18 @@
       "contact": {
         "label": "Contacto / enlace",
         "placeholder": "ej.: Instagram @id, chat abierto"
+      },
+      "tags": {
+        "label": "Especialidades",
+        "placeholder": "Separadas por comas (ej. Estrategia de contenidos, Copywriting)"
+      },
+      "work": {
+        "label": "Trabajo destacado",
+        "placeholder": "Uno por línea — Título | Descripción"
+      },
+      "links": {
+        "label": "Enlaces",
+        "placeholder": "Uno por línea — Etiqueta | https://..."
       }
     },
     "samples": {
@@ -174,7 +186,10 @@
         "title": "Kkotnim Kim",
         "tagline": "Marketing de contenidos que conecta personas e historias",
         "body": "Hola, soy Kkotnim, especialista en contenidos con 5 años de experiencia.\nEncuentro la voz de cada marca y creo historias que llegan a la gente.",
-        "contact": "Correo jiyeong@example.com"
+        "contact": "Correo jiyeong@example.com",
+        "tags": "Estrategia de contenidos, Voz de marca, Copywriting, Newsletters, SEO",
+        "work": "Guía de voz de marca | Definí el tono y el estilo de 3 startups.\nNewsletter con 120 mil suscriptores | La hice crecer de cero a un 48% de apertura.\nRenovación de contenidos SEO | Reestructuré 50 artículos y tripliqué el tráfico orgánico.",
+        "links": "Portafolio | https://kkot.example.com\nInstagram | https://instagram.com/kkot.writes\nBlog | https://kkot.example.com/blog\nLinkedIn | https://linkedin.com/in/kkot"
       },
       "shop": {
         "title": "Panadería Ongi",
@@ -194,6 +209,9 @@
       }
     },
     "preview": {
+      "expertise": "Especialidades",
+      "work": "Trabajo destacado",
+      "links": "Enlaces",
       "about": "Acerca de",
       "directions": "Cómo llegar",
       "gallery": "Fotos",

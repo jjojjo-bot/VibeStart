@@ -167,6 +167,18 @@
       "contact": {
         "label": "Contact / link",
         "placeholder": "e.g. Instagram @id, open chat"
+      },
+      "tags": {
+        "label": "Skills",
+        "placeholder": "Comma-separated (e.g. Content strategy, Copywriting)"
+      },
+      "work": {
+        "label": "Featured work",
+        "placeholder": "One per line — Title | Description"
+      },
+      "links": {
+        "label": "Links",
+        "placeholder": "One per line — Label | https://..."
       }
     },
     "samples": {
@@ -174,7 +186,10 @@
         "title": "Kkotnim Kim",
         "tagline": "Content marketer connecting people and stories",
         "body": "Hi, I'm Kkotnim, a content marketer with 5 years of experience.\nI find a brand's voice and craft stories that reach people.",
-        "contact": "Email jiyeong@example.com"
+        "contact": "Email jiyeong@example.com",
+        "tags": "Content strategy, Brand voice, Copywriting, Newsletters, SEO",
+        "work": "Brand voice guide | Defined the tone and manner for 3 startups.\nNewsletter to 120k subscribers | Grew it from zero to a 48% open rate.\nSEO content revamp | Restructured 50 posts and tripled organic traffic.",
+        "links": "Portfolio | https://kkot.example.com\nInstagram | https://instagram.com/kkot.writes\nBlog | https://kkot.example.com/blog\nLinkedIn | https://linkedin.com/in/kkot"
       },
       "shop": {
         "title": "Ongi Bakery",
@@ -194,6 +209,9 @@
       }
     },
     "preview": {
+      "expertise": "Expertise",
+      "work": "Featured work",
+      "links": "Elsewhere",
       "about": "About",
       "directions": "Find us",
       "gallery": "Photos",

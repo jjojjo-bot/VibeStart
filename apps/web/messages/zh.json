@@ -167,6 +167,18 @@
       "contact": {
         "label": "联系方式·链接",
         "placeholder": "例：Instagram @id、群聊"
+      },
+      "tags": {
+        "label": "专长",
+        "placeholder": "用逗号分隔（例: 内容策略, 文案）"
+      },
+      "work": {
+        "label": "主要作品",
+        "placeholder": "每行一个 — 标题 | 说明"
+      },
+      "links": {
+        "label": "链接",
+        "placeholder": "每行一个 — 名称 | https://..."
       }
     },
     "samples": {
@@ -174,7 +186,10 @@
         "title": "金智英",
         "tagline": "连接人与故事的内容营销人",
         "body": "你好，我是有 5 年经验的内容营销人金智英。\n寻找品牌的声音，创作能打动人的故事。",
-        "contact": "邮箱 jiyeong@example.com"
+        "contact": "邮箱 jiyeong@example.com",
+        "tags": "内容策略, 品牌声音, 文案, 邮件通讯, SEO",
+        "work": "品牌声音指南 | 为 3 家创业公司定义了语气与风格。\n12 万订阅的邮件通讯 | 从零做到 48% 打开率。\nSEO 内容改版 | 重构 50 篇博客，自然流量提升 3 倍。",
+        "links": "作品集 | https://kkot.example.com\nInstagram | https://instagram.com/kkot.writes\n博客 | https://kkot.example.com/blog\nLinkedIn | https://linkedin.com/in/kkot"
       },
       "shop": {
         "title": "暖意烘焙坊",
@@ -194,6 +209,9 @@
       }
     },
     "preview": {
+      "expertise": "专长",
+      "work": "主要作品",
+      "links": "链接",
       "about": "简介",
       "directions": "位置",
       "gallery": "相册",

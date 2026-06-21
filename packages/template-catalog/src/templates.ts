@@ -10,12 +10,22 @@ export const FIELD_KINDS: Record<TemplateFieldKey, TemplateFieldKind> = {
   tagline: 'text',
   body: 'textarea',
   contact: 'text',
+  tags: 'text',
+  work: 'textarea',
+  links: 'textarea',
+  menu: 'textarea',
+  hours: 'textarea',
+  location: 'text',
+  date: 'text',
+  venue: 'text',
+  photos: 'textarea',
+  features: 'textarea',
 };
 
 export const introTemplate: TemplateDefinition = {
   id: 'intro',
   category: 'intro',
-  fields: ['title', 'tagline', 'body', 'contact'],
+  fields: ['title', 'tagline', 'body', 'tags', 'work', 'links', 'contact'],
   accent: '#b4532a',
 };
 

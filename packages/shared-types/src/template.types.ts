@@ -5,9 +5,23 @@
  * 구조는 카탈로그(신뢰)에서, 내용은 사용자(신뢰 불가)에서 온다.
  */
 
-export type TemplateCategory = 'intro' | 'shop' | 'invitation' | 'todo';
+export type TemplateCategory = 'intro' | 'shop' | 'invitation' | 'todo' | 'launch';
 
-export type TemplateFieldKey = 'title' | 'tagline' | 'body' | 'contact';
+export type TemplateFieldKey =
+  | 'title'
+  | 'tagline'
+  | 'body'
+  | 'contact'
+  | 'tags'
+  | 'work'
+  | 'links'
+  | 'menu'
+  | 'hours'
+  | 'location'
+  | 'date'
+  | 'venue'
+  | 'photos'
+  | 'features';
 
 export type TemplateFieldKind = 'text' | 'textarea';
 
@@ -33,6 +47,9 @@ export type TemplatePreviewLabels = {
   /** <html lang> 값 */
   lang: string;
   about: string;
+  expertise: string;
+  work: string;
+  links: string;
   directions: string;
   gallery: string;
   guestbook: string;

@@ -167,6 +167,18 @@
       "contact": {
         "label": "연락처·링크",
         "placeholder": "예: 인스타 @id, 카톡 오픈채팅"
+      },
+      "tags": {
+        "label": "전문 분야",
+        "placeholder": "쉼표로 구분 (예: 콘텐츠 전략, 카피라이팅)"
+      },
+      "work": {
+        "label": "주요 작업",
+        "placeholder": "한 줄에 하나 — 제목 | 설명"
+      },
+      "links": {
+        "label": "링크",
+        "placeholder": "한 줄에 하나 — 라벨 | https://..."
       }
     },
     "samples": {
@@ -174,7 +186,10 @@
         "title": "김꽃님",
         "tagline": "사람과 이야기를 잇는 콘텐츠 마케터",
         "body": "안녕하세요. 5년 차 콘텐츠 마케터 김꽃님입니다.\n브랜드의 목소리를 찾고, 사람에게 가닿는 이야기를 만듭니다.",
-        "contact": "이메일 jiyeong@example.com"
+        "contact": "이메일 jiyeong@example.com",
+        "tags": "콘텐츠 전략, 브랜드 보이스, 카피라이팅, 뉴스레터, SEO",
+        "work": "브랜드 보이스 가이드 | 스타트업 3곳의 톤앤매너를 정의했어요.\n월 12만 구독 뉴스레터 | 0에서 시작해 오픈율 48%로 키웠습니다.\nSEO 콘텐츠 리뉴얼 | 블로그 50편을 재구조화해 유입을 3배로 늘렸어요.",
+        "links": "포트폴리오 | https://kkot.example.com\n인스타그램 | https://instagram.com/kkot.writes\n브런치 | https://brunch.co.kr/@kkot\n링크드인 | https://linkedin.com/in/kkot"
       },
       "shop": {
         "title": "온기 베이커리",
@@ -194,6 +209,9 @@
       }
     },
     "preview": {
+      "expertise": "전문 분야",
+      "work": "주요 작업",
+      "links": "연결",
       "about": "소개",
       "directions": "오시는 길",
       "gallery": "사진첩",

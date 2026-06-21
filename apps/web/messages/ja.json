@@ -167,6 +167,18 @@
       "contact": {
         "label": "連絡先・リンク",
         "placeholder": "例: インスタ @id、オープンチャット"
+      },
+      "tags": {
+        "label": "専門分野",
+        "placeholder": "カンマ区切り（例: コンテンツ戦略, コピーライティング）"
+      },
+      "work": {
+        "label": "主な実績",
+        "placeholder": "1行に1つ — タイトル | 説明"
+      },
+      "links": {
+        "label": "リンク",
+        "placeholder": "1行に1つ — ラベル | https://..."
       }
     },
     "samples": {
@@ -174,7 +186,10 @@
         "title": "キム・コンニム",
         "tagline": "人と物語をつなぐコンテンツマーケター",
         "body": "こんにちは。5年目のコンテンツマーケター、キム・コンニムです。\nブランドの声を見つけ、人に届く物語を作ります。",
-        "contact": "メール jiyeong@example.com"
+        "contact": "メール jiyeong@example.com",
+        "tags": "コンテンツ戦略, ブランドボイス, コピーライティング, ニュースレター, SEO",
+        "work": "ブランドボイスガイド | スタートアップ3社のトーン＆マナーを定義しました。\n12万人購読のニュースレター | ゼロから開封率48%まで育てました。\nSEOコンテンツ刷新 | 記事50本を再構成し、流入を3倍に伸ばしました。",
+        "links": "ポートフォリオ | https://kkot.example.com\nInstagram | https://instagram.com/kkot.writes\nブログ | https://kkot.example.com/blog\nLinkedIn | https://linkedin.com/in/kkot"
       },
       "shop": {
         "title": "オンギ ベーカリー",
@@ -194,6 +209,9 @@
       }
     },
     "preview": {
+      "expertise": "専門分野",
+      "work": "主な実績",
+      "links": "リンク",
       "about": "紹介",
       "directions": "アクセス",
       "gallery": "フォト",
