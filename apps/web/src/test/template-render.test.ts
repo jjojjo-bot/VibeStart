@@ -18,13 +18,13 @@ describe('template render', () => {
     const tpl = getTemplate('intro')!;
     const html = renderTemplate(tpl, { title: 'Jiyeong' });
     expect(html).toContain('Jiyeong');
-    expect(html).not.toContain('class="tagline"');
+    expect(html).not.toContain('class="role"');
   });
 
   it('renders provided optional fields', () => {
     const tpl = getTemplate('intro')!;
     const html = renderTemplate(tpl, { title: 'Cafe', tagline: 'Warm coffee' });
-    expect(html).toContain('class="tagline"');
+    expect(html).toContain('class="role"');
     expect(html).toContain('Warm coffee');
   });
 });
