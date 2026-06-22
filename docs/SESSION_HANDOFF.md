@@ -1,16 +1,16 @@
-# Session Handoff — 2026-06-19
+# Session Handoff — 2026-06-22
 
 다른 기기에서 새 Claude Code 세션을 시작할 때 이 문서를 먼저 읽으면 작업을 바로 이어갈 수 있다. 이 PC의 `~/.claude/projects/.../memory/` 메모리는 git에 안 올라가므로, 핵심 전략·다음 단계를 여기 합쳐 둔다.
 
-**최신 커밋**: `f4ad4ed` (미리보기 4종 리치 레이아웃 재설계 + 투두앱 + i18n)
+**최신 커밋**: `4eb8ad4` (5분 체험 미리보기 4종 와이어업 완성 — shop/invitation 필드 연결 + todo→launch)
 **브랜치**: `main` (origin과 동기화됨)
-**기준일**: 2026-06-19
-**프로덕션**: https://vibe-start.com (이번 세션 작업 전부 라이브 배포됨)
+**기준일**: 2026-06-22
+**프로덕션**: https://vibe-start.com (아래 §1 작업 전부 라이브 배포됨)
 
 ## 다른 기기에서 바로 이어가기
 
 ```bash
-cd ~/VibeStart && git pull      # c3175f8 이상 확인
+cd ~/VibeStart && git pull      # 4eb8ad4 이상 확인
 pnpm install
 pnpm dev:web                    # localhost:3000 (점유 시 3001 fallback)
 ```
@@ -20,7 +20,7 @@ pnpm dev:web                    # localhost:3000 (점유 시 3001 fallback)
 
 ---
 
-## 0. 큰 그림 (이번 세션에서 확정된 전략)
+## 0. 큰 그림 (확정된 전략)
 
 상세 근거는 메모리 `project_target_persona_verification`에 있음. 요약:
 
@@ -35,57 +35,47 @@ pnpm dev:web                    # localhost:3000 (점유 시 3001 fallback)
 
 ---
 
-## 1. 2026-06-19 세션에서 완료한 것 (전부 프로덕션 배포)
+## 1. 완료된 것 (전부 프로덕션 배포)
 
-### 1-1. 진단 루프 ("안 됐어요?" 복구) — 커밋 `670562e`, `7073a1f`
+### 1-A. B′ 첫성공 플로우 (브라우저에서 5분 만에 라이브 페이지)
+
+`/start` → 카테고리 선택 → 빈칸 채우기(빈 칸은 샘플 자동) → 라이브 미리보기 → 발행 → 졸업 브릿지.
+컴포넌트: `apps/web/src/components/start/build-wizard.tsx`. 렌더/이스케이프는 도메인 `packages/template-catalog`에 위임.
+
+- **템플릿 카탈로그 4종** (`packages/template-catalog`): `intro`(링크인바이오) / `shop`(매장 랜딩) / `launch`(Coming Soon) / `invitation`(청첩장). 카테고리마다 **구조가 완전히 다른** 다크 오로라 글래스 정적 레이아웃 + 마우스 색-물결 + 템플릿별 시그니처 파티클. `render.ts`가 결정론적으로 값→HTML(이스케이프).
+- **미리보기 와이어업 완성** (커밋 `4eb8ad4`, 2026-06-22): shop은 `menu/hours/location`, invitation은 `date/venue/location/photos` 필드가 정의에 연결돼 메뉴판·추상지도·사진 히어로·자동 달력이 실제로 렌더됨. **todo 템플릿 제거 → launch로 교체**. render.ts 하드코딩 한국어 9종을 `TemplatePreviewLabels`로 분리해 로케일 주입(영어 등에서 한국어 누수 없음). 렌더 테스트 8종 추가.
+- **화면 4 — 퍼블리시** (`a42558c` 등): 슬러그 선택 → 익명 발행(TTL 24h) → 라이브 URL `/p/{slug}`(`app/p/[slug]/route.ts`, locale 무관, no-store). 발행 직후 pending slug를 쿠키에 심고, 가입 시 `claim-pending.ts`로 영구 연결. 슬러그 검증·한글 IME·충돌 방지 QA 반영.
+- **화면 5 — 졸업 브릿지** (`graduate` step): 🆓 무료(`/dashboard`) / 🚀 AI(`/onboarding`) 2갈래 + 매니페스토(브랜드 라인).
+- **liquid-glass** 디자인: `apps/web/src/styles/liquid-glass.css`(벤더) route-layout 스코프. 튜너는 dev에서만.
+- i18n `Start` 6언어 (preview 라벨 + 템플릿/필드 라벨 + 샘플 전부 번역, 키 동기화).
+
+### 1-B. 진단 루프 ("안 됐어요?" 복구)
+
 사용자가 로컬 셋업에서 막혔을 때 터미널 출력을 붙여넣으면 원인 진단 + 사전 검증된 복구만 제시.
-- **신규 패키지 `packages/diagnosis-catalog`**: `DiagnosisRule` 시드 카탈로그(rules.ts) + 매처(matcher.ts) + 복구 스크립트(remedies.ts) + 카탈로그 무결성/안전 검증(validate-catalog.ts, policy-engine `DANGEROUS_PATTERNS` 재사용).
-- `shared-types/diagnosis.types.ts`, `policy-engine/dangerous-patterns.ts`(단일 출처로 분리).
-- 웹: `apps/web/src/components/diagnosis/stuck-helper.tsx` → `/setup` 각 활성 스텝 카드에 마운트. 매칭은 클라이언트, 인식/모호/모름 3분기 + 재검증. 붙여넣은 출력은 매칭 전용(명령 합성 안 함).
-- i18n `Diagnosis` 6언어 + cause 12/guide 6/ask 1 본문.
-- ⚠️ 현재 `/setup`은 **pre-D′(레거시 복붙)** 플로우 — 진단 루프는 시그니처 매칭으로 작동하지만, 구조화 마커(`VIBESTART::`)는 D′ 하드닝(§2-6) 후에야 나옴.
+- `packages/diagnosis-catalog`: 시드 카탈로그(rules.ts) + 매처 + 복구 스크립트 + 무결성/안전 검증. 마스킹(`mask.ts`).
+- 웹: `components/diagnosis/stuck-helper.tsx` → `/setup` 활성 스텝 카드에 마운트. 인식/모호/모름 3분기.
+- **보강 완료**: BIOS 가상화 그림 가이드(`feee51f`), '모름' 에스컬레이션 전송(`1913aef`), 관리자 검토 화면 `/admin/diagnosis`(이메일 게이트, `73c96a4`), 리포트 저장(`api/diagnosis-report`).
 
-### 1-2. B′ 첫성공 빌더 — 커밋 `2af2c0d`
-- **신규 패키지 `packages/template-catalog`**: 템플릿 정의(나 소개·가게·초대장) + 결정론적 렌더 + **XSS 이스케이프**(render.ts). `shared-types/template.types.ts`.
-- 웹: `apps/web/src/components/start/build-wizard.tsx` (카테고리 → 빈칸 채우기 → iframe 라이브 미리보기, 빈 칸은 샘플 자동 채움). `/start` 라우트(`app/[locale]/start/{layout,page}.tsx`).
-- **liquid-glass 디자인** 적용: `apps/web/src/styles/liquid-glass.css`(벤더) + route-layout으로 /start에만 스코프. 튜너(`public/glass-tuner.js`)는 dev에서만 로드.
-- i18n `Start` 6언어. 렌더 유닛 테스트(`src/test/template-render.test.ts`, XSS 포함).
+### 1-C. D′ 셋업 스크립트 하드닝
 
-### 1-3. 랜딩 메인 CTA → /start 전환 — 커밋 `c3175f8`
-- 히어로·하단 CTA 둘 다: 메인(filled) "설치 없이 5분 체험" → `/start`, 보조(outline) "개발 환경 설치하기" → `/onboarding`.
-- i18n `Landing.startCta`/`Landing.fullSetupCta` 6언어.
-- 라이브 검증 완료: vibe-start.com 랜딩 CTA + /start 빌더 정상 렌더.
+`apps/web/src/lib/setup-steps.ts` + `packages/script-generator/src/harden.ts`.
+- 구조화 마커(`VIBESTART::`) + 항상 ✅/❌ 종료, pre-flight 점검(가상화/버전/관리자, `eacc1bb`), 재부팅 체크포인트 UI(`83fdf3f`), Windows editor 단계는 내부 exit이라 하드닝 제외(`1affc7b`).
+
+### 1-D. 랜딩 메인 CTA → /start 전환
+
+히어로·하단 CTA 메인(filled) "설치 없이 5분 체험" → `/start`, 보조 "개발 환경 설치하기" → `/onboarding`.
 
 ---
 
-## 2. 다음 할 일 (차례대로)
+## 2. 다음 할 일 (남은 것)
 
-빠른 마무리 → B′ 흐름 완성(화면 순) → D′ 하드닝 → 보강 순.
+빠른 마무리 → B′ 마지막 화면 → 보강 순.
 
-### ⭐ 집에서 바로 이어갈 것 (2026-06-19 오후 작업분)
+1. **B′ 화면 3 — AI 손질** ("말로 바꿔보세요", **미구현**): `PageEditPort`(헥사고날) + Claude API 어댑터. 모든 손질 undo 가능, AI 출력은 템플릿 스키마 검증 후 적용(생 에러 노출 ❌). 비용: Claude API. → B′ 흐름의 마지막 미완 화면.
+2. **(선택) invitation 샘플 사진 소스 결정**: 현재 데모 사진은 `picsum.photos`(시드 고정) **외부 URL**. 사진 히어로/갤러리를 데모에서 보여주려는 의도지만 외부 의존이 생김. 자체 호스팅 이미지로 교체하거나, 비워서 비-사진 히어로로 폴백할지 결정.
+3. **(선택) /start 글래스 톤 시각 튜닝**: dev에서 우하단 🎛(Ctrl+Shift+G)로 블러·농도·모서리 조정 → "CSS 복사"한 `:root` knob을 `liquid-glass.css` 상단에 굽기. (눈으로 보고 결정, 우선순위↓)
 
-미리보기 예시를 **구조가 완전히 다른 리치 정적 레이아웃 4종**으로 전면 재설계해 배포함
-(커밋 `ebf7cc8` 레이아웃, `f4ad4ed` i18n 6언어). 코드 전부 `packages/template-catalog/src/render.ts`.
-- **intro** = 인스타 프로필(밝음): 스토리링 아바타+바이오+링크+3×3 갤러리
-- **shop** = 실제 매장 랜딩(밝음): 히어로 사진+갤러리+소개+오시는 길(지도 SVG 핀)
-- **todo** = 투두 앱 UI(밝음, **신규 카테고리**): 진행바+체크박스 목록(완료 취소선)+추가바
-- **invitation** = 모던 청첩장(밝음): 사진 히어로+인사말+사진첩+지도+방명록
-- 합의: **동작 필요 없음, 첫 레이아웃이 핵심**(정적). 색이 아니라 "페이지 종류 자체"를 다르게.
-
-집에서 할 일:
-- [ ] **라이브 확인**: vibe-start.com/start → 4종 카드 클릭해 레이아웃 점검(창 1280px 미만은 미리보기 전체폭 스택).
-- [ ] **폼 라벨 미스매치(알려진 잔여)**: 필드 라벨이 전역(`fields.*.label`)이라 투두에서 body가 "자세한 소개"로 표시됨. 템플릿별 라벨 필요하면 `templates.{id}.fields.*` + build-wizard 폴백(6언어). 미리보기 아닌 **폼 UX**만의 이슈.
-- [ ] (선택) 샘플 미세조정: invitation 샘플 title "지영 ♥ 민수 결혼합니다"가 히어로 eyebrow와 약간 중복. 짧게 다듬으려면 6언어 `samples.invitation.title`.
-
-1. **/start 글래스 톤 시각 튜닝** (빠름, 우선순위↓ — 위 4종 재설계로 미리보기는 밝은 톤이 됨). `pnpm dev:web` → /start 우하단 🎛(또는 Ctrl+Shift+G)로 블러·농도·모서리 조정 → "CSS 복사"한 `:root` knob 블록을 `liquid-glass.css` 상단에 굽기. (현재 시각 확인 안 됨 — 눈으로 보고 결정)
-2. **죽은 i18n 키 3개 청소** (빠름): `Diagnosis.foundProblem`, `Diagnosis.remedy.guidePlaceholder`, `Diagnosis.remedy.askPrompt` — 6언어 모두에서 제거(i18n-sync 유지).
-3. **B′ 화면 4 — 퍼블리시**: 미리보기 → 라이브 URL(`name.vibestart.app` 서브도메인) + **적시 가입**(올리기 직전, 카카오 우선). 첫성공 도파민 완성. 인프라: 와일드카드 서브도메인 호스팅 + 익명 임시 저장 + 가입.
-4. **B′ 화면 5 — 졸업 브릿지** (2단). 🆓 무료=기존 **M1**(GitHub+Vercel OAuth) 재프레이밍 + 브라우저 기본편집 유지. 🚀 AI=**Phase 1 설치(D′)** + **M3** Claude, $20 게이트는 M3 진입 직전. 매니페스토(브랜드 라인) 두 카드 위.
-5. **B′ 화면 3 — AI 손질** ("말로 바꿔보세요"): `PageEditPort`(헥사고날) + Claude API 어댑터. 모든 손질 undo 가능, AI 출력은 템플릿 스키마 검증 후 적용(생 에러 노출 ❌). 비용: Claude API.
-6. **D′ 셋업 스크립트 하드닝** (`apps/web/src/lib/setup-steps.ts`): `trap`+구조화 마커(`VIBESTART::step=…::result=…::code=…`) + 항상 ✅/❌ 종료, pre-flight 점검(가상화/버전/관리자), 재부팅 체크포인트 UI, stale-PATH 검증(새 셸서 도구 확인), 멱등화, projectCreate → `git clone` 사용자 저장소로(스캐폴딩 대신). → 진단 루프 마커 매칭이 실제로 작동.
-7. **진단 카탈로그 보강**: 실제 에러 시그니처 정규식(로케일/버전별), BIOS 그림 가이드 스크린샷, ③ 에스컬레이션 전송(마스킹), 자가개선 루프(미인식 붙여넣기 → 새 규칙).
-
-### 이전 백로그 (여전히 유효, 위 끝낸 뒤)
+### 이전 백로그 (여전히 유효)
 - Phase 1→2 폴더 핸드오프 옵션 A (`PHASE1_DATA_COOKIE`를 onboarding/setup 진입 시 세팅, TTL 7일). 메모리 `project_phase1_handoff_pending` 참조.
 - web-python 트랙 실기기 풀사이클 검증 · auth-ui locale 반영 · verify substep 실제 HTTP · 서버액션 에러 친화 메시지 · M2 메타 Vault 이관 · Phase 2b 트랙 전환 마이그레이션 가드.
 
@@ -95,18 +85,21 @@ pnpm dev:web                    # localhost:3000 (점유 시 3001 fallback)
 
 ```bash
 pnpm -r typecheck
-pnpm --filter @vibestart/web lint
-pnpm --filter @vibestart/web test     # 65 tests (i18n-sync 6언어 + 템플릿 렌더/XSS 포함)
+pnpm --filter @vibestart/web lint     # 0 errors (기존 무관 warning 14개)
+pnpm --filter @vibestart/web test     # 111 tests (i18n-sync 6언어 + 템플릿 렌더 4종/XSS/라벨 주입 포함)
 pnpm --filter @vibestart/web build    # 푸시 전 게이트 (배포 = main push)
 ```
 
-## 4. 이번 세션 커밋
+## 4. 최근 주요 커밋
 
 ```
-c3175f8 feat(web): 랜딩 메인 CTA를 /start(설치 없이 5분 체험)로 전환
-2af2c0d feat(web): B′ 첫성공 빌더 — 템플릿 카탈로그 + 라이브 미리보기(liquid-glass)
-7073a1f feat(web): 진단 루프 cause/guide 본문 + 6개 언어 채움
-670562e feat(web): 셋업 실패 진단 루프 추가 (diagnosis-catalog + StuckHelper)
+4eb8ad4 feat(web): 5분 체험 미리보기 4종 와이어업 완성 — shop/invitation 필드 연결 + todo→launch 교체
+a9bdb90 feat(web): /start 출력 페이지 4종 다크 글래스 리디자인 + 마우스 인터랙션
+73c96a4 feat(web): 진단 리포트 관리자 검토 화면(/admin/diagnosis, 이메일 게이트)
+1913aef feat(web): 진단 에스컬레이션 전송 (#13②) — '모름' 번들 수집
+feee51f feat(web): 진단 BIOS 가상화 그림 가이드 (#13①)
+a42558c feat(web): B′ 화면 4 — 퍼블리시 (미리보기 → 라이브 URL /p/{slug})
+eacc1bb feat(web): D′ pre-flight 점검 단계 — wsl 설치 전 관리자·Windows 버전 확인
 ```
 
 ## 5. 운영 규칙 (잊지 말기)
