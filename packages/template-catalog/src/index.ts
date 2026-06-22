@@ -7,7 +7,7 @@ export {
   introTemplate,
   shopTemplate,
   invitationTemplate,
-  todoTemplate,
+  launchTemplate,
 } from './templates';
 export { renderTemplate, escapeHtml, contactHref, DEFAULT_PREVIEW_LABELS } from './render';
 export { sanitizeTemplateValues, MAX_FIELD_LEN } from './sanitize';

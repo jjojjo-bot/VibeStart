@@ -112,7 +112,55 @@
       },
       "shop": {
         "title": "Tienda o taller",
-        "desc": "Menú · ubicación · reservas"
+        "desc": "Menú · ubicación · reservas",
+        "fields": {
+          "title": {
+            "label": "Nombre del local",
+            "placeholder": "ej.: Panadería Ongi"
+          },
+          "body": {
+            "label": "Sobre el local",
+            "placeholder": "Cuenta qué hace especial a tu lugar"
+          },
+          "menu": {
+            "label": "Menú destacado",
+            "placeholder": "Uno por línea — nombre | descripción | precio\nej.: Americano | origen único intenso | 4,50"
+          },
+          "hours": {
+            "label": "Horario",
+            "placeholder": "ej.: Mar–Dom 10:00–19:00\nLunes cerrado"
+          },
+          "location": {
+            "label": "Ubicación / dirección",
+            "placeholder": "ej.: Calle del Callejón 12-3, Seúl"
+          }
+        }
+      },
+      "launch": {
+        "title": "Página de lanzamiento",
+        "desc": "Lanzamiento de producto o proyecto",
+        "fields": {
+          "title": {
+            "label": "Nombre del producto / proyecto",
+            "placeholder": "ej.: Noeul — una foto al día"
+          },
+          "tagline": {
+            "label": "Presentación en una línea",
+            "placeholder": "ej.: Captura el día con una foto cada noche"
+          },
+          "date": {
+            "label": "Fecha de lanzamiento",
+            "placeholder": "ej.: 1 de diciembre de 2026, 10:00"
+          },
+          "body": {
+            "label": "Descripción",
+            "placeholder": "Describe tu producto con libertad"
+          },
+          "features": {
+            "label": "Funciones clave",
+            "placeholder": "Una por línea — nombre | descripción\nej.: Una al día | deja una foto cada noche"
+          }
+        }
       },
       "invitation": {
         "title": "Invitación",
@@ -120,33 +168,31 @@
         "fields": {
           "title": {
             "label": "Título",
-            "placeholder": "Ej.: Kkotnim ♥ Minsu"
+            "placeholder": "ej.: Kkotnim ♥ Minsu"
           },
           "tagline": {
+            "label": "Saludo en una línea",
+            "placeholder": "ej.: Acompáñanos el día que nos unimos"
+          },
+          "date": {
+            "label": "Fecha y hora",
+            "placeholder": "ej.: Sábado 12 de septiembre de 2026, 14:00"
+          },
+          "venue": {
+            "label": "Lugar",
+            "placeholder": "ej.: Gran Salón, 3.er piso, Salón Somewhere"
+          },
+          "location": {
+            "label": "Dirección",
+            "placeholder": "ej.: Calle Somewhere 123, Seúl"
+          },
+          "body": {
             "label": "Saludo",
-            "placeholder": "Ej.: Acompáñanos el día en que nos unimos"
+            "placeholder": "ej.: Dos caminos que ahora se vuelven uno.\nTu presencia sería nuestra mayor alegría."
           },
-          "body": {
-            "label": "Fecha · lugar · detalles",
-            "placeholder": "Ej.: Sáb, 12 sep 2026, 14:00\nSalón ○○"
-          }
-        }
-      },
-      "todo": {
-        "title": "Tareas · Lista",
-        "desc": "App de tareas diarias",
-        "fields": {
-          "title": {
-            "label": "Nombre de la lista",
-            "placeholder": "Ej.: Tareas de hoy"
-          },
-          "tagline": {
-            "label": "Subtítulo",
-            "placeholder": "Ej.: Organiza el día sin agobios"
-          },
-          "body": {
-            "label": "Tareas (una por línea)",
-            "placeholder": "Comprar víveres\nEntrenar 30 min\nLeer un libro"
+          "photos": {
+            "label": "Fotos (un enlace por línea)",
+            "placeholder": "https://...\nLa primera es la principal; el resto va a la galería"
           }
         }
       }
@@ -194,35 +240,56 @@
       "shop": {
         "title": "Panadería Ongi",
         "tagline": "Una pequeña panadería de barrio, recién horneada cada mañana",
-        "body": "Horneamos dos veces al día con masa madre natural.\nHorario: mar–dom 10:00–19:00 (lun cerrado)\nEn un callejón de algún lugar de Seúl",
+        "body": "Horneado dos veces al día con masa madre natural, en un horno pequeño y con mucho cariño. Una panadería que llena de calidez las mañanas del barrio.",
+        "menu": "Pan de sal | crujiente por fuera, tierno por dentro — el favorito | 3.500\nCampaña integral | fermentada 24 h con masa madre | 6.000\nCruasán de mantequilla | capas de mantequilla francesa | 4.200\nCafé de filtro | un origen único que cambia cada día | 4.500",
+        "hours": "Mar–Dom 10:00–19:00\nLunes cerrado",
+        "location": "Calle del Callejón 12-3, Seúl",
         "contact": "Reservas por Instagram @ongi.bakery"
+      },
+      "launch": {
+        "title": "Noeul — una foto al día",
+        "tagline": "Captura el día con una foto y una frase cada noche",
+        "date": "1 de diciembre de 2026 · 10:00",
+        "body": "Llevar un diario completo agobia. Noeul es el diario más ligero: solo una foto al día para el momento que se quedó contigo.",
+        "features": "Una al día | Cuando llega la noche, deja una foto y una frase de hoy.\nResumen automático | Tras un mes, tus entradas forman una pequeña historia.\nCompartir en silencio | Comparte solo lo que elijas, con un enlace privado.",
+        "contact": "Recibe novedades hello@noeul.app"
       },
       "invitation": {
         "title": "Kkotnim ♥ Minsu",
         "tagline": "Acompáñanos el día en que dos se vuelven uno",
-        "body": "Sábado 12 de septiembre de 2026, 14:00\nSalón de bodas Algún Lugar, 3.ª planta\nDetalles: directamente a la pareja"
-      },
-      "todo": {
-        "title": "Tareas de hoy",
-        "tagline": "Organiza tu día con ligereza",
-        "body": "✓ Estiramiento matutino (10 min)\n✓ Revisar el correo\nCompra (leche, huevos, pan)\nEjercicio 30 min\nLeer 30 páginas\nLlamar a un amigo"
+        "date": "Sábado 12 de septiembre de 2026 · 14:00",
+        "venue": "Gran Salón, 3.er piso, Salón Somewhere",
+        "location": "Calle Somewhere 123, Seúl",
+        "body": "Dos personas que caminaban por sendas distintas\nahora miran en la misma dirección y caminan juntas.\nTu presencia sería nuestra mayor alegría.",
+        "photos": "https://picsum.photos/seed/vibestart-wed-1/1000/1200\nhttps://picsum.photos/seed/vibestart-wed-2/800/1000\nhttps://picsum.photos/seed/vibestart-wed-3/800/1000\nhttps://picsum.photos/seed/vibestart-wed-4/800/1000\nhttps://picsum.photos/seed/vibestart-wed-5/800/1000",
+        "contact": "Envía tus deseos\nNovio 010-1234-5678 · Novia 010-8765-4321"
       }
     },
     "preview": {
+      "madeWith": "Hecho con VibeStart",
+      "about": "Acerca de",
       "expertise": "Especialidades",
       "work": "Trabajo destacado",
       "links": "Enlaces",
-      "about": "Acerca de",
       "directions": "Cómo llegar",
-      "gallery": "Fotos",
-      "guestbook": "Mensajes",
-      "guestbookPlaceholder": "Deja un mensaje…",
-      "guestbook1Who": "Haneul",
-      "guestbook1Msg": "¡Felicidades a los dos! Os deseo una vida llena de felicidad 💕",
-      "guestbook2Who": "Junho",
-      "guestbook2Msg": "Que siempre os cuidéis como hoy 🤍",
-      "todoAdd": "Añadir tarea",
-      "todoProgress": "%done% de %total% completadas"
+      "menu": "Menú",
+      "hours": "Horario",
+      "invite": "Te invitamos",
+      "ourMoments": "Nuestros momentos",
+      "weddingDate": "El gran día",
+      "venueHeading": "Lugar",
+      "giftHeading": "Envía tus deseos",
+      "weekdays": "Dom,Lun,Mar,Mié,Jue,Vie,Sáb",
+      "launchAbout": "De qué se trata",
+      "launchFeatures": "Funciones clave",
+      "cdDays": "días",
+      "cdHours": "h",
+      "cdMins": "min",
+      "cdSecs": "seg",
+      "emailPlaceholder": "Correo electrónico",
+      "waitlistBtn": "Unirme a la lista",
+      "waitlistProof": "Te avisaremos en cuanto lancemos",
+      "waitlistDone": "¡Ya estás en la lista! Te avisaremos primero al lanzar"
     }
   },
   "Metadata": {

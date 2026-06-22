@@ -112,7 +112,55 @@
       },
       "shop": {
         "title": "Shop or studio",
-        "desc": "Menu · location · booking"
+        "desc": "Menu · location · booking",
+        "fields": {
+          "title": {
+            "label": "Shop name",
+            "placeholder": "e.g. Ongi Bakery"
+          },
+          "body": {
+            "label": "About the shop",
+            "placeholder": "Tell people what makes your place special"
+          },
+          "menu": {
+            "label": "Signature menu",
+            "placeholder": "One per line — name | description | price\ne.g. Americano | bold single origin | 4,500"
+          },
+          "hours": {
+            "label": "Opening hours",
+            "placeholder": "e.g. Tue–Sun 10:00–19:00\nClosed Mondays"
+          },
+          "location": {
+            "label": "Location / address",
+            "placeholder": "e.g. 12-3 Alley St, Seoul"
+          }
+        }
+      },
+      "launch": {
+        "title": "Launch teaser",
+        "desc": "Product or project launch",
+        "fields": {
+          "title": {
+            "label": "Product / project name",
+            "placeholder": "e.g. Noeul — one photo a day"
+          },
+          "tagline": {
+            "label": "One-line pitch",
+            "placeholder": "e.g. Capture today with one evening photo"
+          },
+          "date": {
+            "label": "Launch date",
+            "placeholder": "e.g. Dec 1 2026, 10:00 AM"
+          },
+          "body": {
+            "label": "About",
+            "placeholder": "Describe your product freely"
+          },
+          "features": {
+            "label": "Key features",
+            "placeholder": "One per line — name | description\ne.g. One a day | leave one photo each evening"
+          }
+        }
       },
       "invitation": {
         "title": "Invitation",
@@ -123,30 +171,28 @@
             "placeholder": "e.g. Kkotnim ♥ Minsu"
           },
           "tagline": {
-            "label": "Greeting line",
-            "placeholder": "e.g. Join us on the day we become one"
+            "label": "One-line greeting",
+            "placeholder": "e.g. Please join us as we become one"
+          },
+          "date": {
+            "label": "Date & time",
+            "placeholder": "e.g. Saturday, Sep 12 2026, 2:00 PM"
+          },
+          "venue": {
+            "label": "Venue",
+            "placeholder": "e.g. Grand Ballroom, 3F Somewhere Hall"
+          },
+          "location": {
+            "label": "Address",
+            "placeholder": "e.g. 123 Somewhere Rd, Seoul"
           },
           "body": {
-            "label": "Date · place · details",
-            "placeholder": "e.g. Sat, Sep 12, 2026, 2:00 PM\n○○ Wedding Hall"
-          }
-        }
-      },
-      "todo": {
-        "title": "To-Do · Checklist",
-        "desc": "Daily task app",
-        "fields": {
-          "title": {
-            "label": "List name",
-            "placeholder": "e.g. Today's tasks"
+            "label": "Greeting",
+            "placeholder": "e.g. Two paths now become one.\nYour presence would be our greatest joy."
           },
-          "tagline": {
-            "label": "Subtitle",
-            "placeholder": "e.g. A light plan for the day"
-          },
-          "body": {
-            "label": "To-dos (one per line)",
-            "placeholder": "Buy groceries\nWork out 30 min\nRead a book"
+          "photos": {
+            "label": "Photos (one link per line)",
+            "placeholder": "https://...\nThe first is the hero, the rest fill the gallery"
           }
         }
       }
@@ -194,35 +240,56 @@
       "shop": {
         "title": "Ongi Bakery",
         "tagline": "A small neighborhood bakery, baked fresh every morning",
-        "body": "Baked twice a day with natural sourdough.\nHours: Tue–Sun 10:00–19:00 (closed Mon)\nIn an alley somewhere in Seoul",
+        "body": "Baked twice a day from natural sourdough, in a tiny oven with a lot of care. A little bakery warming the neighborhood every morning.",
+        "menu": "Salt bread | crisp outside, soft inside — our signature | 3,500\nWholewheat campagne | 24h naturally leavened | 6,000\nButter croissant | layered with French butter | 4,200\nDrip coffee | a single origin that changes daily | 4,500",
+        "hours": "Tue–Sun 10:00–19:00\nClosed Mondays",
+        "location": "12-3 Alley St, Somewhere-gu, Seoul",
         "contact": "Book via Instagram @ongi.bakery"
+      },
+      "launch": {
+        "title": "Noeul — one photo a day",
+        "tagline": "Capture today with a single evening photo and a line",
+        "date": "December 1, 2026 · 10:00 AM",
+        "body": "Big journaling feels like a chore. Noeul is the lightest diary there is — just one photo a day for the moment that stayed with you.",
+        "features": "One a day | When evening comes, leave one photo and a line for today.\nAuto recap | After a month, your entries gather into one little story.\nQuiet sharing | Share only the entries you choose, via a private link.",
+        "contact": "Get updates hello@noeul.app"
       },
       "invitation": {
         "title": "Kkotnim ♥ Minsu",
         "tagline": "Please join us on the day two become one",
-        "body": "Saturday, September 12, 2026, 2:00 PM\nSomewhere Wedding Hall, 3rd floor\nGifts: directly to the couple"
-      },
-      "todo": {
-        "title": "Today's To-Do",
-        "tagline": "Keep your day light and clear",
-        "body": "✓ Morning stretch (10 min)\n✓ Check email\nGroceries (milk, eggs, bread)\n30-min workout\nRead 30 pages\nCall a friend"
+        "date": "Saturday, September 12, 2026 · 2:00 PM",
+        "venue": "Grand Ballroom, 3F Somewhere Hall",
+        "location": "123 Somewhere Rd, Somewhere-gu, Seoul",
+        "body": "Two who once walked separate paths\nnow look the same way and walk as one.\nYour presence would be our greatest joy.",
+        "photos": "https://picsum.photos/seed/vibestart-wed-1/1000/1200\nhttps://picsum.photos/seed/vibestart-wed-2/800/1000\nhttps://picsum.photos/seed/vibestart-wed-3/800/1000\nhttps://picsum.photos/seed/vibestart-wed-4/800/1000\nhttps://picsum.photos/seed/vibestart-wed-5/800/1000",
+        "contact": "Send your wishes\nGroom 010-1234-5678 · Bride 010-8765-4321"
       }
     },
     "preview": {
+      "madeWith": "Made with VibeStart",
+      "about": "About",
       "expertise": "Expertise",
       "work": "Featured work",
       "links": "Elsewhere",
-      "about": "About",
       "directions": "Find us",
-      "gallery": "Photos",
-      "guestbook": "Guestbook",
-      "guestbookPlaceholder": "Leave a message…",
-      "guestbook1Who": "Haneul",
-      "guestbook1Msg": "Congratulations to you both! Wishing you a lifetime of happiness 💕",
-      "guestbook2Who": "Junho",
-      "guestbook2Msg": "May you always cherish each other like today 🤍",
-      "todoAdd": "Add task",
-      "todoProgress": "%done% of %total% done"
+      "menu": "Menu",
+      "hours": "Hours",
+      "invite": "You're invited",
+      "ourMoments": "Our moments",
+      "weddingDate": "The big day",
+      "venueHeading": "Venue",
+      "giftHeading": "Send your wishes",
+      "weekdays": "Sun,Mon,Tue,Wed,Thu,Fri,Sat",
+      "launchAbout": "What it's about",
+      "launchFeatures": "Key features",
+      "cdDays": "days",
+      "cdHours": "hrs",
+      "cdMins": "min",
+      "cdSecs": "sec",
+      "emailPlaceholder": "Email address",
+      "waitlistBtn": "Join waitlist",
+      "waitlistProof": "We'll let you know the moment we launch",
+      "waitlistDone": "You're on the list! We'll tell you first when we launch"
     }
   },
   "Metadata": {

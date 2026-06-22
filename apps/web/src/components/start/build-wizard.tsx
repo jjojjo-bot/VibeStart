@@ -62,23 +62,6 @@ const CATEGORY_ICONS: Record<TemplateCategory, ReactNode> = {
       <path d="M9.8 19.6v-4.3h4.4v4.3" />
     </svg>
   ),
-  todo: (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M10 7h9" />
-      <path d="M10 12h9" />
-      <path d="M10 17h9" />
-      <path d="m4 6.7 1.1 1.1L7.4 5.5" />
-      <path d="M4.3 12h2.9" />
-      <path d="M4.3 17h2.9" />
-    </svg>
-  ),
   invitation: (
     <svg
       viewBox="0 0 24 24"
@@ -167,20 +150,31 @@ export function BuildWizard() {
   function previewLabels(): TemplatePreviewLabels {
     return {
       lang: locale,
+      madeWith: t('preview.madeWith'),
       about: t('preview.about'),
       expertise: t('preview.expertise'),
       work: t('preview.work'),
       links: t('preview.links'),
       directions: t('preview.directions'),
-      gallery: t('preview.gallery'),
-      guestbook: t('preview.guestbook'),
-      guestbookPlaceholder: t('preview.guestbookPlaceholder'),
-      guestbookSamples: [
-        { who: t('preview.guestbook1Who'), msg: t('preview.guestbook1Msg') },
-        { who: t('preview.guestbook2Who'), msg: t('preview.guestbook2Msg') },
-      ],
-      todoAdd: t('preview.todoAdd'),
-      todoProgress: t('preview.todoProgress'),
+      menu: t('preview.menu'),
+      hours: t('preview.hours'),
+      invite: t('preview.invite'),
+      ourMoments: t('preview.ourMoments'),
+      weddingDate: t('preview.weddingDate'),
+      venueHeading: t('preview.venueHeading'),
+      giftHeading: t('preview.giftHeading'),
+      // 달력 요일 머리글 — CSV 한 키로 관리(일~토), 렌더는 string[]을 받는다.
+      weekdays: t('preview.weekdays').split(','),
+      launchAbout: t('preview.launchAbout'),
+      launchFeatures: t('preview.launchFeatures'),
+      cdDays: t('preview.cdDays'),
+      cdHours: t('preview.cdHours'),
+      cdMins: t('preview.cdMins'),
+      cdSecs: t('preview.cdSecs'),
+      emailPlaceholder: t('preview.emailPlaceholder'),
+      waitlistBtn: t('preview.waitlistBtn'),
+      waitlistProof: t('preview.waitlistProof'),
+      waitlistDone: t('preview.waitlistDone'),
     };
   }
 

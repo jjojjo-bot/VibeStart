@@ -112,7 +112,55 @@
       },
       "shop": {
         "title": "お店・工房の紹介",
-        "desc": "メニュー・場所・予約案内"
+        "desc": "メニュー・場所・予約案内",
+        "fields": {
+          "title": {
+            "label": "店名",
+            "placeholder": "例: オンギ ベーカリー"
+          },
+          "body": {
+            "label": "お店の紹介",
+            "placeholder": "どんなお店か自由に書いてください"
+          },
+          "menu": {
+            "label": "看板メニュー",
+            "placeholder": "1行に1つ — 名前 | 説明 | 価格\n例: アメリカーノ | 深煎りシングルオリジン | 450"
+          },
+          "hours": {
+            "label": "営業時間",
+            "placeholder": "例: 火–日 10:00–19:00\n月曜定休"
+          },
+          "location": {
+            "label": "場所・住所",
+            "placeholder": "例: ソウル どこか区 路地12-3"
+          }
+        }
+      },
+      "launch": {
+        "title": "ローンチ予告ページ",
+        "desc": "製品・プロジェクトのローンチ",
+        "fields": {
+          "title": {
+            "label": "製品・プロジェクト名",
+            "placeholder": "例: ノウル — 1日1枚の写真日記"
+          },
+          "tagline": {
+            "label": "一言で紹介",
+            "placeholder": "例: 毎晩、写真1枚で今日を残そう"
+          },
+          "date": {
+            "label": "公開予定日",
+            "placeholder": "例: 2026年12月1日 午前10時"
+          },
+          "body": {
+            "label": "紹介",
+            "placeholder": "どんな製品か自由に書いてください"
+          },
+          "features": {
+            "label": "主な機能",
+            "placeholder": "1行に1つ — 名前 | 説明\n例: 1日1枚 | 毎晩、今日の写真を残す"
+          }
+        }
       },
       "invitation": {
         "title": "招待状",
@@ -120,33 +168,31 @@
         "fields": {
           "title": {
             "label": "タイトル",
-            "placeholder": "例: コンニム ♥ ミンス"
+            "placeholder": "例: ハナ ♥ ミンス"
           },
           "tagline": {
-            "label": "ひとことご挨拶",
-            "placeholder": "例: 二人が夫婦になる日、ぜひお越しください"
+            "label": "一言あいさつ",
+            "placeholder": "例: 二人が夫婦になる日、ご一緒ください"
+          },
+          "date": {
+            "label": "日付・時間",
+            "placeholder": "例: 2026年9月12日(土) 午後2時"
+          },
+          "venue": {
+            "label": "会場",
+            "placeholder": "例: どこかホール 3階 グランドボールルーム"
+          },
+          "location": {
+            "label": "会場の住所",
+            "placeholder": "例: ソウル どこか区 どこか路123"
           },
           "body": {
-            "label": "日時・場所・ご案内",
-            "placeholder": "例: 2026年9月12日（土）午後2時\n○○ウェディングホール"
-          }
-        }
-      },
-      "todo": {
-        "title": "To-Do・チェックリスト",
-        "desc": "タスク管理アプリ",
-        "fields": {
-          "title": {
-            "label": "リスト名",
-            "placeholder": "例: 今日のやること"
+            "label": "あいさつ文",
+            "placeholder": "例: 別々の道を歩んできた二人が、\nこれから一つの道を歩みます。"
           },
-          "tagline": {
-            "label": "サブタイトル",
-            "placeholder": "例: 一日を軽く整理しましょう"
-          },
-          "body": {
-            "label": "やること（1行に1つ）",
-            "placeholder": "買い物\n運動30分\n読書"
+          "photos": {
+            "label": "写真（リンク、1行に1つ）",
+            "placeholder": "https://...\n最初の1枚がメイン、残りはギャラリーになります"
           }
         }
       }
@@ -194,35 +240,56 @@
       "shop": {
         "title": "オンギ ベーカリー",
         "tagline": "毎朝焼く小さな街のパン屋",
-        "body": "天然酵母で1日2回焼いています。\n営業: 火–日 10:00–19:00（月休）\nソウルのどこかの路地裏",
+        "body": "天然酵母で1日2回、小さなオーブンで丁寧に焼いています。街の朝を温かく満たす、小さなパン屋です。",
+        "menu": "塩パン | 外はサクッ、中はふんわりの看板 | 3,500\n全粒粉カンパーニュ | 天然酵母で24時間熟成 | 6,000\nバタークロワッサン | 層ごとに生きるフランス産バター | 4,200\nドリップコーヒー | 日替わりのシングルオリジン | 4,500",
+        "hours": "火–日 10:00–19:00\n月曜定休",
+        "location": "ソウル どこか区 路地12-3",
         "contact": "予約はインスタ @ongi.bakery"
+      },
+      "launch": {
+        "title": "ノウル — 1日1枚の写真日記",
+        "tagline": "毎晩、写真1枚と短い言葉で今日を残そう",
+        "date": "2026年12月1日 午前10時",
+        "body": "大げさな記録は負担ですよね。ノウルは1日たった1枚、心に残った瞬間を残す、いちばん軽い日記です。",
+        "features": "1日1枚 | 毎晩の通知で、今日の写真1枚と一言を残します。\n自動ふりかえり | 1か月たつと、その月の記録が一つの物語になります。\n静かな共有 | 選んだ記録だけを、リンクでそっと共有できます。",
+        "contact": "お知らせを受け取る hello@noeul.app"
       },
       "invitation": {
         "title": "コンニム ♥ ミンス",
         "tagline": "二人が夫婦になる日、ぜひご一緒に",
-        "body": "2026年9月12日（土）午後2時\nどこかウェディングホール 3階\nお祝いは新郎新婦へ直接"
-      },
-      "todo": {
-        "title": "今日のやること",
-        "tagline": "一日を軽やかに整理",
-        "body": "✓ 朝のストレッチ10分\n✓ メールを確認\n買い物（牛乳・卵・パン）\n運動30分\n本を30ページ読む\n友達に電話する"
+        "date": "2026年9月12日(土) 午後2時",
+        "venue": "どこかホール 3階 グランドボールルーム",
+        "location": "ソウル どこか区 どこか路123",
+        "body": "別々の道を歩んできた二人が、\nいま同じ方を見つめ、一つの道を歩みます。\nお越しいただき祝福いただければ幸いです。",
+        "photos": "https://picsum.photos/seed/vibestart-wed-1/1000/1200\nhttps://picsum.photos/seed/vibestart-wed-2/800/1000\nhttps://picsum.photos/seed/vibestart-wed-3/800/1000\nhttps://picsum.photos/seed/vibestart-wed-4/800/1000\nhttps://picsum.photos/seed/vibestart-wed-5/800/1000",
+        "contact": "お祝いを贈る\n新郎 010-1234-5678 ・ 新婦 010-8765-4321"
       }
     },
     "preview": {
+      "madeWith": "VibeStartで作成",
+      "about": "紹介",
       "expertise": "専門分野",
       "work": "主な実績",
       "links": "リンク",
-      "about": "紹介",
       "directions": "アクセス",
-      "gallery": "フォト",
-      "guestbook": "ゲストブック",
-      "guestbookPlaceholder": "お祝いのメッセージをどうぞ…",
-      "guestbook1Who": "ハヌル",
-      "guestbook1Msg": "ご結婚おめでとうございます！末永くお幸せに 💕",
-      "guestbook2Who": "ジュノ",
-      "guestbook2Msg": "これからもお互いを大切にするご夫婦でいてください 🤍",
-      "todoAdd": "タスクを追加",
-      "todoProgress": "%total%件中%done%件完了"
+      "menu": "メニュー",
+      "hours": "営業時間",
+      "invite": "ご招待します",
+      "ourMoments": "わたしたちの瞬間",
+      "weddingDate": "挙式日",
+      "venueHeading": "会場",
+      "giftHeading": "お祝いを贈る",
+      "weekdays": "日,月,火,水,木,金,土",
+      "launchAbout": "こんなサービスです",
+      "launchFeatures": "主な機能",
+      "cdDays": "日",
+      "cdHours": "時間",
+      "cdMins": "分",
+      "cdSecs": "秒",
+      "emailPlaceholder": "メールアドレス",
+      "waitlistBtn": "事前登録する",
+      "waitlistProof": "リリースしたら、まっ先にお知らせします",
+      "waitlistDone": "登録完了！ リリースしたら、まっ先にお知らせします"
     }
   },
   "Metadata": {

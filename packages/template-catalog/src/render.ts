@@ -10,20 +10,30 @@ import type {
  */
 export const DEFAULT_PREVIEW_LABELS: TemplatePreviewLabels = {
   lang: 'ko',
+  madeWith: 'VibeStart로 만든 페이지',
   about: '소개',
   expertise: '전문 분야',
   work: '주요 작업',
   links: '연결',
   directions: '오시는 길',
-  gallery: '사진첩',
-  guestbook: '방명록',
-  guestbookPlaceholder: '축하 메시지를 남겨주세요…',
-  guestbookSamples: [
-    { who: '김하늘', msg: '두 분 결혼 진심으로 축하해요! 행복하게 잘 사세요 💕' },
-    { who: '이준호', msg: '늘 지금처럼 서로 아껴주는 부부 되세요 🤍' },
-  ],
-  todoAdd: '할 일 추가',
-  todoProgress: '%total%개 중 %done%개 완료',
+  menu: '메뉴',
+  hours: '영업시간',
+  invite: '초대합니다',
+  ourMoments: '우리의 순간',
+  weddingDate: '예식일',
+  venueHeading: '예식 장소',
+  giftHeading: '마음 전하기',
+  weekdays: ['일', '월', '화', '수', '목', '금', '토'],
+  launchAbout: '이런 거예요',
+  launchFeatures: '핵심 기능',
+  cdDays: '일',
+  cdHours: '시간',
+  cdMins: '분',
+  cdSecs: '초',
+  emailPlaceholder: '이메일 주소',
+  waitlistBtn: '대기자 등록',
+  waitlistProof: '출시되면 가장 먼저 알려드릴게요',
+  waitlistDone: '신청 완료! 출시되면 가장 먼저 알려드릴게요',
 };
 
 /** HTML 특수문자 이스케이프(사용자 값 XSS 방지). */
@@ -114,10 +124,10 @@ const MAP_SVG = `<svg class="map-svg" viewBox="0 0 400 270" preserveAspectRatio=
  * 템플릿 + 값 → 완성된 한 페이지 HTML(문자열). 결정론적·이스케이프.
  *
  * 카테고리마다 **구조(페이지 종류)가 완전히 다른** 레이아웃(동작 없는 정적):
- *  intro       = 인스타 프로필 풍(밝음): 아바타 + 바이오 + 링크 + 갤러리 그리드
- *  shop        = 실제 매장 랜딩(밝음): 히어로 사진 + 갤러리 + 소개 + 오시는 길
- *  todo        = 투두 앱 UI(밝음): 헤더 + 진행바 + 체크박스 목록 + 추가바
- *  invitation  = 모던 청첩장(밝음): 사진 히어로 + 인사말 + 사진첩 + 오시는 길 + 방명록
+ *  intro       = 다크 글래스 링크인바이오: 모노그램 + 바이오 + 작업 + 링크 스택
+ *  shop        = 다크 글래스 매장 랜딩: 히어로 + 소개 + 메뉴판 + 오시는 길(지도)
+ *  invitation  = 다크 글래스 모던 청첩장: 사진 히어로 + 인사말 + 사진첩 + 달력 + 마음 전하기
+ *  launch      = 다크 글래스 Coming Soon: 카운트다운 + 웨이트리스트 + 핵심 기능
  */
 export function renderTemplate(
   template: TemplateDefinition,
@@ -180,9 +190,9 @@ ${has('tagline') ? `<p class="lede">${v('tagline')}</p>` : ''}
 ${contactCta('s-cta')}
 </header>
 ${has('body') ? `<section class="sec"><h2>${labels.about}</h2><div class="bio">${v('body')}</div></section>` : ''}
-${menuHtml ? `<section class="sec"><h2>메뉴</h2><div class="glass menu-board"><div class="menu-grid">${menuHtml}</div></div></section>` : ''}
-${has('hours') || has('location') ? `<section class="sec"><h2>${labels.directions}</h2><div class="visit"><div class="glass mapcard">${mapSvg}${has('location') ? `<div class="map-addr"><span class="map-pin-ic">${pin}</span><span>${v('location')}</span></div>` : ''}</div>${has('hours') ? `<div class="glass hourscard"><div class="ic-h">영업시간</div><div class="ic-b">${v('hours')}</div></div>` : ''}</div></section>` : ''}
-<footer class="mark"><span class="mk">&gt;_</span><span>VibeStart로 만든 페이지</span></footer>
+${menuHtml ? `<section class="sec"><h2>${labels.menu}</h2><div class="glass menu-board"><div class="menu-grid">${menuHtml}</div></div></section>` : ''}
+${has('hours') || has('location') ? `<section class="sec"><h2>${labels.directions}</h2><div class="visit"><div class="glass mapcard">${mapSvg}${has('location') ? `<div class="map-addr"><span class="map-pin-ic">${pin}</span><span>${v('location')}</span></div>` : ''}</div>${has('hours') ? `<div class="glass hourscard"><div class="ic-h">${labels.hours}</div><div class="ic-b">${v('hours')}</div></div>` : ''}</div></section>` : ''}
+<footer class="mark"><span class="mk">&gt;_</span><span>${labels.madeWith}</span></footer>
 </main>
 ${WAVE_SCRIPT}
 ${sparkScript({ cols: ['#ffe6c2', '#ffd0a0', '#fff2dd', '#ffbf8a'], rate: 85, moveN: 1, moveSp: 0.7, burstN: 9, burstSp: 2.2, grav: -0.02 })}`;
@@ -259,8 +269,8 @@ ${sparkScript({ cols: ['#ffe6c2', '#ffd0a0', '#fff2dd', '#ffbf8a'], rate: 85, mo
       const dd = Number(dm[3]);
       const firstDow = new Date(y, mo - 1, 1).getDay();
       const last = new Date(y, mo, 0).getDate();
-      const dows = ['일', '월', '화', '수', '목', '금', '토']
-        .map((w) => `<span class="cal-w">${w}</span>`)
+      const dows = labels.weekdays
+        .map((w) => `<span class="cal-w">${escapeHtml(w)}</span>`)
         .join('');
       let cells = '';
       for (let i = 0; i < firstDow; i++) cells += '<span class="cal-x"></span>';
@@ -284,13 +294,13 @@ ${petals}
 ${heroPhoto
   ? `<header class="photo-hero"><img src="${escapeHtml(heroPhoto)}" alt="" loading="lazy" referrerpolicy="no-referrer"><p class="ph-eyebrow">WEDDING INVITATION</p><div class="ph-body"><h1 class="names">${title}</h1>${orn}${has('tagline') ? `<p class="lede">${v('tagline')}</p>` : ''}${has('date') ? `<p class="hdate">${v('date')}</p>` : ''}</div></header>`
   : `<header class="hero"><p class="eyebrow">WEDDING INVITATION</p><h1 class="names">${title}</h1>${orn}${has('tagline') ? `<p class="lede">${v('tagline')}</p>` : ''}${has('date') ? `<p class="hdate">${v('date')}</p>` : ''}</header>`}
-${has('body') ? `<section class="sec"><h2>초대합니다</h2><div class="bio">${v('body')}</div></section>` : ''}
-${galleryPhotos.length ? `<section class="sec"><h2>우리의 순간</h2><div class="gallery">${galleryPhotos.map((u) => `<img src="${escapeHtml(u)}" alt="" loading="lazy" referrerpolicy="no-referrer">`).join('')}</div></section>` : ''}
-${calHtml ? `<section class="sec"><h2>예식일</h2>${calHtml}</section>` : ''}
-${has('venue') ? `<section class="sec"><h2>예식 장소</h2><div class="venue">${v('venue')}</div></section>` : ''}
+${has('body') ? `<section class="sec"><h2>${labels.invite}</h2><div class="bio">${v('body')}</div></section>` : ''}
+${galleryPhotos.length ? `<section class="sec"><h2>${labels.ourMoments}</h2><div class="gallery">${galleryPhotos.map((u) => `<img src="${escapeHtml(u)}" alt="" loading="lazy" referrerpolicy="no-referrer">`).join('')}</div></section>` : ''}
+${calHtml ? `<section class="sec"><h2>${labels.weddingDate}</h2>${calHtml}</section>` : ''}
+${has('venue') ? `<section class="sec"><h2>${labels.venueHeading}</h2><div class="venue">${v('venue')}</div></section>` : ''}
 ${has('location') ? `<section class="sec"><h2>${labels.directions}</h2><div class="glass mapcard">${MAP_SVG}<div class="map-addr"><span class="map-pin-ic">${pin}</span><span>${v('location')}</span></div></div></section>` : ''}
-${has('contact') ? `<section class="sec"><h2>마음 전하기</h2><div class="glass giftbox"><div class="gift-b">${v('contact')}</div></div></section>` : ''}
-<footer class="mark"><span class="mk">&gt;_</span><span>VibeStart로 만든 페이지</span></footer>
+${has('contact') ? `<section class="sec"><h2>${labels.giftHeading}</h2><div class="glass giftbox"><div class="gift-b">${v('contact')}</div></div></section>` : ''}
+<footer class="mark"><span class="mk">&gt;_</span><span>${labels.madeWith}</span></footer>
 </main>
 ${WAVE_SCRIPT}
 ${sparkScript({ cols: ['#ffffff', '#ffe1b0', '#f6c2da', '#cbb0ff'], rate: 55, moveN: 1, moveSp: 1.3, burstN: 18, burstSp: 4.4, grav: 0.05 })}`;
@@ -348,49 +358,6 @@ ${sparkScript({ cols: ['#ffffff', '#ffe1b0', '#f6c2da', '#cbb0ff'], rate: 55, mo
 .mark{display:flex;align-items:center;justify-content:center;gap:7px;color:rgba(255,255,255,.42);font-size:.8rem;font-weight:500;margin-top:8px}
 .mark .mk{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:color-mix(in srgb,var(--accent) 64%,#fff);font-weight:700}
 @media (prefers-reduced-motion:reduce){.map-ring,.petals i{animation:none}.petals{display:none}}`;
-  } else if (template.category === 'todo') {
-    // 투두 앱 UI(밝음): 헤더 + 진행바 + 체크박스 목록 + 추가바 (정적)
-    const lines = (values.body ?? '')
-      .split('\n')
-      .map((l) => l.trim())
-      .filter(Boolean);
-    const items = lines.map((line) => ({
-      done: /^(\[x\]|✓)\s*/i.test(line),
-      label: escapeHtml(line.replace(/^(\[x\]|\[ \]|✓)\s*/i, '')),
-    }));
-    const doneCount = items.filter((i) => i.done).length;
-    const pct = items.length ? Math.round((doneCount / items.length) * 100) : 0;
-    const rows = items
-      .map(
-        (it) =>
-          `<div class="t-item${it.done ? ' done' : ''}"><span class="t-box"></span><span class="t-txt">${it.label}</span></div>`,
-      )
-      .join('');
-    inner = `<div class="wrap todo">
-<header class="t-head"><h1>${title}</h1>${tagline()}<div class="t-prog"><div class="bar"><i style="width:${pct}%"></i></div><div class="lbl">${labels.todoProgress.replace('%total%', String(items.length)).replace('%done%', String(doneCount))}</div></div></header>
-<div class="t-list">${rows}</div>
-<div class="t-add"><span class="plus">+</span><span>${labels.todoAdd}</span></div>
-</div>`;
-    css = `
-body{background:#eef0f6;color:#1f2433}
-body::before{display:none}
-.wrap.todo{max-width:640px;margin:0 auto;min-height:100vh;background:#fff;box-shadow:0 0 80px rgba(0,0,0,.07)}
-.todo .t-head{padding:clamp(30px,7vw,42px) 26px 22px;background:linear-gradient(135deg,#4f46e5,#7c74f0);color:#fff}
-.todo .t-head h1{color:#fff;font-family:-apple-system,system-ui,sans-serif;font-weight:800;font-size:clamp(1.5rem,5vw,2rem)}
-.todo .t-head .tagline{color:rgba(255,255,255,.85);font-family:-apple-system,system-ui,sans-serif;margin-top:6px;font-size:1rem}
-.todo .t-prog{margin-top:20px}
-.todo .t-prog .bar{height:8px;border-radius:999px;background:rgba(255,255,255,.28);overflow:hidden}
-.todo .t-prog .bar>i{display:block;height:100%;background:#fff;border-radius:999px}
-.todo .t-prog .lbl{margin-top:8px;font-size:.85rem;color:rgba(255,255,255,.9)}
-.todo .t-list{padding:10px 20px}
-.todo .t-item{display:flex;align-items:center;gap:14px;padding:15px 10px;border-bottom:1px solid #eef0f4}
-.todo .t-box{flex:0 0 auto;width:24px;height:24px;border-radius:8px;border:2px solid #cdd2e0}
-.todo .t-item.done .t-box{background:#4f46e5;border-color:#4f46e5;display:grid;place-items:center}
-.todo .t-item.done .t-box::after{content:"✓";color:#fff;font-size:13px;font-weight:800}
-.todo .t-txt{font-size:1.02rem;color:#2a2f3e}
-.todo .t-item.done .t-txt{color:#a3a8ba;text-decoration:line-through}
-.todo .t-add{display:flex;align-items:center;gap:12px;margin:10px 20px 30px;padding:15px 16px;border:2px dashed #d4d8e6;border-radius:14px;color:#9aa0b4}
-.todo .t-add .plus{color:#4f46e5;font-size:20px;font-weight:800}`;
   } else if (template.category === 'launch') {
     // 제품·프로젝트 런칭 — 다크 오로라 글래스 Coming Soon + 웨이트리스트: 배지 + 큰 제품명
     // + 가치 제안 + 이메일 대기 등록(비주얼) + 핵심 기능 3개. 공유=가입, 졸업(백엔드 연결) 훅.
@@ -428,8 +395,8 @@ body::before{display:none}
       const mim = raw.match(/(\d{1,2})\s*분/);
       const cmi = mim ? Number(mim[1]) : 0;
       const u = (k: string, l: string): string =>
-        `<div class="cd-u"><span class="cd-n" data-k="${k}">--</span><span class="cd-l">${l}</span></div>`;
-      cdHtml = `<div class="cd" id="cd" data-y="${cy}" data-mo="${cmo}" data-d="${cd}" data-h="${ch}" data-mi="${cmi}">${u('d', '일')}${u('h', '시간')}${u('m', '분')}${u('s', '초')}</div>`;
+        `<div class="cd-u"><span class="cd-n" data-k="${k}">--</span><span class="cd-l">${escapeHtml(l)}</span></div>`;
+      cdHtml = `<div class="cd" id="cd" data-y="${cy}" data-mo="${cmo}" data-d="${cd}" data-h="${ch}" data-mi="${cmi}">${u('d', labels.cdDays)}${u('h', labels.cdHours)}${u('m', labels.cdMins)}${u('s', labels.cdSecs)}</div>`;
       cdScript = `<script>(function(){var el=document.getElementById('cd');if(!el)return;var t=new Date(+el.dataset.y,(+el.dataset.mo)-1,+el.dataset.d,+el.dataset.h||0,+el.dataset.mi||0).getTime();var ns=el.querySelectorAll('[data-k]');function p(n){return(n<10?'0':'')+n;}function tick(){var ms=t-Date.now();if(ms<0)ms=0;var s=Math.floor(ms/1000);var v={d:String(Math.floor(s/86400)),h:p(Math.floor(s%86400/3600)),m:p(Math.floor(s%3600/60)),s:p(s%60)};ns.forEach(function(n){n.textContent=v[n.getAttribute('data-k')];});}tick();setInterval(tick,1000);})();</script>`;
     }
     inner = `${RIP_DIV}
@@ -439,17 +406,17 @@ body::before{display:none}
 <h1>${title}</h1>
 ${has('tagline') ? `<p class="lede">${v('tagline')}</p>` : ''}
 ${cdHtml}
-<div class="wait" id="wl"><input class="wait-in" type="email" placeholder="이메일 주소" aria-label="이메일 주소"><button class="wait-btn" type="button" id="wlb">대기자 등록</button></div>
-<p class="proof" id="wlp">출시되면 가장 먼저 알려드릴게요</p>
+<div class="wait" id="wl"><input class="wait-in" type="email" placeholder="${escapeHtml(labels.emailPlaceholder)}" aria-label="${escapeHtml(labels.emailPlaceholder)}"><button class="wait-btn" type="button" id="wlb">${escapeHtml(labels.waitlistBtn)}</button></div>
+<p class="proof" id="wlp">${escapeHtml(labels.waitlistProof)}</p>
 </header>
-${has('body') ? `<section class="sec"><h2>이런 거예요</h2><div class="bio">${v('body')}</div></section>` : ''}
-${featsHtml ? `<section class="sec"><h2>핵심 기능</h2><div class="feats">${featsHtml}</div></section>` : ''}
+${has('body') ? `<section class="sec"><h2>${labels.launchAbout}</h2><div class="bio">${v('body')}</div></section>` : ''}
+${featsHtml ? `<section class="sec"><h2>${labels.launchFeatures}</h2><div class="feats">${featsHtml}</div></section>` : ''}
 ${has('contact') ? `<p class="contact-line">${escapeHtml((values.contact ?? '').trim())}</p>` : ''}
-<footer class="mark"><span class="mk">&gt;_</span><span>VibeStart로 만든 페이지</span></footer>
+<footer class="mark"><span class="mk">&gt;_</span><span>${labels.madeWith}</span></footer>
 </main>
 ${WAVE_SCRIPT}
 ${cdScript}
-<script>(function(){var b=document.getElementById('wlb'),w=document.getElementById('wl'),p=document.getElementById('wlp');if(b){b.addEventListener('click',function(){w.innerHTML='<div class="wait-ok"><span class="ok-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.2 4.2L19 7.5"/></svg></span><span>신청 완료! 출시되면 가장 먼저 알려드릴게요</span></div>';if(p){p.textContent='출시되면 가장 먼저 알려드릴게요.';}});}})();</script>
+<script>(function(){var b=document.getElementById('wlb'),w=document.getElementById('wl'),p=document.getElementById('wlp');if(b){b.addEventListener('click',function(){w.innerHTML='<div class="wait-ok"><span class="ok-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12.5 4.2 4.2L19 7.5"/></svg></span><span>'+${JSON.stringify(escapeHtml(labels.waitlistDone))}+'</span></div>';if(p){p.textContent=${JSON.stringify(labels.waitlistProof)};}});}})();</script>
 ${sparkScript({ cols: ['#bcdcff', '#ffffff', '#7aa8ff', '#a8f0ff'], rate: 60, moveN: 1, moveSp: 1.1, burstN: 20, burstSp: 5, grav: 0.04 })}`;
     css = `${AURORA_CSS}
 .page.launch{position:relative;z-index:2;max-width:920px;margin:0 auto;padding:clamp(40px,7vw,84px) 0 clamp(40px,6vw,60px);display:flex;flex-direction:column;gap:clamp(34px,5vw,56px);text-align:center}
@@ -616,7 +583,7 @@ ${has('body') ? `<section class="sec"><h2>${labels.about}</h2><div class="bio">$
 ${tags.length ? `<section class="sec"><h2>${labels.expertise}</h2>${tagsHtml}</section>` : ''}
 ${worksHtml ? `<section class="sec"><h2>${labels.work}</h2><div class="works">${worksHtml}</div></section>` : ''}
 ${linksHtml ? `<section class="sec"><h2>${labels.links}</h2><nav class="links">${linksHtml}</nav></section>` : ''}
-<footer class="mark"><span class="mk">&gt;_</span><span>VibeStart로 만든 페이지</span></footer>
+<footer class="mark"><span class="mk">&gt;_</span><span>${labels.madeWith}</span></footer>
 </main>
 </div>
 <script>(function(){var r=document.documentElement;if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;var tx=.5,ty=.4,cx=.5,cy=.4,t=0,run=true;function loop(){if(!run)return;t+=.016;cx+=(tx-cx)*.06;cy+=(ty-cy)*.06;var h=(20+(cx-.5)*300+(cy-.5)*120+Math.sin(t*.6)*12)%360;if(h<0)h+=360;r.style.setProperty('--mx',(cx+Math.sin(t*.9)*.05+Math.sin(t*.37)*.025).toFixed(4));r.style.setProperty('--my',(cy+Math.cos(t*.7)*.045+Math.sin(t*.51)*.025).toFixed(4));r.style.setProperty('--hue',h.toFixed(1));requestAnimationFrame(loop);}function move(e){var p=e.touches&&e.touches[0]?e.touches[0]:e;tx=p.clientX/innerWidth;ty=p.clientY/innerHeight;}addEventListener('pointermove',move,{passive:true});addEventListener('touchmove',move,{passive:true});document.addEventListener('visibilitychange',function(){if(document.hidden){run=false;}else if(!run){run=true;requestAnimationFrame(loop);}});requestAnimationFrame(loop);})();</script>`;

@@ -112,7 +112,55 @@
       },
       "shop": {
         "title": "가게·공방 소개",
-        "desc": "메뉴·위치·예약 안내"
+        "desc": "메뉴·위치·예약 안내",
+        "fields": {
+          "title": {
+            "label": "가게 이름",
+            "placeholder": "예: 온기 베이커리"
+          },
+          "body": {
+            "label": "가게 소개",
+            "placeholder": "어떤 가게인지 자유롭게 적어주세요"
+          },
+          "menu": {
+            "label": "대표 메뉴",
+            "placeholder": "한 줄에 하나 — 이름 | 설명 | 가격\n예: 아메리카노 | 진한 싱글 오리진 | 4,500"
+          },
+          "hours": {
+            "label": "영업시간",
+            "placeholder": "예: 화–일 10:00–19:00\n월요일 휴무"
+          },
+          "location": {
+            "label": "위치·주소",
+            "placeholder": "예: 서울 어딘가구 골목길 12-3"
+          }
+        }
+      },
+      "launch": {
+        "title": "출시 예고 페이지",
+        "desc": "제품·프로젝트 런칭",
+        "fields": {
+          "title": {
+            "label": "제품·프로젝트 이름",
+            "placeholder": "예: 노을 — 하루 한 장 사진 일기"
+          },
+          "tagline": {
+            "label": "한 줄 소개",
+            "placeholder": "예: 매일 저녁, 사진 한 장으로 오늘을 남겨요"
+          },
+          "date": {
+            "label": "출시 예정일",
+            "placeholder": "예: 2026년 12월 1일 오전 10시"
+          },
+          "body": {
+            "label": "소개",
+            "placeholder": "어떤 제품인지 자유롭게 적어주세요"
+          },
+          "features": {
+            "label": "핵심 기능",
+            "placeholder": "한 줄에 하나 — 이름 | 설명\n예: 하루 한 장 | 매일 저녁 오늘의 사진을 남겨요"
+          }
+        }
       },
       "invitation": {
         "title": "초대장",
@@ -126,27 +174,25 @@
             "label": "인사 한 줄",
             "placeholder": "예: 두 사람이 부부가 되는 날, 함께해 주세요"
           },
-          "body": {
-            "label": "날짜·장소·안내",
-            "placeholder": "예: 2026년 9월 12일 토요일 오후 2시\n○○ 웨딩홀"
-          }
-        }
-      },
-      "todo": {
-        "title": "투두 · 체크리스트",
-        "desc": "할 일 관리 앱",
-        "fields": {
-          "title": {
-            "label": "목록 이름",
-            "placeholder": "예: 오늘 할 일"
+          "date": {
+            "label": "날짜·시간",
+            "placeholder": "예: 2026년 9월 12일 토요일 오후 2시"
           },
-          "tagline": {
-            "label": "부제",
-            "placeholder": "예: 하루를 가볍게 정리해요"
+          "venue": {
+            "label": "예식 장소",
+            "placeholder": "예: 어딘가 웨딩홀 3층 그랜드볼룸"
+          },
+          "location": {
+            "label": "오시는 길(주소)",
+            "placeholder": "예: 서울 어딘가구 어딘가로 123"
           },
           "body": {
-            "label": "할 일 (한 줄에 하나씩)",
-            "placeholder": "장보기\n운동 30분\n책 읽기"
+            "label": "인사말",
+            "placeholder": "예: 저희 두 사람, 사랑으로 하나가 되려 합니다.\n귀한 걸음으로 축복해 주세요."
+          },
+          "photos": {
+            "label": "사진 (링크, 한 줄에 하나)",
+            "placeholder": "https://...\n첫 장은 큰 사진, 나머지는 갤러리로 들어가요"
           }
         }
       }
@@ -194,35 +240,56 @@
       "shop": {
         "title": "온기 베이커리",
         "tagline": "매일 아침 굽는 작은 동네 빵집",
-        "body": "천연 발효종으로 하루 두 번 굽습니다.\n영업: 화–일 10:00–19:00 (월 휴무)\n서울 어딘가 골목 안",
+        "body": "천연 발효종으로 하루 두 번, 작은 오븐에서 정성껏 구워요. 동네의 아침을 따뜻하게 채우는 빵집입니다.",
+        "menu": "소금빵 | 겉은 바삭 속은 촉촉한 시그니처 | 3,500\n통밀 캄파뉴 | 천연 발효종 24시간 숙성 | 6,000\n버터 크루아상 | 결마다 살아있는 프랑스산 버터 | 4,200\n드립 커피 | 매일 바뀌는 싱글 오리진 | 4,500",
+        "hours": "화–일 10:00–19:00\n월요일 휴무",
+        "location": "서울 어딘가구 골목길 12-3",
         "contact": "예약 인스타 @ongi.bakery"
+      },
+      "launch": {
+        "title": "노을 — 하루 한 장 사진 일기",
+        "tagline": "매일 저녁, 사진 한 장과 짧은 글로 오늘을 남겨요",
+        "date": "2026년 12월 1일 오전 10시",
+        "body": "거창한 기록은 부담스럽잖아요. 노을은 하루에 딱 한 장, 마음에 남은 순간을 남기는 가장 가벼운 일기예요.",
+        "features": "하루 한 장 | 매일 저녁 알림이 오면 오늘의 사진 한 장과 한 줄을 남겨요.\n자동 회고 | 한 달이 지나면 그달의 기록을 모아 한 편의 이야기로 보여줘요.\n조용한 공유 | 원하는 기록만 링크로 살며시 나눌 수 있어요.",
+        "contact": "소식 받기 hello@noeul.app"
       },
       "invitation": {
         "title": "꽃님 ♥ 민수",
         "tagline": "두 사람이 부부가 되는 날, 함께해 주세요",
-        "body": "2026년 9월 12일 토요일 오후 2시\n어딘가 웨딩홀 3층\n마음 전하실 곳: 신랑신부에게 직접"
-      },
-      "todo": {
-        "title": "오늘 할 일",
-        "tagline": "하루를 가볍게 정리해요",
-        "body": "✓ 아침 스트레칭 10분\n✓ 이메일 확인하기\n장보기 (우유, 달걀, 빵)\n운동 30분\n책 30쪽 읽기\n친구에게 전화하기"
+        "date": "2026년 9월 12일 토요일 오후 2시",
+        "venue": "어딘가 웨딩홀 3층 그랜드볼룸",
+        "location": "서울 어딘가구 어딘가로 123",
+        "body": "서로 다른 길을 걷던 두 사람이\n이제 같은 곳을 바라보며 한 길을 걸으려 합니다.\n귀한 걸음으로 축복해 주시면 큰 기쁨이겠습니다.",
+        "photos": "https://picsum.photos/seed/vibestart-wed-1/1000/1200\nhttps://picsum.photos/seed/vibestart-wed-2/800/1000\nhttps://picsum.photos/seed/vibestart-wed-3/800/1000\nhttps://picsum.photos/seed/vibestart-wed-4/800/1000\nhttps://picsum.photos/seed/vibestart-wed-5/800/1000",
+        "contact": "마음 전하실 곳\n신랑 010-1234-5678 · 신부 010-8765-4321"
       }
     },
     "preview": {
+      "madeWith": "VibeStart로 만든 페이지",
+      "about": "소개",
       "expertise": "전문 분야",
       "work": "주요 작업",
       "links": "연결",
-      "about": "소개",
       "directions": "오시는 길",
-      "gallery": "사진첩",
-      "guestbook": "방명록",
-      "guestbookPlaceholder": "축하 메시지를 남겨주세요…",
-      "guestbook1Who": "김하늘",
-      "guestbook1Msg": "두 분 결혼 진심으로 축하해요! 행복하게 잘 사세요 💕",
-      "guestbook2Who": "이준호",
-      "guestbook2Msg": "늘 지금처럼 서로 아껴주는 부부 되세요 🤍",
-      "todoAdd": "할 일 추가",
-      "todoProgress": "%total%개 중 %done%개 완료"
+      "menu": "메뉴",
+      "hours": "영업시간",
+      "invite": "초대합니다",
+      "ourMoments": "우리의 순간",
+      "weddingDate": "예식일",
+      "venueHeading": "예식 장소",
+      "giftHeading": "마음 전하기",
+      "weekdays": "일,월,화,수,목,금,토",
+      "launchAbout": "이런 거예요",
+      "launchFeatures": "핵심 기능",
+      "cdDays": "일",
+      "cdHours": "시간",
+      "cdMins": "분",
+      "cdSecs": "초",
+      "emailPlaceholder": "이메일 주소",
+      "waitlistBtn": "대기자 등록",
+      "waitlistProof": "출시되면 가장 먼저 알려드릴게요",
+      "waitlistDone": "신청 완료! 출시되면 가장 먼저 알려드릴게요"
     }
   },
   "Metadata": {

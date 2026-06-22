@@ -5,7 +5,7 @@
  * 구조는 카탈로그(신뢰)에서, 내용은 사용자(신뢰 불가)에서 온다.
  */
 
-export type TemplateCategory = 'intro' | 'shop' | 'invitation' | 'todo' | 'launch';
+export type TemplateCategory = 'intro' | 'shop' | 'invitation' | 'launch';
 
 export type TemplateFieldKey =
   | 'title'
@@ -38,23 +38,42 @@ export interface TemplateDefinition {
 export type TemplateValues = Partial<Record<TemplateFieldKey, string>>;
 
 /**
- * 렌더된 페이지의 **구조 라벨**(섹션 머리말·데모 텍스트). 사용자 콘텐츠가 아니라
+ * 렌더된 페이지의 **구조 라벨**(섹션 머리말·고정 UI 텍스트). 사용자 콘텐츠가 아니라
  * 페이지 chrome이라 로케일을 타야 한다 — 도메인(renderTemplate)은 i18n을 모르므로
- * 호출자(웹앱)가 활성 로케일의 라벨을 주입한다. todoProgress는 `%total%`/`%done%`
- * 토큰을 포함하는 템플릿 문자열(렌더가 치환).
+ * 호출자(웹앱)가 활성 로케일의 라벨을 주입한다. weekdays는 일~토 7개(달력용).
  */
 export type TemplatePreviewLabels = {
   /** <html lang> 값 */
   lang: string;
+  /** 공통 푸터 — "VibeStart로 만든 페이지" */
+  madeWith: string;
+  // intro(나 소개)
   about: string;
   expertise: string;
   work: string;
   links: string;
+  // shop(가게) · invitation(청첩장) 공용
   directions: string;
-  gallery: string;
-  guestbook: string;
-  guestbookPlaceholder: string;
-  guestbookSamples: { who: string; msg: string }[];
-  todoAdd: string;
-  todoProgress: string;
+  // shop
+  menu: string;
+  hours: string;
+  // invitation
+  invite: string;
+  ourMoments: string;
+  weddingDate: string;
+  venueHeading: string;
+  giftHeading: string;
+  /** 달력 요일 머리글(일·월·화·수·목·금·토 순서, 7개) */
+  weekdays: string[];
+  // launch(출시 예고)
+  launchAbout: string;
+  launchFeatures: string;
+  cdDays: string;
+  cdHours: string;
+  cdMins: string;
+  cdSecs: string;
+  emailPlaceholder: string;
+  waitlistBtn: string;
+  waitlistProof: string;
+  waitlistDone: string;
 };

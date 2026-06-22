@@ -112,7 +112,55 @@
       },
       "shop": {
         "title": "店铺·工作室介绍",
-        "desc": "菜单 · 位置 · 预约"
+        "desc": "菜单 · 位置 · 预约",
+        "fields": {
+          "title": {
+            "label": "店铺名称",
+            "placeholder": "例：暖意烘焙坊"
+          },
+          "body": {
+            "label": "店铺介绍",
+            "placeholder": "自由介绍你的店铺"
+          },
+          "menu": {
+            "label": "招牌菜单",
+            "placeholder": "每行一项 — 名称 | 说明 | 价格\n例：美式咖啡 | 浓郁单一产地 | 4,500"
+          },
+          "hours": {
+            "label": "营业时间",
+            "placeholder": "例：周二–周日 10:00–19:00\n周一休息"
+          },
+          "location": {
+            "label": "位置 / 地址",
+            "placeholder": "例：首尔某区小巷12-3"
+          }
+        }
+      },
+      "launch": {
+        "title": "上线预告页",
+        "desc": "产品 · 项目发布",
+        "fields": {
+          "title": {
+            "label": "产品 / 项目名称",
+            "placeholder": "例：暮光 — 每天一张照片日记"
+          },
+          "tagline": {
+            "label": "一句话介绍",
+            "placeholder": "例：每晚用一张照片记录今天"
+          },
+          "date": {
+            "label": "预计上线日",
+            "placeholder": "例：2026年12月1日 上午10点"
+          },
+          "body": {
+            "label": "介绍",
+            "placeholder": "自由介绍你的产品"
+          },
+          "features": {
+            "label": "核心功能",
+            "placeholder": "每行一项 — 名称 | 说明\n例：每天一张 | 每晚留下今天的照片"
+          }
+        }
       },
       "invitation": {
         "title": "邀请函",
@@ -120,33 +168,31 @@
         "fields": {
           "title": {
             "label": "标题",
-            "placeholder": "例：智英 ♥ 敏秀"
+            "placeholder": "例：花妮 ♥ 敏秀"
           },
           "tagline": {
-            "label": "问候语",
-            "placeholder": "例：在我们成为夫妻的这天，请来见证"
+            "label": "一句问候",
+            "placeholder": "例：两人结为夫妇的日子，敬请光临"
+          },
+          "date": {
+            "label": "日期与时间",
+            "placeholder": "例：2026年9月12日 周六 下午2点"
+          },
+          "venue": {
+            "label": "婚礼场地",
+            "placeholder": "例：某某礼堂 3楼 大宴会厅"
+          },
+          "location": {
+            "label": "场地地址",
+            "placeholder": "例：首尔某区某路123"
           },
           "body": {
-            "label": "日期·地点·须知",
-            "placeholder": "例：2026年9月12日 周六 下午2点\n○○婚礼厅"
-          }
-        }
-      },
-      "todo": {
-        "title": "待办 · 清单",
-        "desc": "每日任务应用",
-        "fields": {
-          "title": {
-            "label": "清单名称",
-            "placeholder": "例：今天要做的事"
+            "label": "致辞",
+            "placeholder": "例：曾走在不同路上的两个人，\n如今相视同行。"
           },
-          "tagline": {
-            "label": "副标题",
-            "placeholder": "例：轻松规划一天"
-          },
-          "body": {
-            "label": "待办（每行一条）",
-            "placeholder": "买菜\n运动30分钟\n读书"
+          "photos": {
+            "label": "照片（每行一个链接）",
+            "placeholder": "https://...\n第一张为主图，其余进入相册"
           }
         }
       }
@@ -194,35 +240,56 @@
       "shop": {
         "title": "暖意烘焙坊",
         "tagline": "每天清晨现烤的小小街角面包店",
-        "body": "用天然酵母每天烤两次。\n营业：周二–周日 10:00–19:00（周一休）\n首尔某条小巷里",
+        "body": "用天然酵种每天烘焙两次，在小烤箱里用心制作。一家温暖街区清晨的小面包店。",
+        "menu": "盐面包 | 外脆内软的招牌 | 3,500\n全麦乡村面包 | 天然酵种24小时发酵 | 6,000\n黄油可颂 | 层层法国黄油 | 4,200\n手冲咖啡 | 每天更换单一产地 | 4,500",
+        "hours": "周二–周日 10:00–19:00\n周一休息",
+        "location": "首尔某区小巷12-3",
         "contact": "预约 Instagram @ongi.bakery"
+      },
+      "launch": {
+        "title": "暮光 — 每天一张照片日记",
+        "tagline": "每晚用一张照片和一句话记录今天",
+        "date": "2026年12月1日 上午10点",
+        "body": "宏大的记录让人却步。暮光是最轻的日记——每天仅一张，留住心头难忘的瞬间。",
+        "features": "每天一张 | 每晚提醒到来时，留下今天的一张照片和一句话。\n自动回顾 | 一个月后，将当月记录汇成一段小故事。\n安静分享 | 只把你选中的记录，用私密链接轻轻分享。",
+        "contact": "获取更新 hello@noeul.app"
       },
       "invitation": {
         "title": "智英 ♥ 敏秀",
         "tagline": "在两人结为夫妻的日子，请来见证",
-        "body": "2026 年 9 月 12 日 周六 下午 2 点\n某某婚礼厅 3 楼\n心意可直接转交新人"
-      },
-      "todo": {
-        "title": "今日待办",
-        "tagline": "轻松整理你的一天",
-        "body": "✓ 晨间拉伸10分钟\n✓ 查看邮件\n买菜（牛奶、鸡蛋、面包）\n锻炼30分钟\n阅读30页\n给朋友打电话"
+        "date": "2026年9月12日 周六 下午2点",
+        "venue": "某某礼堂 3楼 大宴会厅",
+        "location": "首尔某区某路123",
+        "body": "曾走在不同路上的两个人，\n如今相视而行，携手同路。\n期待您的莅临与祝福。",
+        "photos": "https://picsum.photos/seed/vibestart-wed-1/1000/1200\nhttps://picsum.photos/seed/vibestart-wed-2/800/1000\nhttps://picsum.photos/seed/vibestart-wed-3/800/1000\nhttps://picsum.photos/seed/vibestart-wed-4/800/1000\nhttps://picsum.photos/seed/vibestart-wed-5/800/1000",
+        "contact": "送上祝福\n新郎 010-1234-5678 · 新娘 010-8765-4321"
       }
     },
     "preview": {
+      "madeWith": "由 VibeStart 制作",
+      "about": "简介",
       "expertise": "专长",
       "work": "主要作品",
       "links": "链接",
-      "about": "简介",
       "directions": "位置",
-      "gallery": "相册",
-      "guestbook": "留言板",
-      "guestbookPlaceholder": "留下你的祝福…",
-      "guestbook1Who": "晓敏",
-      "guestbook1Msg": "祝你们百年好合，幸福美满！💕",
-      "guestbook2Who": "俊浩",
-      "guestbook2Msg": "愿你们永远像今天一样珍惜彼此 🤍",
-      "todoAdd": "添加待办",
-      "todoProgress": "%total% 项中已完成 %done% 项"
+      "menu": "菜单",
+      "hours": "营业时间",
+      "invite": "诚挚邀请",
+      "ourMoments": "我们的瞬间",
+      "weddingDate": "婚礼日",
+      "venueHeading": "婚礼场地",
+      "giftHeading": "送上祝福",
+      "weekdays": "日,一,二,三,四,五,六",
+      "launchAbout": "这是什么",
+      "launchFeatures": "核心功能",
+      "cdDays": "天",
+      "cdHours": "时",
+      "cdMins": "分",
+      "cdSecs": "秒",
+      "emailPlaceholder": "电子邮箱",
+      "waitlistBtn": "加入候补名单",
+      "waitlistProof": "上线后第一时间通知你",
+      "waitlistDone": "已加入！上线后第一时间通知你"
     }
   },
   "Metadata": {

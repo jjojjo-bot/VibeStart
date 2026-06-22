@@ -32,27 +32,27 @@ export const introTemplate: TemplateDefinition = {
 export const shopTemplate: TemplateDefinition = {
   id: 'shop',
   category: 'shop',
-  fields: ['title', 'tagline', 'body', 'contact'],
+  fields: ['title', 'tagline', 'body', 'menu', 'hours', 'location', 'contact'],
   accent: '#2a6b4f',
 };
 
 export const invitationTemplate: TemplateDefinition = {
   id: 'invitation',
   category: 'invitation',
-  fields: ['title', 'tagline', 'body'],
+  fields: ['title', 'tagline', 'date', 'venue', 'location', 'body', 'photos', 'contact'],
   accent: '#8a5a9e',
 };
 
-export const todoTemplate: TemplateDefinition = {
-  id: 'todo',
-  category: 'todo',
-  fields: ['title', 'tagline', 'body'],
-  accent: '#4f46e5',
+export const launchTemplate: TemplateDefinition = {
+  id: 'launch',
+  category: 'launch',
+  fields: ['title', 'tagline', 'date', 'body', 'features', 'contact'],
+  accent: '#5b6cff',
 };
 
 export const templates: TemplateDefinition[] = [
   introTemplate,
   shopTemplate,
-  todoTemplate,
+  launchTemplate,
   invitationTemplate,
 ];
