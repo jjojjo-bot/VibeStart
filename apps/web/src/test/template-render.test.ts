@@ -82,6 +82,17 @@ describe('invitation preview (사진 히어로·달력·예식 장소)', () => {
     expect(html).toContain('어딘가 웨딩홀');
   });
 
+  it('photo slots carry a self-contained placeholder background (never blank w/o image)', () => {
+    const html = renderTemplate(tpl, {
+      title: 'x',
+      photos: 'https://example.com/a.jpg\nhttps://example.com/b.jpg',
+    });
+    // 히어로/갤러리 컨테이너 자체에 accent 배경을 깔아, 이미지가 없거나 로딩 중이어도
+    // 흰/빈 화면이 아니라 온브랜드 그라데이션이 보인다(이미지 로드 시 가려짐).
+    expect(html).toMatch(/\.photo-hero\{[^}]*background:[^}]*--accent/);
+    expect(html).toMatch(/\.gallery img\{[^}]*background:[^}]*--accent/);
+  });
+
   it('only accepts http(s) photo URLs (주입 차단)', () => {
     const html = renderTemplate(tpl, {
       title: 'x',

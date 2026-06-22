@@ -13,6 +13,7 @@ import type {
 } from '@vibestart/shared-types';
 import { Link } from '@/i18n/navigation';
 import { validateSlug, normalizeSlug } from '@/lib/publish/slug';
+import { useDebounced } from '@/lib/use-debounced';
 
 type Step = 'category' | 'build' | 'publish' | 'graduate';
 type PubStatus = 'idle' | 'publishing' | 'done' | 'error';
@@ -104,6 +105,9 @@ export function BuildWizard() {
   const [step, setStep] = useState<Step>('category');
   const [templateId, setTemplateId] = useState<string | null>(null);
   const [values, setValues] = useState<TemplateValues>({});
+  // 입력칸은 values로 즉시 반응하되, 미리보기 iframe(srcDoc 교체 = 문서 리로드)은
+  // 디바운스 값으로만 다시 그린다 — 매 키 입력마다 리로드되어 깜빡이던 문제 차단.
+  const debouncedValues = useDebounced(values, 250);
 
   // 발행 상태
   const [slug, setSlug] = useState('');
@@ -136,10 +140,11 @@ export function BuildWizard() {
   }
 
   // 빈 칸은 샘플로 채운다 — 미리보기와 발행이 동일하게 보이도록.
-  function mergedValues(tpl: TemplateDefinition): TemplateValues {
+  // vals를 인자로 받아, 미리보기는 디바운스 값으로·발행은 최신 값으로 호출한다.
+  function mergedValues(tpl: TemplateDefinition, vals: TemplateValues): TemplateValues {
     const merged: TemplateValues = {};
     for (const key of tpl.fields) {
-      const v = (values[key] ?? '').trim();
+      const v = (vals[key] ?? '').trim();
       merged[key] = v.length > 0 ? v : t(`samples.${tpl.id}.${key}`);
     }
     return merged;
@@ -178,8 +183,8 @@ export function BuildWizard() {
     };
   }
 
-  function previewHtml(tpl: TemplateDefinition): string {
-    return renderTemplate(tpl, mergedValues(tpl), previewLabels());
+  function previewHtml(tpl: TemplateDefinition, vals: TemplateValues): string {
+    return renderTemplate(tpl, mergedValues(tpl, vals), previewLabels());
   }
 
   // 미리보기 → 발행 화면. 슬러그를 제목에서 추정해 미리 채운다.
@@ -211,7 +216,7 @@ export function BuildWizard() {
         body: JSON.stringify({
           slug: clean,
           templateId: template.id,
-          values: mergedValues(template),
+          values: mergedValues(template, values),
         }),
       });
       const data = (await res.json()) as { ok: boolean; path?: string; reason?: string };
@@ -471,8 +476,8 @@ export function BuildWizard() {
             </div>
             <iframe
               title={t('build.previewLabel')}
-              srcDoc={previewHtml(template)}
-              className="block h-[72vh] min-h-[560px] w-full border-0 bg-white"
+              srcDoc={previewHtml(template, debouncedValues)}
+              className="block h-[72vh] min-h-[560px] w-full border-0 bg-[#070611]"
             />
           </div>
           <button

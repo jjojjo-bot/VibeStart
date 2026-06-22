@@ -98,6 +98,14 @@ body::after{content:"";position:fixed;inset:0;z-index:1;pointer-events:none;opac
 
 const RIP_DIV = '<div class="rip"></div>';
 
+/**
+ * 사진 슬롯 플레이스홀더 아이콘(data-uri, stroke=white) — accent 그라데이션과 함께
+ * 사진 컨테이너 배경에 깔린다. 실제 이미지가 로드되면 그 위를 덮어 가려지고,
+ * URL이 없거나 로딩 중·실패면 빈 칸 대신 이 "사진 자리" 표시가 보인다.
+ */
+const PHOTO_ICON =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-opacity='0.55' stroke-width='1.3' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2.4'/%3E%3Ccircle cx='8.5' cy='10.2' r='1.7'/%3E%3Cpath d='m20 16.5-5-5L5 19.5'/%3E%3C/svg%3E";
+
 /** 포인터 추적 → --mx/--my/--hue (rAF lerp + 상시 sine + 위치별 색). 사용자 입력 없음, reduced-motion·탭가시성 가드. */
 const WAVE_SCRIPT = `<script>(function(){var r=document.documentElement;if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;var tx=.5,ty=.4,cx=.5,cy=.4,t=0,run=true;function loop(){if(!run)return;t+=.016;cx+=(tx-cx)*.06;cy+=(ty-cy)*.06;var h=(20+(cx-.5)*300+(cy-.5)*120+Math.sin(t*.6)*12)%360;if(h<0)h+=360;r.style.setProperty('--mx',(cx+Math.sin(t*.9)*.05+Math.sin(t*.37)*.025).toFixed(4));r.style.setProperty('--my',(cy+Math.cos(t*.7)*.045+Math.sin(t*.51)*.025).toFixed(4));r.style.setProperty('--hue',h.toFixed(1));requestAnimationFrame(loop);}function move(e){var p=e.touches&&e.touches[0]?e.touches[0]:e;tx=p.clientX/innerWidth;ty=p.clientY/innerHeight;}addEventListener('pointermove',move,{passive:true});addEventListener('touchmove',move,{passive:true});document.addEventListener('visibilitychange',function(){if(document.hidden){run=false;}else if(!run){run=true;requestAnimationFrame(loop);}});requestAnimationFrame(loop);})();</script>`;
 
@@ -318,7 +326,7 @@ ${sparkScript({ cols: ['#ffffff', '#ffe1b0', '#f6c2da', '#cbb0ff'], rate: 55, mo
 .orn .orn-f{fill:currentColor}
 .lede{font-family:"Nanum Myeongjo",Georgia,serif;margin:24px auto 0;max-width:26ch;color:rgba(255,255,255,.84);font-size:clamp(1.06rem,2.7vw,1.24rem);line-height:1.9;white-space:pre-line;word-break:keep-all}
 .hdate{margin-top:22px;font-size:.96rem;letter-spacing:.12em;color:color-mix(in srgb,var(--accent) 48%,#fff)}
-.photo-hero{position:relative;border-radius:24px;overflow:hidden;min-height:clamp(460px,66vh,640px);display:flex;align-items:flex-end;border:1px solid rgba(255,255,255,.14);box-shadow:0 44px 110px -36px rgba(0,0,0,.92),0 0 90px -28px color-mix(in srgb,var(--accent) 42%, transparent)}
+.photo-hero{position:relative;border-radius:24px;overflow:hidden;min-height:clamp(460px,66vh,640px);display:flex;align-items:flex-end;border:1px solid rgba(255,255,255,.14);box-shadow:0 44px 110px -36px rgba(0,0,0,.92),0 0 90px -28px color-mix(in srgb,var(--accent) 42%, transparent);background:url("${PHOTO_ICON}") center 42% / clamp(54px,11vw,84px) no-repeat,linear-gradient(155deg,color-mix(in srgb,var(--accent) 50%,#241830),color-mix(in srgb,var(--accent) 16%,#0c0a14))}
 .photo-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .photo-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(8,6,14,.34),transparent 26%,transparent 44%,rgba(8,6,14,.55) 74%,rgba(8,6,14,.92))}
 .ph-eyebrow{position:absolute;top:26px;left:0;right:0;z-index:1;text-align:center;font-size:.7rem;font-weight:600;letter-spacing:.44em;text-transform:uppercase;color:rgba(255,255,255,.92);margin-left:.44em;text-shadow:0 1px 10px rgba(0,0,0,.5)}
@@ -328,7 +336,7 @@ ${sparkScript({ cols: ['#ffffff', '#ffe1b0', '#f6c2da', '#cbb0ff'], rate: 55, mo
 .photo-hero .lede{color:rgba(255,255,255,.92);text-shadow:0 1px 14px rgba(0,0,0,.55)}
 .photo-hero .hdate{color:rgba(255,255,255,.92);text-shadow:0 1px 12px rgba(0,0,0,.5)}
 .gallery{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.gallery img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.1);box-shadow:0 16px 36px -20px rgba(0,0,0,.7)}
+.gallery img{width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.1);box-shadow:0 16px 36px -20px rgba(0,0,0,.7);background:url("${PHOTO_ICON}") center/40px no-repeat,linear-gradient(155deg,color-mix(in srgb,var(--accent) 46%,#241830),color-mix(in srgb,var(--accent) 12%,#0c0a14))}
 .invite .sec{padding:0 clamp(18px,4vw,26px)}
 .invite .sec h2{font-family:"Nanum Myeongjo",Georgia,serif;font-size:.98rem;font-weight:800;letter-spacing:.26em;color:color-mix(in srgb,var(--accent) 56%,#fff);margin-bottom:22px}
 .bio{margin:0 auto;max-width:30ch;color:rgba(255,255,255,.78);font-size:clamp(1.02rem,2.4vw,1.1rem);line-height:2.1;white-space:pre-line;word-break:keep-all}
