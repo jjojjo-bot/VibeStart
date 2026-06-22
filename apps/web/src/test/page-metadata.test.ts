@@ -1,6 +1,6 @@
 // @vitest-environment node
 /**
- * createPageMetadata — 하위 마케팅 페이지(onboarding/plan/setup/complete/about/terms)가
+ * createPageMetadata — 하위 마케팅 페이지(onboarding/plan/setup/complete/about/terms/privacy)가
  * 자기 자신을 가리키는 canonical을 갖는지 검증.
  *
  * 기존엔 title/description만 줘서 루트 레이아웃의 로케일-루트 canonical을 상속 →
@@ -26,6 +26,9 @@ describe('createPageMetadata', () => {
     );
     expect((await createPageMetadata('ja', 'terms')).alternates?.canonical).toBe(
       'https://vibe-start.com/ja/terms',
+    );
+    expect((await createPageMetadata('ko', 'privacy')).alternates?.canonical).toBe(
+      'https://vibe-start.com/privacy',
     );
   });
 

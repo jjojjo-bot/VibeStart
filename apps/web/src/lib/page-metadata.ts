@@ -4,7 +4,7 @@ import { pageAlternates } from "./canonical";
 
 export async function createPageMetadata(
   locale: string,
-  page: "onboarding" | "plan" | "setup" | "complete" | "about" | "terms",
+  page: "onboarding" | "plan" | "setup" | "complete" | "about" | "terms" | "privacy",
 ): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "Metadata" });
 

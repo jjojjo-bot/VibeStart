@@ -2,10 +2,12 @@
 
 다른 기기에서 새 Claude Code 세션을 시작할 때 이 문서를 먼저 읽으면 작업을 바로 이어갈 수 있다. 이 PC의 `~/.claude/projects/.../memory/` 메모리는 git에 안 올라가므로, 핵심 전략·다음 단계를 여기 합쳐 둔다.
 
-**최신 커밋**: `4eb8ad4` (5분 체험 미리보기 4종 와이어업 완성 — shop/invitation 필드 연결 + todo→launch)
+**최신 커밋**: `main` HEAD = SEO/a11y/보안 하드닝 스윕 + privacy canonical 마무리 (아래 §1-E)
 **브랜치**: `main` (origin과 동기화됨)
-**기준일**: 2026-06-22
+**기준일**: 2026-06-22 (저녁 핸드오프 — 집에서 이어가기)
 **프로덕션**: https://vibe-start.com (아래 §1 작업 전부 라이브 배포됨)
+
+> **이 핸드오프의 핵심 (2026-06-22 저녁)**: 코드 작업은 모두 커밋·푸시 완료. 집에서 할 일 **딱 하나** — **딥리서치 시장경쟁력 검증 워크플로우 재실행** (이전 실행이 29/30에서 세션 크래시로 중단됨, 최종 합성만 미완). 재실행용 질문(args) 전문은 §6에 보존해 뒀다. `git pull` 후 그걸 `/deep-research`로 다시 돌리면 됨.
 
 ## 다른 기기에서 바로 이어가기
 
@@ -65,9 +67,21 @@ pnpm dev:web                    # localhost:3000 (점유 시 3001 fallback)
 
 히어로·하단 CTA 메인(filled) "설치 없이 5분 체험" → `/start`, 보조 "개발 환경 설치하기" → `/onboarding`.
 
+### 1-E. SEO/a11y/보안 하드닝 스윕 (2026-06-22 오후, 라이브)
+
+Lighthouse SEO/접근성 감점 정리 + 보안 헤더. 4eb8ad4 이후 커밋들:
+- `f3fc5e4` 5분 체험 미리보기 깜빡임 제거(`use-debounced`) + invitation 사진을 외부 picsum 의존 대신 **사진 슬롯 플레이스홀더**로 (백로그 §2-2 처리됨).
+- `87e8f9c` `/start` self-canonical·hreflang + a11y(중복 alt·헤딩 교정) + **보안 헤더**(`next.config.ts`). canonical 헬퍼 `lib/canonical.ts` 신설.
+- `4788fa2` 하위 6개 마케팅 페이지(onboarding/plan/setup/complete/about/terms) self-canonical·hreflang (`lib/page-metadata.ts`, `createPageMetadata`).
+- **(이번 커밋)** 스윕에서 빠졌던 **`privacy` 페이지** self-canonical·hreflang 마무리 — `privacy/layout.tsx` 추가 + `createPageMetadata` union에 `"privacy"` + 테스트 단언. (privacy는 client 컴포넌트라 layout 래퍼로 metadata 주입.)
+
+> 패턴: 루트 `[locale]/layout.tsx`는 로케일-루트만 canonical을 줌 → 하위 라우트는 `createPageMetadata(locale, page)`로 자기 경로 canonical+hreflang을 따로 줘야 함. 새 마케팅 페이지 추가 시 동일 패턴 반복(또는 layout.tsx에서 generateMetadata).
+
 ---
 
 ## 2. 다음 할 일 (남은 것)
+
+> **0순위 (집에서): 딥리서치 시장경쟁력 검증 재실행.** §6의 질문(args)을 `/deep-research`로 다시 돌린다. 이전 실행(`wf_be4ff7f5-f0e`)은 에이전트 30개 중 29개 완료 후 세션 크래시로 `aborted` — 최종 합성 1개만 미완이라 결과 리포트가 안 나왔다. 웹 데이터는 거의 안 변했으니 그대로 재실행이면 충분.
 
 빠른 마무리 → B′ 마지막 화면 → 보강 순.
 
@@ -110,3 +124,16 @@ eacc1bb feat(web): D′ pre-flight 점검 단계 — wsl 설치 전 관리자·W
 - **데이터 보호**: 실데이터/실비밀 컨텍스트 반입 금지(전역 지침). 데모·검증은 합성 데이터.
 - **i18n**: ko 원본, 6언어 동기화 필수(테스트가 강제). 새 메시지 키는 6개 다 추가.
 - **헥사고날**: 비즈니스 로직은 packages/, 새 외부연동은 Port 먼저. 사용자 입력 셸/HTML 직접 삽입 금지(이스케이프/allowlist).
+
+---
+
+## 6. 딥리서치 재실행 — 시장경쟁력 검증 (집에서 0순위)
+
+이전 실행 `wf_be4ff7f5-f0e`이 29/30 에이전트 완료 후 세션 크래시로 중단됨(최종 합성만 미완 → 리포트 미생성). 이 PC의 `~/.claude/.../268e82d1.../` 세션에 중간 산출물은 남아있지만 다른 기기에선 못 쓰니, **집에서 아래 질문으로 `/deep-research`를 그냥 새로 돌리는 게 가장 깔끔**하다. (웹 데이터는 몇 시간새 거의 안 변함.)
+
+재실행 질문(args) — 전문 그대로:
+
+> VibeStart(비개발자 절대초보가 로컬에 Claude Code 등 AI 코딩 환경을 무실패로 설치·학습하도록 돕고, 5분 체험 템플릿 빌더로 입문시키는 한국어 우선 웹서비스)의 2026년 상반기 시장 경쟁력 검증. 핵심 리서치 질문: (1) 제로설치 브라우저형 AI 앱 빌더(Lovable, Bolt.new, v0, Replit Agent, Create.xyz, a0.dev 등)의 현재 가격·무료티어·역량·한국어 지원·시장 점유/모멘텀; (2) 비개발자에게 '직접 로컬에서 AI로 빌드하는 능력'을 가르치는(락인 없는 자립) 방향의 직접 경쟁자가 존재하는가; (3) Anthropic의 Claude Code 자체 온보딩이 얼마나 초보 친화적이 되었는가(플랫폼 의존 리스크); (4) 한국 시장에서 비개발자 AI 앱제작/바이브코딩 타겟 플레이어(예: 뤼튼 등); (5) '시간 많고 지식 0인 절대초보가 AI로 직접 만들기' 세그먼트의 크기·성장·결제의향 신호. 목표: VibeStart가 '앱을 준다(Lovable에 패배)' vs '직접 만들 능력을 준다(틈새)' 중 어느 포지션이 방어 가능한지 판단할 근거.
+
+- 리서치 목적은 메모리 `project_target_persona_verification`의 2026-06 시장검증 후속(적대적 재검증). 결과 나오면 그 메모리 + 이 문서 §0 전략에 반영.
+- 결과는 토큰 큼(이전 실행 73만 토큰/~12분). 비용 감안해 한 번에 끝까지 돌리기.
