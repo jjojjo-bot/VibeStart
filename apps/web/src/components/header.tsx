@@ -17,7 +17,8 @@ export function Header() {
       </a>
       <div className="flex items-center gap-6">
         <Link href="/" className="flex items-center gap-2 text-lg font-bold tracking-tight text-foreground hover:text-primary transition-colors">
-          <Image src="/logo.svg" alt="VibeStart" width={32} height={32} />
+          {/* 로고는 옆 "VibeStart" 텍스트가 라벨이므로 장식용(alt="") — 중복 alt 회피 */}
+          <Image src="/logo.svg" alt="" width={32} height={32} />
           VibeStart
         </Link>
         <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground transition-colors">

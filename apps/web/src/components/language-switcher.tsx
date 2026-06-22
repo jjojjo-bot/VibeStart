@@ -19,14 +19,16 @@ const LOCALE_CONFIG: Record<string, LocaleConfig> = {
   hi: { label: "हिन्दी", flag: "in" },
 };
 
-function FlagImage({ code, label }: { code: string; label: string }) {
+// 국기는 옆 <span>{label}</span>가 라벨이고 버튼엔 aria-label도 있으므로
+// 장식용(alt="")으로 둔다 — 중복 alt(언어명 반복) 회피.
+function FlagImage({ code }: { code: string }) {
   return (
     <img
       src={`https://flagcdn.com/20x15/${code}.png`}
       srcSet={`https://flagcdn.com/40x30/${code}.png 2x`}
       width={20}
       height={15}
-      alt={label}
+      alt=""
       className="rounded-sm"
     />
   );
@@ -65,7 +67,7 @@ export function LanguageSwitcher() {
         aria-expanded={open}
         aria-haspopup="listbox"
       >
-        <FlagImage code={current.flag} label={current.label} />
+        <FlagImage code={current.flag} />
         <span>{current.label}</span>
         <svg
           className={`h-3 w-3 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
@@ -94,7 +96,7 @@ export function LanguageSwitcher() {
                     loc === locale ? "text-primary font-medium" : "text-foreground"
                   }`}
                 >
-                  <FlagImage code={config.flag} label={config.label} />
+                  <FlagImage code={config.flag} />
                   <span>{config.label}</span>
                 </button>
               </li>

@@ -97,9 +97,10 @@ export function CountryStats({ dailyCountries, period }: CountryStatsProps) {
 
   return (
     <div className="mt-6 border-t border-border/50 pt-6">
-      <h3 className="mb-4 text-sm font-medium text-muted-foreground">
+      {/* 히어로 h1 바로 다음에 오는 통계 섹션 제목 — 헤딩 레벨 순차화를 위해 h2 */}
+      <h2 className="mb-4 text-sm font-medium text-muted-foreground">
         {t("countryStats.title")}
-      </h3>
+      </h2>
       <div className="space-y-3">
         {countries.map((country, index) => {
           const barWidth = Math.round((country.visitors / maxVisitors) * 100);
