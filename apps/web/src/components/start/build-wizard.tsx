@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { CSSProperties, ReactNode } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { templates, getTemplate, renderTemplate, FIELD_KINDS } from '@vibestart/template-catalog';
@@ -14,6 +14,14 @@ import type {
 import { Link } from '@/i18n/navigation';
 import { validateSlug, normalizeSlug } from '@/lib/publish/slug';
 import { useDebounced } from '@/lib/use-debounced';
+import {
+  trackStartOpen,
+  trackStartCategory,
+  trackStartPublishClick,
+  trackStartPublishSuccess,
+  trackStartClaimClick,
+  trackStartGraduateChoice,
+} from '@/lib/ga';
 
 type Step = 'category' | 'build' | 'publish' | 'graduate';
 type PubStatus = 'idle' | 'publishing' | 'done' | 'error';
@@ -118,10 +126,17 @@ export function BuildWizard() {
 
   const template = templateId ? getTemplate(templateId) : undefined;
 
+  // 빌더 진입(퍼널 분모). locale은 마운트 동안 고정(라우트 바인딩)이라 사실상 1회.
+  useEffect(() => {
+    trackStartOpen(locale);
+  }, [locale]);
+
   function pick(id: string): void {
     setTemplateId(id);
     setValues({});
     setStep('build');
+    const tpl = getTemplate(id);
+    if (tpl) trackStartCategory(tpl.category);
   }
 
   function setField(key: TemplateFieldKey, v: string): void {
@@ -209,6 +224,7 @@ export function BuildWizard() {
     }
     setPubStatus('publishing');
     setPubError(null);
+    trackStartPublishClick(template.category);
     try {
       const res = await fetch('/api/publish', {
         method: 'POST',
@@ -224,6 +240,7 @@ export function BuildWizard() {
         setPubPath(data.path);
         setPubStatus('done');
         setPendingClaimCookie(clean);
+        trackStartPublishSuccess(template.category); // ★ 첫 성공
       } else {
         setPubStatus('error');
         setPubError(
@@ -360,7 +377,11 @@ export function BuildWizard() {
               </a>
             </div>
             <p className="field-hint mt-3">{t('publish.tempNote')}</p>
-            <Link href="/login" className="btn-primary mt-3 w-full justify-center py-2.5">
+            <Link
+              href="/login"
+              className="btn-primary mt-3 w-full justify-center py-2.5"
+              onClick={() => trackStartClaimClick(template.category)}
+            >
               {t('publish.keepCta')}
             </Link>
             <button
@@ -392,7 +413,11 @@ export function BuildWizard() {
           </p>
         </header>
         <div className="grid gap-5 sm:grid-cols-2">
-          <Link href="/dashboard" className="card text-left transition hover:-translate-y-0.5">
+          <Link
+            href="/dashboard"
+            className="card text-left transition hover:-translate-y-0.5"
+            onClick={() => trackStartGraduateChoice('free')}
+          >
             <span className="chip self-start">{t('graduate.free.badge')}</span>
             <h2 className="text-lg font-semibold tracking-tight">{t('graduate.free.title')}</h2>
             <p className="flex-1 text-sm leading-relaxed text-[color:var(--txt-2,#9aa6b8)]">
@@ -403,7 +428,11 @@ export function BuildWizard() {
             </span>
             <span className="field-hint text-center">{t('graduate.free.note')}</span>
           </Link>
-          <Link href="/onboarding" className="card text-left transition hover:-translate-y-0.5">
+          <Link
+            href="/onboarding"
+            className="card text-left transition hover:-translate-y-0.5"
+            onClick={() => trackStartGraduateChoice('ai')}
+          >
             <span className="chip self-start">{t('graduate.ai.badge')}</span>
             <h2 className="text-lg font-semibold tracking-tight">{t('graduate.ai.title')}</h2>
             <p className="flex-1 text-sm leading-relaxed text-[color:var(--txt-2,#9aa6b8)]">

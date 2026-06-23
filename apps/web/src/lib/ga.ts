@@ -45,3 +45,29 @@ export function trackPhase2Login(): void {
 export function trackProjectCreate(track: string): void {
   trackEvent({ action: "project_create", params: { track } });
 }
+
+/* ── B′ 첫성공 빌더(/start) 퍼널 ── */
+
+export function trackStartOpen(locale: string): void {
+  trackEvent({ action: "start_open", params: { locale } });
+}
+
+export function trackStartCategory(category: string): void {
+  trackEvent({ action: "start_category", params: { category } });
+}
+
+export function trackStartPublishClick(category: string): void {
+  trackEvent({ action: "start_publish_click", params: { category } });
+}
+
+export function trackStartPublishSuccess(category: string): void {
+  trackEvent({ action: "start_publish_success", params: { category } });
+}
+
+export function trackStartClaimClick(category: string): void {
+  trackEvent({ action: "start_claim_click", params: { category } });
+}
+
+export function trackStartGraduateChoice(choice: string): void {
+  trackEvent({ action: "start_graduate_choice", params: { choice } });
+}
