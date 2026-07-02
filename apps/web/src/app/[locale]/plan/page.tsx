@@ -108,6 +108,8 @@ function PlanContent() {
   const os = (searchParams.get("os") ?? "windows") as OS;
   const goal = (searchParams.get("goal") ?? "web-nextjs") as Goal;
   const projectName = searchParams.get("project") ?? "my-first-app";
+  // 설치 경험(exp) — 온보딩이 준 값을 /setup으로 그대로 전달. 없으면 생략(=first 폴백).
+  const exp = searchParams.get("exp");
 
   const planItems = getPlanItems(os, goal, t);
 
@@ -116,6 +118,7 @@ function PlanContent() {
     goal,
     project: projectName,
   });
+  if (exp) setupParams.set("exp", exp);
 
   return (
     <main id="main-content" className="flex min-h-screen flex-col items-center justify-center px-6 py-16">

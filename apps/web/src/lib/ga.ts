@@ -30,12 +30,26 @@ export function trackOnboardingComplete(os: string, goal: string): void {
   trackEvent({ action: "onboarding_complete", params: { os, goal } });
 }
 
-export function trackSetupStart(os: string, goal: string): void {
-  trackEvent({ action: "setup_start", params: { os, goal } });
+export function trackSetupStart(os: string, goal: string, exp?: string): void {
+  trackEvent({ action: "setup_start", params: exp ? { os, goal, exp } : { os, goal } });
 }
 
 export function trackSetupComplete(os: string, goal: string): void {
   trackEvent({ action: "setup_complete", params: { os, goal } });
+}
+
+/* ── 환경 스캔("내 컴퓨터 확인하기") 게이트 ── */
+
+export function trackSetupScanShown(): void {
+  trackEvent({ action: "setup_scan_shown" });
+}
+
+export function trackSetupScanResult(wsl: string, vscode: string): void {
+  trackEvent({ action: "setup_scan_result", params: { wsl, vscode } });
+}
+
+export function trackSetupScanSkipped(): void {
+  trackEvent({ action: "setup_scan_skipped" });
 }
 
 export function trackPhase2Login(): void {

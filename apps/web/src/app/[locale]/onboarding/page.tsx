@@ -9,15 +9,15 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { StepOS } from "@/components/onboarding/step-os";
 import { StepAIIntro } from "@/components/onboarding/step-ai-intro";
+import { StepExperience } from "@/components/onboarding/step-experience";
 import { StepGoal } from "@/components/onboarding/step-goal";
 import { StepProjectName } from "@/components/onboarding/step-project-name";
 import {
   OnboardingData,
   INITIAL_ONBOARDING,
-  ONBOARDING_STEPS,
+  onboardingStepKeys,
+  canProceedFrom,
 } from "@/lib/onboarding";
-
-const STEP_KEYS = ["os", "aiIntro", "goal", "projectName"] as const;
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -32,29 +32,20 @@ export default function OnboardingPage() {
     }
   }, []);
 
-  const totalSteps = ONBOARDING_STEPS.length;
+  // OS에 따라 단계 구성이 달라진다 — Windows는 설치 경험 질문 포함 5단계
+  const stepKeys = onboardingStepKeys(data.os);
+  const totalSteps = stepKeys.length;
   const progress = ((step + 1) / totalSteps) * 100;
-  const stepKey = STEP_KEYS[step];
+  const stepKey = stepKeys[step];
 
   function canProceed(): boolean {
-    switch (step) {
-      case 0:
-        return data.os !== null;
-      case 1:
-        return true; // AI 소개 — 항상 진행 가능
-      case 2:
-        return data.goal !== null;
-      case 3:
-        return data.projectName.length >= 2;
-      default:
-        return false;
-    }
+    return canProceedFrom(stepKey, data);
   }
 
   function handleNext() {
     if (step < totalSteps - 1) {
-      // OS 선택 완료 시 (step 0 → 1)
-      if (step === 0 && data.os) {
+      // OS 선택 완료 시
+      if (stepKey === "os" && data.os) {
         trackOnboardingStart(data.os);
       }
       setStep(step + 1);
@@ -65,6 +56,9 @@ export default function OnboardingPage() {
         goal: data.goal!,
         project: data.projectName,
       });
+      if (data.os === "windows") {
+        params.set("exp", data.experience ?? "first");
+      }
       router.push(`/plan?${params.toString()}`);
     }
   }
@@ -92,20 +86,26 @@ export default function OnboardingPage() {
 
         {/* 단계별 컴포넌트 */}
         <div className="mb-10">
-          {step === 0 && (
+          {stepKey === "os" && (
             <StepOS
               value={data.os}
               onChange={(os) => setData({ ...data, os })}
             />
           )}
-          {step === 1 && <StepAIIntro />}
-          {step === 2 && (
+          {stepKey === "experience" && (
+            <StepExperience
+              value={data.experience}
+              onChange={(experience) => setData({ ...data, experience })}
+            />
+          )}
+          {stepKey === "aiIntro" && <StepAIIntro />}
+          {stepKey === "goal" && (
             <StepGoal
               value={data.goal}
               onChange={(goal) => setData({ ...data, goal })}
             />
           )}
-          {step === 3 && (
+          {stepKey === "projectName" && (
             <StepProjectName
               value={data.projectName}
               onChange={(projectName) => setData({ ...data, projectName })}

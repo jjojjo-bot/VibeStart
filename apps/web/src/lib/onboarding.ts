@@ -2,16 +2,22 @@ export type OS = "windows" | "macos";
 
 export type Goal = "web-nextjs" | "web-python" | "web-java" | "mobile" | "data-ai" | "not-sure";
 
+/** 이 컴퓨터에 개발 도구를 설치해본 경험 — Windows 스캔 게이트 분기용. */
+export type InstallExperience = "first" | "prior" | "unsure";
+
 export interface OnboardingData {
   os: OS | null;
   goal: Goal | null;
   projectName: string;
+  /** Windows에서만 질문. macOS 플로우에선 null 유지. */
+  experience: InstallExperience | null;
 }
 
 export const INITIAL_ONBOARDING: OnboardingData = {
   os: null,
   goal: null,
   projectName: "",
+  experience: null,
 };
 
 export const OS_OPTIONS = [
@@ -54,9 +60,27 @@ export const GOAL_OPTIONS = [
   { value: "not-sure" as Goal, label: "아직 잘 모르겠어요", icon: "🤔" },
 ] as const;
 
-export const ONBOARDING_STEPS = [
-  { id: "os", title: "운영체제", description: "어떤 컴퓨터를 사용하시나요?" },
-  { id: "ai-intro", title: "AI 도구", description: "이런 도구와 함께해요" },
-  { id: "goal", title: "목표", description: "어떤 걸 만들고 싶으세요?" },
-  { id: "project-name", title: "프로젝트 이름", description: "프로젝트 이름을 지어주세요" },
-] as const;
+export type OnboardingStepKey = "os" | "experience" | "aiIntro" | "goal" | "projectName";
+
+/** OS에 따른 온보딩 단계 구성. 설치 경험 질문은 Windows에만 (스캔 게이트가 Windows 전용). */
+export function onboardingStepKeys(os: OS | null): readonly OnboardingStepKey[] {
+  return os === "windows"
+    ? (["os", "experience", "aiIntro", "goal", "projectName"] as const)
+    : (["os", "aiIntro", "goal", "projectName"] as const);
+}
+
+/** 단계별 진행 가능 조건 — 온보딩 페이지의 '다음' 버튼 활성화 규칙. */
+export function canProceedFrom(stepKey: OnboardingStepKey, data: OnboardingData): boolean {
+  switch (stepKey) {
+    case "os":
+      return data.os !== null;
+    case "experience":
+      return data.experience !== null;
+    case "aiIntro":
+      return true;
+    case "goal":
+      return data.goal !== null;
+    case "projectName":
+      return data.projectName.length >= 2;
+  }
+}

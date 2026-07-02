@@ -7,13 +7,27 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScriptBlock } from "@/components/onboarding/script-block";
 import { StuckHelper } from "@/components/diagnosis/stuck-helper";
-import { getSetupSteps, diagnosisStepFor, type SetupGroup } from "@/lib/setup-steps";
+import { ScanGate } from "@/components/setup/scan-gate";
+import {
+  getSetupSteps,
+  diagnosisStepFor,
+  scanPrecompletedStepIds,
+  WINDOWS_SCAN_SCRIPT,
+  type SetupGroup,
+} from "@/lib/setup-steps";
 import {
   type OS,
   type Goal,
 } from "@/lib/onboarding";
+import type { ScanResult } from "@vibestart/shared-types";
 import { useTranslations } from "next-intl";
-import { trackSetupStart, trackSetupComplete } from "@/lib/ga";
+import {
+  trackSetupStart,
+  trackSetupComplete,
+  trackSetupScanShown,
+  trackSetupScanResult,
+  trackSetupScanSkipped,
+} from "@/lib/ga";
 
 const GROUP_ORDER: SetupGroup[] = ["envPrep", "toolInstall", "aiSetup", "projectCreate"];
 
@@ -26,14 +40,19 @@ function SetupContent() {
   const os = (searchParams.get("os") ?? "windows") as OS;
   const goal = (searchParams.get("goal") ?? "web-nextjs") as Goal;
   const projectName = searchParams.get("project") ?? "my-first-app";
+  // 설치 경험 — 이상값·부재는 first 폴백(기존 링크·북마크 하위호환)
+  const rawExp = searchParams.get("exp");
+  const exp = rawExp === "prior" || rawExp === "unsure" ? rawExp : "first";
 
   const steps = getSetupSteps(os, goal, projectName, ts);
   const storageKey = `vibestart-progress-${os}-${goal}-${projectName}`;
+  const scanKey = `vibestart-scan-${os}-${goal}-${projectName}`;
 
   const [openTroubleshooting, setOpenTroubleshooting] = useState<Set<string>>(new Set());
 
   const [completed, setCompleted] = useState<Set<string>>(new Set());
   const [hydrated, setHydrated] = useState(false);
+  const [scanResolved, setScanResolved] = useState(false);
 
   // Group name mapping for translations
   const groupNameMap: Record<string, string> = {
@@ -53,10 +72,14 @@ function SetupContent() {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setCompleted(new Set<string>(JSON.parse(saved) as string[]));
       }
+      // 스캔을 이미 완료/스킵했으면 게이트를 다시 띄우지 않는다 (재부팅 복귀 포함)
+      if (localStorage.getItem(scanKey)) {
+        setScanResolved(true);
+      }
     } catch { /* 무시 */ }
     setHydrated(true);
-    trackSetupStart(os, goal);
-  }, [storageKey, os, goal]);
+    trackSetupStart(os, goal, os === "windows" ? exp : undefined);
+  }, [storageKey, scanKey, os, goal, exp]);
 
   // 완료 상태 변경 시 저장 (hydration 완료 후에만)
   useEffect(() => {
@@ -101,6 +124,38 @@ function SetupContent() {
     return completed.has(steps[index - 1].id);
   }
 
+  // 스캔 게이트 — Windows + 설치 경험자(prior/unsure) + 스캔 미완료일 때만.
+  // exp=first(절대초보 기본 경로)는 게이트를 아예 만나지 않는다.
+  const showScanGate = os === "windows" && exp !== "first" && hydrated && !scanResolved;
+
+  const scanShownTracked = useRef(false);
+  useEffect(() => {
+    if (showScanGate && !scanShownTracked.current) {
+      scanShownTracked.current = true;
+      trackSetupScanShown();
+    }
+  }, [showScanGate]);
+
+  function handleScanDone(result: ScanResult | null): void {
+    try {
+      localStorage.setItem(
+        scanKey,
+        JSON.stringify(result ? { status: "done", ...result } : { status: "skipped" }),
+      );
+    } catch { /* 무시 */ }
+    if (result) {
+      trackSetupScanResult(result.wsl ? "ok" : "missing", result.vscode ? "ok" : "missing");
+      const precompleted = scanPrecompletedStepIds(result);
+      if (precompleted.length > 0) {
+        // 기존 진행과 합집합 — 스캔이 사용자의 이전 진행을 되돌리지 않는다
+        setCompleted((prev) => new Set([...prev, ...precompleted]));
+      }
+    } else {
+      trackSetupScanSkipped();
+    }
+    setScanResolved(true);
+  }
+
   const allDone = steps.every((s) => completed.has(s.id));
   const progressPercent = Math.round((completed.size / steps.length) * 100);
 
@@ -141,6 +196,10 @@ function SetupContent() {
           {t.rich("subtitle", { strong: (chunks) => <strong className="text-foreground">{chunks}</strong> })}
         </p>
 
+        {showScanGate ? (
+          <ScanGate script={WINDOWS_SCAN_SCRIPT} onDone={handleScanDone} />
+        ) : (
+          <>
         {/* 프로그레스 바 + 그룹 뱃지 (스크롤 시 상단 고정) */}
         <div className="sticky top-0 z-10 -mx-6 mb-10 bg-background/80 px-6 pt-3 pb-3 backdrop-blur-sm">
           {/* 프로그레스 바 */}
@@ -393,6 +452,8 @@ function SetupContent() {
               {t("allDoneButton")}
             </Button>
           </div>
+        )}
+          </>
         )}
       </div>
     </main>
