@@ -85,3 +85,9 @@ export interface ParsedMarker {
   result?: 'ok' | 'fail';
   code?: string;
 }
+
+/** 환경 스캔("내 컴퓨터 확인하기") 판정 결과. true = 이미 설치됨. */
+export interface ScanResult {
+  wsl: boolean;
+  vscode: boolean;
+}
