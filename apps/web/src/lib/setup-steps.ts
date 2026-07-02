@@ -1,5 +1,5 @@
 import { hardenScript, type HardenShell } from "@vibestart/script-generator";
-import type { DiagnosisStep } from "@vibestart/shared-types";
+import type { DiagnosisStep, ScanResult } from "@vibestart/shared-types";
 import type { OS, Goal } from "./onboarding";
 
 export type SetupGroup = "envPrep" | "toolInstall" | "aiSetup" | "projectCreate";
@@ -45,6 +45,35 @@ export const GROUP_TO_DIAGNOSIS_STEP: Record<SetupGroup, DiagnosisStep> = {
 /** 한 단계의 진단 단계(마커 step·StuckHelper 둘 다 이걸 단일 출처로 쓴다). */
 export function diagnosisStepFor(step: SetupStep): DiagnosisStep {
   return step.diagnosisStep ?? GROUP_TO_DIAGNOSIS_STEP[step.group];
+}
+
+// ─── 환경 스캔 ("내 컴퓨터 확인하기") ───
+//
+// 설치 경험자(exp=prior|unsure)용 사전 스캔. 검사 항목당 마커 1개를 내서
+// 기존 parseMarkers(step/result만 파싱)를 무변경 재사용한다.
+//
+// WSL 판정 주의점:
+//   - `wsl -l -q`는 Docker Desktop 배포판(docker-desktop 등)도 나열하므로
+//     "목록 비어있지 않음"이 아니라 Ubuntu 매칭으로 판정 (오탐 방지)
+//   - 출력이 UTF-16이라 null 문자(`0)를 제거한 뒤 매칭
+//   - WSL 내부 명령(wsl -e 등)은 절대 실행하지 않음 — 미초기화 배포판이면
+//     계정 생성 화면이 떠버린다
+//   - 관리자 권한 불필요 (preflight와 다름 — 일반 PowerShell에서 동작)
+export const WINDOWS_SCAN_SCRIPT = [
+  "$w='fail'",
+  "if (Get-Command wsl.exe -ErrorAction SilentlyContinue) { try { $d=(wsl.exe -l -q 2>$null) -replace \"`0\",''; if ($LASTEXITCODE -eq 0 -and ($d | Where-Object { $_ -match 'Ubuntu' })) { $w='ok' } } catch {} }",
+  "$v='fail'",
+  "if (Get-Command code -ErrorAction SilentlyContinue) { $v='ok' }",
+  "Write-Output \"VIBESTART::step=scan-wsl::result=$w\"",
+  "Write-Output \"VIBESTART::step=scan-vscode::result=$v\"",
+].join("; ");
+
+/** 스캔 결과로 사전 완료 처리할 단계 id. wsl-open은 제외 — WSL이 있어도 창은 열어야 한다. */
+export function scanPrecompletedStepIds(result: ScanResult): string[] {
+  const ids: string[] = [];
+  if (result.wsl) ids.push("preflight", "wsl", "reboot");
+  if (result.vscode) ids.push("editor");
+  return ids;
 }
 
 /** Translation function type for SetupSteps namespace */
@@ -319,7 +348,11 @@ function wslVscodeStep(t: T): SetupStep {
     title: t("editor.title"),
     description: t("editor.description"),
     whyNeeded: t("editor.whyNeeded"),
-    group: "toolInstall",
+    group: "envPrep",
+    // group을 envPrep로 옮겼지만 진단 규칙은 도구 설치 계열이 맞다.
+    // 그룹 기본 매핑(envPrep→wsl-install)을 그대로 두면 StuckHelper가
+    // WSL 설치 규칙으로 진단하는 회귀가 생긴다.
+    diagnosisStep: "tools-install",
     environment: t("environments.windowsCmd"),
     detailedGuide: t("editor.detailedGuide.windows"),
     script,
@@ -1088,8 +1121,13 @@ export function getSetupSteps(
   steps.push(terminalGuide(os, t));
 
   if (os === "windows") {
-    // 환경 준비
+    // 환경 준비 — VS Code를 재부팅 앞에 배치:
+    //   1) PowerShell 구간(preflight~wsl)이 연속돼 창 왕복이 줄고
+    //   2) Ubuntu 첫 실행 전에 VS Code가 깔려 새 셸 PATH에 code가 포함됨
+    //      → ai-setup의 code --install-extension 실패 원인(PATH 스테일) 소멸
+    //   3) 재부팅 전 쉬운 성공 1개를 적립해 이탈을 완충
     steps.push(windowsPreflightStep(t));
+    steps.push(wslVscodeStep(t));
     steps.push(wslInstallStep(t));
     steps.push(windowsRebootStep(t));
     steps.push(wslOpenStep(t));
@@ -1099,7 +1137,6 @@ export function getSetupSteps(
     if (needsNode(goal)) {
       steps.push(wslNodejsStep(t));
     }
-    steps.push(wslVscodeStep(t));
 
     // AI 설정
     steps.push(wslClaudeStep(t));
