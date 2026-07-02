@@ -512,6 +512,10 @@
         "title": "Operating System",
         "description": "What computer are you using?"
       },
+      "experience": {
+        "title": "Experience",
+        "description": "Have you ever installed developer tools on this computer?"
+      },
       "aiIntro": {
         "title": "AI Tool",
         "description": "Meet your AI coding companion"
@@ -530,6 +534,21 @@
       "macos": "Mac"
     },
     "osAriaLabel": "Select operating system",
+    "experienceAriaLabel": "Select installation experience",
+    "experienceOptions": {
+      "first": {
+        "label": "This is my first time",
+        "description": "No worries! We'll guide you through every step from scratch."
+      },
+      "prior": {
+        "label": "I've done it before",
+        "description": "We'll check which tools are already installed and skip those steps."
+      },
+      "unsure": {
+        "label": "I'm not sure",
+        "description": "One quick check will tell you. It takes about a minute."
+      }
+    },
     "goalOptions": {
       "website": "Website / Web App",
       "mobile": "Mobile App",
@@ -666,6 +685,26 @@
       "toolInstall": "Tool Installation",
       "aiSetup": "AI Setup",
       "projectCreate": "Project Creation"
+    },
+    "scanGate": {
+      "title": "Check your computer",
+      "subtitle": "Let's spend one minute checking what's already installed. Anything found gets skipped!",
+      "adminNote": "No administrator rights needed for this check.",
+      "openGuideToggle": "▸ How to open PowerShell",
+      "openGuide": "Press the Windows key, type 'PowerShell', then press Enter. When a blue (or black) command window opens, you're ready!",
+      "scriptLabel": "Copy the command below, paste it into PowerShell, and press Enter.",
+      "pasteLabel": "Copy the output and paste it below.",
+      "pastePlaceholder": "Paste the output that includes lines starting with VIBESTART::",
+      "submit": "Check",
+      "skip": "Just start from scratch",
+      "parseError": "We couldn't recognize the output. Copy the entire output and paste it again — or continue with 'Just start from scratch' below.",
+      "resultTitle": "Result",
+      "wslFound": "✓ Ubuntu (WSL) — already installed",
+      "wslMissing": "Ubuntu (WSL) — needs to be installed",
+      "vscodeFound": "✓ VS Code — already installed",
+      "vscodeMissing": "VS Code — needs to be installed",
+      "resultNote": "Items already installed are marked complete. Your progress bar starts pre-filled!",
+      "continueButton": "See my plan"
     }
   },
   "SetupSteps": {
@@ -788,7 +827,7 @@
       "description": "Install a program for editing code",
       "whyNeeded": "VS Code is a dedicated code editor. It's like Notepad, but with superpowers — code autocomplete, error highlighting, AI assistant integration, and more.",
       "detailedGuide": {
-        "windows": "VS Code is installed on Windows but automatically connects to WSL. Open a new PowerShell window to run the command. Once installation finishes, be sure to close any Ubuntu windows you had open and reopen Ubuntu — the next step (AI coding assistant) needs Ubuntu to pick up the new PATH so the code command works."
+        "windows": "VS Code installs on Windows and will connect to WSL (Linux) automatically later. You can run this right in the PowerShell window you already have open."
       },
       "troubleshooting": {
         "windows": [

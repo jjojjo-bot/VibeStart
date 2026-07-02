@@ -512,6 +512,10 @@
         "title": "OS",
         "description": "どのパソコンをお使いですか？"
       },
+      "experience": {
+        "title": "インストール経験",
+        "description": "このパソコンに開発ツールをインストールしたことはありますか？"
+      },
       "aiIntro": {
         "title": "AIツール",
         "description": "こんなツールと一緒に始めましょう"
@@ -530,6 +534,21 @@
       "macos": "Mac"
     },
     "osAriaLabel": "OSを選択",
+    "experienceAriaLabel": "インストール経験を選択",
+    "experienceOptions": {
+      "first": {
+        "label": "初めてです",
+        "description": "大丈夫です！最初からひとつずつ丁寧にご案内します。"
+      },
+      "prior": {
+        "label": "したことがあります",
+        "description": "すでにインストール済みのツールを確認して、そのステップをスキップできます。"
+      },
+      "unsure": {
+        "label": "わかりません",
+        "description": "簡単なチェック一回でわかります。1分もかかりません。"
+      }
+    },
     "goalOptions": {
       "website": "ウェブサイト / ウェブサービス",
       "mobile": "モバイルアプリ",
@@ -666,6 +685,26 @@
       "toolInstall": "ツールインストール",
       "aiSetup": "AI設定",
       "projectCreate": "プロジェクト作成"
+    },
+    "scanGate": {
+      "title": "パソコンをチェック",
+      "subtitle": "すでにインストール済みのツールがないか、1分でチェックしましょう。見つかったステップはスキップされます！",
+      "adminNote": "このチェックに管理者権限は必要ありません。",
+      "openGuideToggle": "▸ PowerShellの開き方",
+      "openGuide": "キーボードのWindowsキーを押して「PowerShell」と入力し、Enterを押してください。青い（または黒い）コマンドウィンドウが開けば準備完了です！",
+      "scriptLabel": "下のコマンドをコピーしてPowerShellに貼り付け、Enterを押してください。",
+      "pasteLabel": "実行結果をそのままコピーして、下に貼り付けてください。",
+      "pastePlaceholder": "VIBESTART:: で始まる行を含む結果を貼り付けてください",
+      "submit": "チェックする",
+      "skip": "最初からやります",
+      "parseError": "結果を認識できませんでした。出力全体をもう一度コピーして貼り付けてください。うまくいかない場合は、下の「最初からやります」で進めても大丈夫です。",
+      "resultTitle": "チェック結果",
+      "wslFound": "✓ Ubuntu（WSL）— インストール済みです",
+      "wslMissing": "Ubuntu（WSL）— インストールが必要です",
+      "vscodeFound": "✓ VS Code — インストール済みです",
+      "vscodeMissing": "VS Code — インストールが必要です",
+      "resultNote": "インストール済みの項目は完了としてマークしました。進捗バーが埋まった状態でスタートします！",
+      "continueButton": "プランを見る"
     }
   },
   "SetupSteps": {
@@ -788,7 +827,7 @@
       "description": "コードを編集するプログラムをインストールします",
       "whyNeeded": "VS Codeはコードを書くための専用エディタです。メモ帳に似ていますが、コード自動補完、エラー表示、AIアシスタント連携など、開発に特化した機能があります。",
       "detailedGuide": {
-        "windows": "VS CodeはWindowsにインストールしますが、WSLと自動的に連携します。新しいPowerShellウィンドウを開いて実行してください。インストールが終わったら、開いていたUbuntuウィンドウを必ず閉じて新しく開き直してください — 次のステップ（AIコーディングアシスタント）でcodeコマンドを使うには、Ubuntuが新しいPATHを読み込む必要があります。"
+        "windows": "VS CodeはWindowsにインストールしますが、後でWSL（Linux）と自動的に連携します。いま開いているPowerShellウィンドウでそのまま実行すればOKです。"
       },
       "troubleshooting": {
         "windows": [

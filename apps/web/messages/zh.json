@@ -512,6 +512,10 @@
         "title": "操作系统",
         "description": "你用的是什么电脑？"
       },
+      "experience": {
+        "title": "安装经验",
+        "description": "你在这台电脑上安装过开发工具吗？"
+      },
       "aiIntro": {
         "title": "AI 工具",
         "description": "将和这些工具一起使用"
@@ -530,6 +534,21 @@
       "macos": "Mac"
     },
     "osAriaLabel": "选择操作系统",
+    "experienceAriaLabel": "选择安装经验",
+    "experienceOptions": {
+      "first": {
+        "label": "第一次",
+        "description": "没关系！我们会从头开始一步步引导你。"
+      },
+      "prior": {
+        "label": "安装过",
+        "description": "我们会检查哪些工具已经安装，安装过的步骤可以跳过。"
+      },
+      "unsure": {
+        "label": "不确定",
+        "description": "做个简单检查就知道了，只需 1 分钟。"
+      }
+    },
     "goalOptions": {
       "website": "网站 / 网络服务",
       "mobile": "移动应用",
@@ -666,6 +685,26 @@
       "toolInstall": "工具安装",
       "aiSetup": "AI 设置",
       "projectCreate": "项目创建"
+    },
+    "scanGate": {
+      "title": "检查我的电脑",
+      "subtitle": "花 1 分钟检查哪些工具已经安装。已安装的步骤会被跳过！",
+      "adminNote": "这次检查不需要管理员权限。",
+      "openGuideToggle": "▸ 如何打开 PowerShell",
+      "openGuide": "按下键盘上的 Windows 键，输入 'PowerShell'，然后按 Enter。看到蓝色（或黑色）命令窗口打开就准备好了！",
+      "scriptLabel": "复制下面的命令，粘贴到 PowerShell 中并按 Enter。",
+      "pasteLabel": "把运行结果原样复制，粘贴到下面。",
+      "pastePlaceholder": "请粘贴包含以 VIBESTART:: 开头的行的结果",
+      "submit": "检查",
+      "skip": "直接从头开始",
+      "parseError": "无法识别结果。请重新复制完整输出并粘贴。如果还是不行，也可以点下面的'直接从头开始'继续。",
+      "resultTitle": "检查结果",
+      "wslFound": "✓ Ubuntu（WSL）— 已安装",
+      "wslMissing": "Ubuntu（WSL）— 需要安装",
+      "vscodeFound": "✓ VS Code — 已安装",
+      "vscodeMissing": "VS Code — 需要安装",
+      "resultNote": "已安装的项目已标记为完成。进度条会预先填充！",
+      "continueButton": "查看我的计划"
     }
   },
   "SetupSteps": {
@@ -788,7 +827,7 @@
       "description": "安装用于编写代码的程序",
       "whyNeeded": "VS Code是专门写代码的编辑器。和记事本类似，但有代码自动补全、错误提示、AI助手连接等开发专用功能。",
       "detailedGuide": {
-        "windows": "VS Code安装在Windows上，但会自动连接WSL。请打开新的PowerShell窗口运行。安装完成后，请务必关闭之前打开的Ubuntu窗口并重新打开 — 下一步（AI编程助手）需要Ubuntu读取新的PATH才能使用code命令。"
+        "windows": "VS Code 安装在 Windows 上，之后会自动连接 WSL（Linux）。直接在当前打开的 PowerShell 窗口中运行即可。"
       },
       "troubleshooting": {
         "windows": [
