@@ -516,10 +516,6 @@
         "title": "インストール経験",
         "description": "このパソコンに開発ツールをインストールしたことはありますか？"
       },
-      "aiIntro": {
-        "title": "AIツール",
-        "description": "こんなツールと一緒に始めましょう"
-      },
       "goal": {
         "title": "目標",
         "description": "何を作りたいですか？"
@@ -572,25 +568,6 @@
       }
     },
     "recommended": "おすすめ",
-    "aiIntro": {
-      "heading": "Claude Code",
-      "subtitle": "AIがコードを代わりに書いてくれるツールです",
-      "features": {
-        "conversation": {
-          "title": "会話するようにお願いするだけ",
-          "description": "「ログインページを作って」のように言えば、AIがコードを書いてくれます"
-        },
-        "terminal": {
-          "title": "ターミナルで実行します",
-          "description": "プロジェクトフォルダで claude コマンドを入力すると開始します"
-        },
-        "free": {
-          "title": "無料で始められます",
-          "description": "インストール後すぐに使えます。コーディング経験がなくても大丈夫です"
-        }
-      },
-      "alternativeNote": "Cursorも同じ役割です。後のM3ステップでClaude Code・Cursorのどちらかを選べます。"
-    },
     "projectName": {
       "label": "プロジェクト名",
       "placeholder": "my-first-app",
@@ -601,6 +578,7 @@
   "Plan": {
     "title": "カスタムインストールプラン",
     "subtitle": "以下のツールをステップごとにインストールします",
+    "aiNote": "インストールが終わったら、この中の Claude Code に会話するようにお願いするだけ — コードはAIが代わりに書いてくれます。",
     "tools": {
       "git": {
         "name": "Git",

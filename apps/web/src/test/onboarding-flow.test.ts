@@ -12,22 +12,21 @@ import {
 } from "@/lib/onboarding";
 
 describe("onboardingStepKeys", () => {
-  it("Windows는 experience 단계를 포함한 5단계다", () => {
+  it("Windows는 experience 단계를 포함한 4단계다", () => {
     expect(onboardingStepKeys("windows")).toEqual([
       "os",
       "experience",
-      "aiIntro",
       "goal",
       "projectName",
     ]);
   });
 
-  it("macOS는 기존 4단계 그대로다", () => {
-    expect(onboardingStepKeys("macos")).toEqual(["os", "aiIntro", "goal", "projectName"]);
+  it("macOS는 3단계다", () => {
+    expect(onboardingStepKeys("macos")).toEqual(["os", "goal", "projectName"]);
   });
 
-  it("OS 미선택 상태는 4단계다 (선택 시 재계산)", () => {
-    expect(onboardingStepKeys(null)).toEqual(["os", "aiIntro", "goal", "projectName"]);
+  it("OS 미선택 상태는 3단계다 (선택 시 재계산)", () => {
+    expect(onboardingStepKeys(null)).toEqual(["os", "goal", "projectName"]);
   });
 });
 
@@ -42,10 +41,6 @@ describe("canProceedFrom", () => {
   it("experience 단계는 응답 후 진행 가능", () => {
     expect(canProceedFrom("experience", base)).toBe(false);
     expect(canProceedFrom("experience", { ...base, experience: "first" })).toBe(true);
-  });
-
-  it("aiIntro는 항상 진행 가능", () => {
-    expect(canProceedFrom("aiIntro", base)).toBe(true);
   });
 
   it("goal 단계는 goal 선택 후 진행 가능", () => {

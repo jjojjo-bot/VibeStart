@@ -60,13 +60,13 @@ export const GOAL_OPTIONS = [
   { value: "not-sure" as Goal, label: "아직 잘 모르겠어요", icon: "🤔" },
 ] as const;
 
-export type OnboardingStepKey = "os" | "experience" | "aiIntro" | "goal" | "projectName";
+export type OnboardingStepKey = "os" | "experience" | "goal" | "projectName";
 
 /** OS에 따른 온보딩 단계 구성. 설치 경험 질문은 Windows에만 (스캔 게이트가 Windows 전용). */
 export function onboardingStepKeys(os: OS | null): readonly OnboardingStepKey[] {
   return os === "windows"
-    ? (["os", "experience", "aiIntro", "goal", "projectName"] as const)
-    : (["os", "aiIntro", "goal", "projectName"] as const);
+    ? (["os", "experience", "goal", "projectName"] as const)
+    : (["os", "goal", "projectName"] as const);
 }
 
 /** 단계별 진행 가능 조건 — 온보딩 페이지의 '다음' 버튼 활성화 규칙. */
@@ -76,8 +76,6 @@ export function canProceedFrom(stepKey: OnboardingStepKey, data: OnboardingData)
       return data.os !== null;
     case "experience":
       return data.experience !== null;
-    case "aiIntro":
-      return true;
     case "goal":
       return data.goal !== null;
     case "projectName":

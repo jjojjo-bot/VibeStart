@@ -516,10 +516,6 @@
         "title": "Experience",
         "description": "Have you ever installed developer tools on this computer?"
       },
-      "aiIntro": {
-        "title": "AI Tool",
-        "description": "Meet your AI coding companion"
-      },
       "goal": {
         "title": "Goal",
         "description": "What do you want to build?"
@@ -572,25 +568,6 @@
       }
     },
     "recommended": "Recommended",
-    "aiIntro": {
-      "heading": "Claude Code",
-      "subtitle": "An AI tool that writes code for you",
-      "features": {
-        "conversation": {
-          "title": "Just ask in plain English",
-          "description": "Say something like \"Build me a login page\" and the AI writes the code"
-        },
-        "terminal": {
-          "title": "Runs in the terminal",
-          "description": "Open your project folder and type claude to get started"
-        },
-        "free": {
-          "title": "Free to start",
-          "description": "Ready to use right after installation. No coding experience needed"
-        }
-      },
-      "alternativeNote": "Cursor plays the same role. You'll pick between Claude Code and Cursor later in the M3 step."
-    },
     "projectName": {
       "label": "Project Name",
       "placeholder": "my-first-app",
@@ -601,6 +578,7 @@
   "Plan": {
     "title": "Your Custom Setup Plan",
     "subtitle": "We'll install these tools step by step",
+    "aiNote": "Once everything's installed, you'll just tell Claude Code what you want in plain words — the AI writes the code for you.",
     "tools": {
       "git": {
         "name": "Git",

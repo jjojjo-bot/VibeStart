@@ -516,10 +516,6 @@
         "title": "Experiencia",
         "description": "¿Alguna vez instalaste herramientas de desarrollo en esta computadora?"
       },
-      "aiIntro": {
-        "title": "Herramienta de IA",
-        "description": "Trabajarás con esta herramienta"
-      },
       "goal": {
         "title": "Objetivo",
         "description": "¿Qué quieres crear?"
@@ -572,25 +568,6 @@
       }
     },
     "recommended": "Recomendado",
-    "aiIntro": {
-      "heading": "Claude Code",
-      "subtitle": "Una herramienta de IA que escribe código por ti",
-      "features": {
-        "conversation": {
-          "title": "Solo pide como si estuvieras conversando",
-          "description": "Di algo como \"Hazme una página de login\" y la IA escribirá el código"
-        },
-        "terminal": {
-          "title": "Se ejecuta en la terminal",
-          "description": "Escribe el comando claude en la carpeta del proyecto y listo"
-        },
-        "free": {
-          "title": "Puedes empezar gratis",
-          "description": "Disponible inmediatamente después de instalar. No necesitas experiencia en programación"
-        }
-      },
-      "alternativeNote": "Cursor cumple el mismo rol. Podrás elegir entre Claude Code y Cursor más adelante en el paso M3."
-    },
     "projectName": {
       "label": "Nombre del proyecto",
       "placeholder": "my-first-app",
@@ -601,6 +578,7 @@
   "Plan": {
     "title": "Plan de instalación personalizado",
     "subtitle": "Vamos a instalar estas herramientas paso a paso",
+    "aiNote": "Cuando termine la instalación, solo le dirás a Claude Code lo que quieres con tus palabras — la IA escribe el código por ti.",
     "tools": {
       "git": {
         "name": "Git",

@@ -8,7 +8,6 @@ import { trackOnboardingStart, trackOnboardingComplete } from "@/lib/ga";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { StepOS } from "@/components/onboarding/step-os";
-import { StepAIIntro } from "@/components/onboarding/step-ai-intro";
 import { StepExperience } from "@/components/onboarding/step-experience";
 import { StepGoal } from "@/components/onboarding/step-goal";
 import { StepProjectName } from "@/components/onboarding/step-project-name";
@@ -98,7 +97,6 @@ export default function OnboardingPage() {
               onChange={(experience) => setData({ ...data, experience })}
             />
           )}
-          {stepKey === "aiIntro" && <StepAIIntro />}
           {stepKey === "goal" && (
             <StepGoal
               value={data.goal}

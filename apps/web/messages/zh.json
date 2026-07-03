@@ -516,10 +516,6 @@
         "title": "安装经验",
         "description": "你在这台电脑上安装过开发工具吗？"
       },
-      "aiIntro": {
-        "title": "AI 工具",
-        "description": "将和这些工具一起使用"
-      },
       "goal": {
         "title": "目标",
         "description": "你想做什么？"
@@ -572,25 +568,6 @@
       }
     },
     "recommended": "推荐",
-    "aiIntro": {
-      "heading": "Claude Code",
-      "subtitle": "AI帮你写代码的工具",
-      "features": {
-        "conversation": {
-          "title": "像对话一样提需求",
-          "description": "说「帮我做个登录页面」AI就会写代码"
-        },
-        "terminal": {
-          "title": "在终端里运行",
-          "description": "在项目文件夹里输入 claude 命令就能开始"
-        },
-        "free": {
-          "title": "可以免费开始使用",
-          "description": "安装后马上就能用。没有编程经验也没关系"
-        }
-      },
-      "alternativeNote": "Cursor也是同样的角色。后面的M3步骤里可以在Claude Code和Cursor中自己选。"
-    },
     "projectName": {
       "label": "项目名称",
       "placeholder": "my-first-app",
@@ -601,6 +578,7 @@
   "Plan": {
     "title": "定制安装方案",
     "subtitle": "将按步骤安装以下工具",
+    "aiNote": "安装完成后，你只要用大白话告诉这里的 Claude Code 想要什么 —— 代码由 AI 帮你写。",
     "tools": {
       "git": {
         "name": "Git",

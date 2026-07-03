@@ -151,6 +151,12 @@ function PlanContent() {
           ))}
         </div>
 
+        {/* AI 오리엔테이션 — 설치 후 무엇을 하는지 */}
+        <div className="mb-8 flex items-start gap-3 rounded-xl border border-border/50 bg-card p-4">
+          <span className="text-xl">🤖</span>
+          <p className="text-sm text-muted-foreground">{t("aiNote")}</p>
+        </div>
+
         {/* 요약 */}
         <div className="mb-8 rounded-xl bg-muted/30 p-4 text-sm text-muted-foreground">
           <div className="flex justify-between">
