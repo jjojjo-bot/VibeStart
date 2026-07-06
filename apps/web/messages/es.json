@@ -646,7 +646,7 @@
     "progressLabel": "Progreso",
     "progressAriaLabel": "Progreso de instalación",
     "resultPreviewLabel": "Ejemplo del resultado",
-    "claudeMdGuide": "El archivo <code>CLAUDE.md</code> se crea automáticamente en la raíz del proyecto con el comando de arriba. Ábrelo en VS Code si quieres personalizarlo. A continuación se muestra el contenido del archivo.",
+    "claudeMdGuide": "El archivo <code>CLAUDE.md</code> se crea automáticamente en la raíz del proyecto con el comando de arriba. Ábrelo en VS Code si quieres personalizarlo.",
     "whyNeededToggle": {
       "open": "▾ Cerrar",
       "closed": "▸ ¿Qué es esto?"
@@ -810,8 +810,8 @@
       "troubleshooting": {
         "windows": [
           {
-            "symptom": "'winget' no se reconoce",
-            "solution": "Si VS Code ya está instalado, puedes omitir este paso (continúa al siguiente). Si necesitas instalarlo, instala o actualiza 'Instalador de aplicaciones (App Installer)' desde Microsoft Store, luego abre una nueva ventana de PowerShell y vuelve a intentar. Si aún falla, descarga VS Code directamente desde https://code.visualstudio.com/download."
+            "symptom": "La instalación parece atascada / tarda mucho",
+            "solution": "Durante la instalación la terminal no muestra salida; el progreso ocurre en una ventana de instalación aparte. Espera un momento, revisa tu conexión a internet y es seguro volver a ejecutar el mismo comando. Si aún falla, descarga el 'System Installer' directamente desde https://code.visualstudio.com/download."
           },
           {
             "symptom": "Mensaje de que ya está instalado",
@@ -874,7 +874,7 @@
         },
         {
           "symptom": "Error: code: command not found",
-          "solution": "La ventana de Ubuntu que tenías abierta antes de instalar VS Code todavía no conoce el nuevo PATH. Cierra por completo la ventana actual de Ubuntu, abre Ubuntu de nuevo desde el menú Inicio y vuelve a ejecutar este paso."
+          "solution": "Este paso ahora localiza tu instalación de VS Code automáticamente. Si aún ves este error, ten en cuenta que solo cerrar y volver a abrir la ventana de Ubuntu NO actualiza el PATH: en PowerShell ejecuta wsl --shutdown, luego abre Ubuntu de nuevo y vuelve a ejecutar este paso. Si sigue fallando, confirma que el paso 'Instalar VS Code' se completó."
         }
       ]
     },
@@ -940,7 +940,7 @@
         "default": "Configuramos las reglas de arquitectura que seguirá la herramienta de IA",
         "dataAi": "Configuramos las reglas del proyecto de análisis que seguirá la herramienta de IA"
       },
-      "detailedGuide": "Crea la estructura de carpetas con el comando de abajo y luego guarda el contenido de CLAUDE.md en la raíz del proyecto."
+      "detailedGuide": "El comando de abajo crea la estructura de carpetas y el archivo CLAUDE.md por ti."
     },
     "firstRun": {
       "title": "¡Primera ejecución!",

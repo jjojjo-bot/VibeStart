@@ -377,13 +377,12 @@ function SetupContent() {
                   </div>
                 )}
 
-                {/* CLAUDE.md 파일 저장 안내 */}
+                {/* CLAUDE.md 자동 생성 안내 (내용은 명령어 heredoc에 이미 포함 — 중복 표시 안 함) */}
                 {active && step.claudeMdContent && (
                   <div className="mb-4">
-                    <div className="mb-2 rounded-lg bg-primary/5 p-3 text-sm text-muted-foreground">
+                    <div className="rounded-lg bg-primary/5 p-3 text-sm text-muted-foreground">
                       {t.rich("claudeMdGuide", { code: (chunks) => <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">{chunks}</code> })}
                     </div>
-                    <ScriptBlock script={step.claudeMdContent} />
                   </div>
                 )}
 

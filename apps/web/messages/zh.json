@@ -646,7 +646,7 @@
     "progressLabel": "进度",
     "progressAriaLabel": "安装进度",
     "resultPreviewLabel": "运行结果示例",
-    "claudeMdGuide": "上面的命令会自动在项目根目录生成 <code>CLAUDE.md</code> 文件。如需修改，可在 VS Code 中打开该文件。以下是文件内容。",
+    "claudeMdGuide": "上面的命令会自动在项目根目录生成 <code>CLAUDE.md</code> 文件。如需修改，可在 VS Code 中打开该文件。",
     "whyNeededToggle": {
       "open": "▾ 收起",
       "closed": "▸ 这是什么？"
@@ -810,8 +810,8 @@
       "troubleshooting": {
         "windows": [
           {
-            "symptom": "「winget」不被识别",
-            "solution": "如果已经安装了 VS Code，这一步可以跳过（直接进入下一步）。如果需要安装，请先在 Microsoft Store 安装或更新「应用安装程序(App Installer)」，然后打开新的 PowerShell 窗口重试。如果仍然失败，请直接从 https://code.visualstudio.com/download 下载 VS Code 安装。"
+            "symptom": "安装好像卡住了／耗时较长",
+            "solution": "安装过程中终端不会有输出，进度会在单独的安装程序窗口中显示。请稍等片刻并检查网络连接，重复运行同一条命令是安全的。如果仍然失败，请从 https://code.visualstudio.com/download 直接下载「System Installer」进行安装。"
           },
           {
             "symptom": "提示已经安装了",
@@ -874,7 +874,7 @@
         },
         {
           "symptom": "code: command not found 错误",
-          "solution": "在安装VS Code之前就打开的Ubuntu窗口还不知道新的PATH。请完全关闭当前的Ubuntu窗口，从开始菜单重新打开Ubuntu，然后再次运行此步骤。"
+          "solution": "此步骤现在会自动查找 VS Code 的安装位置。如果仍然出现此错误，请注意：仅关闭并重新打开 Ubuntu 窗口并不会刷新 PATH——请在 PowerShell 中运行 wsl --shutdown，然后重新打开 Ubuntu 并再次运行此步骤。如果还是失败，请确认「安装 VS Code」步骤已完成。"
         }
       ]
     },
@@ -940,7 +940,7 @@
         "default": "设置AI工具遵循的架构规则",
         "dataAi": "设置AI工具遵循的分析项目规则"
       },
-      "detailedGuide": "用以下命令创建文件夹结构，然后将CLAUDE.md内容保存到项目根目录。"
+      "detailedGuide": "下面的命令会为你创建文件夹结构和 CLAUDE.md 文件。"
     },
     "firstRun": {
       "title": "首次运行！",

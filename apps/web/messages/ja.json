@@ -646,7 +646,7 @@
     "progressLabel": "進捗",
     "progressAriaLabel": "インストール進捗",
     "resultPreviewLabel": "実行結果の例",
-    "claudeMdGuide": "<code>CLAUDE.md</code>ファイルは上のコマンドでプロジェクトルートに自動生成されます。編集したい場合は VS Code で開いてください。以下はファイルの中身です。",
+    "claudeMdGuide": "<code>CLAUDE.md</code>ファイルは上のコマンドでプロジェクトルートに自動生成されます。編集したい場合は VS Code で開いてください。",
     "whyNeededToggle": {
       "open": "▾ 閉じる",
       "closed": "▸ これは何ですか？"
@@ -810,8 +810,8 @@
       "troubleshooting": {
         "windows": [
           {
-            "symptom": "「winget」が認識されません",
-            "solution": "すでにVS Codeがインストール済みであれば、このステップは飛ばして次に進んでかまいません。新規インストールが必要な場合は、Microsoft Storeで「アプリ インストーラー（App Installer）」をインストール／アップデートしてから、新しいPowerShellウィンドウを開いて再実行してください。それでもダメなら https://code.visualstudio.com/download から直接ダウンロードしてインストールしてください。"
+            "symptom": "インストールが止まって見える／時間がかかる",
+            "solution": "インストール中はターミナルに出力が出ず、別のインストーラーウィンドウで進行します。少し待ち、インターネット接続を確認してください。同じコマンドを再実行しても安全です。それでもダメなら https://code.visualstudio.com/download から「System Installer」を直接ダウンロードしてインストールしてください。"
           },
           {
             "symptom": "すでにインストールされているというメッセージ",
@@ -874,7 +874,7 @@
         },
         {
           "symptom": "code: command not found エラー",
-          "solution": "VS Codeをインストールする前から開いていたUbuntuウィンドウは、まだ新しいPATHを認識していません。現在のUbuntuウィンドウを完全に閉じて、スタートメニューからUbuntuを新しく開き、このステップをもう一度実行してください。"
+          "solution": "このステップはVS Codeのインストール場所を自動で探すようになりました。それでもこのエラーが出る場合、Ubuntuウィンドウを閉じて開き直すだけではPATHは更新されません。PowerShellで wsl --shutdown を実行してからUbuntuを開き直し、このステップをもう一度実行してください。それでもダメなら「VS Codeのインストール」ステップが完了しているか確認してください。"
         }
       ]
     },
@@ -940,7 +940,7 @@
         "default": "AIツールが従うアーキテクチャルールを設定します",
         "dataAi": "AIツールが従う分析プロジェクトルールを設定します"
       },
-      "detailedGuide": "以下のコマンドでフォルダ構成を作成した後、CLAUDE.mdの内容をプロジェクトルートに保存してください。"
+      "detailedGuide": "以下のコマンドがフォルダ構成とCLAUDE.mdファイルをまとめて作成します。"
     },
     "firstRun": {
       "title": "初回起動！",

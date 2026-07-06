@@ -239,7 +239,11 @@ function joinChain(lines: string[]): string {
 function wslBasicToolsStep(goal: Goal, t: T): SetupStep {
   const extra = extraRuntimeFor(goal);
 
-  const pkgs: string[] = ["git"];
+  // curl: 신선한 WSL Ubuntu는 curl 기본 미포함. 뒤 단계인 nodejs(NodeSource 스크립트 다운로드)와
+  // java 백엔드(start.spring.io 다운로드)의 첫 명령이 curl이라, 없으면 command not found로 즉사한다.
+  // basic-tools는 모든 WSL 흐름에서 그 단계들보다 먼저 실행되므로 여기서 미리 깐다(ca-certificates는
+  // curl의 Recommends로 함께 설치). 버전 확인 대상은 아니라 names/versionChecks엔 넣지 않는다.
+  const pkgs: string[] = ["git", "curl"];
   const names: string[] = ["Git"];
   const versionChecks: string[] = ["git --version"];
   const resultLines: string[] = ["git version 2.x.x"];
@@ -332,17 +336,19 @@ function wslNodejsStep(t: T): SetupStep {
   };
 }
 
-// PowerShell 방어 스크립트:
-//   1) `code`가 PATH에 있으면 이미 설치돼 있으므로 건너뛴다.
-//   2) `winget` 자체가 없으면 (구 Windows 10 / App Installer 미설치 환경) 명시적으로
-//      에러 메시지 + 수동 다운로드 링크를 안내하고 exit 1.
-//   3) 둘 다 통과하면 winget으로 User-scope 설치.
-// 단일 라인 세미콜론 체인 — 복붙 시 PowerShell이 중간에 `>>` 프롬프트로 멈추는 걸 피한다.
+// VS Code는 System 인스톨러를 직접 받아 무음 설치한다. 이 단계는 preflight(관리자 강제)
+// 직후 같은 관리자 PowerShell에서 도는데, winget의 Microsoft.VisualStudioCode는 *User*
+// 인스톨러라 관리자 컨텍스트에서 "not meant to be run as an Administrator"로 거부당해
+// 자주 실패했다(winget으론 VS Code System 설치가 불가해 우회도 안 됨). System 인스톨러는
+// 관리자용이라 이 컨텍스트에서 정상 동작하고, winget 의존성·창을 닫던 exit 1도 사라진다.
+//   1) `code`가 PATH에 있으면 이미 설치됨 → 건너뜀
+//   2) 아니면 update.code.visualstudio.com에서 System x64 안정판을 받아 /SILENT 설치
+//      (/MERGETASKS=!runcode,addtopath: 자동실행 끄고 code를 PATH에 등록 → 뒤 단계 유지)
+// 단일 라인 세미콜론 체인 — 복붙 시 PowerShell이 `>>` 프롬프트로 멈추는 걸 피한다.
 function wslVscodeStep(t: T): SetupStep {
   const script = [
     "if (Get-Command code -ErrorAction SilentlyContinue) { Write-Host 'VS Code already installed - skipping.' }",
-    "elseif (-not (Get-Command winget -ErrorAction SilentlyContinue)) { Write-Host \"winget not found. Install 'App Installer' from Microsoft Store, or download VS Code from https://code.visualstudio.com/download\"; exit 1 }",
-    "else { winget install --id Microsoft.VisualStudioCode -e --accept-source-agreements --accept-package-agreements }",
+    "else { $ProgressPreference='SilentlyContinue'; $f=\"$env:TEMP\\VSCodeSetup.exe\"; Invoke-WebRequest -UseBasicParsing -Uri 'https://update.code.visualstudio.com/latest/win32-x64/stable' -OutFile $f; Start-Process -Wait -FilePath $f -ArgumentList '/SILENT','/NORESTART','/MERGETASKS=!runcode,addtopath'; Remove-Item $f -ErrorAction SilentlyContinue; Write-Host 'VS Code installed.' }",
   ].join(" ");
 
   return {
@@ -358,11 +364,7 @@ function wslVscodeStep(t: T): SetupStep {
     environment: t("environments.windowsCmd"),
     detailedGuide: t("editor.detailedGuide.windows"),
     script,
-    resultPreview: `Found Visual Studio Code [Microsoft.VisualStudioCode]
-This application is licensed to you by its owner.
-Downloading https://az764295.vo.msecnd.net/...
-  ██████████████████████  100%
-Successfully installed`,
+    resultPreview: `VS Code installed.`,
     troubleshooting: [
       { symptom: t("editor.troubleshooting.windows.0.symptom"), solution: t("editor.troubleshooting.windows.0.solution") },
       { symptom: t("editor.troubleshooting.windows.1.symptom"), solution: t("editor.troubleshooting.windows.1.solution") },
@@ -372,18 +374,27 @@ Successfully installed`,
 
 // ─── Claude Code 통합 (WSL) ───
 //
-// ⚠️ WSL + NodeSource Node에서는 `npm install -g`가 EACCES로 즉시 실패한다.
-// NodeSource는 node/npm을 /usr/bin에 설치하고 npm prefix가 /usr이라
-// 글로벌 모듈이 /usr/lib/node_modules(root-owned)에 들어가기 때문이다.
+// ⚠️ WSL + NodeSource Node에서는 기본 `npm install -g`가 EACCES로 즉시 실패한다.
+// NodeSource는 node/npm을 /usr/bin에 설치하고 npm prefix가 /usr이라 글로벌 모듈이
+// /usr/lib/node_modules(root-owned)에 들어가기 때문. 해결: user prefix($HOME/.npm-global)
+// 전환 → sudo 없이 글로벌 설치 + PATH 추가로 `claude` 접근. (grep||echo로 .bashrc 멱등 추가)
 //
-// 해결: user prefix($HOME/.npm-global)로 전환 → sudo 없이 글로벌 설치 가능 +
-// PATH에 추가하면 이후 새 셸에서도 `claude` 바이너리 접근 가능.
-// grep -q ... || echo ... >> ~/.bashrc 로 idempotent하게 PATH 라인 추가.
+// ⚠️ 이 단계는 맨 `wsl` 터미널(VS Code 통합 터미널 아님)에서 돈다. 그래서 `code`는 VS Code
+// Server의 remote-cli가 아니라 Windows VS Code bin(System: "/mnt/c/Program Files/…",
+// User: /mnt/c/Users/*/…)이 WSL interop PATH에 실려야만 잡힌다. WSL은 Windows PATH를
+// 인스턴스 부팅 때 한 번만 읽으므로 창을 닫았다 여는 걸로는 갱신 안 되고 `wsl --shutdown`/
+// 재부팅이라야 갱신된다 → 이 PATH 스테일이 이 단계 최대 실패 원인이었다.
+//
+// 그래서 (C): (1) `code`를 PATH→System→User 경로 순으로 견고 해석해 스테일해도 설치되게,
+// (2) 그래도 못 찾으면 창 닫기 대신 `wsl --shutdown` 안내 후 실패, (3) `claude auth login`을
+// 확장 설치보다 앞에 둬서 확장/코드 문제로 로그인이 막히지 않게 한다.
 
 function wslClaudeStep(t: T): SetupStep {
-  // 주의: `(grep ... || echo ...)`는 괄호 서브셸로 묶어야 한다.
-  // 안 그러면 `set -o pipefail && A && B || C && D`의 우선순위가
-  // `(A && B) || (C && D)`로 해석돼 체인이 깨진다.
+  // `(grep ... || echo ...)`는 괄호 서브셸로 묶는다 — 안 그러면 `&& A || B && C`의
+  // 좌결합 우선순위로 체인이 깨진다.
+  //
+  // `code` 견고 해석 블록: `{ …; }` 그룹의 종료코드가 이 단계의 성공/실패다. not-found
+  // 분기는 exit 대신 `false`로 체인을 멈춰(대화형 창 보존) 하드닝 마커가 fail을 낸다.
   const script = joinChain([
     "set -o pipefail",
     'echo "▶ (1/4) Configuring npm user prefix..."',
@@ -393,21 +404,14 @@ function wslClaudeStep(t: T): SetupStep {
     'export PATH="$HOME/.npm-global/bin:$PATH"',
     'echo "▶ (2/4) Installing Claude Code CLI..."',
     "npm install -g @anthropic-ai/claude-code",
-    'echo "▶ (3/4) Installing VS Code extensions..."',
-    // `code` CLI는 Windows VS Code의 "Add to PATH"(기본 ON) + 셸 재시작 이후에만
-    // WSL bash PATH에 들어온다. step 6에서 VS Code를 설치한 직후 같은 Ubuntu
-    // 창에서 이어 실행하면 PATH가 갱신되지 않아 실패한다. detailedGuide에
-    // "Ubuntu 창을 닫고 다시 열라"고 명시했고, 여기선 명시적 에러로 중단해서
-    // 비전공자가 어디서 막혔는지 확실히 알게 한다.
-    //
-    // WSL 확장(ms-vscode-remote.remote-wsl)이 필수다. 없으면 `code ~/my-project`
-    // 실행 시 VS Code가 "WSL Remote" 모드로 열리지 않고 단순히 \\wsl$\... UNC
-    // 경로로 파일만 로드된다 → 통합 터미널이 Windows PowerShell로 떨어져서
-    // 사용자가 `npm run dev` 같은 명령을 WSL에서 실행하지 못한다.
-    "code --install-extension ms-vscode-remote.remote-wsl",
-    "code --install-extension anthropic.claude-code",
-    'echo "▶ (4/4) Logging in..."',
+    // 로그인을 확장 설치 앞으로 — 확장(코드 CLI 의존)이 실패해도 인증은 끝나 있게 한다.
+    'echo "▶ (3/4) Logging in..."',
     "claude auth login",
+    // WSL 확장(ms-vscode-remote.remote-wsl)은 필수 — 없으면 `code ~/proj`가 WSL Remote로
+    // 안 열리고 UNC 경로 로드로 떨어져 통합 터미널이 Windows PowerShell이 된다.
+    'echo "▶ (4/4) Installing VS Code extensions..."',
+    "{ CODE=\"$(command -v code 2>/dev/null)\"; if [ -z \"$CODE\" ]; then for p in \"/mnt/c/Program Files/Microsoft VS Code/bin/code\" /mnt/c/Users/*/AppData/Local/Programs/\"Microsoft VS Code\"/bin/code; do [ -x \"$p\" ] && CODE=\"$p\" && break; done; fi; if [ -z \"$CODE\" ]; then echo \"⚠️ VS Code(code)를 찾지 못했어요. 'VS Code 설치' 단계를 마쳤는지 확인하고, 그래도 안 되면 PowerShell에서 wsl --shutdown 실행 후 Ubuntu를 다시 열어 이 단계만 다시 실행하세요.\"; false; else \"$CODE\" --install-extension ms-vscode-remote.remote-wsl && \"$CODE\" --install-extension anthropic.claude-code; fi; }",
+    'echo "✅ Claude Code setup complete"',
   ]);
 
   return {
@@ -422,12 +426,13 @@ function wslClaudeStep(t: T): SetupStep {
     resultPreview: `▶ (1/4) Configuring npm user prefix...
 ▶ (2/4) Installing Claude Code CLI...
 added 1 package in 3s
-▶ (3/4) Installing VS Code extensions...
+▶ (3/4) Logging in...
+Opening browser for authentication...
+✓ Logged in as yourname@email.com
+▶ (4/4) Installing VS Code extensions...
 Extension 'ms-vscode-remote.remote-wsl' was successfully installed.
 Extension 'anthropic.claude-code' was successfully installed.
-▶ (4/4) Logging in...
-Opening browser for authentication...
-✓ Logged in as yourname@email.com`,
+✅ Claude Code setup complete`,
     troubleshooting: [
       { symptom: t("aiSetup.troubleshooting.0.symptom"), solution: t("aiSetup.troubleshooting.0.solution") },
       { symptom: t("aiSetup.troubleshooting.1.symptom"), solution: t("aiSetup.troubleshooting.1.solution") },
@@ -704,8 +709,9 @@ Opening browser for authentication...
 }
 
 // ─── 아키텍처 스캐폴딩 (Goal별 1개의 통합 단계) ───
-// script = mkdir로 폴더 구조만 생성
-// claudeMdContent = 웹에서 보여주고 사용자가 직접 파일로 저장
+// script = 폴더 구조 생성 + heredoc으로 CLAUDE.md 파일까지 자동 작성(withClaudeMd)
+// claudeMdContent = 이 단계가 CLAUDE.md를 만든다는 게이트 플래그(원본 상수 보관).
+//   UI는 내용을 다시 표시하지 않고 "자동 생성됨" 안내만 띄운다(명령어 heredoc과 중복 방지).
 
 const CLAUDE_MD_NEXTJS = `# Project Architecture Rules
 
@@ -1130,8 +1136,9 @@ function hardenShellFor(stepId: string, os: OS): HardenShell | null {
     case "wsl":
       return "powershell";
     case "editor":
-      // Windows editor는 내부 if/elseif/exit(winget 없음 분기)이 있어 trailing 마커가
-      // 항상 실행되지 않고 exit이 붙여넣기 세션을 닫는다 → 하드닝 제외. mac은 깔끔한 체인.
+      // Windows editor는 if/else 분기 + Start-Process(-Wait는 $LASTEXITCODE를 세팅하지 않음)라
+      // trailing 마커의 $LASTEXITCODE가 설치 성공/실패를 신뢰성 있게 반영하지 못한다 → 하드닝
+      // 제외. mac은 깔끔한 체인.
       return os === "windows" ? null : "bash";
     case "dev-tools-basic":
     case "dev-tools-nodejs":

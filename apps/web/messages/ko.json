@@ -646,7 +646,7 @@
     "progressLabel": "진행률",
     "progressAriaLabel": "설치 진행률",
     "resultPreviewLabel": "실행 결과 예시",
-    "claudeMdGuide": "<code>CLAUDE.md</code> 파일은 위 명령어로 프로젝트 루트에 자동 생성됩니다. 원하면 VS Code에서 열어 수정할 수 있어요. 아래는 파일에 들어가는 내용입니다.",
+    "claudeMdGuide": "<code>CLAUDE.md</code> 파일은 위 명령어로 프로젝트 루트에 자동 생성됩니다. 원하면 VS Code에서 열어 수정할 수 있어요.",
     "whyNeededToggle": {
       "open": "▾ 닫기",
       "closed": "▸ 이게 뭔가요?"
@@ -810,8 +810,8 @@
       "troubleshooting": {
         "windows": [
           {
-            "symptom": "'winget'이 인식되지 않습니다",
-            "solution": "이미 VS Code가 설치돼 있다면 이 단계는 건너뛰어도 돼요 (다음 단계로 이동). 새로 설치가 필요하다면, Microsoft Store에서 '앱 설치 관리자(App Installer)'를 설치하거나 업데이트한 뒤 PowerShell 창을 새로 열고 다시 실행해주세요. 그래도 안 되면 https://code.visualstudio.com/download 에서 직접 다운로드해 설치하세요."
+            "symptom": "설치가 멈춘 것 같아요 / 오래 걸려요",
+            "solution": "설치 중에는 터미널에 출력이 없고 별도 설치 창에서 진행돼요. 잠시 기다려 보고, 인터넷 연결을 확인한 뒤 같은 명령을 다시 실행해도 안전합니다. 그래도 안 되면 https://code.visualstudio.com/download 에서 'System Installer'를 직접 내려받아 설치하세요."
           },
           {
             "symptom": "이미 설치되어 있다는 메시지",
@@ -874,7 +874,7 @@
         },
         {
           "symptom": "code: command not found 에러",
-          "solution": "VS Code 설치 직후에 열어두었던 Ubuntu 창은 아직 새 PATH를 모릅니다. 현재 Ubuntu 창을 완전히 닫고 시작 메뉴에서 Ubuntu를 새로 연 뒤 이 단계를 다시 실행해주세요."
+          "solution": "이 단계는 이제 VS Code 설치 위치를 자동으로 찾습니다. 그래도 이 오류가 나면, Ubuntu 창을 닫았다 여는 것만으로는 PATH가 갱신되지 않아요 — PowerShell에서 wsl --shutdown 을 실행한 뒤 Ubuntu를 다시 열고 이 단계를 다시 실행하세요. 그래도 안 되면 'VS Code 설치' 단계가 끝났는지 확인하세요."
         }
       ]
     },
@@ -940,7 +940,7 @@
         "default": "AI 도구가 따를 아키텍처 규칙을 세팅해요",
         "dataAi": "AI 도구가 따를 분석 프로젝트 규칙을 세팅해요"
       },
-      "detailedGuide": "아래 명령어로 폴더 구조를 생성한 뒤, CLAUDE.md 내용을 프로젝트 루트에 저장해주세요."
+      "detailedGuide": "아래 명령어가 폴더 구조와 CLAUDE.md 파일을 자동으로 만들어줍니다."
     },
     "firstRun": {
       "title": "첫 실행!",
