@@ -664,6 +664,28 @@
       "aiSetup": "AI設定",
       "projectCreate": "プロジェクト作成"
     },
+    "wslScanGate": {
+      "title": "WSL内にすでにあるか確認",
+      "subtitle": "今開いたUbuntuウィンドウで、開発ツール・Node.js・Claude Codeがすでにあるか確認します。あればそのステップは飛ばします！",
+      "adminNote": "今開いたUbuntu（Linux）ウィンドウに貼り付けてください。",
+      "openGuideToggle": "▸ どこに貼り付けますか？",
+      "openGuide": "すぐ上のステップで開いたUbuntu（黒いLinux）ウィンドウにそのまま貼り付けてください。閉じてしまった場合はスタートメニューからUbuntuを開き直してください。",
+      "scriptLabel": "下のコマンドをコピーしてUbuntuウィンドウに貼り付け、Enterを押してください。",
+      "pasteLabel": "実行結果をそのままコピーして下に貼り付けてください。",
+      "pastePlaceholder": "VIBESTART:: で始まる行を含む結果を貼り付けてください",
+      "submit": "確認する",
+      "skip": "順番どおりに進めます",
+      "parseError": "結果を認識できませんでした。出力全体をもう一度コピーして貼り付けてください。うまくいかない場合は下の「順番どおりに進めます」で進んでも大丈夫です。",
+      "resultTitle": "確認結果",
+      "devToolsFound": "✓ 開発ツール（Gitなど）— すでにインストール済み",
+      "devToolsMissing": "開発ツール（Gitなど）— インストールが必要",
+      "nodejsFound": "✓ Node.js — すでにインストール済み",
+      "nodejsMissing": "Node.js — インストールが必要",
+      "claudeFound": "✓ Claude Code — すでにインストール済み",
+      "claudeMissing": "Claude Code — インストールが必要",
+      "resultNote": "すでにインストール済みの項目は完了にしておきました。残りのステップだけ進めればOKです！",
+      "continueButton": "続ける"
+    },
     "scanGate": {
       "title": "パソコンをチェック",
       "subtitle": "すでにインストール済みのツールがないか、1分でチェックしましょう。見つかったステップはスキップされます！",

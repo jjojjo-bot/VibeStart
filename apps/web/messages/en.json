@@ -664,6 +664,28 @@
       "aiSetup": "AI Setup",
       "projectCreate": "Project Creation"
     },
+    "wslScanGate": {
+      "title": "Check what's already in WSL",
+      "subtitle": "In the Ubuntu window you just opened, check if dev tools, Node.js, and Claude Code are already there. If so, we'll skip those steps!",
+      "adminNote": "Paste this into the Ubuntu (Linux) window you just opened.",
+      "openGuideToggle": "▸ Where do I paste this?",
+      "openGuide": "Paste it into the Ubuntu (black Linux) window you opened in the step just above. If you closed it, reopen Ubuntu from the Start menu.",
+      "scriptLabel": "Copy the command below, paste it into the Ubuntu window, and press Enter.",
+      "pasteLabel": "Copy the output and paste it below exactly.",
+      "pastePlaceholder": "Paste the output that includes lines starting with VIBESTART::",
+      "submit": "Check",
+      "skip": "I'll just go step by step",
+      "parseError": "Couldn't read the output. Copy the full output and paste it again. If it still doesn't work, it's fine to continue with 'I'll just go step by step' below.",
+      "resultTitle": "Results",
+      "devToolsFound": "✓ Dev tools (Git, etc.) — already installed",
+      "devToolsMissing": "Dev tools (Git, etc.) — need to install",
+      "nodejsFound": "✓ Node.js — already installed",
+      "nodejsMissing": "Node.js — need to install",
+      "claudeFound": "✓ Claude Code — already installed",
+      "claudeMissing": "Claude Code — need to install",
+      "resultNote": "We've marked what's already installed as done. Just finish the remaining steps!",
+      "continueButton": "Continue"
+    },
     "scanGate": {
       "title": "Check your computer",
       "subtitle": "Let's spend one minute checking what's already installed. Anything found gets skipped!",

@@ -664,6 +664,28 @@
       "aiSetup": "Configuración de IA",
       "projectCreate": "Creación del proyecto"
     },
+    "wslScanGate": {
+      "title": "Comprueba qué ya está en WSL",
+      "subtitle": "En la ventana de Ubuntu que acabas de abrir, comprueba si las herramientas de desarrollo, Node.js y Claude Code ya están. Si es así, ¡saltamos esos pasos!",
+      "adminNote": "Pega esto en la ventana de Ubuntu (Linux) que acabas de abrir.",
+      "openGuideToggle": "▸ ¿Dónde lo pego?",
+      "openGuide": "Pégalo en la ventana de Ubuntu (Linux, negra) que abriste en el paso anterior. Si la cerraste, vuelve a abrir Ubuntu desde el menú Inicio.",
+      "scriptLabel": "Copia el comando de abajo, pégalo en la ventana de Ubuntu y pulsa Enter.",
+      "pasteLabel": "Copia el resultado y pégalo abajo tal cual.",
+      "pastePlaceholder": "Pega el resultado que incluye líneas que empiezan por VIBESTART::",
+      "submit": "Comprobar",
+      "skip": "Prefiero ir paso a paso",
+      "parseError": "No se pudo leer el resultado. Copia toda la salida y pégala de nuevo. Si sigue sin funcionar, puedes continuar con 'Prefiero ir paso a paso' abajo.",
+      "resultTitle": "Resultados",
+      "devToolsFound": "✓ Herramientas de desarrollo (Git, etc.) — ya instaladas",
+      "devToolsMissing": "Herramientas de desarrollo (Git, etc.) — hay que instalar",
+      "nodejsFound": "✓ Node.js — ya instalado",
+      "nodejsMissing": "Node.js — hay que instalar",
+      "claudeFound": "✓ Claude Code — ya instalado",
+      "claudeMissing": "Claude Code — hay que instalar",
+      "resultNote": "Marcamos como hechos los que ya están instalados. ¡Solo completa los pasos restantes!",
+      "continueButton": "Continuar"
+    },
     "scanGate": {
       "title": "Revisa tu computadora",
       "subtitle": "Dediquemos un minuto a comprobar qué ya está instalado. ¡Lo que encontremos se salta!",

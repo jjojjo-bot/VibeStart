@@ -664,6 +664,28 @@
       "aiSetup": "AI 设置",
       "projectCreate": "项目创建"
     },
+    "wslScanGate": {
+      "title": "检查 WSL 里是否已有",
+      "subtitle": "在你刚打开的 Ubuntu 窗口里，检查开发工具、Node.js、Claude Code 是否已经安装。如果有，就跳过那些步骤！",
+      "adminNote": "把它粘贴到你刚打开的 Ubuntu（Linux）窗口里。",
+      "openGuideToggle": "▸ 粘贴到哪里？",
+      "openGuide": "粘贴到上一步打开的 Ubuntu（黑色 Linux）窗口即可。如果关掉了，请从开始菜单重新打开 Ubuntu。",
+      "scriptLabel": "复制下面的命令，粘贴到 Ubuntu 窗口并按回车。",
+      "pasteLabel": "把运行结果原样复制并粘贴到下方。",
+      "pastePlaceholder": "粘贴包含以 VIBESTART:: 开头行的结果",
+      "submit": "检查",
+      "skip": "我就按顺序来",
+      "parseError": "无法识别结果。请重新复制完整输出并粘贴。如果还是不行，点击下方“我就按顺序来”继续也没关系。",
+      "resultTitle": "检查结果",
+      "devToolsFound": "✓ 开发工具（Git 等）— 已安装",
+      "devToolsMissing": "开发工具（Git 等）— 需要安装",
+      "nodejsFound": "✓ Node.js — 已安装",
+      "nodejsMissing": "Node.js — 需要安装",
+      "claudeFound": "✓ Claude Code — 已安装",
+      "claudeMissing": "Claude Code — 需要安装",
+      "resultNote": "已把安装好的项目标记为完成。只需完成剩下的步骤！",
+      "continueButton": "继续"
+    },
     "scanGate": {
       "title": "检查我的电脑",
       "subtitle": "花 1 分钟检查哪些工具已经安装。已安装的步骤会被跳过！",

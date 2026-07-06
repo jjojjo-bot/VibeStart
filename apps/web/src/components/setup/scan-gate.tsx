@@ -7,26 +7,51 @@ import { ScriptBlock } from "@/components/onboarding/script-block";
 import { parseScanOutput } from "@vibestart/diagnosis-catalog";
 import type { ScanResult } from "@vibestart/shared-types";
 
-interface ScanGateProps {
-  script: string;
-  onDone: (result: ScanResult | null) => void;
+/** 결과 패널 한 줄 — found면 foundKey, 아니면 missingKey를 번역해 표시. */
+export interface ScanRow {
+  found: boolean;
+  foundKey: string;
+  missingKey: string;
 }
+
+interface ScanGateProps<T> {
+  script: string;
+  onDone: (result: T | null) => void;
+  /** 붙여넣은 출력 파서. 미지정 시 1차(Windows) 스캔 파서. */
+  parse?: (output: string) => T | null;
+  /** 결과 패널에 렌더할 항목들. 미지정 시 WSL·VS Code 두 줄. */
+  rows?: (result: T) => ScanRow[];
+  /** 번역 네임스페이스. 기본 Setup.scanGate. */
+  namespace?: string;
+}
+
+const DEFAULT_ROWS = (r: ScanResult): ScanRow[] => [
+  { found: r.wsl, foundKey: "wslFound", missingKey: "wslMissing" },
+  { found: r.vscode, foundKey: "vscodeFound", missingKey: "vscodeMissing" },
+];
 
 /**
  * "내 컴퓨터 확인하기" 게이트 — 설치 경험자(exp=prior|unsure)용 사전 스캔.
  * 붙여넣은 출력은 신뢰 불가: 마커 매칭에만 쓰고 명령을 합성하지 않는다(stuck-helper 원칙).
  * 판정 불가 시 에러 + 스킵 탈출구로 막다른 길을 만들지 않는다(풀 트랙 폴백).
+ * 1차(Windows)·2차(WSL) 스캔이 parse/rows/namespace만 바꿔 공용으로 쓴다(기본값=1차).
  */
-export function ScanGate({ script, onDone }: ScanGateProps) {
-  const t = useTranslations("Setup.scanGate");
+export function ScanGate<T = ScanResult>({
+  script,
+  onDone,
+  parse = parseScanOutput as (output: string) => T | null,
+  rows = DEFAULT_ROWS as (result: T) => ScanRow[],
+  namespace = "Setup.scanGate",
+}: ScanGateProps<T>) {
+  const t = useTranslations(namespace);
   const [output, setOutput] = useState("");
   const [showOpenGuide, setShowOpenGuide] = useState(false);
   const [parseFailed, setParseFailed] = useState(false);
-  const [result, setResult] = useState<ScanResult | null>(null);
+  const [result, setResult] = useState<T | null>(null);
 
   function handleSubmit(): void {
-    const parsed = parseScanOutput(output);
-    if (!parsed) {
+    const parsed = parse(output);
+    if (parsed === null) {
       setParseFailed(true);
       return;
     }
@@ -34,21 +59,23 @@ export function ScanGate({ script, onDone }: ScanGateProps) {
     setResult(parsed);
   }
 
-  if (result) {
+  if (result !== null) {
+    const resultRows = rows(result);
+    const anyFound = resultRows.some((r) => r.found);
     return (
       <div className="rounded-xl border-2 border-primary/50 bg-card p-6">
         <h3 className="mb-4 font-semibold">{t("resultTitle")}</h3>
         <ul className="mb-4 flex flex-col gap-2 text-sm">
-          <li className={result.wsl ? "font-medium text-success" : "text-muted-foreground"}>
-            {result.wsl ? t("wslFound") : t("wslMissing")}
-          </li>
-          <li className={result.vscode ? "font-medium text-success" : "text-muted-foreground"}>
-            {result.vscode ? t("vscodeFound") : t("vscodeMissing")}
-          </li>
+          {resultRows.map((row, i) => (
+            <li
+              key={i}
+              className={row.found ? "font-medium text-success" : "text-muted-foreground"}
+            >
+              {t(row.found ? row.foundKey : row.missingKey)}
+            </li>
+          ))}
         </ul>
-        {(result.wsl || result.vscode) && (
-          <p className="mb-4 text-sm text-muted-foreground">{t("resultNote")}</p>
-        )}
+        {anyFound && <p className="mb-4 text-sm text-muted-foreground">{t("resultNote")}</p>}
         <Button onClick={() => onDone(result)}>{t("continueButton")}</Button>
       </div>
     );

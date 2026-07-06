@@ -86,8 +86,18 @@ export interface ParsedMarker {
   code?: string;
 }
 
-/** 환경 스캔("내 컴퓨터 확인하기") 판정 결과. true = 이미 설치됨. */
+/** 1차(Windows측) 환경 스캔("내 컴퓨터 확인하기") 판정 결과. true = 이미 설치됨. */
 export interface ScanResult {
   wsl: boolean;
   vscode: boolean;
+}
+
+/**
+ * 2차(WSL측) 스캔 판정 — wsl-open 직후 우분투 안에서 프로젝트 생성 전 도구들을 감지한다.
+ * nodejs는 node가 필요없는 goal(data-ai)이면 scan-node 마커가 없어 false로 온다(무해).
+ */
+export interface WslScanResult {
+  devTools: boolean;
+  nodejs: boolean;
+  claude: boolean;
 }

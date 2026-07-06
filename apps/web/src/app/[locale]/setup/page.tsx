@@ -12,6 +12,9 @@ import {
   getSetupSteps,
   diagnosisStepFor,
   scanPrecompletedStepIds,
+  wslScanScript,
+  wslScanPrecompletedStepIds,
+  needsNode,
   WINDOWS_SCAN_SCRIPT,
   type SetupGroup,
 } from "@/lib/setup-steps";
@@ -19,7 +22,9 @@ import {
   type OS,
   type Goal,
 } from "@/lib/onboarding";
-import type { ScanResult } from "@vibestart/shared-types";
+import type { ScanResult, WslScanResult } from "@vibestart/shared-types";
+import { parseWslScanOutput } from "@vibestart/diagnosis-catalog";
+import type { ScanRow } from "@/components/setup/scan-gate";
 import { useTranslations } from "next-intl";
 import {
   trackSetupStart,
@@ -47,12 +52,16 @@ function SetupContent() {
   const steps = getSetupSteps(os, goal, projectName, ts);
   const storageKey = `vibestart-progress-${os}-${goal}-${projectName}`;
   const scanKey = `vibestart-scan-${os}-${goal}-${projectName}`;
+  const wslScanKey = `vibestart-wslscan-${os}-${goal}-${projectName}`;
 
   const [openTroubleshooting, setOpenTroubleshooting] = useState<Set<string>>(new Set());
 
   const [completed, setCompleted] = useState<Set<string>>(new Set());
   const [hydrated, setHydrated] = useState(false);
   const [scanResolved, setScanResolved] = useState(false);
+  const [wslScanResolved, setWslScanResolved] = useState(false);
+  // 완료된 단계 중 사용자가 다시 펼친 것 (기본은 접힘 — 스크롤 최소화)
+  const [expandedDone, setExpandedDone] = useState<Set<string>>(new Set());
 
   // Group name mapping for translations
   const groupNameMap: Record<string, string> = {
@@ -76,10 +85,13 @@ function SetupContent() {
       if (localStorage.getItem(scanKey)) {
         setScanResolved(true);
       }
+      if (localStorage.getItem(wslScanKey)) {
+        setWslScanResolved(true);
+      }
     } catch { /* 무시 */ }
     setHydrated(true);
     trackSetupStart(os, goal, os === "windows" ? exp : undefined);
-  }, [storageKey, scanKey, os, goal, exp]);
+  }, [storageKey, scanKey, wslScanKey, os, goal, exp]);
 
   // 완료 상태 변경 시 저장 (hydration 완료 후에만)
   useEffect(() => {
@@ -154,6 +166,47 @@ function SetupContent() {
       trackSetupScanSkipped();
     }
     setScanResolved(true);
+  }
+
+  // 2차 스캔 — Windows + 경험자 + 미해결. wsl-open 완료 후 인라인으로만 렌더된다.
+  const showWslScanGate = os === "windows" && exp !== "first" && hydrated && !wslScanResolved;
+
+  function handleWslScanDone(result: WslScanResult | null): void {
+    try {
+      localStorage.setItem(
+        wslScanKey,
+        JSON.stringify(result ? { status: "done", ...result } : { status: "skipped" }),
+      );
+    } catch { /* 무시 */ }
+    if (result) {
+      const precompleted = wslScanPrecompletedStepIds(result);
+      if (precompleted.length > 0) {
+        // 기존 진행과 합집합 — 스캔이 사용자의 이전 진행을 되돌리지 않는다
+        setCompleted((prev) => new Set([...prev, ...precompleted]));
+      }
+    }
+    setWslScanResolved(true);
+  }
+
+  // 2차 스캔 결과 패널 행 — node 불필요 goal(data-ai)이면 Node.js 행은 숨긴다.
+  const wslScanRows = (r: WslScanResult): ScanRow[] => {
+    const rowsList: ScanRow[] = [
+      { found: r.devTools, foundKey: "devToolsFound", missingKey: "devToolsMissing" },
+    ];
+    if (needsNode(goal)) {
+      rowsList.push({ found: r.nodejs, foundKey: "nodejsFound", missingKey: "nodejsMissing" });
+    }
+    rowsList.push({ found: r.claude, foundKey: "claudeFound", missingKey: "claudeMissing" });
+    return rowsList;
+  };
+
+  function toggleExpandDone(stepId: string): void {
+    setExpandedDone((prev) => {
+      const next = new Set(prev);
+      if (next.has(stepId)) next.delete(stepId);
+      else next.add(stepId);
+      return next;
+    });
   }
 
   const allDone = steps.every((s) => completed.has(s.id));
@@ -248,6 +301,9 @@ function SetupContent() {
           {steps.map((step, i) => {
             const active = isStepActive(i);
             const done = completed.has(step.id);
+            // 완료 단계는 기본 접힘(스크롤 최소화), 헤더 클릭으로 재확장. 진행 중 단계는 항상 펼침.
+            const bodyOpen = done ? expandedDone.has(step.id) : active;
+            const collapsed = done && !bodyOpen;
             const isFirstInGroup = i === 0 || steps[i - 1].group !== step.group;
             return (
               <div key={step.id}>
@@ -264,7 +320,7 @@ function SetupContent() {
 
               <div
                 ref={(el) => setStepRef(step.id, el)}
-                className={`rounded-xl border-2 p-6 transition-all ${
+                className={`rounded-xl border-2 transition-all ${collapsed ? "px-6 py-4" : "p-6"} ${
                   done
                     ? "border-success/50 bg-success/5"
                     : active
@@ -272,8 +328,15 @@ function SetupContent() {
                       : "border-border/30 bg-card/50 opacity-50"
                 }`}
               >
-                {/* 헤더 */}
-                <div className="mb-3 flex items-center justify-between">
+                {/* 헤더 (완료 단계는 클릭해 펼치기/접기) */}
+                <div
+                  className={`flex items-center justify-between ${collapsed ? "" : "mb-3"} ${done ? "cursor-pointer select-none" : ""}`}
+                  onClick={done ? () => toggleExpandDone(step.id) : undefined}
+                  onKeyDown={done ? (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleExpandDone(step.id); } } : undefined}
+                  role={done ? "button" : undefined}
+                  tabIndex={done ? 0 : undefined}
+                  aria-expanded={done ? bodyOpen : undefined}
+                >
                   <div className="flex items-center gap-3">
                     <div
                       className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold ${
@@ -300,10 +363,15 @@ function SetupContent() {
                       </p>
                     </div>
                   </div>
+                  {done && (
+                    <span className="ml-3 shrink-0 text-sm text-muted-foreground" aria-hidden>
+                      {bodyOpen ? "▾" : "▸"}
+                    </span>
+                  )}
                 </div>
 
                 {/* 재시작 체크포인트 — 이탈 1순위 지점, "진행상황 저장됨" 안심 배너 */}
-                {active && step.requiresReboot && (
+                {bodyOpen && step.requiresReboot && (
                   <div className="mb-4 rounded-xl border border-amber-500/40 bg-amber-500/10 p-4">
                     <div className="flex items-start gap-3">
                       <span className="text-2xl" aria-hidden>
@@ -320,7 +388,7 @@ function SetupContent() {
                 )}
 
                 {/* 이게 뭔가요? */}
-                {active && step.whyNeeded && (
+                {bodyOpen && step.whyNeeded && (
                   <div className="mb-3">
                     <button
                       aria-expanded={openTroubleshooting.has(`why-${step.id}`)}
@@ -344,7 +412,7 @@ function SetupContent() {
                 )}
 
                 {/* 상세 가이드 (초보자용) */}
-                {active && step.detailedGuide && (
+                {bodyOpen && step.detailedGuide && (
                   <div className="mb-4 whitespace-pre-line rounded-lg bg-primary/5 p-4 text-sm text-muted-foreground">
                     {step.detailedGuide}
                     {step.guideImage && (
@@ -359,14 +427,14 @@ function SetupContent() {
                 )}
 
                 {/* 스크립트 */}
-                {active && step.script && (
+                {bodyOpen && step.script && (
                   <div className="mb-4">
                     <ScriptBlock script={step.script} />
                   </div>
                 )}
 
                 {/* 실행 결과 예시 */}
-                {active && step.resultPreview && (
+                {bodyOpen && step.resultPreview && (
                   <div className="mb-4">
                     <p className="mb-1.5 text-xs text-muted-foreground/70">{t("resultPreviewLabel")}</p>
                     <div className="rounded-lg bg-zinc-950 border border-zinc-800 p-4">
@@ -378,7 +446,7 @@ function SetupContent() {
                 )}
 
                 {/* CLAUDE.md 자동 생성 안내 (내용은 명령어 heredoc에 이미 포함 — 중복 표시 안 함) */}
-                {active && step.claudeMdContent && (
+                {bodyOpen && step.claudeMdContent && (
                   <div className="mb-4">
                     <div className="rounded-lg bg-primary/5 p-3 text-sm text-muted-foreground">
                       {t.rich("claudeMdGuide", { code: (chunks) => <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">{chunks}</code> })}
@@ -387,7 +455,7 @@ function SetupContent() {
                 )}
 
                 {/* 트러블슈팅 */}
-                {active && step.troubleshooting && step.troubleshooting.length > 0 && (
+                {bodyOpen && step.troubleshooting && step.troubleshooting.length > 0 && (
                   <div className="mb-4">
                     <button
                       aria-expanded={openTroubleshooting.has(step.id)}
@@ -415,7 +483,7 @@ function SetupContent() {
                 )}
 
                 {/* 완료 버튼 */}
-                {(active || done) && (
+                {bodyOpen && (
                   <Button
                     variant={done ? "secondary" : "outline"}
                     size="sm"
@@ -425,12 +493,25 @@ function SetupContent() {
                   </Button>
                 )}
 
-                {active && (
+                {active && !done && (
                   <div className="mt-3 border-t border-border/30 pt-3">
                     <StuckHelper step={diagnosisStepFor(step)} />
                   </div>
                 )}
               </div>
+
+              {/* 2차 스캔 게이트 — wsl-open 완료 직후 인라인 (Windows·경험자·미해결) */}
+              {step.id === "wsl-open" && done && showWslScanGate && (
+                <div className="mt-6">
+                  <ScanGate<WslScanResult>
+                    script={wslScanScript(goal)}
+                    namespace="Setup.wslScanGate"
+                    parse={parseWslScanOutput}
+                    rows={wslScanRows}
+                    onDone={handleWslScanDone}
+                  />
+                </div>
+              )}
               </div>
             );
           })}

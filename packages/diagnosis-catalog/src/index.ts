@@ -6,7 +6,7 @@ import { remedyScripts } from './remedies';
 export { DiagnosisMatcher, parseMarkers } from './matcher';
 export type { DiagnoseInput } from './matcher';
 export { maskSensitive } from './mask';
-export { parseScanOutput } from './scan';
+export { parseScanOutput, parseWslScanOutput } from './scan';
 export { validateDiagnosisCatalog } from './validate-catalog';
 export type { CatalogIssue } from './validate-catalog';
 export { diagnosisRules } from './rules';

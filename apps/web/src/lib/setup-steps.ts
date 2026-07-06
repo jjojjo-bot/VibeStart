@@ -1,5 +1,5 @@
 import { hardenScript, type HardenShell } from "@vibestart/script-generator";
-import type { DiagnosisStep, ScanResult } from "@vibestart/shared-types";
+import type { DiagnosisStep, ScanResult, WslScanResult } from "@vibestart/shared-types";
 import type { OS, Goal } from "./onboarding";
 
 export type SetupGroup = "envPrep" | "toolInstall" | "aiSetup" | "projectCreate";
@@ -76,6 +76,45 @@ export function scanPrecompletedStepIds(result: ScanResult): string[] {
   return ids;
 }
 
+// ─── 2차 환경 스캔 (WSL측 — wsl-open 직후) ───
+//
+// 1차(Windows) 스캔은 WSL 진입 없이 감지 가능한 것(WSL 존재·VS Code)만 본다. git/node/claude는
+// WSL 안에 있어 진입해야 감지되는데, wsl-open 직후엔 사용자가 이미 우분투에 안전하게 들어와
+// 있으므로(미초기화 계정 생성 위험 없음) 여기서 스캔한다. goal이 실제로 설치하는 도구를 검사:
+//   - scan-devtools: git (+ python3 / java — dev-tools-basic이 까는 것 전부) 있어야 ok
+//   - scan-node: node (needsNode goal에서만 방출)
+//   - scan-claude: claude CLI (PATH 미갱신 대비 npm-global 경로도 확인)
+
+/** 2차 WSL 스캔 스크립트(goal별). 마커 형식은 1차와 동일 — parseWslScanOutput이 파싱. */
+export function wslScanScript(goal: Goal): string {
+  const extra = extraRuntimeFor(goal);
+  const devChecks: string[] = ["command -v git >/dev/null 2>&1"];
+  if (extra === "python") devChecks.push("command -v python3 >/dev/null 2>&1");
+  else if (extra === "java") devChecks.push("command -v java >/dev/null 2>&1");
+
+  const lines: string[] = [
+    `if ${devChecks.join(" && ")}; then echo "VIBESTART::step=scan-devtools::result=ok"; else echo "VIBESTART::step=scan-devtools::result=fail"; fi`,
+  ];
+  if (needsNode(goal)) {
+    lines.push(
+      `if command -v node >/dev/null 2>&1; then echo "VIBESTART::step=scan-node::result=ok"; else echo "VIBESTART::step=scan-node::result=fail"; fi`,
+    );
+  }
+  lines.push(
+    `if command -v claude >/dev/null 2>&1 || [ -x "$HOME/.npm-global/bin/claude" ]; then echo "VIBESTART::step=scan-claude::result=ok"; else echo "VIBESTART::step=scan-claude::result=fail"; fi`,
+  );
+  return lines.join("\n");
+}
+
+/** 2차 스캔 결과로 사전 완료 처리할 단계 id (dev-tools-basic / dev-tools-nodejs / ai-setup). */
+export function wslScanPrecompletedStepIds(result: WslScanResult): string[] {
+  const ids: string[] = [];
+  if (result.devTools) ids.push("dev-tools-basic");
+  if (result.nodejs) ids.push("dev-tools-nodejs");
+  if (result.claude) ids.push("ai-setup");
+  return ids;
+}
+
 /** Translation function type for SetupSteps namespace */
 type T = (key: string, values?: Record<string, string>) => string;
 
@@ -89,7 +128,7 @@ function extraRuntimeFor(goal: Goal): ExtraRuntime {
 }
 
 /** Node.js가 필요한 Goal인지 판별 */
-function needsNode(goal: Goal): boolean {
+export function needsNode(goal: Goal): boolean {
   return goal === "web-nextjs" || goal === "web-python" || goal === "web-java" || goal === "mobile" || goal === "not-sure";
 }
 
