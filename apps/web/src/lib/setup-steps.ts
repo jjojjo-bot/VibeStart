@@ -652,11 +652,15 @@ function macVscodeStep(t: T): SetupStep {
     whyNeeded: t("editor.whyNeeded"),
     group: "toolInstall",
     environment: t("environments.macTerminal"),
-    script: `brew install --cask visual-studio-code && sudo ln -sf "/Applications/Visual Studio Code.app/Contents/Resources/app/bin/code" /usr/local/bin/code`,
+    // cask의 binary 스탠자가 `code`를 $(brew --prefix)/bin(Apple Silicon: /opt/homebrew/bin,
+    // on PATH)에 자동 심링크한다. 수동 `sudo ln … /usr/local/bin/code`는 불필요할 뿐 아니라,
+    // Apple Silicon은 /usr/local/bin이 없을 수 있어(Homebrew가 /opt/homebrew 사용) ln이 "No such
+    // file or directory"로 실패 → VS Code는 멀쩡히 깔렸는데 마커가 fail이 되던 버그였다. 제거.
+    script: `brew install --cask visual-studio-code`,
     resultPreview: `==> Installing Cask visual-studio-code
 ==> Moving App 'Visual Studio Code.app' to '/Applications/Visual Studio Code.app'
-🍺  visual-studio-code was successfully installed!
-code command linked to /usr/local/bin/code`,
+==> Linking Binary 'code' to '/opt/homebrew/bin/code'
+🍺  visual-studio-code was successfully installed!`,
     troubleshooting: [
       { symptom: t("editor.troubleshooting.macos.0.symptom"), solution: t("editor.troubleshooting.macos.0.solution") },
       { symptom: t("editor.troubleshooting.macos.1.symptom"), solution: t("editor.troubleshooting.macos.1.solution") },
@@ -666,22 +670,23 @@ code command linked to /usr/local/bin/code`,
 
 // ─── Claude Code 통합 (macOS) ───
 //
-// brew로 설치된 node는 /opt/homebrew/lib/node_modules(user-owned)에 글로벌
-// 모듈이 들어가므로 EACCES 이슈가 없다 — WSL처럼 npm prefix를 따로 만질
-// 필요 없음. 일관성을 위해 pipefail + echo 마커만 추가.
+// brew로 설치된 node는 /opt/homebrew/lib/node_modules(user-owned)에 글로벌 모듈이
+// 들어가므로 EACCES 이슈가 없다 — WSL처럼 npm prefix를 만질 필요 없음.
+// `code`는 VS Code cask의 binary 스탠자가 $(brew --prefix)/bin(/opt/homebrew/bin, brew
+// shellenv로 이미 PATH에 있음)에 자동 심링크하므로, WSL 같은 interop PATH 취약성이
+// 없다(셸 재시작·Command Palette 불필요). login은 확장 설치 앞에 둬서 확장 문제로
+// 인증이 막히지 않게 한다(WSL ai-setup과 일관).
 
 function macClaudeStep(t: T): SetupStep {
   const script = joinChain([
     "set -o pipefail",
     'echo "▶ (1/3) Installing Claude Code CLI..."',
     "npm install -g @anthropic-ai/claude-code",
-    'echo "▶ (2/3) Installing VS Code extension..."',
-    // macOS는 `code` shim이 VS Code.app의 Command Palette → "Shell Command:
-    // Install 'code' command in PATH" 실행 후 셸 재시작을 해야 잡힌다.
-    // detailedGuide에 절차를 명시하고, 누락 시엔 명시적 에러로 중단한다.
-    "code --install-extension anthropic.claude-code",
-    'echo "▶ (3/3) Logging in..."',
+    // 로그인을 확장 설치 앞으로 — 확장 문제로 인증까지 막히지 않게 한다.
+    'echo "▶ (2/3) Logging in..."',
     "claude auth login",
+    'echo "▶ (3/3) Installing VS Code extension..."',
+    "code --install-extension anthropic.claude-code",
   ]);
 
   return {
@@ -695,11 +700,11 @@ function macClaudeStep(t: T): SetupStep {
     script,
     resultPreview: `▶ (1/3) Installing Claude Code CLI...
 added 1 package in 3s
-▶ (2/3) Installing VS Code extension...
-Extension 'anthropic.claude-code' was successfully installed.
-▶ (3/3) Logging in...
+▶ (2/3) Logging in...
 Opening browser for authentication...
-✓ Logged in as yourname@email.com`,
+✓ Logged in as yourname@email.com
+▶ (3/3) Installing VS Code extension...
+Extension 'anthropic.claude-code' was successfully installed.`,
     troubleshooting: [
       { symptom: t("aiSetup.troubleshooting.0.symptom"), solution: t("aiSetup.troubleshooting.0.solution") },
       { symptom: t("aiSetup.troubleshooting.1.symptom"), solution: t("aiSetup.troubleshooting.1.solution") },
