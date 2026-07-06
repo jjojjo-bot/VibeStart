@@ -30,7 +30,7 @@ export default function LandingPage() {
   return (
     <main id="main-content" className="flex flex-col items-center px-6">
       {/* ───── 히어로 ───── */}
-      <section className="grid w-full max-w-6xl items-center gap-10 py-16 lg:grid-cols-[1fr_1fr] lg:gap-16 lg:py-24">
+      <section className="flex w-full max-w-2xl flex-col items-center gap-10 py-16 lg:py-24">
         <div className="text-center">
           <div className="mb-4 inline-block rounded-full bg-primary/10 px-4 py-1.5 text-sm text-primary">
             {t("badge")}
@@ -82,7 +82,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        <div className="lg:order-last">
+        <div className="w-full">
           <LandingHeroTerminal />
         </div>
       </section>
