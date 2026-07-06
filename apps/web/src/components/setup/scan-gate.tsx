@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { ScriptBlock } from "@/components/onboarding/script-block";
@@ -44,6 +44,7 @@ export function ScanGate<T = ScanResult>({
   namespace = "Setup.scanGate",
 }: ScanGateProps<T>) {
   const t = useTranslations(namespace);
+  const rootRef = useRef<HTMLDivElement>(null);
   const [output, setOutput] = useState("");
   const [showOpenGuide, setShowOpenGuide] = useState(false);
   const [parseFailed, setParseFailed] = useState(false);
@@ -57,13 +58,15 @@ export function ScanGate<T = ScanResult>({
     }
     setParseFailed(false);
     setResult(parsed);
+    // 입력폼→결과패널로 줄며 생기는 스크롤 점프를 잡고, 결과(계속하기 버튼)를 sticky 밑에 놓는다.
+    setTimeout(() => rootRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
   }
 
   if (result !== null) {
     const resultRows = rows(result);
     const anyFound = resultRows.some((r) => r.found);
     return (
-      <div className="rounded-xl border-2 border-primary/50 bg-card p-6">
+      <div ref={rootRef} className="scroll-mt-28 rounded-xl border-2 border-primary/50 bg-card p-6">
         <h3 className="mb-4 font-semibold">{t("resultTitle")}</h3>
         <ul className="mb-4 flex flex-col gap-2 text-sm">
           {resultRows.map((row, i) => (

@@ -102,6 +102,7 @@ function SetupContent() {
   }, [completed, storageKey, hydrated]);
 
   const stepRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const scanGateRef = useRef<HTMLDivElement>(null);
 
   const setStepRef = useCallback((id: string, el: HTMLDivElement | null) => {
     if (el) stepRefs.current.set(id, el);
@@ -115,17 +116,21 @@ function SetupContent() {
         next.delete(stepId);
       } else {
         next.add(stepId);
-        // 다음 단계로 자동 스크롤
+        // 다음 수행 지점으로 스크롤. wsl-open 완료 후 2차 스캔 게이트가 뜨면 그 게이트로
+        // (아니면 게이트를 지나쳐 다음 단계로 스크롤돼 게이트가 화면 밖으로 밀린다).
+        // block:"start" + 카드의 scroll-mt-28로 sticky 진행바(90px) 밑에 위치시킨다.
         const currentIndex = steps.findIndex((s) => s.id === stepId);
         const nextStep = steps[currentIndex + 1];
-        if (nextStep) {
-          setTimeout(() => {
-            stepRefs.current.get(nextStep.id)?.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
-          }, 100);
-        }
+        const gateWillShow =
+          stepId === "wsl-open" && os === "windows" && exp !== "first" && !wslScanResolved;
+        setTimeout(() => {
+          const target = gateWillShow
+            ? scanGateRef.current
+            : nextStep
+              ? stepRefs.current.get(nextStep.id)
+              : null;
+          target?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 120);
       }
       return next;
     });
@@ -178,14 +183,21 @@ function SetupContent() {
         JSON.stringify(result ? { status: "done", ...result } : { status: "skipped" }),
       );
     } catch { /* 무시 */ }
-    if (result) {
-      const precompleted = wslScanPrecompletedStepIds(result);
-      if (precompleted.length > 0) {
-        // 기존 진행과 합집합 — 스캔이 사용자의 이전 진행을 되돌리지 않는다
-        setCompleted((prev) => new Set([...prev, ...precompleted]));
-      }
+    const precompleted = result ? wslScanPrecompletedStepIds(result) : [];
+    if (precompleted.length > 0) {
+      // 기존 진행과 합집합 — 스캔이 사용자의 이전 진행을 되돌리지 않는다
+      setCompleted((prev) => new Set([...prev, ...precompleted]));
     }
     setWslScanResolved(true);
+    // 스캔으로 접힌 단계들 다음의 "수행할 단계"로 스크롤 — 게이트가 사라지며 생기는
+    // 스크롤 점프를 잡고, 이어갈 위치를 sticky 진행바 밑에 정확히 놓는다.
+    setTimeout(() => {
+      const doneSet = new Set([...completed, ...precompleted]);
+      const nextActive = steps.find((s) => !doneSet.has(s.id));
+      if (nextActive) {
+        stepRefs.current.get(nextActive.id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }, 200);
   }
 
   // 2차 스캔 결과 패널 행 — node 불필요 goal(data-ai)이면 Node.js 행은 숨긴다.
@@ -320,7 +332,7 @@ function SetupContent() {
 
               <div
                 ref={(el) => setStepRef(step.id, el)}
-                className={`rounded-xl border-2 transition-all ${collapsed ? "px-6 py-4" : "p-6"} ${
+                className={`scroll-mt-28 rounded-xl border-2 transition-all ${collapsed ? "px-6 py-4" : "p-6"} ${
                   done
                     ? "border-success/50 bg-success/5"
                     : active
@@ -502,7 +514,7 @@ function SetupContent() {
 
               {/* 2차 스캔 게이트 — wsl-open 완료 직후 인라인 (Windows·경험자·미해결) */}
               {step.id === "wsl-open" && done && showWslScanGate && (
-                <div className="mt-6">
+                <div ref={scanGateRef} className="mt-6 scroll-mt-28">
                   <ScanGate<WslScanResult>
                     script={wslScanScript(goal)}
                     namespace="Setup.wslScanGate"
