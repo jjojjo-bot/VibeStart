@@ -250,7 +250,9 @@ function wslBasicToolsStep(goal: Goal, t: T): SetupStep {
     versionChecks.push("python3 --version");
     resultLines.push("Python 3.x.x");
   } else if (extra === "java") {
-    pkgs.push("openjdk-21-jdk");
+    // unzip: WSL Ubuntu는 --no-install-recommends라 기본 미설치. javaBackendProjectStep의
+    // `unzip backend.zip`(Spring starter 압축 해제)이 command not found로 죽는 걸 막는다.
+    pkgs.push("openjdk-21-jdk", "unzip");
     names.push("Java");
     versionChecks.push("java --version");
     resultLines.push('openjdk version "21.x.x"');
@@ -446,7 +448,17 @@ function pythonBackendProjectStep(projectName: string, env: string, t: T): Setup
     group: "projectCreate",
     environment: env,
     detailedGuide: t("projectBackendPython.detailedGuideTemplate", { projectName }),
-    script: `mkdir -p ~/${projectName}/backend && cd ~/${projectName}/backend && python3 -m venv venv && . venv/bin/activate && pip install fastapi uvicorn && echo 'from fastapi import FastAPI\\napp = FastAPI()\\n\\n@app.get("/")\\ndef read_root():\\n    return {"message": "Hello, World!"}' > main.py`,
+    // main.py는 heredoc으로 쓴다. bash `echo '...\n...'`는 \n을 문자 그대로 출력해
+    // (xpg_echo off) 한 줄짜리 깨진 파이썬 파일이 만들어진다. single-quote 구분자로
+    // 감싸 $·백틱 전개 없이 리터럴로 기록한다(withClaudeMd와 동일 패턴).
+    script: `mkdir -p ~/${projectName}/backend && cd ~/${projectName}/backend && python3 -m venv venv && . venv/bin/activate && pip install fastapi uvicorn && cat > main.py << 'VIBESTART_MAIN_PY_EOF'
+from fastapi import FastAPI
+app = FastAPI()
+
+@app.get("/")
+def read_root():
+    return {"message": "Hello, World!"}
+VIBESTART_MAIN_PY_EOF`,
   };
 }
 
@@ -460,7 +472,10 @@ function javaBackendProjectStep(projectName: string, env: string, t: T): SetupSt
     group: "projectCreate",
     environment: env,
     detailedGuide: t("projectBackendJava.detailedGuideTemplate", { projectName }),
-    script: `mkdir -p ~/${projectName} && cd ~/${projectName} && curl -fsSL "https://start.spring.io/starter.zip?type=gradle-project&language=java&bootVersion=3.5.13&javaVersion=17&packaging=jar&baseDir=backend&groupId=com.example&artifactId=backend&name=backend&packageName=com.example.app&dependencies=web,lombok,devtools,validation,data-jpa,sqlserver" -o backend.zip && unzip backend.zip && rm backend.zip && mv backend/src/main/resources/application.properties backend/src/main/resources/application.yml`,
+    // bootVersion을 pin하지 않아 start.spring.io의 현재 기본값(지원되는 최신 Spring Boot)을
+    // 항상 받는다 — 특정 패치를 박아두면 EOL·미지원으로 stale해진다. javaVersion=21은
+    // 설치되는 JDK 21과 맞춰 Gradle 툴체인이 다른 JDK를 따로 받으려는 마찰을 없앤다.
+    script: `mkdir -p ~/${projectName} && cd ~/${projectName} && curl -fsSL "https://start.spring.io/starter.zip?type=gradle-project&language=java&javaVersion=21&packaging=jar&baseDir=backend&groupId=com.example&artifactId=backend&name=backend&packageName=com.example.app&dependencies=web,lombok,devtools,validation,data-jpa,sqlserver" -o backend.zip && unzip backend.zip && rm backend.zip && mv backend/src/main/resources/application.properties backend/src/main/resources/application.yml`,
   };
 }
 
@@ -507,6 +522,18 @@ function dataAiProjectStep(projectName: string, env: string, t: T): SetupStep {
 // ─── macOS 플로우 ───
 
 function brewStep(t: T): SetupStep {
+  // brew 설치 후 PATH 배선 — Apple Silicon은 /opt/homebrew/bin이 로그인 PATH에
+  // 자동 등록되지 않아, 직후 macDevToolsStep의 `brew install`이 command not found로
+  // 실패한다. shellenv를 현재 세션(eval)과 ~/.zprofile(다음 세션) 양쪽에 반영한다.
+  // Intel은 /usr/local/bin. printf로 .zprofile 라인을 쓰되 $(...)는 리터럴로 남겨
+  // 매 셸 시작 시 평가되게 한다(grep 가드로 idempotent).
+  const script = [
+    '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
+    "if [ -x /opt/homebrew/bin/brew ]; then BREW=/opt/homebrew/bin/brew; else BREW=/usr/local/bin/brew; fi",
+    "( grep -q 'brew shellenv' ~/.zprofile 2>/dev/null || printf 'eval \"$(%s shellenv)\"\\n' \"$BREW\" >> ~/.zprofile )",
+    'eval "$($BREW shellenv)"',
+  ].join(" && ");
+
   return {
     id: "brew",
     title: t("brew.title"),
@@ -517,7 +544,7 @@ function brewStep(t: T): SetupStep {
     diagnosisStep: "tools-install",
     environment: t("environments.macTerminal"),
     detailedGuide: t("brew.detailedGuide"),
-    script: '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
+    script,
     resultPreview: `==> Installation successful!
 ==> Homebrew has enabled anonymous aggregate formulae and cask analytics.
 ==> Next steps:
@@ -993,19 +1020,26 @@ function nextjsProjectStep(projectName: string, variant: "wsl" | "mac", isFronte
     group: "projectCreate",
     environment: env,
     detailedGuide: t("projectFrontend.detailedGuideTemplate", { path }),
-    // create-next-app@latest(Next.js 16+)는 AGENTS.md를 자동 생성하는데, 그 안의
-    // "This is NOT the Next.js you know" 문구가 Phase 1 테스트 단계에서 Claude
-    // Code를 혼란스럽게 만든다 (사용자는 평범한 랜딩 페이지만 만들고 싶을 뿐인데
-    // Claude가 docs를 먼저 읽으러 감). 비전공자 프로젝트에는 불필요한 AI agent
-    // 내부 문서이므로 스캐폴딩 직후 제거한다. CLAUDE.md는 architectureStep에서
-    // VibeStart 아키텍처 가이드로 별도 작성됨.
+    // create-next-app@latest(Next.js 16+)는 --agents-md 기본값으로 AGENTS.md와 CLAUDE.md를
+    // 함께 자동 생성한다. 그 안의 "This is NOT the Next.js you know" 문구가 Phase 1 테스트
+    // 단계에서 Claude Code를 혼란스럽게 만든다(사용자는 평범한 랜딩 페이지만 원하는데 Claude가
+    // docs부터 읽으러 감). 둘 다 비전공자 프로젝트엔 불필요하므로 스캐폴딩 직후 제거한다.
+    // VibeStart용 CLAUDE.md는 architectureStep이 프로젝트 루트에 별도로 쓴다(frontendOnly면
+    // frontend/에 생성된 CLAUDE.md는 루트 가이드와 어긋나므로 반드시 지운다).
+    // --yes: 향후 create-next-app이 추가하는 프롬프트(react-compiler 등)에서 비전공자가 멈추지
+    // 않도록 미지정 옵션을 전부 기본값으로 넘긴다(명시한 플래그가 우선).
     script: isFrontendOnly
-      ? `mkdir -p ~/${projectName} && npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm && rm -f ~/${path}/AGENTS.md`
-      : `npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm && rm -f ~/${path}/AGENTS.md`,
-    resultPreview: `✔ Would you like to use TypeScript? … Yes
-✔ Would you like to use ESLint? … Yes
-✔ Would you like to use Tailwind CSS? … Yes
-...
+      ? `mkdir -p ~/${projectName} && npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm --yes && rm -f ~/${path}/AGENTS.md ~/${path}/CLAUDE.md`
+      : `npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm --yes && rm -f ~/${path}/AGENTS.md ~/${path}/CLAUDE.md`,
+    resultPreview: `Creating a new Next.js app in ~/${path}.
+
+Using npm.
+
+Installing dependencies:
+- react
+- react-dom
+- next
+
 Success! Created ${path}
   npm run dev    (개발 서버 시작)
   npm run build  (배포용 빌드)`,
