@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, usePathname } from "@/i18n/navigation";
+import { useSearchParams } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { useRef, useState, useTransition } from "react";
 
@@ -12,6 +13,7 @@ interface BlogSearchProps {
 export function BlogSearch({ placeholder, defaultValue }: BlogSearchProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const timerRef = useRef<ReturnType<typeof setTimeout>>(null);
   const [isPending, startTransition] = useTransition();
   const [value, setValue] = useState(defaultValue);
@@ -22,11 +24,11 @@ export function BlogSearch({ placeholder, defaultValue }: BlogSearchProps) {
     timerRef.current = setTimeout(() => {
       startTransition(() => {
         const trimmed = newValue.trim();
-        if (trimmed) {
-          router.replace(`${pathname}?q=${encodeURIComponent(trimmed)}`);
-        } else {
-          router.replace(pathname);
-        }
+        const params = new URLSearchParams(searchParams.toString());
+        params.delete("page");
+        if (trimmed) params.set("q", trimmed);
+        else params.delete("q");
+        router.replace(params.size > 0 ? `${pathname}?${params.toString()}` : pathname);
       });
     }, 300);
   }
@@ -38,6 +40,7 @@ export function BlogSearch({ placeholder, defaultValue }: BlogSearchProps) {
         placeholder={placeholder}
         value={value}
         onChange={(e) => handleChange(e.target.value)}
+        aria-label={placeholder}
         className="h-10 pl-9"
       />
       <svg

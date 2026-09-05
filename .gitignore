@@ -45,3 +45,4 @@ PRODUCT_HUNT_LAUNCH.md
 apps/web/content/blog/wp/D*.html
 apps/web/content/blog/wp/assets/D*.svg
 apps/web/content/blog/wp/assets/D*.png
+.vercel

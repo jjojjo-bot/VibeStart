@@ -8,6 +8,8 @@ export interface BlogPost {
   description: string;
   date: string;
   tags: string[];
+  category: BlogCategory;
+  readingMinutes: number;
   content: string;
 }
 
@@ -17,7 +19,14 @@ export interface BlogPostMeta {
   description: string;
   date: string;
   tags: string[];
+  category: BlogCategory;
+  readingMinutes: number;
 }
+
+export const BLOG_CATEGORIES = ["guides", "builds", "fixes"] as const;
+export type BlogCategory = (typeof BLOG_CATEGORIES)[number];
+
+export const BLOG_LOCALES = ["ko", "en"] as const;
 
 const CONTENT_DIR = path.join(process.cwd(), "content/blog");
 
@@ -54,30 +63,56 @@ export function getWpCanonicalUrl(locale: string, slug: string): string | undefi
   return KO_TO_WP_CANONICAL[slug];
 }
 
-function getLocaleDir(locale: string): string {
+function getLocaleDir(locale: string): string | null {
   const dir = path.join(CONTENT_DIR, locale);
   if (fs.existsSync(dir)) return dir;
-  // fallback to ko
-  return path.join(CONTENT_DIR, "ko");
+  return null;
+}
+
+function inferCategory(slug: string, tags: string[], category?: string): BlogCategory {
+  if (BLOG_CATEGORIES.includes(category as BlogCategory)) {
+    return category as BlogCategory;
+  }
+
+  const searchable = `${slug} ${tags.join(" ")}`.toLowerCase();
+  if (/(fix|error|troubleshoot|not-working|solution|에러|오류|해결)/.test(searchable)) {
+    return "fixes";
+  }
+  if (/(build|create|portfolio|todo|saas|production|deploy|만들|구축|프로젝트|배포)/.test(searchable)) {
+    return "builds";
+  }
+  return "guides";
+}
+
+function estimateReadingMinutes(content: string): number {
+  const plainText = content
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/<[^>]+>|[#*_>`~\[\]()!-]/g, " ");
+  const latinWords = plainText.match(/[A-Za-z0-9]+/g)?.length ?? 0;
+  const cjkCharacters = plainText.match(/[\u3000-\u9fff\uac00-\ud7af]/g)?.length ?? 0;
+  return Math.max(1, Math.ceil(latinWords / 220 + cjkCharacters / 500));
 }
 
 export function getBlogPosts(locale: string): BlogPostMeta[] {
   const dir = getLocaleDir(locale);
-  if (!fs.existsSync(dir)) return [];
+  if (!dir || !fs.existsSync(dir)) return [];
 
   const files = fs.readdirSync(dir).filter((f) => f.endsWith(".mdx"));
 
   const posts = files.map((file) => {
     const slug = file.replace(/\.mdx$/, "");
     const raw = fs.readFileSync(path.join(dir, file), "utf-8");
-    const { data } = matter(raw);
+    const { data, content } = matter(raw);
+    const tags = (data.tags as string[]) ?? [];
 
     return {
       slug,
       title: (data.title as string) ?? slug,
       description: (data.description as string) ?? "",
       date: (data.date as string) ?? "",
-      tags: (data.tags as string[]) ?? [],
+      tags,
+      category: inferCategory(slug, tags, data.category as string | undefined),
+      readingMinutes: estimateReadingMinutes(content),
     };
   });
 
@@ -86,6 +121,7 @@ export function getBlogPosts(locale: string): BlogPostMeta[] {
 
 export function getBlogPost(locale: string, slug: string): BlogPost | null {
   const dir = getLocaleDir(locale);
+  if (!dir) return null;
   const filePath = path.join(dir, `${slug}.mdx`);
 
   if (!fs.existsSync(filePath)) return null;
@@ -93,19 +129,23 @@ export function getBlogPost(locale: string, slug: string): BlogPost | null {
   const raw = fs.readFileSync(filePath, "utf-8");
   const { data, content } = matter(raw);
 
+  const tags = (data.tags as string[]) ?? [];
+
   return {
     slug,
     title: (data.title as string) ?? slug,
     description: (data.description as string) ?? "",
     date: (data.date as string) ?? "",
-    tags: (data.tags as string[]) ?? [],
+    tags,
+    category: inferCategory(slug, tags, data.category as string | undefined),
+    readingMinutes: estimateReadingMinutes(content),
     content,
   };
 }
 
 export function getAllBlogSlugs(locale: string): string[] {
   const dir = getLocaleDir(locale);
-  if (!fs.existsSync(dir)) return [];
+  if (!dir || !fs.existsSync(dir)) return [];
 
   return fs
     .readdirSync(dir)
@@ -113,10 +153,29 @@ export function getAllBlogSlugs(locale: string): string[] {
     .map((f) => f.replace(/\.mdx$/, ""));
 }
 
+export function getRelatedBlogPosts(
+  locale: string,
+  post: BlogPost,
+  limit = 3,
+): BlogPostMeta[] {
+  const normalizedTags = new Set(post.tags.map((tag) => tag.toLowerCase()));
+
+  return getBlogPosts(locale)
+    .filter((candidate) => candidate.slug !== post.slug)
+    .map((candidate) => ({
+      candidate,
+      score:
+        (candidate.category === post.category ? 4 : 0) +
+        candidate.tags.filter((tag) => normalizedTags.has(tag.toLowerCase())).length * 2,
+    }))
+    .sort((a, b) => b.score - a.score || b.candidate.date.localeCompare(a.candidate.date))
+    .slice(0, limit)
+    .map(({ candidate }) => candidate);
+}
+
 /**
  * 특정 slug의 MDX가 실제로 존재하는 locale 목록.
- * fallback (getLocaleDir의 ko 폴백)을 거치지 않은 진짜 파일 존재 여부 기준.
- * hreflang alternate 출력 시 fallback 콘텐츠를 가리키지 않으려고 사용.
+ * 실제 파일 존재 여부를 기준으로 hreflang alternate를 구성할 때 사용한다.
  */
 export function getAvailableBlogLocales(
   slug: string,

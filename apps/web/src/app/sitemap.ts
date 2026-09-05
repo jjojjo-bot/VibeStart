@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 import { routing } from "@/i18n/routing";
-import { getAllBlogSlugs } from "@/lib/blog";
+import { BLOG_LOCALES, getBlogPosts } from "@/lib/blog";
 
 const siteUrl = "https://vibe-start.com";
 
@@ -14,17 +14,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { path: "/plan", changeFrequency: "weekly" as const, priority: 0.8 },
     { path: "/setup", changeFrequency: "weekly" as const, priority: 0.8 },
     { path: "/complete", changeFrequency: "monthly" as const, priority: 0.6 },
-    { path: "/blog", changeFrequency: "weekly" as const, priority: 0.7 },
     { path: "/about", changeFrequency: "monthly" as const, priority: 0.5 },
     { path: "/terms", changeFrequency: "yearly" as const, priority: 0.3 },
     { path: "/privacy", changeFrequency: "yearly" as const, priority: 0.3 },
   ];
-
-  // 블로그 글도 사이트맵에 추가
-  const blogSlugs = getAllBlogSlugs("ko");
-  for (const slug of blogSlugs) {
-    paths.push({ path: `/blog/${slug}`, changeFrequency: "monthly" as const, priority: 0.6 });
-  }
 
   const entries: MetadataRoute.Sitemap = [];
 
@@ -44,6 +37,57 @@ export default function sitemap(): MetadataRoute.Sitemap {
         lastModified,
         changeFrequency,
         priority,
+        alternates: { languages: alternates },
+      });
+    }
+  }
+
+  const blogIndexAlternates = Object.fromEntries(
+    BLOG_LOCALES.map((locale) => [
+      locale,
+      `${siteUrl}${locale === routing.defaultLocale ? "" : `/${locale}`}/blog`,
+    ]),
+  );
+  blogIndexAlternates["x-default"] = `${siteUrl}/blog`;
+
+  for (const locale of BLOG_LOCALES) {
+    const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
+    entries.push({
+      url: `${siteUrl}${prefix}/blog`,
+      lastModified,
+      changeFrequency: "weekly",
+      priority: 0.7,
+      alternates: { languages: blogIndexAlternates },
+    });
+  }
+
+  const postsByLocale = Object.fromEntries(
+    BLOG_LOCALES.map((locale) => [locale, getBlogPosts(locale)]),
+  ) as Record<(typeof BLOG_LOCALES)[number], ReturnType<typeof getBlogPosts>>;
+  const allSlugs = new Set(BLOG_LOCALES.flatMap((locale) => postsByLocale[locale].map((post) => post.slug)));
+
+  for (const slug of allSlugs) {
+    const availableLocales = BLOG_LOCALES.filter((locale) =>
+      postsByLocale[locale].some((post) => post.slug === slug),
+    );
+    const alternates: Record<string, string> = {};
+    for (const locale of availableLocales) {
+      const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
+      alternates[locale] = `${siteUrl}${prefix}/blog/${slug}`;
+    }
+    if (availableLocales.some((locale) => locale === routing.defaultLocale)) {
+      alternates["x-default"] = `${siteUrl}/blog/${slug}`;
+    }
+
+    for (const locale of availableLocales) {
+      const post = postsByLocale[locale].find((candidate) => candidate.slug === slug);
+      if (!post) continue;
+      const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
+      entries.push({
+        url: `${siteUrl}${prefix}/blog/${slug}`,
+        lastModified: new Date(post.date),
+        changeFrequency: "monthly",
+        priority: 0.6,
         alternates: { languages: alternates },
       });
     }
