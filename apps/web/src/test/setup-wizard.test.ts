@@ -33,8 +33,9 @@ describe('Shell contracts', () => {
   });
   it('checks running Node and npm', () => {
     const v=verificationFor('dev-tools-nodejs','windows','web-nextjs')!;
-    expect(parseVerification(execFileSync('bash',['-c',v.command],{encoding:'utf8'}),'dev-tools-nodejs')).toBe('ok');
-    expect(parseVerification(execFileSync('bash',['-c',`npm() { return 1; }; ${v.command}`],{encoding:'utf8'}),'dev-tools-nodejs')).toBe('error');
+    const nodeOk = `node() { return 0; }; npm() { return 0; };`;
+    expect(parseVerification(execFileSync('bash',['-c',`${nodeOk} ${v.command}`],{encoding:'utf8'}),'dev-tools-nodejs')).toBe('ok');
+    expect(parseVerification(execFileSync('bash',['-c',`${nodeOk} npm() { return 1; }; ${v.command}`],{encoding:'utf8'}),'dev-tools-nodejs')).toBe('error');
   });
   it('native Claude installation has no npm dependency and has separate login', () => {
     for(const os of ['windows','macos'] as const) {
@@ -77,7 +78,7 @@ describe('Existing runtimes must support the generated project', () => {
     ['web-java', `java() { echo 'openjdk version "21.0.6"'; }; javac() { return 127; };`, 'error'],
   ] as const;
   it.each(cases)('%s with %s yields %s', (goal, runtime, expected) => {
-    const mocks = `git() { return 0; }; curl() { return 0; }; unzip() { return 0; }; ${runtime}`;
+    const mocks = `git() { return 0; }; curl() { return 0; }; unzip() { return 0; }; node() { return 0; }; npm() { return 0; }; ${runtime}`;
     for (const [os, id] of [['windows', 'dev-tools-basic'], ['macos', 'dev-tools']] as const) {
       const check = verificationFor(id, os, goal)!;
       const output = execFileSync('bash', ['-c', `${mocks} ${check.command}`], {encoding:'utf8'});
