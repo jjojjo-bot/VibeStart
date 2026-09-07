@@ -49,6 +49,7 @@ export function StepGoal({ value, onChange }: StepGoalProps) {
               onClick={() => {
                 if (hasSubOptions) {
                   setShowWebSub(true);
+                  if (!value || !WEB_SUB_VALUES.has(value)) onChange("web-nextjs");
                 } else {
                   setShowWebSub(false);
                   onChange(option.value as Goal);

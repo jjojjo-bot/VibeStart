@@ -1,8 +1,12 @@
 "use client";
-import { useState, useRef, useCallback, useEffect, Suspense, useMemo } from "react";
+import { parseSetupParams } from "@/lib/onboarding";
+import { InvalidSetup } from "@/components/setup/invalid-setup";
+import { useState, useRef, useCallback, useEffect, Suspense } from "react";
 import confetti from "canvas-confetti";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
+import { VerificationPanel } from "@/components/setup/verification-panel";
+import { verificationFor, restoreCompleted, canActivate } from "@/lib/setup-verification";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScriptBlock } from "@/components/onboarding/script-block";
@@ -18,10 +22,6 @@ import {
   WINDOWS_SCAN_SCRIPT,
   type SetupGroup,
 } from "@/lib/setup-steps";
-import {
-  type OS,
-  type Goal,
-} from "@/lib/onboarding";
 import type { ScanResult, WslScanResult } from "@vibestart/shared-types";
 import { parseWslScanOutput } from "@vibestart/diagnosis-catalog";
 import type { ScanRow } from "@/components/setup/scan-gate";
@@ -37,26 +37,36 @@ import {
 const GROUP_ORDER: SetupGroup[] = ["envPrep", "toolInstall", "aiSetup", "projectCreate"];
 
 function SetupContent() {
+  const params = useSearchParams();
+  const config = parseSetupParams(params);
+  return config ? <SetupContentValid key={`${config.os}-${config.goal}-${config.projectName}`} config={config} /> : <InvalidSetup />;
+}
+
+function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof parseSetupParams>> }) {
   const searchParams = useSearchParams();
   const router = useRouter();
   const t = useTranslations("Setup");
   const ts = useTranslations("SetupSteps");
+  const tw = useTranslations("Wizard");
 
-  const os = (searchParams.get("os") ?? "windows") as OS;
-  const goal = (searchParams.get("goal") ?? "web-nextjs") as Goal;
-  const projectName = searchParams.get("project") ?? "my-first-app";
+  const { os, goal, projectName } = config;
   // 설치 경험 — 이상값·부재는 first 폴백(기존 링크·북마크 하위호환)
   const rawExp = searchParams.get("exp");
   const exp = rawExp === "prior" || rawExp === "unsure" ? rawExp : "first";
 
   const steps = getSetupSteps(os, goal, projectName, ts);
-  const storageKey = `vibestart-progress-${os}-${goal}-${projectName}`;
+  const storageKey = `vibestart-progress-v2-${os}-${goal}-${projectName}`;
   const scanKey = `vibestart-scan-${os}-${goal}-${projectName}`;
   const wslScanKey = `vibestart-wslscan-${os}-${goal}-${projectName}`;
 
+  const [beginnerGuide, setBeginnerGuide] = useState(exp === "first");
   const [openTroubleshooting, setOpenTroubleshooting] = useState<Set<string>>(new Set());
 
   const [completed, setCompleted] = useState<Set<string>>(new Set());
+  const [checks, setChecks] = useState<Record<string, 'ok' | 'error' | 'unknown'>>({});
+  const [origins, setOrigins] = useState<Record<string, string>>({});
+  const [finalChecks, setFinalChecks] = useState<string[]>([]);
+  const [saveFailed, setSaveFailed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
   const [scanResolved, setScanResolved] = useState(false);
   const [wslScanResolved, setWslScanResolved] = useState(false);
@@ -79,7 +89,11 @@ function SetupContent() {
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setCompleted(new Set<string>(JSON.parse(saved) as string[]));
+        setCompleted(restoreCompleted(saved, getSetupSteps(os, goal, projectName, ts).map(s => s.id)));
+      }
+      const originData: unknown = JSON.parse(localStorage.getItem(storageKey + '-origins') ?? '{}');
+      if (originData && typeof originData === 'object' && !Array.isArray(originData)) {
+        setOrigins(Object.fromEntries(Object.entries(originData).filter(([, v]) => v === 'reused' || v === 'skipped')));
       }
       // 스캔을 이미 완료/스킵했으면 게이트를 다시 띄우지 않는다 (재부팅 복귀 포함)
       if (localStorage.getItem(scanKey)) {
@@ -88,18 +102,22 @@ function SetupContent() {
       if (localStorage.getItem(wslScanKey)) {
         setWslScanResolved(true);
       }
-    } catch { /* 무시 */ }
+    } catch { setSaveFailed(true); }
     setHydrated(true);
     trackSetupStart(os, goal, os === "windows" ? exp : undefined);
-  }, [storageKey, scanKey, wslScanKey, os, goal, exp]);
+  }, [storageKey, scanKey, wslScanKey, os, goal, exp, projectName, ts]);
 
   // 완료 상태 변경 시 저장 (hydration 완료 후에만)
   useEffect(() => {
     if (!hydrated) return;
     try {
       localStorage.setItem(storageKey, JSON.stringify([...completed]));
-    } catch { /* localStorage 접근 불가 시 무시 */ }
-  }, [completed, storageKey, hydrated]);
+      localStorage.setItem(storageKey + "-origins", JSON.stringify(origins));
+    } catch {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setSaveFailed(true);
+    }
+  }, [completed, origins, storageKey, hydrated]);
 
   const stepRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   const scanGateRef = useRef<HTMLDivElement>(null);
@@ -110,10 +128,12 @@ function SetupContent() {
   }, []);
 
   function toggleComplete(stepId: string) {
+    if (completed.has(stepId)) { setChecks({}); setFinalChecks([]); }
     setCompleted((prev) => {
       const next = new Set(prev);
       if (next.has(stepId)) {
-        next.delete(stepId);
+        const index = steps.findIndex(s => s.id === stepId);
+        for (const later of steps.slice(index)) next.delete(later.id);
       } else {
         next.add(stepId);
         // 다음 수행 지점으로 스크롤. wsl-open 완료 후 2차 스캔 게이트가 뜨면 그 게이트로
@@ -137,8 +157,7 @@ function SetupContent() {
   }
 
   function isStepActive(index: number): boolean {
-    if (index === 0) return true;
-    return completed.has(steps[index - 1].id);
+    return canActivate(index, steps.map(s => s.id), completed);
   }
 
   // 스캔 게이트 — Windows + 설치 경험자(prior/unsure) + 스캔 미완료일 때만.
@@ -222,12 +241,12 @@ function SetupContent() {
   }
 
   const allDone = steps.every((s) => completed.has(s.id));
-  const progressPercent = Math.round((completed.size / steps.length) * 100);
+  const progressPercent = Math.round((steps.filter(s => completed.has(s.id)).length / steps.length) * 100);
 
   // 모든 단계 완료 시 폭죽 애니메이션
   const hasFired = useRef(false);
   useEffect(() => {
-    if (allDone && !hasFired.current) {
+    if (allDone && !window.matchMedia("(prefers-reduced-motion: reduce)").matches && !hasFired.current) {
       hasFired.current = true;
       // 좌우에서 교차 발사
       const end = Date.now() + 1500;
@@ -261,7 +280,9 @@ function SetupContent() {
           {t.rich("subtitle", { strong: (chunks) => <strong className="text-foreground">{chunks}</strong> })}
         </p>
 
-        {showScanGate ? (
+        <p role="status" className="mb-4 rounded-lg border p-3 text-sm">{saveFailed ? tw("saveFailed") : tw("scanLimit")}</p>
+        <label className="mb-4 flex items-center gap-3 text-sm"><input type="checkbox" checked={beginnerGuide} onChange={e => setBeginnerGuide(e.target.checked)} />{tw("beginnerGuide")}</label>
+        {!hydrated ? <p>{tw("loading")}</p> : showScanGate ? (
           <ScanGate script={WINDOWS_SCAN_SCRIPT} onDone={handleScanDone} />
         ) : (
           <>
@@ -282,7 +303,7 @@ function SetupContent() {
           </div>
 
           {/* 그룹별 진행 상황 */}
-          <div className="flex justify-center gap-3">
+          <div className="flex flex-wrap justify-center gap-2">
           {GROUP_ORDER.filter((g) => steps.some((s) => s.group === g)).map((group) => {
             const groupSteps = steps.filter((s) => s.group === group);
             const groupDone = groupSteps.every((s) => completed.has(s.id));
@@ -311,7 +332,8 @@ function SetupContent() {
         {/* 스텝 리스트 */}
         <div className="flex flex-col gap-6">
           {steps.map((step, i) => {
-            const active = isStepActive(i);
+            const active = isStepActive(i) && !(os === "windows" && exp !== "first" && !wslScanResolved && i > steps.findIndex(s => s.id === "wsl-open"));
+            const verification = verificationFor(step.id, os, goal);
             const done = completed.has(step.id);
             // 완료 단계는 기본 접힘(스크롤 최소화), 헤더 클릭으로 재확장. 진행 중 단계는 항상 펼침.
             const bodyOpen = done ? expandedDone.has(step.id) : active;
@@ -331,6 +353,7 @@ function SetupContent() {
                 )}
 
               <div
+                id={`step-${step.id}`}
                 ref={(el) => setStepRef(step.id, el)}
                 className={`scroll-mt-28 rounded-xl border-2 transition-all ${collapsed ? "px-6 py-4" : "p-6"} ${
                   done
@@ -362,8 +385,9 @@ function SetupContent() {
                       {done ? "✓" : i + 1}
                     </div>
                     <div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex flex-wrap items-center gap-2">
                         <h3 className="font-semibold">{step.title}</h3>
+                        <span className="text-xs" role="status">{tw(done ? (origins[step.id] === 'reused' ? 'reused' : origins[step.id] === 'skipped' ? 'skipped' : 'done') : checks[step.id] === 'error' ? 'error' : checks[step.id] === 'ok' ? 'verified' : active ? 'inProgress' : 'pending')}</span>
                         {step.environment && (
                           <Badge variant="outline" className="text-xs font-normal">
                             {step.environment}
@@ -392,7 +416,7 @@ function SetupContent() {
                       <div>
                         <p className="font-semibold text-amber-200">{step.title}</p>
                         <p className="mt-1 text-sm leading-relaxed text-amber-100/80">
-                          {ts("reboot.safeNote")}
+                          {saveFailed ? tw("saveFailed") : ts("reboot.safeNote")}
                         </p>
                       </div>
                     </div>
@@ -425,7 +449,8 @@ function SetupContent() {
 
                 {/* 상세 가이드 (초보자용) */}
                 {bodyOpen && step.detailedGuide && (
-                  <div className="mb-4 whitespace-pre-line rounded-lg bg-primary/5 p-4 text-sm text-muted-foreground">
+                  <details open={beginnerGuide} className="mb-4 whitespace-pre-line rounded-lg bg-primary/5 p-4 text-sm text-muted-foreground">
+                    <summary className="mb-2 cursor-pointer font-medium">{tw("detailGuide")}</summary>
                     {step.detailedGuide}
                     {step.guideImage && (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -435,9 +460,12 @@ function SetupContent() {
                         className="mt-3 w-full max-w-2xl rounded-md border border-border/40"
                       />
                     )}
-                  </div>
+                  </details>
                 )}
 
+                {bodyOpen && !done && verification && <VerificationPanel id={step.id} verification={verification}
+                  onChange={state => setChecks(prev => ({...prev, [step.id]: state}))}
+                  onReuse={() => { setOrigins(prev => ({...prev, [step.id]: 'reused'})); toggleComplete(step.id); }} />}
                 {/* 스크립트 */}
                 {bodyOpen && step.script && (
                   <div className="mb-4">
@@ -494,11 +522,34 @@ function SetupContent() {
                   </div>
                 )}
 
+                {bodyOpen && step.id === 'run-check' && !done && <div className="mb-4 space-y-3">
+                  <p className="text-sm">{tw('finalGuide')}</p>
+                  <ScriptBlock script={`cd ~/${projectName} && claude`} />
+                  {['editor', 'preview', 'ai'].map(item => <label key={item} className="flex items-start gap-3 text-sm">
+                    <input type="checkbox" checked={finalChecks.includes(item)} onChange={e => setFinalChecks(prev => e.target.checked ? [...prev, item] : prev.filter(x => x !== item))} />
+                    {tw(`final.${item}`)}
+                  </label>)}
+                </div>}
+                {bodyOpen && step.optional && !done && <Button className="mb-3 mr-3" size="sm" variant="secondary" onClick={() => {
+                  setOrigins(prev => ({...prev, [step.id]: 'skipped'})); toggleComplete(step.id);
+                }}>{tw('skipOptional')}</Button>}
+                {bodyOpen && <nav className="mb-3 flex flex-wrap gap-4 text-sm">
+                  {i > 0 && <button className="underline" onClick={() => {
+                    const previous = steps[i - 1];
+                    setExpandedDone(prev => new Set([...prev, previous.id]));
+                    setTimeout(() => stepRefs.current.get(previous.id)?.scrollIntoView({behavior: 'smooth', block: 'start'}), 50);
+                  }}>{tw('backStep')}</button>}
+                  {done && <button className="underline" onClick={() => {
+                    const next = steps.find(s => !completed.has(s.id));
+                    if (next) stepRefs.current.get(next.id)?.scrollIntoView({behavior: 'smooth', block: 'start'});
+                  }}>{tw('continueStep')}</button>}
+                </nav>}
                 {/* 완료 버튼 */}
                 {bodyOpen && (
                   <Button
                     variant={done ? "secondary" : "outline"}
                     size="sm"
+                    disabled={!done && ((!!verification && checks[step.id] !== 'ok') || (step.id === 'run-check' && finalChecks.length !== 3))}
                     onClick={() => toggleComplete(step.id)}
                   >
                     {done ? t("undoCompleteButton") : t("completeButton")}
@@ -537,7 +588,7 @@ function SetupContent() {
               className="h-12 px-8 text-base animate-pulse"
               onClick={() => {
                 trackSetupComplete(os, goal);
-                const params = new URLSearchParams({ os, goal, project: projectName });
+                const params = new URLSearchParams({ os, goal, project: projectName, verified: "1" });
                 router.push(`/complete?${params.toString()}`);
               }}
             >

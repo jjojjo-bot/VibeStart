@@ -1,6 +1,7 @@
+import { PYTHON_READY_CHECK, JAVA_READY_CHECK } from "./setup-verification";
 import { hardenScript, type HardenShell } from "@vibestart/script-generator";
 import type { DiagnosisStep, ScanResult, WslScanResult } from "@vibestart/shared-types";
-import type { OS, Goal } from "./onboarding";
+import { isValidProjectName, type OS, type Goal } from "./onboarding";
 
 export type SetupGroup = "envPrep" | "toolInstall" | "aiSetup" | "projectCreate";
 
@@ -32,6 +33,7 @@ export interface SetupStep {
   diagnosisStep?: DiagnosisStep;
   /** 재시작 체크포인트 — 켜면 /setup이 "진행상황 저장됨" 안심 배너를 강조 렌더. */
   requiresReboot?: boolean;
+  optional?: boolean;
 }
 
 /** 셋업 그룹 → 진단 단계 기본 매핑. per-step diagnosisStep으로 덮어쓸 수 있다. */
@@ -61,7 +63,7 @@ export function diagnosisStepFor(step: SetupStep): DiagnosisStep {
 //   - 관리자 권한 불필요 (preflight와 다름 — 일반 PowerShell에서 동작)
 export const WINDOWS_SCAN_SCRIPT = [
   "$w='fail'",
-  "if (Get-Command wsl.exe -ErrorAction SilentlyContinue) { try { $d=(wsl.exe -l -q 2>$null) -replace \"`0\",''; if ($LASTEXITCODE -eq 0 -and ($d | Where-Object { $_ -match 'Ubuntu' })) { $w='ok' } } catch {} }",
+  "if (Get-Command wsl.exe -ErrorAction SilentlyContinue) { try { $d=(wsl.exe -l -q 2>$null) -replace \"`0\",''; if ($LASTEXITCODE -eq 0 -and ($d | Where-Object { $_ -match '^\\s*Ubuntu\\s*$' })) { $w='ok' } } catch {} }",
   "$v='fail'",
   "if (Get-Command code -ErrorAction SilentlyContinue) { $v='ok' }",
   "Write-Output \"VIBESTART::step=scan-wsl::result=$w\"",
@@ -88,20 +90,20 @@ export function scanPrecompletedStepIds(result: ScanResult): string[] {
 /** 2차 WSL 스캔 스크립트(goal별). 마커 형식은 1차와 동일 — parseWslScanOutput이 파싱. */
 export function wslScanScript(goal: Goal): string {
   const extra = extraRuntimeFor(goal);
-  const devChecks: string[] = ["command -v git >/dev/null 2>&1"];
-  if (extra === "python") devChecks.push("command -v python3 >/dev/null 2>&1");
-  else if (extra === "java") devChecks.push("command -v java >/dev/null 2>&1");
+  const devChecks: string[] = ["git --version >/dev/null 2>&1 && curl --version >/dev/null 2>&1"];
+  if (extra === "python") devChecks.push(PYTHON_READY_CHECK);
+  else if (extra === "java") devChecks.push(JAVA_READY_CHECK);
 
   const lines: string[] = [
     `if ${devChecks.join(" && ")}; then echo "VIBESTART::step=scan-devtools::result=ok"; else echo "VIBESTART::step=scan-devtools::result=fail"; fi`,
   ];
   if (needsNode(goal)) {
     lines.push(
-      `if command -v node >/dev/null 2>&1; then echo "VIBESTART::step=scan-node::result=ok"; else echo "VIBESTART::step=scan-node::result=fail"; fi`,
+      `if node -e 'const [a,b]=process.versions.node.split(".").map(Number);process.exit((a===22&&b>=12)||a>=24?0:1)' >/dev/null 2>&1 && npm --version >/dev/null 2>&1; then echo "VIBESTART::step=scan-node::result=ok"; else echo "VIBESTART::step=scan-node::result=fail"; fi`,
     );
   }
   lines.push(
-    `if command -v claude >/dev/null 2>&1 || [ -x "$HOME/.npm-global/bin/claude" ]; then echo "VIBESTART::step=scan-claude::result=ok"; else echo "VIBESTART::step=scan-claude::result=fail"; fi`,
+    `if claude --version >/dev/null 2>&1; then echo "VIBESTART::step=scan-claude::result=ok"; else echo "VIBESTART::step=scan-claude::result=fail"; fi`,
   );
   return lines.join("\n");
 }
@@ -190,7 +192,7 @@ function wslInstallStep(t: T): SetupStep {
     group: "envPrep",
     environment: t("environments.windowsCmd"),
     detailedGuide: t("wsl.detailedGuide"),
-    script: "wsl --install",
+    script: "wsl --install -d Ubuntu",
     resultPreview: `Installing: Ubuntu
 Successfully installed: Ubuntu
 The requested operation is successful.
@@ -230,7 +232,7 @@ function wslOpenStep(t: T): SetupStep {
     group: "envPrep",
     environment: t("environments.windowsCmd"),
     detailedGuide: t("wslOpen.detailedGuide"),
-    script: "wsl",
+    script: "wsl -d Ubuntu --cd ~",
     resultPreview: `yourname@DESKTOP-XXXXX:/mnt/c/Users/yourname$
 $ cd ~
 yourname@DESKTOP-XXXXX:~$`,
@@ -335,7 +337,7 @@ function wslBasicToolsStep(goal: Goal, t: T): SetupStep {
 }
 
 /**
- * Node.js 설치 (NodeSource setup_lts.x 스크립트 → apt install nodejs).
+ * Node.js 설치 (NodeSource setup_24.x 스크립트 → apt install nodejs).
  *
  * ⚠️ `set -o pipefail`이 반드시 있어야 한다 — 없으면 curl 실패 시에도 `| sudo bash -`가
  * 빈 stdin으로 0을 반환해서 `&&`가 계속 진행되고, 결국 nodesource 레포 없이 Ubuntu
@@ -345,7 +347,7 @@ function wslNodejsStep(t: T): SetupStep {
   const script = joinChain([
     "set -o pipefail",
     'echo "▶ (1/3) Adding NodeSource repository..."',
-    "curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -",
+    "curl -fsSL https://deb.nodesource.com/setup_24.x | sudo -E bash -",
     'echo "▶ (2/3) Installing Node.js..."',
     "sudo DEBIAN_FRONTEND=noninteractive apt-get install -y nodejs",
     'echo "▶ (3/3) Verifying version..."',
@@ -381,14 +383,17 @@ function wslNodejsStep(t: T): SetupStep {
 // 자주 실패했다(winget으론 VS Code System 설치가 불가해 우회도 안 됨). System 인스톨러는
 // 관리자용이라 이 컨텍스트에서 정상 동작하고, winget 의존성·창을 닫던 exit 1도 사라진다.
 //   1) `code`가 PATH에 있으면 이미 설치됨 → 건너뜀
-//   2) 아니면 update.code.visualstudio.com에서 System x64 안정판을 받아 /SILENT 설치
+//   2) 아니면 update.code.visualstudio.com에서 CPU에 맞는 System 안정판을 받아 /SILENT 설치
 //      (/MERGETASKS=!runcode,addtopath: 자동실행 끄고 code를 PATH에 등록 → 뒤 단계 유지)
 // 단일 라인 세미콜론 체인 — 복붙 시 PowerShell이 `>>` 프롬프트로 멈추는 걸 피한다.
 function wslVscodeStep(t: T): SetupStep {
   const script = [
-    "if (Get-Command code -ErrorAction SilentlyContinue) { Write-Host 'VS Code already installed - skipping.' }",
-    "else { $ProgressPreference='SilentlyContinue'; $f=\"$env:TEMP\\VSCodeSetup.exe\"; Invoke-WebRequest -UseBasicParsing -Uri 'https://update.code.visualstudio.com/latest/win32-x64/stable' -OutFile $f; Start-Process -Wait -FilePath $f -ArgumentList '/SILENT','/NORESTART','/MERGETASKS=!runcode,addtopath'; Remove-Item $f -ErrorAction SilentlyContinue; Write-Host 'VS Code installed.' }",
-  ].join(" ");
+    "$paths=@(\"$env:ProgramFiles\\Microsoft VS Code\\bin\\code.cmd\", \"$env:LOCALAPPDATA\\Programs\\Microsoft VS Code\\bin\\code.cmd\")",
+    "if ((Get-Command code -ErrorAction SilentlyContinue) -or ($paths | Where-Object { Test-Path $_ })) { Write-Host 'VS Code already installed. Reopen PowerShell and run the check.' } else {",
+    "try { $arch=if ($env:PROCESSOR_ARCHITEW6432) { $env:PROCESSOR_ARCHITEW6432 } else { $env:PROCESSOR_ARCHITECTURE }; $platform=switch ($arch) { 'ARM64' {'win32-arm64'} 'AMD64' {'win32-x64'} default {throw 'A supported 64-bit Windows computer is required.'} }; $f=Join-Path $env:TEMP ('VSCodeSetup-' + [guid]::NewGuid() + '.exe'); Invoke-WebRequest -UseBasicParsing -Uri \"https://update.code.visualstudio.com/latest/$platform/stable\" -OutFile $f -ErrorAction Stop; $process=Start-Process -Wait -PassThru -FilePath $f -ArgumentList '/SILENT','/NORESTART','/MERGETASKS=!runcode,addtopath' -ErrorAction Stop; if ($process.ExitCode -ne 0) { throw \"Installer exit code: $($process.ExitCode)\" }; Write-Host 'Installation finished. Reopen PowerShell and run the check.' } catch { Write-Error $_ }",
+    "}",
+  ].join("; ").replace("{;", "{");
+
 
   return {
     id: "editor",
@@ -411,22 +416,36 @@ function wslVscodeStep(t: T): SetupStep {
   };
 }
 
-// ─── Claude Code 통합 (WSL) ───
-//
-// ⚠️ WSL + NodeSource Node에서는 기본 `npm install -g`가 EACCES로 즉시 실패한다.
-// NodeSource는 node/npm을 /usr/bin에 설치하고 npm prefix가 /usr이라 글로벌 모듈이
-// /usr/lib/node_modules(root-owned)에 들어가기 때문. 해결: user prefix($HOME/.npm-global)
-// 전환 → sudo 없이 글로벌 설치 + PATH 추가로 `claude` 접근. (grep||echo로 .bashrc 멱등 추가)
-//
-// ⚠️ 이 단계는 맨 `wsl` 터미널(VS Code 통합 터미널 아님)에서 돈다. 그래서 `code`는 VS Code
-// Server의 remote-cli가 아니라 Windows VS Code bin(System: "/mnt/c/Program Files/…",
-// User: /mnt/c/Users/*/…)이 WSL interop PATH에 실려야만 잡힌다. WSL은 Windows PATH를
-// 인스턴스 부팅 때 한 번만 읽으므로 창을 닫았다 여는 걸로는 갱신 안 되고 `wsl --shutdown`/
-// 재부팅이라야 갱신된다 → 이 PATH 스테일이 이 단계 최대 실패 원인이었다.
-//
-// 그래서 (C): (1) `code`를 PATH→System→User 경로 순으로 견고 해석해 스테일해도 설치되게,
-// (2) 그래도 못 찾으면 창 닫기 대신 `wsl --shutdown` 안내 후 실패, (3) `claude auth login`을
-// 확장 설치보다 앞에 둬서 확장/코드 문제로 로그인이 막히지 않게 한다.
+// Native CLI installation is independent from login and VS Code extensions.
+function nativeClaudeScript(os: OS): string {
+  const profile = os === "windows" ? "$HOME/.bashrc" : "$HOME/.zprofile";
+  return joinChain([
+    "set -o pipefail",
+    'export PATH="$HOME/.local/bin:$PATH"',
+    '(command -v claude >/dev/null 2>&1 || curl -fsSL https://claude.ai/install.sh | bash)',
+    `(grep -Fq '.local/bin' "${profile}" 2>/dev/null || printf '%s\\n' 'export PATH="$HOME/.local/bin:$PATH"' >> "${profile}")`,
+    'claude --version',
+  ]);
+}
+
+function claudeAuthStep(os: OS, t: T): SetupStep {
+  return {
+    id: "ai-auth", group: "aiSetup", title: t("auth.title"),
+    description: t("auth.description"), detailedGuide: t("auth.guide"),
+    environment: t(os === "windows" ? "environments.linuxCmd" : "environments.macTerminal"),
+    script: "claude auth login", resultPreview: "claude auth status --text",
+  };
+}
+
+function editorExtensionsStep(os: OS, t: T): SetupStep {
+  return {
+    id: "editor-extensions", group: "aiSetup", title: t("extensions.title"),
+    description: t("extensions.description"), detailedGuide: t("extensions.guide"),
+    environment: t(os === "windows" ? "environments.linuxCmd" : "environments.macTerminal"),
+    script: (os === "windows" ? "code --install-extension ms-vscode-remote.remote-wsl && " : "") +
+      "code --install-extension anthropic.claude-code",
+  };
+}
 
 function wslClaudeStep(t: T): SetupStep {
   // `(grep ... || echo ...)`는 괄호 서브셸로 묶는다 — 안 그러면 `&& A || B && C`의
@@ -434,24 +453,7 @@ function wslClaudeStep(t: T): SetupStep {
   //
   // `code` 견고 해석 블록: `{ …; }` 그룹의 종료코드가 이 단계의 성공/실패다. not-found
   // 분기는 exit 대신 `false`로 체인을 멈춰(대화형 창 보존) 하드닝 마커가 fail을 낸다.
-  const script = joinChain([
-    "set -o pipefail",
-    'echo "▶ (1/4) Configuring npm user prefix..."',
-    'mkdir -p "$HOME/.npm-global"',
-    'npm config set prefix "$HOME/.npm-global"',
-    "(grep -q 'npm-global/bin' \"$HOME/.bashrc\" || echo 'export PATH=\"$HOME/.npm-global/bin:$PATH\"' >> \"$HOME/.bashrc\")",
-    'export PATH="$HOME/.npm-global/bin:$PATH"',
-    'echo "▶ (2/4) Installing Claude Code CLI..."',
-    "npm install -g @anthropic-ai/claude-code",
-    // 로그인을 확장 설치 앞으로 — 확장(코드 CLI 의존)이 실패해도 인증은 끝나 있게 한다.
-    'echo "▶ (3/4) Logging in..."',
-    "claude auth login",
-    // WSL 확장(ms-vscode-remote.remote-wsl)은 필수 — 없으면 `code ~/proj`가 WSL Remote로
-    // 안 열리고 UNC 경로 로드로 떨어져 통합 터미널이 Windows PowerShell이 된다.
-    'echo "▶ (4/4) Installing VS Code extensions..."',
-    "{ CODE=\"$(command -v code 2>/dev/null)\"; if [ -z \"$CODE\" ]; then for p in \"/mnt/c/Program Files/Microsoft VS Code/bin/code\" /mnt/c/Users/*/AppData/Local/Programs/\"Microsoft VS Code\"/bin/code; do [ -x \"$p\" ] && CODE=\"$p\" && break; done; fi; if [ -z \"$CODE\" ]; then echo \"⚠️ VS Code(code)를 찾지 못했어요. 'VS Code 설치' 단계를 마쳤는지 확인하고, 그래도 안 되면 PowerShell에서 wsl --shutdown 실행 후 Ubuntu를 다시 열어 이 단계만 다시 실행하세요.\"; false; else \"$CODE\" --install-extension ms-vscode-remote.remote-wsl && \"$CODE\" --install-extension anthropic.claude-code; fi; }",
-    'echo "✅ Claude Code setup complete"',
-  ]);
+  const script = nativeClaudeScript("windows");
 
   return {
     id: "ai-setup",
@@ -462,16 +464,7 @@ function wslClaudeStep(t: T): SetupStep {
     environment: t("environments.linuxCmd"),
     detailedGuide: t("aiSetup.detailedGuide"),
     script,
-    resultPreview: `▶ (1/4) Configuring npm user prefix...
-▶ (2/4) Installing Claude Code CLI...
-added 1 package in 3s
-▶ (3/4) Logging in...
-Opening browser for authentication...
-✓ Logged in as yourname@email.com
-▶ (4/4) Installing VS Code extensions...
-Extension 'ms-vscode-remote.remote-wsl' was successfully installed.
-Extension 'anthropic.claude-code' was successfully installed.
-✅ Claude Code setup complete`,
+    resultPreview: "2.x.x (Claude Code)",
     troubleshooting: [
       { symptom: t("aiSetup.troubleshooting.0.symptom"), solution: t("aiSetup.troubleshooting.0.solution") },
       { symptom: t("aiSetup.troubleshooting.1.symptom"), solution: t("aiSetup.troubleshooting.1.solution") },
@@ -519,7 +512,7 @@ function javaBackendProjectStep(projectName: string, env: string, t: T): SetupSt
     // bootVersion을 pin하지 않아 start.spring.io의 현재 기본값(지원되는 최신 Spring Boot)을
     // 항상 받는다 — 특정 패치를 박아두면 EOL·미지원으로 stale해진다. javaVersion=21은
     // 설치되는 JDK 21과 맞춰 Gradle 툴체인이 다른 JDK를 따로 받으려는 마찰을 없앤다.
-    script: `mkdir -p ~/${projectName} && cd ~/${projectName} && curl -fsSL "https://start.spring.io/starter.zip?type=gradle-project&language=java&javaVersion=21&packaging=jar&baseDir=backend&groupId=com.example&artifactId=backend&name=backend&packageName=com.example.app&dependencies=web,lombok,devtools,validation,data-jpa,sqlserver" -o backend.zip && unzip backend.zip && rm backend.zip && mv backend/src/main/resources/application.properties backend/src/main/resources/application.yml`,
+    script: `mkdir -p ~/${projectName} && cd ~/${projectName} && curl -fsSL "https://start.spring.io/starter.zip?type=gradle-project&language=java&javaVersion=21&packaging=jar&baseDir=backend&groupId=com.example&artifactId=backend&name=backend&packageName=com.example.app&dependencies=web,lombok,devtools,validation" -o backend.zip && unzip backend.zip && rm backend.zip`,
   };
 }
 
@@ -572,7 +565,7 @@ function brewStep(t: T): SetupStep {
   // Intel은 /usr/local/bin. printf로 .zprofile 라인을 쓰되 $(...)는 리터럴로 남겨
   // 매 셸 시작 시 평가되게 한다(grep 가드로 idempotent).
   const script = [
-    '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"',
+    '(command -v brew >/dev/null 2>&1 || { installer=$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh) && /bin/bash -c "$installer"; })',
     "if [ -x /opt/homebrew/bin/brew ]; then BREW=/opt/homebrew/bin/brew; else BREW=/usr/local/bin/brew; fi",
     "( grep -q 'brew shellenv' ~/.zprofile 2>/dev/null || printf 'eval \"$(%s shellenv)\"\\n' \"$BREW\" >> ~/.zprofile )",
     'eval "$($BREW shellenv)"',
@@ -626,7 +619,7 @@ function macDevToolsStep(goal: Goal, t: T): SetupStep {
   const resultLines: string[] = ["git version 2.x.x"];
 
   if (node) {
-    brewPkgs.push("node");
+    brewPkgs.push("node@24");
     names.push("Node.js");
     versionChecks.push("node --version");
     resultLines.push("v24.x.x");
@@ -648,6 +641,12 @@ function macDevToolsStep(goal: Goal, t: T): SetupStep {
   }
 
   const installCmds: string[] = [`brew install ${brewPkgs.join(" ")}`];
+  if (node) {
+    installCmds.push(
+      'export PATH="$(brew --prefix node@24)/bin:$PATH"',
+      `(grep -q 'node@24/bin' "$HOME/.zprofile" 2>/dev/null || printf '%s\\n' 'export PATH="$(brew --prefix)/opt/node@24/bin:$PATH"' >> "$HOME/.zprofile")`,
+    );
+  }
   if (caskPkgs.length > 0) {
     installCmds.push(`brew install --cask ${caskPkgs.join(" ")}`);
   }
@@ -707,26 +706,9 @@ function macVscodeStep(t: T): SetupStep {
   };
 }
 
-// ─── Claude Code 통합 (macOS) ───
-//
-// brew로 설치된 node는 /opt/homebrew/lib/node_modules(user-owned)에 글로벌 모듈이
-// 들어가므로 EACCES 이슈가 없다 — WSL처럼 npm prefix를 만질 필요 없음.
-// `code`는 VS Code cask의 binary 스탠자가 $(brew --prefix)/bin(/opt/homebrew/bin, brew
-// shellenv로 이미 PATH에 있음)에 자동 심링크하므로, WSL 같은 interop PATH 취약성이
-// 없다(셸 재시작·Command Palette 불필요). login은 확장 설치 앞에 둬서 확장 문제로
-// 인증이 막히지 않게 한다(WSL ai-setup과 일관).
-
+// Same native CLI installer on macOS; Homebrew supplies Git and project runtimes.
 function macClaudeStep(t: T): SetupStep {
-  const script = joinChain([
-    "set -o pipefail",
-    'echo "▶ (1/3) Installing Claude Code CLI..."',
-    "npm install -g @anthropic-ai/claude-code",
-    // 로그인을 확장 설치 앞으로 — 확장 문제로 인증까지 막히지 않게 한다.
-    'echo "▶ (2/3) Logging in..."',
-    "claude auth login",
-    'echo "▶ (3/3) Installing VS Code extension..."',
-    "code --install-extension anthropic.claude-code",
-  ]);
+  const script = nativeClaudeScript("macos");
 
   return {
     id: "ai-setup",
@@ -737,13 +719,7 @@ function macClaudeStep(t: T): SetupStep {
     environment: t("environments.macTerminal"),
     detailedGuide: t("aiSetup.detailedGuide"),
     script,
-    resultPreview: `▶ (1/3) Installing Claude Code CLI...
-added 1 package in 3s
-▶ (2/3) Logging in...
-Opening browser for authentication...
-✓ Logged in as yourname@email.com
-▶ (3/3) Installing VS Code extension...
-Extension 'anthropic.claude-code' was successfully installed.`,
+    resultPreview: "2.x.x (Claude Code)",
     troubleshooting: [
       { symptom: t("aiSetup.troubleshooting.0.symptom"), solution: t("aiSetup.troubleshooting.0.solution") },
       { symptom: t("aiSetup.troubleshooting.1.symptom"), solution: t("aiSetup.troubleshooting.1.solution") },
@@ -909,9 +885,10 @@ function mkdirWithGitkeep(dirs: ReadonlyArray<string>): string {
  * 존재하도록 만들어 두고, 필요하면 VS Code에서 열어 편집하게 유도한다.
  */
 function withClaudeMd(mkdirChain: string, projectRoot: string, content: string): string {
-  return `${mkdirChain} && cd ${projectRoot} && cat > CLAUDE.md << 'VIBESTART_CLAUDE_MD_EOF'
+  return `${mkdirChain} && cd ${projectRoot} && if [ ! -e CLAUDE.md ]; then cat > CLAUDE.md << 'VIBESTART_CLAUDE_MD_EOF'
 ${content}
-VIBESTART_CLAUDE_MD_EOF`;
+VIBESTART_CLAUDE_MD_EOF
+fi`;
 }
 
 function architectureStep(goal: Goal, projectName: string, env: string, t: T): SetupStep {
@@ -930,6 +907,7 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
       ]);
       return {
         id: "architecture",
+        optional: true,
         title: t("architecture.title"),
         description: t(descKey),
         group: "projectCreate",
@@ -961,6 +939,7 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
       ]);
       return {
         id: "architecture",
+        optional: true,
         title: t("architecture.title"),
         description: t(descKey),
         group: "projectCreate",
@@ -992,6 +971,7 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
       ]);
       return {
         id: "architecture",
+        optional: true,
         title: t("architecture.title"),
         description: t(descKey),
         group: "projectCreate",
@@ -1016,6 +996,7 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
       ]);
       return {
         id: "architecture",
+        optional: true,
         title: t("architecture.title"),
         description: t(descKey),
         group: "projectCreate",
@@ -1039,6 +1020,7 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
       ]);
       return {
         id: "architecture",
+        optional: true,
         title: t("architecture.title"),
         description: t(descKey),
         group: "projectCreate",
@@ -1070,17 +1052,10 @@ function nextjsProjectStep(projectName: string, variant: "wsl" | "mac", isFronte
     group: "projectCreate",
     environment: env,
     detailedGuide: t("projectFrontend.detailedGuideTemplate", { path }),
-    // create-next-app@latest(Next.js 16+)는 --agents-md 기본값으로 AGENTS.md와 CLAUDE.md를
-    // 함께 자동 생성한다. 그 안의 "This is NOT the Next.js you know" 문구가 Phase 1 테스트
-    // 단계에서 Claude Code를 혼란스럽게 만든다(사용자는 평범한 랜딩 페이지만 원하는데 Claude가
-    // docs부터 읽으러 감). 둘 다 비전공자 프로젝트엔 불필요하므로 스캐폴딩 직후 제거한다.
-    // VibeStart용 CLAUDE.md는 architectureStep이 프로젝트 루트에 별도로 쓴다(frontendOnly면
-    // frontend/에 생성된 CLAUDE.md는 루트 가이드와 어긋나므로 반드시 지운다).
-    // --yes: 향후 create-next-app이 추가하는 프롬프트(react-compiler 등)에서 비전공자가 멈추지
-    // 않도록 미지정 옵션을 전부 기본값으로 넘긴다(명시한 플래그가 우선).
+    // Keep framework-provided AGENTS.md/CLAUDE.md; --yes uses explicit defaults.
     script: isFrontendOnly
-      ? `mkdir -p ~/${projectName} && npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm --yes && rm -f ~/${path}/AGENTS.md ~/${path}/CLAUDE.md`
-      : `npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm --yes && rm -f ~/${path}/AGENTS.md ~/${path}/CLAUDE.md`,
+      ? `mkdir -p ~/${projectName} && npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm --yes`
+      : `npx create-next-app@latest ~/${path} --typescript --tailwind --eslint --app --src-dir --no-import-alias --use-npm --yes`,
     resultPreview: `Creating a new Next.js app in ~/${path}.
 
 Using npm.
@@ -1161,11 +1136,19 @@ function appendProjectSteps(
       break;
   }
 
-  // 아키텍처 스캐폴딩 (CLAUDE.md는 프로젝트 루트에 1개)
+  // 선택적 아키텍처 스캐폴딩 (기존 CLAUDE.md 보존)
   steps.push(architectureStep(goal, projectName, env, t));
 
   // 첫 실행
   steps.push(firstRunStep(projectName, goal, variant, env, t));
+  const folder = `~/${projectName}` + (goal === "web-python" || goal === "web-java" ? "/frontend" : "");
+  steps.push({
+    id: "run-check", title: t("runCheck.title"), description: t("runCheck.description"),
+    group: "projectCreate", environment: env,
+    detailedGuide: t(goal === "data-ai" ? "runCheck.dataGuide" : goal === "mobile" ? "runCheck.mobileGuide" : "runCheck.webGuide"),
+    script: goal === "data-ai" ? `cd ${folder} && . venv/bin/activate && jupyter notebook` :
+      `cd ${folder} && ${goal === "mobile" ? "npx expo start" : "npm run dev"}`,
+  });
 }
 
 // ─── 메인 ───
@@ -1201,6 +1184,7 @@ export function getSetupSteps(
   projectName: string,
   t: T,
 ): SetupStep[] {
+  if (!isValidProjectName(projectName)) throw new Error("Invalid project name");
   const steps: SetupStep[] = [];
 
   steps.push(terminalGuide(os, t));
@@ -1225,6 +1209,8 @@ export function getSetupSteps(
 
     // AI 설정
     steps.push(wslClaudeStep(t));
+    steps.push(claudeAuthStep(os, t));
+    steps.push(editorExtensionsStep(os, t));
 
     // 프로젝트 생성
     appendProjectSteps(steps, goal, projectName, "wsl", t);
@@ -1238,6 +1224,8 @@ export function getSetupSteps(
 
     // AI 설정
     steps.push(macClaudeStep(t));
+    steps.push(claudeAuthStep(os, t));
+    steps.push(editorExtensionsStep(os, t));
 
     // 프로젝트 생성
     appendProjectSteps(steps, goal, projectName, "mac", t);

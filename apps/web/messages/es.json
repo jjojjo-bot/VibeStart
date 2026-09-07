@@ -635,7 +635,7 @@
       "os": "Sistema operativo",
       "projectName": "Nombre del proyecto",
       "estimatedTime": "Tiempo estimado",
-      "estimatedTimeValue": "Aprox. 10–15 minutos"
+      "estimatedTimeValue": "About 15–30+ min; downloads and restarts vary"
     },
     "ctaButton": "Iniciar instalación",
     "skipNote": "Las herramientas que ya tengas instaladas se omiten automáticamente"
@@ -646,7 +646,7 @@
     "progressLabel": "Progreso",
     "progressAriaLabel": "Progreso de instalación",
     "resultPreviewLabel": "Ejemplo del resultado",
-    "claudeMdGuide": "El archivo <code>CLAUDE.md</code> se crea automáticamente en la raíz del proyecto con el comando de arriba. Ábrelo en VS Code si quieres personalizarlo.",
+    "claudeMdGuide": "An existing <code>CLAUDE.md</code> is preserved. Project guidance is created only when the file does not exist.",
     "whyNeededToggle": {
       "open": "▾ Cerrar",
       "closed": "▸ ¿Qué es esto?"
@@ -725,13 +725,13 @@
       "title": "Abrir la terminal",
       "description": "Abre la ventana donde ejecutarás los comandos",
       "detailedGuide": {
-        "windows": "Escribe 'PowerShell' en la barra de búsqueda de Windows (ícono de lupa) y haz clic en 'Windows PowerShell' para abrirlo. Después de instalar el entorno Linux, busca 'Ubuntu' y ábrelo.",
+        "windows": "Search PowerShell in Start, right-click it and choose Run as administrator. After WSL and VS Code installation, switch to a regular Ubuntu terminal. sudo asks for your Ubuntu password; no characters appear while typing it.",
         "macos": "Abre Spotlight (Cmd + Space), escribe 'Terminal' y presiona Enter."
       }
     },
     "wsl": {
       "title": "Instalar entorno Linux (WSL2)",
-      "description": "Para usar herramientas de IA en Windows necesitas Linux",
+      "description": "This guide uses Ubuntu (WSL) on Windows.",
       "whyNeeded": "Las herramientas de IA para programación (Claude Code) solo funcionan en Linux. WSL2 es como una mini computadora Linux dentro de Windows. Al instalarlo, puedes usar comandos de Linux sin dejar Windows.",
       "detailedGuide": "Después de la instalación debes reiniciar la computadora. Al reiniciar, es posible que se abra automáticamente una ventana de Ubuntu para configurar nombre de usuario y contraseña. Si no se abre automáticamente, no pasa nada — el siguiente paso te muestra cómo abrirlo directamente.",
       "troubleshooting": [
@@ -778,8 +778,8 @@
       "descriptionTemplate": "Instalamos {names}",
       "detailedGuide": "Instala las herramientas básicas de una vez. Puede pedirte tu contraseña de sudo.",
       "nodeTitle": "Instalar Node.js",
-      "nodeDescription": "Instalar la última versión LTS de Node.js",
-      "nodeDetailedGuide": "Node.js se instala desde el repositorio de NodeSource con la última versión LTS. Puede tardar 1–2 minutos según tu red.",
+      "nodeDescription": "Install Node.js 24 LTS.",
+      "nodeDetailedGuide": "Install Node.js 24 LTS from NodeSource. Afterwards verify that both node and npm run using the check below.",
       "whyNeeded": {
         "git": "Git es una 'máquina del tiempo' que guarda el historial de cambios en tu código.",
         "nodejs": "Node.js es el motor de JavaScript que necesitas para crear sitios web.",
@@ -874,29 +874,29 @@
     },
     "aiSetup": {
       "title": "Instalar asistente de IA (Claude Code)",
-      "description": "Instalamos el asistente de programación con IA y lo conectamos a tu cuenta",
+      "description": "Install the CLI first. Account login follows in a separate step.",
       "whyNeeded": "Claude Code es una IA que te ayuda a programar como si estuvieras conversando. Di algo como 'Hazme una página de login' y escribirá el código por ti.",
-      "detailedGuide": "Después de instalar, el inicio de sesión se ejecutará automáticamente. Cuando se abra el navegador, inicia sesión con tu cuenta de Claude. Si no tienes una cuenta, puedes registrarte gratis.",
+      "detailedGuide": "Run in Ubuntu on Windows, or Terminal on Mac. The official native installer does not require Node.js or npm. An existing working claude command is reused. If a new terminal cannot find claude, run export PATH=\"$HOME/.local/bin:$PATH\" and add that PATH entry to your shell profile.",
       "troubleshooting": [
         {
-          "symptom": "npm: command not found",
-          "solution": "Node.js no está instalado. Verifica de nuevo el paso de 'Instalar herramientas de desarrollo'."
+          "symptom": "claude: command not found",
+          "solution": "In Ubuntu or Mac Terminal, run export PATH=\"$HOME/.local/bin:$PATH\" and claude --version. Rerun the installer step to persist PATH if new terminals still fail."
         },
         {
-          "symptom": "Error: EACCES permission denied",
-          "solution": "Intenta de nuevo con sudo npm install -g @anthropic-ai/claude-code."
+          "symptom": "curl: (6), (22), (35), (60)",
+          "solution": "Check internet, proxy and certificate settings, then retry. Managed computers may restrict downloads. Do not disable certificate validation."
         },
         {
-          "symptom": "El navegador no se abre automáticamente",
-          "solution": "Copia la URL que aparece en la terminal y pégala directamente en la barra de direcciones del navegador."
+          "symptom": "Permission denied",
+          "solution": "Do not install Claude with sudo. Check that your home directory is writable."
         },
         {
-          "symptom": "No hay respuesta en la terminal después de iniciar sesión",
-          "solution": "La terminal lo detectará automáticamente cuando completes el inicio de sesión en el navegador. Espera un momento."
+          "symptom": "Login / account access",
+          "solution": "After checking the CLI version, sign in at the next step. The free Claude plan does not include Claude Code."
         },
         {
-          "symptom": "Error: code: command not found",
-          "solution": "Este paso ahora localiza tu instalación de VS Code automáticamente. Si aún ves este error, ten en cuenta que solo cerrar y volver a abrir la ventana de Ubuntu NO actualiza el PATH: en PowerShell ejecuta wsl --shutdown, luego abre Ubuntu de nuevo y vuelve a ejecutar este paso. Si sigue fallando, confirma que el paso 'Instalar VS Code' se completó."
+          "symptom": "VS Code / code not found",
+          "solution": "Editor integration is a separate step. Follow its PATH and extension instructions."
         }
       ]
     },
@@ -983,6 +983,23 @@
       "macTerminal": "Terminal de Mac",
       "vscodeTerminal": "Terminal de VS Code",
       "anywhere": "En cualquier lugar"
+    },
+    "auth": {
+      "title": "Connect your Claude account",
+      "description": "Sign in separately from installation",
+      "guide": "Run this in Ubuntu on Windows, or Terminal on Mac. Complete login in the opened browser. An eligible paid plan or billed API access is required. If no browser opens, use the login URL shown in your own terminal. Do not paste credentials into this website. Then run the status check."
+    },
+    "extensions": {
+      "title": "Connect VS Code to the AI tool",
+      "description": "Install editor extensions after CLI login",
+      "guide": "Run in Ubuntu (Windows) or Terminal (Mac). If code is not found, reopen the terminal. On Mac, open VS Code → Command Palette → Shell Command: Install code command in PATH. On Windows, save work, run wsl --shutdown in PowerShell, then reopen Ubuntu. You can also install the WSL and Claude Code extensions in VS Code Extensions."
+    },
+    "runCheck": {
+      "title": "Run your project and verify readiness",
+      "description": "See a working result before finishing",
+      "webGuide": "Run this in your project terminal and keep it open. Open the Local URL printed by the server (usually http://localhost:3000) in your browser. If port 3000 is busy, use the actual port shown. Ctrl+C stops the server. For Python/Java projects, this verifies the frontend; start the backend separately as described in its setup step.",
+      "mobileGuide": "Keep Expo running. Open the project on a phone using Expo Go and the QR code. The phone and computer must be able to reach each other. If the network blocks this, retry with npx expo start --tunnel. Confirm the app actually renders.",
+      "dataGuide": "Keep Jupyter running. Open the local URL it prints, including the token, in your own browser. Do not paste that token here. Create a notebook, run print(\"Hello, vibe coding!\") in a cell, and confirm the output."
     }
   },
   "Complete": {
@@ -1738,5 +1755,55 @@
       "errorNoDeploy": "Aún no hay deploy. Haz push de tu código primero",
       "errorGeneric": "Verificación fallida. Intenta de nuevo más tarde"
     }
+  },
+  "Wizard": {
+    "verify": "Check before installing / after installing",
+    "verifyGuide": "Run this check in the terminal shown on this card first. If it succeeds, reuse the existing tool. Otherwise install below, then run this check again. Windows VS Code: close and reopen PowerShell before checking.",
+    "expected": "Successful last line",
+    "resultLabel": "Paste the output (not the command)",
+    "localOnly": "This check reads the pasted result in this browser. It does not send or save your terminal output. Paste only the VIBESTART_CHECK result line; do not include keys or account details.",
+    "checkResult": "Check result",
+    "result": {
+      "ok": "The supplied result confirms this check. You can continue.",
+      "error": "This check failed. Check the terminal type, reopen it, then retry. See troubleshooting below.",
+      "unknown": "No result for this step found. Run the check and paste its last VIBESTART_CHECK line."
+    },
+    "reuse": "Already installed — continue",
+    "invalid": "Check your setup link: choose an OS, goal and a valid project name.",
+    "restart": "Choose my environment",
+    "cost": "This guide and the development tools are free. Claude Code usage requires an eligible paid account or billed API access. No API key is needed on this website.",
+    "windowsPlan": "Windows route: PowerShell → VS Code → Ubuntu (WSL) → restart → Ubuntu terminal. Allow extra time for downloads and a restart; administrator access is required for WSL.",
+    "macPlan": "macOS route: Terminal → Homebrew → Git and runtimes → VS Code. Apple Silicon and Intel paths are handled separately. Homebrew may request your Mac password.",
+    "scanLimit": "This website cannot run commands or read installed software on your computer. You run checks and provide results; progress is saved only in this browser.",
+    "saveFailed": "Progress could not be saved in this browser. Keep your setup URL and note the current step before restarting.",
+    "loading": "Restoring progress…",
+    "pending": "Not started",
+    "inProgress": "In progress",
+    "error": "Needs attention",
+    "verified": "Check passed",
+    "done": "Completed",
+    "reused": "Already installed",
+    "skipped": "Skipped (optional)",
+    "skipOptional": "Skip advanced project structure",
+    "finalGuide": "Keep the server terminal open. In a NEW terminal of the same type, run the command below to open Claude in your project. Ask it to explain this project in one sentence; account usage may be billed. Confirm the three items after seeing the results.",
+    "final": {
+      "editor": "The correct project opens in VS Code (Windows: WSL / Ubuntu).",
+      "preview": "The web page, Expo app, or Jupyter notebook actually opens and runs.",
+      "ai": "Claude is signed in and has responded to my first prompt."
+    },
+    "detected": "Detected: {os}. Confirm the computer you will install on.",
+    "unsupported": "Linux and mobile devices do not have a local installation route here yet. Select Windows or Mac only if that is your target computer.",
+    "copyFailed": "Copy failed. Select the command and copy it manually.",
+    "copyLabel": "Copy command",
+    "terminalHint": "Execution environment: {environment}",
+    "completionNote": "Completion is based on your checks, not a remote inspection of your computer. Reopen the setup to check again if you changed tools.",
+    "recheck": "Return to setup checks",
+    "unverifiedComplete": "Setup has not been verified in this browser. Complete the checks before treating this environment as ready.",
+    "architecture": "CPU / terminal check (optional)",
+    "architectureGuide": "Windows: Settings → System → About → System type. macOS: Apple menu → About This Mac (Apple chip or Intel). Browser OS detection cannot reliably determine CPU architecture.",
+    "backStep": "Previous step",
+    "continueStep": "Next unfinished step",
+    "detailGuide": "Step-by-step instructions",
+    "beginnerGuide": "Show beginner instructions"
   }
 }

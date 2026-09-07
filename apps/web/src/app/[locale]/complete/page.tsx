@@ -1,9 +1,13 @@
 "use client";
+import { getSetupSteps } from "@/lib/setup-steps";
+import { restoreCompleted } from "@/lib/setup-verification";
+import { parseSetupParams } from "@/lib/onboarding";
+import { InvalidSetup } from "@/components/setup/invalid-setup";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import type { OS, Goal } from "@/lib/onboarding";
+import type { Goal } from "@/lib/onboarding";
 import { incrementCompletions } from "@/lib/stats";
 import { trackPhase2Login } from "@/lib/ga";
 import { Suspense } from "react";
@@ -136,20 +140,35 @@ function PromptCopyBlock({ text }: { text: string }) {
 }
 
 function CompleteContent() {
-  const searchParams = useSearchParams();
+  const params = useSearchParams();
+  const config = parseSetupParams(params);
+  return config ? <CompleteContentValid key={`${config.os}-${config.goal}-${config.projectName}`} config={config} /> : <InvalidSetup />;
+}
+
+function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeof parseSetupParams>> }) {
   const t = useTranslations("Complete");
   const tc = useTranslations("Common");
+  const tw = useTranslations("Wizard");
+  const [ready, setReady] = useState(false);
+  const [showStructure, setShowStructure] = useState(false);
 
-  const os = (searchParams.get("os") ?? "windows") as OS;
-  const goal = (searchParams.get("goal") ?? "web-nextjs") as Goal;
-  const projectName = searchParams.get("project") ?? "my-first-app";
+  const { os, goal, projectName } = config;
 
   useEffect(() => {
-    if (!sessionStorage.getItem("vibestart_completed")) {
-      sessionStorage.setItem("vibestart_completed", "1");
-      incrementCompletions();
-    }
-  }, []);
+    try {
+      const ids = getSetupSteps(os, goal, projectName, key => key).map(s => s.id);
+      const completed = restoreCompleted(localStorage.getItem(`vibestart-progress-v2-${os}-${goal}-${projectName}`), ids);
+      const verified = ids.every(id => completed.has(id));
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setReady(verified);
+      const origins = JSON.parse(localStorage.getItem(`vibestart-progress-v2-${os}-${goal}-${projectName}-origins`) ?? "{}");
+      setShowStructure(origins?.architecture !== "skipped");
+      if (verified && !sessionStorage.getItem("vibestart_completed")) {
+        sessionStorage.setItem("vibestart_completed", "1");
+        incrementCompletions();
+      }
+    } catch { /* Unavailable storage means unverified, never a success claim. */ }
+  }, [os, goal, projectName]);
 
   const tools = getInstalledTools(goal);
   const goalLabel = t(getGoalLabelKey(goal) as Parameters<typeof t>[0]);
@@ -176,6 +195,11 @@ function CompleteContent() {
     t("claudeDesign.steps.3" as Parameters<typeof t>[0], { designPath }),
   ] : [];
 
+  const setupLink = `/setup?${new URLSearchParams({os, goal, project: projectName})}`;
+  if (!ready) return <main id="main-content" className="mx-auto max-w-lg space-y-6 px-6 py-20">
+    <p>{tw("unverifiedComplete")}</p><Link href={setupLink} className="underline">{tw("recheck")}</Link>
+  </main>;
+
   return (
     <main id="main-content" className="min-h-screen px-6 py-16">
       <div className="mx-auto max-w-2xl">
@@ -188,6 +212,8 @@ function CompleteContent() {
           </p>
         </div>
 
+        <p className="mb-4 text-sm text-muted-foreground">{tw("completionNote")}</p>
+        <Link href={setupLink} className="mb-6 inline-block underline">{tw("recheck")}</Link>
         {/* 설치된 도구 */}
         <div className="mb-6 rounded-xl border border-border/50 bg-card p-6">
           <h2 className="mb-4 font-semibold">{t("installedTools")}</h2>
@@ -204,12 +230,12 @@ function CompleteContent() {
         </div>
 
         {/* 프로젝트 구조 */}
-        <div className="mb-6 rounded-xl border border-border/50 bg-card p-6">
+        {showStructure && <div className="mb-6 rounded-xl border border-border/50 bg-card p-6">
           <h2 className="mb-4 font-semibold">{t("projectStructure")}</h2>
           <pre className="overflow-x-auto rounded-lg bg-background/80 border border-border/30 p-4 text-sm text-muted-foreground leading-relaxed whitespace-pre">
             {tree}
           </pre>
-        </div>
+        </div>}
 
         {/* 첫 번째 프롬프트 */}
         <div className="mb-6 rounded-xl border border-border/50 bg-card p-6">

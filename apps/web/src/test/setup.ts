@@ -11,3 +11,6 @@ import "@testing-library/jest-dom/vitest";
 import { vi } from "vitest";
 
 vi.mock("server-only", () => ({}));
+
+// jsdom has no layout engine; scrollIntoView is a browser API used by setup cards.
+if (typeof Element !== "undefined") Element.prototype.scrollIntoView = vi.fn();

@@ -1,6 +1,8 @@
 "use client";
 
-import { OS, OS_OPTIONS } from "@/lib/onboarding";
+import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
+import { detectOS, OS, OS_OPTIONS } from "@/lib/onboarding";
 
 function WindowsLogo({ className }: { className?: string }) {
   return (
@@ -29,7 +31,15 @@ interface StepOSProps {
 }
 
 export function StepOS({ value, onChange }: StepOSProps) {
-  return (
+  const t = useTranslations("Wizard");
+  const [detected, setDetected] = useState<ReturnType<typeof detectOS>>(null);
+  useEffect(() => {
+    // Browser hint only; user explicitly confirms the target OS.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setDetected(detectOS(navigator.userAgent));
+  }, []);
+  return (<>
+    {detected && <p className="mb-4 text-sm" role="status">{detected === 'linux' || detected === 'mobile' ? t('unsupported') : t('detected', {os: detected === 'windows' ? 'Windows' : 'macOS'})}</p>}
     <div role="radiogroup" aria-label="운영체제 선택" className="grid grid-cols-2 gap-4">
       {OS_OPTIONS.map((option) => (
         <button
@@ -48,5 +58,6 @@ export function StepOS({ value, onChange }: StepOSProps) {
         </button>
       ))}
     </div>
-  );
+    <details className="mt-4 text-sm"><summary className="cursor-pointer">{t("architecture")}</summary><p className="mt-2 text-muted-foreground">{t("architectureGuide")}</p></details>
+  </>);
 }

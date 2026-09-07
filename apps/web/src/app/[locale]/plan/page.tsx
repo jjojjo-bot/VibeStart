@@ -1,4 +1,6 @@
 "use client";
+import { parseSetupParams } from "@/lib/onboarding";
+import { InvalidSetup } from "@/components/setup/invalid-setup";
 import { useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
@@ -23,7 +25,7 @@ function getPlanItems(os: OS, goal: Goal, t: ReturnType<typeof useTranslations<"
   });
 
   // 프론트엔드가 있는 Goal은 Node.js 필요
-  if (goal === "web-nextjs" || goal === "web-python" || goal === "web-java" || goal === "not-sure") {
+  if (goal === "web-nextjs" || goal === "web-python" || goal === "web-java" || goal === "not-sure" || goal === "mobile") {
     items.push({
       name: t("tools.nodejs.name"),
       description: t("tools.nodejs.description"),
@@ -101,13 +103,18 @@ function getPlanItems(os: OS, goal: Goal, t: ReturnType<typeof useTranslations<"
 }
 
 function PlanContent() {
+  const params = useSearchParams();
+  const config = parseSetupParams(params);
+  return config ? <PlanContentValid key={`${config.os}-${config.goal}-${config.projectName}`} config={config} /> : <InvalidSetup />;
+}
+
+function PlanContentValid({ config }: { config: NonNullable<ReturnType<typeof parseSetupParams>> }) {
   const searchParams = useSearchParams();
   const t = useTranslations("Plan");
   const tc = useTranslations("Common");
+  const tw = useTranslations("Wizard");
 
-  const os = (searchParams.get("os") ?? "windows") as OS;
-  const goal = (searchParams.get("goal") ?? "web-nextjs") as Goal;
-  const projectName = searchParams.get("project") ?? "my-first-app";
+  const { os, goal, projectName } = config;
   // 설치 경험(exp) — 온보딩이 준 값을 /setup으로 그대로 전달. 없으면 생략(=first 폴백).
   const exp = searchParams.get("exp");
 
@@ -128,6 +135,9 @@ function PlanContent() {
           {t("subtitle")}
         </p>
 
+        <div className="mb-6 space-y-2 rounded-lg border p-4 text-sm">
+          <p>{tw("cost")}</p><p>{tw(os === "windows" ? "windowsPlan" : "macPlan")}</p>
+        </div>
         {/* 플랜 아이템 리스트 */}
         <div className="mb-8 flex flex-col gap-3">
           {planItems.map((item, i) => (
@@ -188,7 +198,7 @@ function PlanContent() {
             ← {tc("previous")}
           </Link>
           <p className="text-sm text-muted-foreground/70">
-            {t("skipNote")}
+            {tw("scanLimit")}
           </p>
         </div>
       </div>

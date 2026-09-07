@@ -16,6 +16,7 @@ import {
   INITIAL_ONBOARDING,
   onboardingStepKeys,
   canProceedFrom,
+  isValidProjectName,
 } from "@/lib/onboarding";
 
 export default function OnboardingPage() {
@@ -24,11 +25,31 @@ export default function OnboardingPage() {
   const tc = useTranslations("Common");
   const [step, setStep] = useState(0);
   const [data, setData] = useState<OnboardingData>(INITIAL_ONBOARDING);
+  const [restored, setRestored] = useState(false);
   useEffect(() => {
-    if (!sessionStorage.getItem("vibestart_visited")) {
+    try {
+      const saved = JSON.parse(localStorage.getItem("vibestart-onboarding") ?? "null");
+      if (saved && typeof saved === 'object') {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setData({
+          os: saved.os === 'windows' || saved.os === 'macos' ? saved.os : null,
+          goal: ['web-nextjs','web-python','web-java','mobile','data-ai','not-sure'].includes(saved.goal) ? saved.goal : null,
+          projectName: typeof saved.projectName === 'string' && isValidProjectName(saved.projectName) ? saved.projectName : '',
+          experience: ['first','prior','unsure'].includes(saved.experience) ? saved.experience : null,
+        });
+      }
+    } catch { /* Missing or corrupt preferences are safe to ignore. */ }
+    setRestored(true);
+  }, []);
+  useEffect(() => {
+    if (!restored) return;
+    try { localStorage.setItem("vibestart-onboarding", JSON.stringify(data)); } catch { /* Optional persistence. */ }
+  }, [data, restored]);
+  useEffect(() => {
+    try { if (!sessionStorage.getItem("vibestart_visited")) {
       sessionStorage.setItem("vibestart_visited", "1");
       incrementVisitors();
-    }
+    } } catch { /* Private browsing must not block setup. */ }
   }, []);
 
   // OS에 따라 단계 구성이 달라진다 — Windows는 설치 경험 질문 포함 5단계

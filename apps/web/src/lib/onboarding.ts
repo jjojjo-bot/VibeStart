@@ -34,6 +34,7 @@ export const GOAL_OPTIONS = [
       {
         value: "web-nextjs" as Goal,
         label: "Next.js 하나로 완성",
+        recommended: true,
         icon: "⚡",
         description:
           "화면과 서버를 한번에 만들 수 있어요.\n빠르게 완성하고 바로 배포하기 좋습니다.\nAirbnb, TikTok 웹, 트위치가 사용하고 있어요.",
@@ -44,7 +45,6 @@ export const GOAL_OPTIONS = [
         icon: "🐍",
         description:
           "화면은 Next.js, 서버는 Python으로 나눠서 만들어요.\nAI 챗봇이나 데이터 분석 기능을 붙이기 좋습니다.\nInstagram, Pinterest, Netflix가 사용하고 있어요.",
-        recommended: true,
       },
       {
         value: "web-java" as Goal,
@@ -79,6 +79,29 @@ export function canProceedFrom(stepKey: OnboardingStepKey, data: OnboardingData)
     case "goal":
       return data.goal !== null;
     case "projectName":
-      return data.projectName.length >= 2;
+      return isValidProjectName(data.projectName);
   }
+}
+
+/** Validate before interpolation into commands, including direct/bookmarked URLs. */
+export function isValidProjectName(value: string): boolean {
+  return /^[a-z0-9][a-z0-9-]{0,61}[a-z0-9]$/.test(value) && !["node_modules", "npm", "test"].includes(value);
+}
+
+export function parseSetupParams(params: { get(key: string): string | null }) {
+  const os = params.get("os");
+  const goal = params.get("goal");
+  const projectName = params.get("project");
+  if ((os !== "windows" && os !== "macos") ||
+      !["web-nextjs", "web-python", "web-java", "mobile", "data-ai", "not-sure"].includes(goal ?? "") ||
+      !projectName || !isValidProjectName(projectName)) return null;
+  return { os: os as OS, goal: goal as Goal, projectName };
+}
+
+export function detectOS(userAgent: string): OS | "linux" | "mobile" | null {
+  if (/Android|iPhone|iPad|Mobile/i.test(userAgent)) return "mobile";
+  if (/Windows/i.test(userAgent)) return "windows";
+  if (/Macintosh|Mac OS X/i.test(userAgent)) return "macos";
+  if (/Linux/i.test(userAgent)) return "linux";
+  return null;
 }

@@ -635,7 +635,7 @@
       "os": "운영체제",
       "projectName": "프로젝트 이름",
       "estimatedTime": "예상 소요 시간",
-      "estimatedTimeValue": "약 10~15분"
+      "estimatedTimeValue": "약 15~30분 이상 (다운로드·재부팅에 따라 다름)"
     },
     "ctaButton": "설치 시작하기",
     "skipNote": "이미 설치된 도구는 자동으로 건너뛰어요"
@@ -646,7 +646,7 @@
     "progressLabel": "진행률",
     "progressAriaLabel": "설치 진행률",
     "resultPreviewLabel": "실행 결과 예시",
-    "claudeMdGuide": "<code>CLAUDE.md</code> 파일은 위 명령어로 프로젝트 루트에 자동 생성됩니다. 원하면 VS Code에서 열어 수정할 수 있어요.",
+    "claudeMdGuide": "기존 <code>CLAUDE.md</code>가 있으면 보존합니다. 파일이 없는 경우에만 프로젝트 안내 파일을 생성합니다.",
     "whyNeededToggle": {
       "open": "▾ 닫기",
       "closed": "▸ 이게 뭔가요?"
@@ -725,13 +725,13 @@
       "title": "터미널 열기",
       "description": "명령어를 실행할 창을 열어주세요",
       "detailedGuide": {
-        "windows": "Windows 검색창(돋보기 아이콘)에 'PowerShell'을 입력하고, 'Windows PowerShell'을 클릭해서 열어주세요. 리눅스 환경 설치 후에는 'Ubuntu'를 검색해서 열면 됩니다.",
+        "windows": "시작 메뉴에서 PowerShell을 검색하고 마우스 오른쪽 버튼 → 관리자 권한으로 실행을 선택하세요. WSL·VS Code 설치가 끝난 뒤에는 일반 Ubuntu 창으로 전환합니다. sudo 비밀번호는 Ubuntu에서 정한 암호이며, 입력해도 화면에 글자가 나타나지 않는 것이 정상입니다.",
         "macos": "Spotlight(Cmd + Space)를 열고 '터미널'을 입력한 후 Enter를 눌러주세요."
       }
     },
     "wsl": {
       "title": "리눅스 환경 설치 (WSL2)",
-      "description": "Windows에서 AI 코딩 도구를 쓰려면 리눅스가 필요해요",
+      "description": "이 가이드는 Windows에서 Ubuntu(WSL)를 사용하는 경로로 안내해요",
       "whyNeeded": "AI 코딩 도구(Claude Code)는 리눅스에서만 작동해요. WSL2는 Windows 안에서 돌아가는 미니 리눅스 컴퓨터예요. 설치하면 Windows를 쓰면서 리눅스 명령어를 사용할 수 있어요.",
       "detailedGuide": "설치 후 컴퓨터를 재시작해주세요. 재시작하면 Ubuntu 창이 자동으로 열려 사용자 이름과 비밀번호를 설정하는 화면이 나올 수 있어요. 자동으로 안 떠도 괜찮아요 — 다음 단계에서 직접 여는 방법을 안내해드려요.",
       "troubleshooting": [
@@ -778,8 +778,8 @@
       "descriptionTemplate": "{names}을 설치해요",
       "detailedGuide": "기본 도구를 한 번에 설치해요. 중간에 sudo 비밀번호를 물어볼 수 있어요.",
       "nodeTitle": "Node.js 설치",
-      "nodeDescription": "최신 Node.js LTS를 설치해요",
-      "nodeDetailedGuide": "Node.js는 NodeSource 저장소를 통해 최신 LTS 버전으로 설치돼요. 네트워크 속도에 따라 1~2분 걸릴 수 있어요.",
+      "nodeDescription": "Node.js 24 LTS를 설치해요",
+      "nodeDetailedGuide": "NodeSource 저장소에서 Node.js 24 LTS를 설치합니다. 설치 후 아래 확인 명령으로 node와 npm이 모두 실행되는지 확인하세요.",
       "whyNeeded": {
         "git": "Git은 코드의 변경 이력을 저장하는 '타임머신'이에요.",
         "nodejs": "Node.js는 웹사이트를 만들 때 필요한 자바스크립트 실행기예요.",
@@ -874,29 +874,29 @@
     },
     "aiSetup": {
       "title": "AI 코딩 도우미 설치 (Claude Code)",
-      "description": "AI 코딩 도우미를 설치하고 계정에 연결해요",
+      "description": "AI 프로그램만 먼저 설치해요. 계정 연결은 다음 단계입니다.",
       "whyNeeded": "Claude Code는 대화하듯이 코딩을 도와주는 AI예요. '로그인 페이지 만들어줘'처럼 말하면 코드를 대신 작성해줍니다.",
-      "detailedGuide": "설치 후 자동으로 로그인이 진행됩니다. 브라우저가 열리면 Claude 계정으로 로그인해주세요. 계정이 없으면 무료로 가입할 수 있습니다.",
+      "detailedGuide": "Windows는 Ubuntu, Mac은 터미널에서 실행합니다. 공식 네이티브 설치를 사용하므로 Node.js·npm이 없어도 설치할 수 있습니다. 이미 claude가 실행되면 재설치하지 않습니다. 새 터미널에서 claude를 찾지 못하면 export PATH=\"$HOME/.local/bin:$PATH\"를 실행해 확인하고, 터미널 설정 파일에도 같은 경로를 추가하세요.",
       "troubleshooting": [
         {
-          "symptom": "npm: command not found",
-          "solution": "Node.js가 설치되지 않았어요. '개발 도구 설치' 단계를 다시 확인해주세요."
+          "symptom": "claude: command not found",
+          "solution": "Ubuntu 또는 Mac 터미널에서 export PATH=\"$HOME/.local/bin:$PATH\"를 실행하고 claude --version을 확인하세요. 새 창에서도 안 되면 설치 단계의 명령을 다시 실행해 PATH 저장을 마치세요."
         },
         {
-          "symptom": "EACCES permission denied 에러",
-          "solution": "sudo npm install -g @anthropic-ai/claude-code 로 다시 시도해주세요."
+          "symptom": "curl: (6), (22), (35), (60)",
+          "solution": "인터넷·프록시·인증서 설정을 확인하고 다시 실행하세요. 회사 PC라면 정책으로 다운로드가 제한될 수 있습니다. 인증서 검증을 끄지 마세요."
         },
         {
-          "symptom": "브라우저가 자동으로 열리지 않아요",
-          "solution": "터미널에 표시된 URL을 복사해서 브라우저 주소창에 직접 붙여넣으세요."
+          "symptom": "Permission denied",
+          "solution": "sudo로 Claude를 설치하지 마세요. 사용자 홈 폴더에 쓰기 권한이 있는지 확인하세요."
         },
         {
-          "symptom": "로그인 후 터미널에 반응이 없어요",
-          "solution": "브라우저에서 로그인을 완료하면 터미널이 자동으로 인식합니다. 잠시 기다려주세요."
+          "symptom": "Login / account access",
+          "solution": "프로그램 버전 확인이 성공하면 다음 계정 연결 단계에서 로그인하세요. 무료 Claude 계정만으로는 Claude Code를 사용할 수 없습니다."
         },
         {
-          "symptom": "code: command not found 에러",
-          "solution": "이 단계는 이제 VS Code 설치 위치를 자동으로 찾습니다. 그래도 이 오류가 나면, Ubuntu 창을 닫았다 여는 것만으로는 PATH가 갱신되지 않아요 — PowerShell에서 wsl --shutdown 을 실행한 뒤 Ubuntu를 다시 열고 이 단계를 다시 실행하세요. 그래도 안 되면 'VS Code 설치' 단계가 끝났는지 확인하세요."
+          "symptom": "VS Code / code not found",
+          "solution": "편집기 연결은 뒤의 별도 단계입니다. 해당 단계에서 PATH·확장 설치 안내를 따라주세요."
         }
       ]
     },
@@ -983,6 +983,23 @@
       "macTerminal": "Mac 터미널",
       "vscodeTerminal": "VS Code 터미널",
       "anywhere": "어디서든"
+    },
+    "auth": {
+      "title": "Claude 계정 연결",
+      "description": "프로그램 설치와 별도로 로그인해요",
+      "guide": "Windows는 Ubuntu, Mac은 터미널에서 실행하세요. 열린 브라우저에서 로그인을 마칩니다. 이용 가능한 유료 플랜 또는 사용량 과금 API 계정이 필요합니다. 브라우저가 열리지 않으면 본인 터미널에 표시된 로그인 주소를 여세요. 이 사이트에는 인증 정보를 붙여넣지 마세요. 이후 상태 확인 명령을 실행합니다."
+    },
+    "extensions": {
+      "title": "VS Code와 AI 도구 연결",
+      "description": "로그인 후 편집기 확장을 설치해요",
+      "guide": "Windows는 Ubuntu, Mac은 터미널에서 실행합니다. code를 찾지 못하면 터미널을 다시 여세요. Mac은 VS Code → 명령 팔레트 → Shell Command: Install code command in PATH를 실행하세요. Windows는 작업을 저장하고 PowerShell에서 wsl --shutdown 실행 후 Ubuntu를 다시 여세요. VS Code 확장 메뉴에서 WSL과 Claude Code를 직접 설치할 수도 있습니다."
+    },
+    "runCheck": {
+      "title": "프로젝트 실행과 최종 점검",
+      "description": "실제로 실행되는 결과를 확인하고 마쳐요",
+      "webGuide": "프로젝트 터미널에서 아래 명령을 실행하고 창을 열어두세요. 서버가 표시한 Local 주소(보통 http://localhost:3000)를 브라우저에서 여세요. 3000 포트가 사용 중이면 출력된 실제 포트 번호를 사용합니다. Ctrl+C로 서버를 멈출 수 있습니다. Python·Java 프로젝트는 이 단계에서 프론트엔드를 확인하며, 백엔드는 앞 단계 안내대로 별도로 실행합니다.",
+      "mobileGuide": "Expo가 실행 중인 창을 열어두고 휴대폰의 Expo Go로 QR 코드를 여세요. PC와 휴대폰 사이의 네트워크 연결이 가능해야 합니다. 차단되면 npx expo start --tunnel로 다시 시도하세요. 실제 앱 화면이 뜨는지 확인합니다.",
+      "dataGuide": "Jupyter 실행 창을 열어두세요. 터미널에 출력된 토큰이 포함된 주소를 본인 브라우저에서 여세요. 토큰은 이 사이트에 붙여넣지 마세요. 새 노트북에서 print(\"Hello, vibe coding!\")를 실행해 결과를 확인합니다."
     }
   },
   "Complete": {
@@ -1114,7 +1131,11 @@
           "서비스 이용 기록(선택한 OS, 목적, 진행 단계)"
         ],
         "loginTitle": "Google 로그인 시 수집 항목",
-        "loginItems": ["이메일 주소", "표시 이름(닉네임)", "프로필 사진 URL"],
+        "loginItems": [
+          "이메일 주소",
+          "표시 이름(닉네임)",
+          "프로필 사진 URL"
+        ],
         "note": "Google 로그인을 사용하지 않는 경우, 개인 식별정보는 수집되지 않습니다."
       },
       "2": {
@@ -1134,7 +1155,10 @@
       "4": {
         "title": "4. 개인정보의 제3자 제공 및 위탁",
         "intro": "VibeStart는 수집한 정보를 제3자에게 제공하지 않습니다. 다만 아래의 경우는 예외로 합니다.",
-        "items": ["법령에 의해 요구되는 경우", "이용자의 사전 동의가 있는 경우"],
+        "items": [
+          "법령에 의해 요구되는 경우",
+          "이용자의 사전 동의가 있는 경우"
+        ],
         "delegateIntro": "서비스 운영을 위해 아래 외부 서비스에 개인정보 처리를 위탁합니다.",
         "delegateItems": [
           "Supabase (인증 및 데이터 저장): 이메일, 표시 이름, 프로필 사진",
@@ -1731,5 +1755,55 @@
       "errorNoDeploy": "배포 기록이 없어요. git push를 먼저 진행해주세요",
       "errorGeneric": "확인 실패. 잠시 후 다시 시도해주세요"
     }
+  },
+  "Wizard": {
+    "verify": "설치 전·후 정상 여부 확인",
+    "verifyGuide": "먼저 이 카드에 표시된 터미널에서 확인 명령을 실행하세요. 통과하면 기존 도구를 그대로 사용하고, 실패하면 아래 설치 명령 실행 후 다시 확인하세요. Windows의 VS Code는 PowerShell을 닫았다 다시 열고 확인하세요.",
+    "expected": "성공 시 마지막 줄",
+    "resultLabel": "실행 결과를 붙여넣으세요 (명령어 제외)",
+    "localOnly": "입력한 결과는 이 브라우저 안에서만 판별하며 전송하거나 저장하지 않습니다. VIBESTART_CHECK 결과 줄만 붙여넣고, 계정 정보나 API 키는 넣지 마세요.",
+    "checkResult": "결과 확인",
+    "result": {
+      "ok": "입력한 결과에서 정상 상태를 확인했습니다. 다음으로 진행할 수 있습니다.",
+      "error": "확인에 실패했습니다. 실행한 터미널 종류를 확인하고 새로 연 뒤 다시 검사하세요. 아래 오류 해결 안내도 펼쳐보세요.",
+      "unknown": "이 단계의 확인 결과가 없습니다. 확인 명령 실행 후 마지막 VIBESTART_CHECK 줄을 붙여넣으세요."
+    },
+    "reuse": "이미 설치되어 있어요 — 다음으로",
+    "invalid": "설정 링크를 확인해주세요. 운영체제·목표·올바른 프로젝트 이름이 필요합니다.",
+    "restart": "내 환경 다시 선택하기",
+    "cost": "이 가이드와 개발 도구 설치는 무료입니다. Claude Code 사용에는 이용 가능한 유료 계정 또는 사용량에 따른 API 요금이 필요합니다. 이 사이트에 API 키를 입력할 필요는 없습니다.",
+    "windowsPlan": "Windows 진행 순서: PowerShell → VS Code → Ubuntu(WSL) → 재부팅 → Ubuntu 명령창. 다운로드와 재부팅 시간을 여유 있게 잡아주세요. WSL 설치에는 관리자 권한이 필요합니다.",
+    "macPlan": "macOS 진행 순서: 터미널 → Homebrew → Git·실행 도구 → VS Code. Apple Silicon과 Intel의 설치 경로를 구분하며, Homebrew 설치 시 Mac 로그인 암호를 요청할 수 있습니다.",
+    "scanLimit": "이 사이트는 PC의 명령을 실행하거나 설치된 프로그램을 직접 읽을 수 없습니다. 직접 실행한 확인 결과를 입력하며, 진행 상황은 현재 브라우저에만 저장됩니다.",
+    "saveFailed": "이 브라우저에 진행 상황을 저장하지 못했습니다. 재부팅 전에 현재 주소와 진행 단계를 따로 기록해주세요.",
+    "loading": "진행 상황을 불러오는 중…",
+    "pending": "시작 전",
+    "inProgress": "진행 중",
+    "error": "확인 필요",
+    "verified": "정상 확인",
+    "done": "완료",
+    "reused": "기존 설치 확인",
+    "skipped": "선택 단계 건너뜀",
+    "skipOptional": "고급 프로젝트 구조는 나중에 설정",
+    "finalGuide": "서버가 실행 중인 창은 열어두세요. 같은 종류의 새 터미널을 열어 아래 명령을 실행하고, Claude에게 “이 프로젝트가 무엇인지 한 문장으로 설명해줘”라고 입력하세요. 계정 사용량에 따라 요금이 발생할 수 있습니다. 실제 결과를 본 뒤 아래 세 항목을 체크하세요.",
+    "final": {
+      "editor": "VS Code에 내 프로젝트가 열립니다. (Windows: WSL / Ubuntu 연결)",
+      "preview": "웹페이지·Expo 앱·Jupyter 노트북 중 선택한 결과물이 실제로 열리고 실행됩니다.",
+      "ai": "Claude에 로그인했고 첫 프롬프트에 대한 응답을 받았습니다."
+    },
+    "detected": "감지된 환경: {os}. 실제 설치할 컴퓨터가 맞는지 확인하세요.",
+    "unsupported": "Linux·모바일의 직접 설치 경로는 아직 제공하지 않습니다. 설치 대상 컴퓨터가 Windows 또는 Mac일 때만 해당 항목을 선택하세요.",
+    "copyFailed": "복사하지 못했습니다. 명령어를 선택해 직접 복사해주세요.",
+    "copyLabel": "명령어 복사",
+    "terminalHint": "실행할 곳: {environment}",
+    "completionNote": "완료 상태는 사용자가 수행한 확인을 기준으로 합니다. PC를 원격 검사한 결과는 아닙니다. 도구를 변경했다면 설치 화면에서 다시 점검하세요.",
+    "recheck": "설치 점검으로 돌아가기",
+    "unverifiedComplete": "이 브라우저에서 설치 완료를 확인하지 못했습니다. 설치 화면에서 점검을 마쳐주세요.",
+    "architecture": "CPU·실행 환경 확인 (선택)",
+    "architectureGuide": "Windows: 설정 → 시스템 → 정보 → 시스템 종류에서 확인합니다. Mac: Apple 메뉴 → 이 Mac에 관하여에서 Apple 칩 또는 Intel을 확인합니다. 브라우저의 OS 감지만으로 CPU 종류를 확정할 수는 없습니다.",
+    "backStep": "이전 단계 보기",
+    "continueStep": "다음 미완료 단계",
+    "detailGuide": "자세히 따라하기",
+    "beginnerGuide": "초보자 안내 자세히 보기"
   }
 }
