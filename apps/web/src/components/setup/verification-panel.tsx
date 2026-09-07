@@ -3,16 +3,16 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { ScriptBlock } from '@/components/onboarding/script-block';
 import { Button } from '@/components/ui/button';
-import { parseVerification, type Verification } from '@/lib/setup-verification';
+import { parseVerification, type Verification, type VerificationState } from '@/lib/setup-verification';
 
 export function VerificationPanel({ id, verification, onChange, onReuse }: {
   id: string; verification: Verification;
-  onChange: (state: 'ok' | 'error' | 'unknown') => void;
+  onChange: (state: VerificationState) => void;
   onReuse: () => void;
 }) {
   const t = useTranslations('Wizard');
   const [output, setOutput] = useState('');
-  const [state, setState] = useState<'ok' | 'error' | 'unknown' | null>(null);
+  const [state, setState] = useState<VerificationState | null>(null);
   return <section className="my-4 space-y-3 rounded-lg border border-sky-500/30 p-4" aria-label={t('verify')}>
     <h4 className="font-semibold">{t('verify')}</h4>
     <p className="text-sm text-muted-foreground">{t('verifyGuide')}</p>

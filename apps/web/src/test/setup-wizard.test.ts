@@ -31,6 +31,14 @@ describe('Shell contracts', () => {
     expect(parseVerification('VIBESTART_CHECK::ai-setup::ok\nVIBESTART_CHECK::ai-setup::fail','ai-setup')).toBe('error');
     expect(parseVerification(verificationFor('dev-tools-nodejs','windows','web-nextjs')!.command,'dev-tools-nodejs')).toBe('unknown');
   });
+  it('distinguishes a missing macOS code command from a missing VS Code app', () => {
+    const verification = verificationFor('editor','macos','web-nextjs')!;
+    expect(verification.command).toContain('command -v code');
+    expect(verification.command).toContain('Visual Studio Code.app');
+    expect(parseVerification('VIBESTART_CHECK::editor::path-missing','editor')).toBe('editor-path');
+    expect(parseVerification('VIBESTART_CHECK::editor::fail','editor')).toBe('error');
+    expect(parseVerification('VIBESTART_CHECK::editor::path-missing\nVIBESTART_CHECK::editor::ok','editor')).toBe('ok');
+  });
   it('checks running Node and npm', () => {
     const v=verificationFor('dev-tools-nodejs','windows','web-nextjs')!;
     const nodeOk = `node() { return 0; }; npm() { return 0; };`;

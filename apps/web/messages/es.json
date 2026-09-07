@@ -1765,6 +1765,7 @@
     "checkResult": "Check result",
     "result": {
       "ok": "The supplied result confirms this check. You can continue.",
+      "editor-path": "VS Code is installed, but the code command is not connected to your terminal yet. Open VS Code, press Cmd+Shift+P, and run ‘Shell Command: Install 'code' command in PATH’. Fully close and reopen Terminal, then run this check again.",
       "error": "This check failed. Check the terminal type, reopen it, then retry. See troubleshooting below.",
       "unknown": "No result for this step found. Run the check and paste its last VIBESTART_CHECK line."
     },

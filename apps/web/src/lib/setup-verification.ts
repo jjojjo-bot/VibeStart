@@ -11,6 +11,10 @@ export interface Verification {
   canReuse: boolean;
 }
 
+export type VerificationState = 'ok' | 'error' | 'unknown' | 'editor-path';
+
+const MAC_EDITOR_CHECK = `if command -v code >/dev/null 2>&1 && code --version; then printf '%s\\n' 'VIBESTART_CHECK::editor::ok'; elif [ -d '/Applications/Visual Studio Code.app' ] || [ -d "$HOME/Applications/Visual Studio Code.app" ]; then printf '%s\\n' 'VIBESTART_CHECK::editor::path-missing'; else printf '%s\\n' 'VIBESTART_CHECK::editor::fail'; fi`;
+
 /** A successful command is evidence supplied by the user, never a browser scan. */
 export function verificationFor(id: string, os: OS, goal: Goal): Verification | null {
   const basic = ['git --version', 'curl --version'];
@@ -26,26 +30,30 @@ export function verificationFor(id: string, os: OS, goal: Goal): Verification | 
     'ai-auth': 'claude auth status --text',
     'editor-extensions': 'code --list-extensions | grep -Fx anthropic.claude-code' +
       (os === 'windows' ? ' && code --list-extensions | grep -Fx ms-vscode-remote.remote-wsl' : ''),
-    editor: os === 'macos' ? 'code --version' :
+    editor: os === 'macos' ? MAC_EDITOR_CHECK :
       `$c = Get-Command code -ErrorAction SilentlyContinue; if ($c) { & $c --version; if ($LASTEXITCODE -eq 0) { Write-Output 'VIBESTART_CHECK::editor::ok' } else { Write-Output 'VIBESTART_CHECK::editor::fail' } } else { Write-Output 'VIBESTART_CHECK::editor::fail' }`,
   };
   const command = commands[id];
   if (!command) return null;
   const expected = `VIBESTART_CHECK::${id}::ok`;
   return {
-    command: id === 'editor' && os === 'windows' ? command :
+    command: id === 'editor' ? command :
       `if ${command}; then printf '%s\\n' '${expected}'; else printf '%s\\n' 'VIBESTART_CHECK::${id}::fail'; fi`,
     expected,
     canReuse: ['brew', 'dev-tools', 'dev-tools-basic', 'dev-tools-nodejs', 'editor', 'ai-setup'].includes(id),
   };
 }
 
-export function parseVerification(output: string, id: string): 'ok' | 'error' | 'unknown' {
+export function parseVerification(output: string, id: string): VerificationState {
   const lines = output.replace(/\r/g, '').split('\n').map(l => l.trim());
   // A pasted command or another step's result must never count as success.
-  const matches = lines.filter(l => l === `VIBESTART_CHECK::${id}::ok` || l === `VIBESTART_CHECK::${id}::fail`);
+  const matches = lines.filter(l => l === `VIBESTART_CHECK::${id}::ok` ||
+    l === `VIBESTART_CHECK::${id}::fail` ||
+    (id === 'editor' && l === 'VIBESTART_CHECK::editor::path-missing'));
   if (!matches.length) return 'unknown';
-  return matches.at(-1)!.endsWith('::ok') ? 'ok' : 'error';
+  const latest = matches.at(-1)!;
+  if (latest.endsWith('::ok')) return 'ok';
+  return latest.endsWith('::path-missing') ? 'editor-path' : 'error';
 }
 
 export function restoreCompleted(raw: string | null, validIds: readonly string[]): Set<string> {

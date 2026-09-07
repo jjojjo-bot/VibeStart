@@ -6,7 +6,7 @@ import confetti from "canvas-confetti";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { VerificationPanel } from "@/components/setup/verification-panel";
-import { verificationFor, restoreCompleted, canActivate } from "@/lib/setup-verification";
+import { verificationFor, restoreCompleted, canActivate, type VerificationState } from "@/lib/setup-verification";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScriptBlock } from "@/components/onboarding/script-block";
@@ -63,7 +63,7 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
   const [openTroubleshooting, setOpenTroubleshooting] = useState<Set<string>>(new Set());
 
   const [completed, setCompleted] = useState<Set<string>>(new Set());
-  const [checks, setChecks] = useState<Record<string, 'ok' | 'error' | 'unknown'>>({});
+  const [checks, setChecks] = useState<Record<string, VerificationState>>({});
   const [origins, setOrigins] = useState<Record<string, string>>({});
   const [finalChecks, setFinalChecks] = useState<string[]>([]);
   const [saveFailed, setSaveFailed] = useState(false);
@@ -387,7 +387,7 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
                     <div>
                       <div className="flex flex-wrap items-center gap-2">
                         <h3 className="font-semibold">{step.title}</h3>
-                        <span className="text-xs" role="status">{tw(done ? (origins[step.id] === 'reused' ? 'reused' : origins[step.id] === 'skipped' ? 'skipped' : 'done') : checks[step.id] === 'error' ? 'error' : checks[step.id] === 'ok' ? 'verified' : active ? 'inProgress' : 'pending')}</span>
+                        <span className="text-xs" role="status">{tw(done ? (origins[step.id] === 'reused' ? 'reused' : origins[step.id] === 'skipped' ? 'skipped' : 'done') : checks[step.id] === 'error' || checks[step.id] === 'editor-path' ? 'error' : checks[step.id] === 'ok' ? 'verified' : active ? 'inProgress' : 'pending')}</span>
                         {step.environment && (
                           <Badge variant="outline" className="text-xs font-normal">
                             {step.environment}
