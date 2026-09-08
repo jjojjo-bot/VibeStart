@@ -1,7 +1,7 @@
 import { PYTHON_READY_CHECK, JAVA_READY_CHECK } from "./setup-verification";
 import { hardenScript, type HardenShell } from "@vibestart/script-generator";
 import type { DiagnosisStep, ScanResult, WslScanResult } from "@vibestart/shared-types";
-import { isValidProjectName, type OS, type Goal } from "./onboarding";
+import { isValidProjectName, type OS, type Goal, type SetupMode } from "./onboarding";
 import { aiToolProvider, nativeAiInstallScript, type AiTool } from "./ai-tools";
 
 export type SetupGroup = "envPrep" | "toolInstall" | "aiSetup" | "projectCreate";
@@ -1173,9 +1173,15 @@ export function getSetupSteps(
   projectName: string,
   t: T,
   aiTool: AiTool = "claude",
+  mode: SetupMode = "full",
 ): SetupStep[] {
   if (!isValidProjectName(projectName)) throw new Error("Invalid project name");
   const steps: SetupStep[] = [];
+
+  if (mode === "project-only") {
+    appendProjectSteps(steps, goal, projectName, os === "windows" ? "wsl" : "mac", aiTool, t);
+    return steps;
+  }
 
   steps.push(terminalGuide(os, t));
 

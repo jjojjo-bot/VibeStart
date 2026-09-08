@@ -18,6 +18,7 @@ import {
   onboardingStepKeys,
   canProceedFrom,
   isValidProjectName,
+  applySetupMode,
 } from "@/lib/onboarding";
 
 export default function OnboardingPage() {
@@ -33,6 +34,7 @@ export default function OnboardingPage() {
       if (saved && typeof saved === 'object') {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setData({
+          mode: saved.mode === 'project-only' ? 'project-only' : 'full',
           os: saved.os === 'windows' || saved.os === 'macos' ? saved.os : null,
           goal: ['web-nextjs','web-python','web-java','mobile','data-ai','not-sure'].includes(saved.goal) ? saved.goal : null,
           aiTool: saved.aiTool === 'codex' || saved.aiTool === 'claude' ? saved.aiTool : null,
@@ -55,7 +57,7 @@ export default function OnboardingPage() {
   }, []);
 
   // OS에 따라 단계 구성이 달라진다 — Windows는 설치 경험 질문 포함 5단계
-  const stepKeys = onboardingStepKeys(data.os);
+  const stepKeys = onboardingStepKeys(data.os, data.mode);
   const totalSteps = stepKeys.length;
   const progress = ((step + 1) / totalSteps) * 100;
   const stepKey = stepKeys[step];
@@ -73,13 +75,13 @@ export default function OnboardingPage() {
       setStep(step + 1);
     } else {
       trackOnboardingComplete(data.os!, data.goal!);
-      const params = new URLSearchParams({
+      const params = applySetupMode(new URLSearchParams({
         os: data.os!,
         goal: data.goal!,
         project: data.projectName,
         ai: data.aiTool!,
-      });
-      if (data.os === "windows") {
+      }), data.mode);
+      if (data.os === "windows" && data.mode === "full") {
         params.set("exp", data.experience ?? "first");
       }
       router.push(`/plan?${params.toString()}`);
@@ -93,6 +95,21 @@ export default function OnboardingPage() {
   return (
     <main id="main-content" className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
       <div className="mx-auto w-full max-w-lg">
+        {step === 0 && (
+          <div className={`mb-8 rounded-xl border p-4 ${data.mode === "project-only" ? "border-primary/50 bg-primary/5" : "border-border/60 bg-card"}`}>
+            <p className="font-semibold">{t("quickStart.title")}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{t("quickStart.description")}</p>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="mt-3"
+              onClick={() => setData({ ...data, mode: data.mode === "project-only" ? "full" : "project-only", experience: null })}
+            >
+              {t(data.mode === "project-only" ? "quickStart.useFullSetup" : "quickStart.cta")}
+            </Button>
+          </div>
+        )}
         {/* 진행 바 */}
         <div className="mb-2 flex items-center justify-between text-sm text-muted-foreground">
           <span>

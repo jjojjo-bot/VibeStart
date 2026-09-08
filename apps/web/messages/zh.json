@@ -507,6 +507,7 @@
   "Onboarding": {
     "progressLabel": "{current} / {total}",
     "lastStepButton": "查看方案",
+    "quickStart": { "title": "开发环境已经准备好了吗？", "description": "跳过安装，只创建项目文件夹和 AI 指令文件。", "cta": "使用项目快速开始", "useFullSetup": "使用完整环境设置" },
     "steps": {
       "os": {
         "title": "操作系统",
@@ -584,7 +585,10 @@
   "Plan": {
     "title": "定制安装方案",
     "subtitle": "将按步骤安装以下工具",
+    "quickTitle": "项目快速开始方案",
+    "quickSubtitle": "只创建项目文件夹、结构和 AI 指令文件",
     "aiNote": "安装完成后，告诉 {aiTool} 你想做什么，AI 会为你编写代码。",
+    "quickAiNote": "此流程假定 {aiTool} 和所需运行环境已安装并完成登录。",
     "tools": {
       "git": {
         "name": "Git",
@@ -642,14 +646,18 @@
       "os": "操作系统",
       "projectName": "项目名称",
       "estimatedTime": "预计用时",
-      "estimatedTimeValue": "About 15–30+ min; downloads and restarts vary"
+      "estimatedTimeValue": "About 15–30+ min; downloads and restarts vary",
+      "quickEstimatedTimeValue": "约 3–10 分钟"
     },
     "ctaButton": "开始安装",
+    "quickCtaButton": "开始配置项目",
     "skipNote": "已安装的工具会自动跳过"
   },
   "Setup": {
     "title": "分步安装",
     "subtitle": "用<strong>复制按钮</strong>复制每个步骤的命令，粘贴到终端中",
+    "quickTitle": "项目快速开始",
+    "quickSubtitle": "无需重复环境安装，直接创建项目文件夹和 <strong>AI 指令文件</strong>",
     "progressLabel": "进度",
     "progressAriaLabel": "安装进度",
     "resultPreviewLabel": "运行结果示例",
@@ -666,6 +674,7 @@
     "completeButton": "完成了！",
     "undoCompleteButton": "取消完成",
     "allDoneButton": "完成！下一步",
+    "quickAllDoneButton": "项目配置完成！下一步",
     "groups": {
       "envPrep": "环境准备",
       "toolInstall": "工具安装",
@@ -1018,7 +1027,9 @@
   "Complete": {
     "congratulations": "恭喜你！",
     "envCompleteTemplate": "<strong>{goalLabel}</strong> 开发环境搭建完成了",
+    "projectCompleteTemplate": "<strong>{goalLabel}</strong> 项目配置完成了",
     "installedTools": "已安装的工具",
+    "configuredProject": "已配置的项目",
     "projectStructure": "在你电脑上创建的项目结构",
     "goalLabels": {
       "webNextjs": "Next.js 网站",
@@ -1795,6 +1806,11 @@
     "windowsPlan": "Windows route: PowerShell → VS Code → Ubuntu (WSL) → restart → Ubuntu terminal. Allow extra time for downloads and a restart; administrator access is required for WSL.",
     "macPlan": "macOS route: Terminal → Homebrew → Git and runtimes → VS Code. Apple Silicon and Intel paths are handled separately. Homebrew may request your Mac password.",
     "scanLimit": "This website cannot run commands or read installed software on your computer. You run checks and provide results; progress is saved only in this browser.",
+    "quickModeNote": "快速开始仅创建项目。如果缺少命令或登录失败，请使用完整环境设置。",
+    "fullModeNote": "只需要新项目吗？可以跳过安装，直接进入项目创建。",
+    "switchToQuick": "切换到项目快速开始",
+    "switchToFull": "打开完整环境设置",
+    "quickStorageNote": "快速开始进度会单独保存在此浏览器中，不影响完整设置进度。",
     "saveFailed": "Progress could not be saved in this browser. Keep your setup URL and note the current step before restarting.",
     "loading": "Restoring progress…",
     "pending": "Not started",
@@ -1817,8 +1833,11 @@
     "copyLabel": "Copy command",
     "terminalHint": "Execution environment: {environment}",
     "completionNote": "Completion is based on your checks, not a remote inspection of your computer. Reopen the setup to check again if you changed tools.",
+    "quickCompletionNote": "仅配置了项目文件夹和 AI 指令文件；未安装或更改现有开发工具。",
     "recheck": "Return to setup checks",
+    "quickRecheck": "返回项目快速开始",
     "unverifiedComplete": "Setup has not been verified in this browser. Complete the checks before treating this environment as ready.",
+    "quickUnverifiedComplete": "此浏览器中尚未完成项目配置。请返回快速开始；若缺少必要工具，请使用完整设置。",
     "architecture": "CPU / terminal check (optional)",
     "architectureGuide": "Windows: Settings → System → About → System type. macOS: Apple menu → About This Mac (Apple chip or Intel). Browser OS detection cannot reliably determine CPU architecture.",
     "backStep": "Previous step",

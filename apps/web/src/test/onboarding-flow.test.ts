@@ -8,6 +8,9 @@ import {
   onboardingStepKeys,
   canProceedFrom,
   INITIAL_ONBOARDING,
+  applySetupMode,
+  parseSetupParams,
+  setupProgressKey,
   type OnboardingData,
 } from "@/lib/onboarding";
 
@@ -28,6 +31,36 @@ describe("onboardingStepKeys", () => {
 
   it("OS 미선택 상태는 4단계다 (선택 시 재계산)", () => {
     expect(onboardingStepKeys(null)).toEqual(["os", "goal", "aiTool", "projectName"]);
+  });
+
+  it("빠른 시작은 Windows에서도 설치 경험 단계를 제외한다", () => {
+    expect(onboardingStepKeys("windows", "project-only")).toEqual([
+      "os",
+      "goal",
+      "aiTool",
+      "projectName",
+    ]);
+  });
+});
+
+describe("setup mode routing and progress", () => {
+  const base = "os=macos&goal=web-nextjs&project=demo&ai=codex";
+
+  it("누락되거나 알 수 없는 mode는 전체 설정으로 안전하게 폴백한다", () => {
+    expect(parseSetupParams(new URLSearchParams(base))?.mode).toBe("full");
+    expect(parseSetupParams(new URLSearchParams(`${base}&mode=unexpected`))?.mode).toBe("full");
+    expect(parseSetupParams(new URLSearchParams(`${base}&mode=project-only`))?.mode).toBe("project-only");
+  });
+
+  it("URL에는 빠른 시작 모드만 명시하고 전체 설정은 기존 링크 형태를 유지한다", () => {
+    expect(applySetupMode(new URLSearchParams(base), "project-only").get("mode")).toBe("project-only");
+    expect(applySetupMode(new URLSearchParams(`${base}&mode=project-only`), "full").has("mode")).toBe(false);
+  });
+
+  it("진행률 키는 모드와 AI 도구별로 격리된다", () => {
+    const fullCodex = setupProgressKey("full", "macos", "web-nextjs", "codex", "demo");
+    expect(setupProgressKey("project-only", "macos", "web-nextjs", "codex", "demo")).not.toBe(fullCodex);
+    expect(setupProgressKey("full", "macos", "web-nextjs", "claude", "demo")).not.toBe(fullCodex);
   });
 });
 

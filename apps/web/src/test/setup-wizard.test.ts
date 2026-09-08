@@ -72,6 +72,20 @@ describe('Shell contracts', () => {
       expect(verificationFor('ai-auth', os, 'web-nextjs', 'codex')!.command).toContain('codex login status');
     }
   });
+  it('project-only includes only project creation across every OS, goal, and AI tool', () => {
+    for (const os of ['windows', 'macos'] as const) for (const goal of ['web-nextjs','web-python','web-java','mobile','data-ai','not-sure'] as const) for (const aiTool of ['claude', 'codex'] as const) {
+      const full = getSetupSteps(os, goal, 'demo-app', t, aiTool, 'full');
+      const quick = getSetupSteps(os, goal, 'demo-app', t, aiTool, 'project-only');
+      expect(full.some(step => step.group !== 'projectCreate')).toBe(true);
+      expect(quick.length).toBeGreaterThanOrEqual(4);
+      expect(quick.every(step => step.group === 'projectCreate')).toBe(true);
+      expect(quick.map(step => step.id)).toEqual(expect.arrayContaining(['architecture', 'first-run', 'run-check']));
+      expect(quick.map(step => step.id)).not.toEqual(expect.arrayContaining(['terminal', 'ai-setup', 'ai-auth', 'editor-extensions']));
+      const instructions = quick.find(step => step.id === 'architecture')!;
+      expect(instructions.instructionFileName).toBe(aiTool === 'codex' ? 'AGENTS.md' : 'CLAUDE.md');
+      expect(instructions.script).toContain(`if [ ! -e ${instructions.instructionFileName} ]`);
+    }
+  });
   it('curl failure cannot report install success', () => {
     const s=getSetupSteps('macos','data-ai','demo',t).find(s=>s.id==='ai-setup')!;
     const output=execFileSync('bash',['-c',`command() { return 1; }; curl() { return 22; }; ${s.script}`],{encoding:'utf8'});

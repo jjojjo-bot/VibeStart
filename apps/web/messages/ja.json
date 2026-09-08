@@ -507,6 +507,7 @@
   "Onboarding": {
     "progressLabel": "{current} / {total}",
     "lastStepButton": "プランを確認する",
+    "quickStart": { "title": "開発環境はすでに準備できていますか？", "description": "インストールを省略し、プロジェクトフォルダとAI指示ファイルだけを作成します。", "cta": "プロジェクトクイックスタートを使う", "useFullSetup": "開発環境を一から設定する" },
     "steps": {
       "os": {
         "title": "OS",
@@ -584,7 +585,10 @@
   "Plan": {
     "title": "カスタムインストールプラン",
     "subtitle": "以下のツールをステップごとにインストールします",
+    "quickTitle": "プロジェクトクイックスタートプラン",
+    "quickSubtitle": "プロジェクトフォルダ、構成、AI指示ファイルだけを作成します",
     "aiNote": "インストール後は{aiTool}に作りたいものを伝えるだけで、AIがコードを書きます。",
+    "quickAiNote": "{aiTool}と必要なランタイムがすでにインストールされ、ログイン済みであることを前提に進みます。",
     "tools": {
       "git": {
         "name": "Git",
@@ -642,14 +646,18 @@
       "os": "OS",
       "projectName": "プロジェクト名",
       "estimatedTime": "所要時間の目安",
-      "estimatedTimeValue": "About 15–30+ min; downloads and restarts vary"
+      "estimatedTimeValue": "About 15–30+ min; downloads and restarts vary",
+      "quickEstimatedTimeValue": "約3〜10分"
     },
     "ctaButton": "インストールを開始する",
+    "quickCtaButton": "プロジェクトを作成する",
     "skipNote": "すでにインストール済みのツールは自動でスキップされます"
   },
   "Setup": {
     "title": "ステップ別インストール",
     "subtitle": "各ステップのコマンドを<strong>コピーボタン</strong>でコピーして、ターミナルに貼り付けてください",
+    "quickTitle": "プロジェクトクイックスタート",
+    "quickSubtitle": "環境設定を繰り返さず、プロジェクトフォルダと<strong>AI指示ファイル</strong>を作成します",
     "progressLabel": "進捗",
     "progressAriaLabel": "インストール進捗",
     "resultPreviewLabel": "実行結果の例",
@@ -666,6 +674,7 @@
     "completeButton": "完了しました！",
     "undoCompleteButton": "完了を取り消す",
     "allDoneButton": "完了！次へ進む",
+    "quickAllDoneButton": "プロジェクト設定完了！次へ",
     "groups": {
       "envPrep": "環境準備",
       "toolInstall": "ツールインストール",
@@ -1018,7 +1027,9 @@
   "Complete": {
     "congratulations": "おめでとうございます！",
     "envCompleteTemplate": "<strong>{goalLabel}</strong>の開発環境が完成しました",
+    "projectCompleteTemplate": "<strong>{goalLabel}</strong>のプロジェクト設定が完了しました",
     "installedTools": "インストール済みツール",
+    "configuredProject": "設定したプロジェクト",
     "projectStructure": "PCに作成されたプロジェクト構成",
     "goalLabels": {
       "webNextjs": "Next.js ウェブサイト",
@@ -1795,6 +1806,11 @@
     "windowsPlan": "Windows route: PowerShell → VS Code → Ubuntu (WSL) → restart → Ubuntu terminal. Allow extra time for downloads and a restart; administrator access is required for WSL.",
     "macPlan": "macOS route: Terminal → Homebrew → Git and runtimes → VS Code. Apple Silicon and Intel paths are handled separately. Homebrew may request your Mac password.",
     "scanLimit": "This website cannot run commands or read installed software on your computer. You run checks and provide results; progress is saved only in this browser.",
+    "quickModeNote": "クイックスタートはプロジェクト作成のみ行います。コマンドがない、またはログインできない場合は完全設定を利用してください。",
+    "fullModeNote": "新しいプロジェクトだけが必要ですか？インストールを省略して作成に進めます。",
+    "switchToQuick": "クイックスタートに切り替える",
+    "switchToFull": "開発環境の完全設定を開く",
+    "quickStorageNote": "クイックスタートの進捗は、このブラウザに完全設定とは別に保存されます。",
     "saveFailed": "Progress could not be saved in this browser. Keep your setup URL and note the current step before restarting.",
     "loading": "Restoring progress…",
     "pending": "Not started",
@@ -1817,8 +1833,11 @@
     "copyLabel": "Copy command",
     "terminalHint": "Execution environment: {environment}",
     "completionNote": "Completion is based on your checks, not a remote inspection of your computer. Reopen the setup to check again if you changed tools.",
+    "quickCompletionNote": "プロジェクトフォルダとAI指示ファイルのみを作成し、既存ツールのインストールや変更は行っていません。",
     "recheck": "Return to setup checks",
+    "quickRecheck": "プロジェクトクイックスタートに戻る",
     "unverifiedComplete": "Setup has not been verified in this browser. Complete the checks before treating this environment as ready.",
+    "quickUnverifiedComplete": "このブラウザではプロジェクト設定が完了していません。クイックスタートに戻るか、前提ツールがない場合は完全設定を利用してください。",
     "architecture": "CPU / terminal check (optional)",
     "architectureGuide": "Windows: Settings → System → About → System type. macOS: Apple menu → About This Mac (Apple chip or Intel). Browser OS detection cannot reliably determine CPU architecture.",
     "backStep": "Previous step",

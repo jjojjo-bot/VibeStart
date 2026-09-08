@@ -1,5 +1,5 @@
 "use client";
-import { parseSetupParams } from "@/lib/onboarding";
+import { applySetupMode, parseSetupParams, setupProgressKey } from "@/lib/onboarding";
 import { InvalidSetup } from "@/components/setup/invalid-setup";
 import { useState, useRef, useCallback, useEffect, Suspense } from "react";
 import confetti from "canvas-confetti";
@@ -40,7 +40,7 @@ const GROUP_ORDER: SetupGroup[] = ["envPrep", "toolInstall", "aiSetup", "project
 function SetupContent() {
   const params = useSearchParams();
   const config = parseSetupParams(params);
-  return config ? <SetupContentValid key={`${config.os}-${config.goal}-${config.aiTool}-${config.projectName}`} config={config} /> : <InvalidSetup />;
+  return config ? <SetupContentValid key={`${config.mode}-${config.os}-${config.goal}-${config.aiTool}-${config.projectName}`} config={config} /> : <InvalidSetup />;
 }
 
 function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof parseSetupParams>> }) {
@@ -50,17 +50,17 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
   const ts = useTranslations("SetupSteps");
   const tw = useTranslations("Wizard");
 
-  const { os, goal, projectName, aiTool } = config;
+  const { os, goal, projectName, aiTool, mode } = config;
   // 설치 경험 — 이상값·부재는 first 폴백(기존 링크·북마크 하위호환)
   const rawExp = searchParams.get("exp");
   const exp = rawExp === "prior" || rawExp === "unsure" ? rawExp : "first";
 
-  const steps = getSetupSteps(os, goal, projectName, ts, aiTool);
-  const storageKey = `vibestart-progress-v3-${os}-${goal}-${aiTool}-${projectName}`;
+  const steps = getSetupSteps(os, goal, projectName, ts, aiTool, mode);
+  const storageKey = setupProgressKey(mode, os, goal, aiTool, projectName);
   const scanKey = `vibestart-scan-${os}-${goal}-${aiTool}-${projectName}`;
   const wslScanKey = `vibestart-wslscan-${os}-${goal}-${aiTool}-${projectName}`;
 
-  const [beginnerGuide, setBeginnerGuide] = useState(exp === "first");
+  const [beginnerGuide, setBeginnerGuide] = useState(mode === "full" && exp === "first");
   const [openTroubleshooting, setOpenTroubleshooting] = useState<Set<string>>(new Set());
 
   const [completed, setCompleted] = useState<Set<string>>(new Set());
@@ -90,7 +90,7 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setCompleted(restoreCompleted(saved, getSetupSteps(os, goal, projectName, ts, aiTool).map(s => s.id)));
+        setCompleted(restoreCompleted(saved, getSetupSteps(os, goal, projectName, ts, aiTool, mode).map(s => s.id)));
       }
       const originData: unknown = JSON.parse(localStorage.getItem(storageKey + '-origins') ?? '{}');
       if (originData && typeof originData === 'object' && !Array.isArray(originData)) {
@@ -105,8 +105,8 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
       }
     } catch { setSaveFailed(true); }
     setHydrated(true);
-    trackSetupStart(os, goal, os === "windows" ? exp : undefined);
-  }, [storageKey, scanKey, wslScanKey, os, goal, aiTool, exp, projectName, ts]);
+    trackSetupStart(os, goal, os === "windows" && mode === "full" ? exp : undefined);
+  }, [storageKey, scanKey, wslScanKey, os, goal, aiTool, mode, exp, projectName, ts]);
 
   // 완료 상태 변경 시 저장 (hydration 완료 후에만)
   useEffect(() => {
@@ -163,7 +163,7 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
 
   // 스캔 게이트 — Windows + 설치 경험자(prior/unsure) + 스캔 미완료일 때만.
   // exp=first(절대초보 기본 경로)는 게이트를 아예 만나지 않는다.
-  const showScanGate = os === "windows" && exp !== "first" && hydrated && !scanResolved;
+  const showScanGate = mode === "full" && os === "windows" && exp !== "first" && hydrated && !scanResolved;
 
   const scanShownTracked = useRef(false);
   useEffect(() => {
@@ -194,7 +194,7 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
   }
 
   // 2차 스캔 — Windows + 경험자 + 미해결. wsl-open 완료 후 인라인으로만 렌더된다.
-  const showWslScanGate = os === "windows" && exp !== "first" && hydrated && !wslScanResolved;
+  const showWslScanGate = mode === "full" && os === "windows" && exp !== "first" && hydrated && !wslScanResolved;
 
   function handleWslScanDone(result: WslScanResult | null): void {
     try {
@@ -276,12 +276,26 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
   return (
     <main id="main-content" className="min-h-screen px-6 py-16">
       <div className="mx-auto max-w-2xl">
-        <h1 className="mb-2 text-center text-3xl font-bold">{t("title")}</h1>
+        <h1 className="mb-2 text-center text-3xl font-bold">{t(mode === "project-only" ? "quickTitle" : "title")}</h1>
         <p className="mb-6 text-center text-muted-foreground">
-          {t.rich("subtitle", { strong: (chunks) => <strong className="text-foreground">{chunks}</strong> })}
+          {t.rich(mode === "project-only" ? "quickSubtitle" : "subtitle", { strong: (chunks) => <strong className="text-foreground">{chunks}</strong> })}
         </p>
 
-        <p role="status" className="mb-4 rounded-lg border p-3 text-sm">{saveFailed ? tw("saveFailed") : tw("scanLimit")}</p>
+        <div className="mb-4 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm">
+          <p>{mode === "project-only" ? tw("quickModeNote") : tw("fullModeNote")}</p>
+          <button
+            type="button"
+            className="mt-2 font-medium text-primary underline underline-offset-2"
+            onClick={() => {
+              const next = applySetupMode(new URLSearchParams({ os, goal, project: projectName, ai: aiTool }), mode === "full" ? "project-only" : "full");
+              if (mode === "full" && os === "windows") next.set("exp", exp);
+              router.push(`/setup?${next.toString()}`);
+            }}
+          >
+            {tw(mode === "project-only" ? "switchToFull" : "switchToQuick")}
+          </button>
+        </div>
+        <p role="status" className="mb-4 rounded-lg border p-3 text-sm">{saveFailed ? tw("saveFailed") : tw(mode === "project-only" ? "quickStorageNote" : "scanLimit")}</p>
         <label className="mb-4 flex items-center gap-3 text-sm"><input type="checkbox" checked={beginnerGuide} onChange={e => setBeginnerGuide(e.target.checked)} />{tw("beginnerGuide")}</label>
         {!hydrated ? <p>{tw("loading")}</p> : showScanGate ? (
           <ScanGate script={WINDOWS_SCAN_SCRIPT} onDone={handleScanDone} />
@@ -589,11 +603,11 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
               className="h-12 px-8 text-base animate-pulse"
               onClick={() => {
                 trackSetupComplete(os, goal);
-                const params = new URLSearchParams({ os, goal, project: projectName, ai: aiTool, verified: "1" });
+                const params = applySetupMode(new URLSearchParams({ os, goal, project: projectName, ai: aiTool, verified: "1" }), mode);
                 router.push(`/complete?${params.toString()}`);
               }}
             >
-              {t("allDoneButton")}
+              {t(mode === "project-only" ? "quickAllDoneButton" : "allDoneButton")}
             </Button>
           </div>
         )}

@@ -507,6 +507,7 @@
   "Onboarding": {
     "progressLabel": "{current} / {total}",
     "lastStepButton": "प्लान देखें",
+    "quickStart": { "title": "क्या आपका डेवलपमेंट एनवायरनमेंट पहले से तैयार है?", "description": "इंस्टॉलेशन छोड़कर सिर्फ प्रोजेक्ट फ़ोल्डर और AI निर्देश बनाएं।", "cta": "प्रोजेक्ट क्विक स्टार्ट इस्तेमाल करें", "useFullSetup": "पूरा एनवायरनमेंट सेटअप करें" },
     "steps": {
       "os": {
         "title": "ऑपरेटिंग सिस्टम",
@@ -584,7 +585,10 @@
   "Plan": {
     "title": "आपके लिए खास इंस्टॉल प्लान",
     "subtitle": "नीचे दिए टूल्स को स्टेप-बाय-स्टेप इंस्टॉल करेंगे",
+    "quickTitle": "प्रोजेक्ट क्विक स्टार्ट प्लान",
+    "quickSubtitle": "सिर्फ प्रोजेक्ट फ़ोल्डर, संरचना और AI निर्देश बनाएं",
     "aiNote": "इंस्टॉल होने के बाद {aiTool} को बताएं कि आप क्या चाहते हैं — AI कोड लिखेगा।",
+    "quickAiNote": "यह तरीका मानता है कि {aiTool} और ज़रूरी रनटाइम पहले से इंस्टॉल और साइन इन हैं।",
     "tools": {
       "git": {
         "name": "Git",
@@ -642,14 +646,18 @@
       "os": "ऑपरेटिंग सिस्टम",
       "projectName": "प्रोजेक्ट का नाम",
       "estimatedTime": "अनुमानित समय",
-      "estimatedTimeValue": "About 15–30+ min; downloads and restarts vary"
+      "estimatedTimeValue": "About 15–30+ min; downloads and restarts vary",
+      "quickEstimatedTimeValue": "लगभग 3–10 मिनट"
     },
     "ctaButton": "इंस्टॉल शुरू करें",
+    "quickCtaButton": "प्रोजेक्ट कॉन्फ़िगर करें",
     "skipNote": "पहले से इंस्टॉल टूल्स अपने आप स्किप हो जाएँगे"
   },
   "Setup": {
     "title": "स्टेप-बाय-स्टेप इंस्टॉलेशन",
     "subtitle": "हर स्टेप की कमांड को <strong>कॉपी बटन</strong> से कॉपी करके टर्मिनल में पेस्ट करें",
+    "quickTitle": "प्रोजेक्ट क्विक स्टार्ट",
+    "quickSubtitle": "एनवायरनमेंट सेटअप दोहराए बिना प्रोजेक्ट फ़ोल्डर और <strong>AI निर्देश</strong> बनाएं",
     "progressLabel": "प्रगति",
     "progressAriaLabel": "इंस्टॉलेशन प्रगति",
     "resultPreviewLabel": "चलाने के बाद का उदाहरण",
@@ -666,6 +674,7 @@
     "completeButton": "हो गया!",
     "undoCompleteButton": "पूरा अनडू करें",
     "allDoneButton": "पूरा हुआ! आगे बढ़ें",
+    "quickAllDoneButton": "प्रोजेक्ट तैयार! आगे बढ़ें",
     "groups": {
       "envPrep": "एनवायरनमेंट तैयारी",
       "toolInstall": "टूल इंस्टॉलेशन",
@@ -1018,7 +1027,9 @@
   "Complete": {
     "congratulations": "बधाई हो!",
     "envCompleteTemplate": "<strong>{goalLabel}</strong> डेवलपमेंट एनवायरनमेंट तैयार है",
+    "projectCompleteTemplate": "<strong>{goalLabel}</strong> प्रोजेक्ट कॉन्फ़िगरेशन तैयार है",
     "installedTools": "इंस्टॉल किए गए टूल्स",
+    "configuredProject": "कॉन्फ़िगर किया गया प्रोजेक्ट",
     "projectStructure": "आपके PC पर बना प्रोजेक्ट स्ट्रक्चर",
     "goalLabels": {
       "webNextjs": "Next.js वेबसाइट",
@@ -1795,6 +1806,11 @@
     "windowsPlan": "Windows route: PowerShell → VS Code → Ubuntu (WSL) → restart → Ubuntu terminal. Allow extra time for downloads and a restart; administrator access is required for WSL.",
     "macPlan": "macOS route: Terminal → Homebrew → Git and runtimes → VS Code. Apple Silicon and Intel paths are handled separately. Homebrew may request your Mac password.",
     "scanLimit": "This website cannot run commands or read installed software on your computer. You run checks and provide results; progress is saved only in this browser.",
+    "quickModeNote": "क्विक स्टार्ट केवल प्रोजेक्ट बनाता है। कोई कमांड न मिले या साइन-इन विफल हो तो पूरा सेटअप इस्तेमाल करें।",
+    "fullModeNote": "सिर्फ नया प्रोजेक्ट चाहिए? इंस्टॉलेशन छोड़कर सीधे प्रोजेक्ट बनाएं।",
+    "switchToQuick": "प्रोजेक्ट क्विक स्टार्ट पर जाएं",
+    "switchToFull": "पूरा एनवायरनमेंट सेटअप खोलें",
+    "quickStorageNote": "क्विक स्टार्ट की प्रगति इस ब्राउज़र में पूरे सेटअप से अलग सेव होती है।",
     "saveFailed": "Progress could not be saved in this browser. Keep your setup URL and note the current step before restarting.",
     "loading": "Restoring progress…",
     "pending": "Not started",
@@ -1817,8 +1833,11 @@
     "copyLabel": "Copy command",
     "terminalHint": "Execution environment: {environment}",
     "completionNote": "Completion is based on your checks, not a remote inspection of your computer. Reopen the setup to check again if you changed tools.",
+    "quickCompletionNote": "केवल प्रोजेक्ट फ़ोल्डर और AI निर्देश बनाए गए; मौजूदा टूल इंस्टॉल या बदले नहीं गए।",
     "recheck": "Return to setup checks",
+    "quickRecheck": "प्रोजेक्ट क्विक स्टार्ट पर लौटें",
     "unverifiedComplete": "Setup has not been verified in this browser. Complete the checks before treating this environment as ready.",
+    "quickUnverifiedComplete": "इस ब्राउज़र में प्रोजेक्ट कॉन्फ़िगरेशन पूरा नहीं हुआ। क्विक स्टार्ट पर लौटें या ज़रूरी टूल न होने पर पूरा सेटअप इस्तेमाल करें।",
     "architecture": "CPU / terminal check (optional)",
     "architectureGuide": "Windows: Settings → System → About → System type. macOS: Apple menu → About This Mac (Apple chip or Intel). Browser OS detection cannot reliably determine CPU architecture.",
     "backStep": "Previous step",

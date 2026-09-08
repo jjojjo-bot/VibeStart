@@ -507,6 +507,12 @@
   "Onboarding": {
     "progressLabel": "{current} / {total}",
     "lastStepButton": "플랜 확인하기",
+    "quickStart": {
+      "title": "개발환경이 이미 준비되어 있나요?",
+      "description": "설치는 건너뛰고 프로젝트 폴더와 AI 지침만 빠르게 구성하세요.",
+      "cta": "프로젝트 빠른 시작 사용하기",
+      "useFullSetup": "전체 개발환경 설정 사용하기"
+    },
     "steps": {
       "os": {
         "title": "운영체제",
@@ -587,7 +593,10 @@
   "Plan": {
     "title": "맞춤 설치 플랜",
     "subtitle": "아래 도구들을 단계별로 설치할 거예요",
+    "quickTitle": "프로젝트 빠른 시작 플랜",
+    "quickSubtitle": "프로젝트 폴더와 구조, AI 지침만 구성합니다",
     "aiNote": "설치가 끝나면 {aiTool}에게 말로 원하는 것을 만들 수 있어요 — 코드는 AI가 대신 써줘요.",
+    "quickAiNote": "{aiTool}와 필요한 개발 도구가 이미 설치되고 로그인된 상태를 기준으로 진행합니다.",
     "tools": {
       "git": {
         "name": "Git",
@@ -647,14 +656,18 @@
       "os": "운영체제",
       "projectName": "프로젝트 이름",
       "estimatedTime": "예상 소요 시간",
-      "estimatedTimeValue": "약 15~30분 이상 (다운로드·재부팅에 따라 다름)"
+      "estimatedTimeValue": "약 15~30분 이상 (다운로드·재부팅에 따라 다름)",
+      "quickEstimatedTimeValue": "약 3~10분"
     },
     "ctaButton": "설치 시작하기",
+    "quickCtaButton": "프로젝트 구성 시작하기",
     "skipNote": "이미 설치된 도구는 자동으로 건너뛰어요"
   },
   "Setup": {
     "title": "단계별 설치",
     "subtitle": "각 단계의 명령어를 <strong>복사 버튼</strong>으로 복사해서 터미널에 붙여넣으세요",
+    "quickTitle": "프로젝트 빠른 시작",
+    "quickSubtitle": "개발환경 설치를 반복하지 않고 프로젝트 폴더와 <strong>AI 지침</strong>만 구성합니다",
     "progressLabel": "진행률",
     "progressAriaLabel": "설치 진행률",
     "resultPreviewLabel": "실행 결과 예시",
@@ -671,6 +684,7 @@
     "completeButton": "완료했어요!",
     "undoCompleteButton": "완료 취소",
     "allDoneButton": "완료! 다음으로",
+    "quickAllDoneButton": "프로젝트 구성 완료! 다음으로",
     "groups": {
       "envPrep": "환경 준비",
       "toolInstall": "도구 설치",
@@ -1041,7 +1055,9 @@
   "Complete": {
     "congratulations": "축하합니다!",
     "envCompleteTemplate": "<strong>{goalLabel}</strong> 개발 환경이 완성됐어요",
+    "projectCompleteTemplate": "<strong>{goalLabel}</strong> 프로젝트 구성이 완료됐어요",
     "installedTools": "설치된 도구",
+    "configuredProject": "구성된 프로젝트",
     "projectStructure": "내 PC에 만들어진 프로젝트 구조",
     "goalLabels": {
       "webNextjs": "Next.js 웹사이트",
@@ -1818,6 +1834,11 @@
     "windowsPlan": "Windows 진행 순서: PowerShell → VS Code → Ubuntu(WSL) → 재부팅 → Ubuntu 명령창. 다운로드와 재부팅 시간을 여유 있게 잡아주세요. WSL 설치에는 관리자 권한이 필요합니다.",
     "macPlan": "macOS 진행 순서: 터미널 → Homebrew → Git·실행 도구 → VS Code. Apple Silicon과 Intel의 설치 경로를 구분하며, Homebrew 설치 시 Mac 로그인 암호를 요청할 수 있습니다.",
     "scanLimit": "이 사이트는 PC의 명령을 실행하거나 설치된 프로그램을 직접 읽을 수 없습니다. 직접 실행한 확인 결과를 입력하며, 진행 상황은 현재 브라우저에만 저장됩니다.",
+    "quickModeNote": "빠른 시작은 프로젝트 생성만 진행합니다. 명령어가 없거나 로그인이 풀렸다면 아래 전체 개발환경 설정을 이용하세요.",
+    "fullModeNote": "새 프로젝트만 필요하신가요? 설치 단계를 건너뛰고 프로젝트 생성으로 바로 이동할 수 있습니다.",
+    "switchToQuick": "프로젝트 빠른 시작으로 전환",
+    "switchToFull": "전체 개발환경 설정 열기",
+    "quickStorageNote": "빠른 시작 진행률은 이 브라우저에 별도로 저장되며 전체 설정 진행률에 영향을 주지 않습니다.",
     "saveFailed": "이 브라우저에 진행 상황을 저장하지 못했습니다. 재부팅 전에 현재 주소와 진행 단계를 따로 기록해주세요.",
     "loading": "진행 상황을 불러오는 중…",
     "pending": "시작 전",
@@ -1840,8 +1861,11 @@
     "copyLabel": "명령어 복사",
     "terminalHint": "실행할 곳: {environment}",
     "completionNote": "완료 상태는 사용자가 수행한 확인을 기준으로 합니다. PC를 원격 검사한 결과는 아닙니다. 도구를 변경했다면 설치 화면에서 다시 점검하세요.",
+    "quickCompletionNote": "프로젝트 폴더와 AI 지침만 구성했으며 기존 개발 도구를 설치하거나 변경하지 않았습니다.",
     "recheck": "설치 점검으로 돌아가기",
+    "quickRecheck": "프로젝트 빠른 시작으로 돌아가기",
     "unverifiedComplete": "이 브라우저에서 설치 완료를 확인하지 못했습니다. 설치 화면에서 점검을 마쳐주세요.",
+    "quickUnverifiedComplete": "이 브라우저에서 프로젝트 구성이 완료되지 않았습니다. 빠른 시작으로 돌아가거나, 필수 도구가 없다면 전체 설정을 이용하세요.",
     "architecture": "CPU·실행 환경 확인 (선택)",
     "architectureGuide": "Windows: 설정 → 시스템 → 정보 → 시스템 종류에서 확인합니다. Mac: Apple 메뉴 → 이 Mac에 관하여에서 Apple 칩 또는 Intel을 확인합니다. 브라우저의 OS 감지만으로 CPU 종류를 확정할 수는 없습니다.",
     "backStep": "이전 단계 보기",

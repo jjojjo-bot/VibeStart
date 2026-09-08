@@ -5,17 +5,20 @@ import { NextIntlClientProvider } from 'next-intl';
 import messages from '../../messages/ko.json';
 import { getSetupSteps } from '@/lib/setup-steps';
 import { verificationFor } from '@/lib/setup-verification';
+import { setupProgressKey } from '@/lib/onboarding';
 
 const state=vi.hoisted(()=>({params:new URLSearchParams(),push:vi.fn()}));
 vi.mock('next/navigation',()=>({useSearchParams:()=>state.params}));
 vi.mock('@/i18n/navigation',()=>({useRouter:()=>({push:state.push}),Link:({children,...props}: React.PropsWithChildren<{href:string}>)=><a {...props}>{children}</a>}));
 vi.mock('@/components/diagnosis/stuck-helper',()=>({StuckHelper:()=>null}));
-vi.mock('@/lib/stats',()=>({incrementCompletions:vi.fn()}));
+vi.mock('@/lib/stats',()=>({incrementCompletions:vi.fn(),incrementVisitors:vi.fn()}));
 vi.mock('@/app/[locale]/login/actions',()=>({signInFromCompleteAction:vi.fn(),goToDashboardWithPhase1Action:vi.fn()}));
 vi.mock('canvas-confetti',()=>({default:vi.fn()}));
-vi.mock('@/lib/ga',()=>({trackSetupStart:vi.fn(),trackSetupComplete:vi.fn(),trackSetupScanShown:vi.fn(),trackSetupScanResult:vi.fn(),trackSetupScanSkipped:vi.fn()}));
+vi.mock('@/lib/ga',()=>({trackSetupStart:vi.fn(),trackSetupComplete:vi.fn(),trackSetupScanShown:vi.fn(),trackSetupScanResult:vi.fn(),trackSetupScanSkipped:vi.fn(),trackOnboardingStart:vi.fn(),trackOnboardingComplete:vi.fn()}));
 import SetupPage from '@/app/[locale]/setup/page';
 import CompletePage from '@/app/[locale]/complete/page';
+import OnboardingPage from '@/app/[locale]/onboarding/page';
+import PlanPage from '@/app/[locale]/plan/page';
 import { ScriptBlock } from '@/components/onboarding/script-block';
 
 beforeEach(()=>{
@@ -23,12 +26,33 @@ beforeEach(()=>{
   Element.prototype.scrollIntoView=vi.fn();
   window.matchMedia=vi.fn().mockReturnValue({matches:true});
 });
-function mount(os: 'windows'|'macos', project='wizard-test') {
-  state.params=new URLSearchParams({os,goal:'web-nextjs',project});
+function mount(os: 'windows'|'macos', project='wizard-test', mode?: 'project-only') {
+  state.params=new URLSearchParams({os,goal:'web-nextjs',project,...(mode ? {mode} : {})});
   return render(<NextIntlClientProvider locale="ko" messages={messages}><SetupPage/></NextIntlClientProvider>);
 }
 
 describe('Installation wizard user journeys (simulated terminal evidence)',()=>{
+  it('shows Quick Start entry points without replacing the beginner path', async () => {
+    render(<NextIntlClientProvider locale="ko" messages={messages}><OnboardingPage/></NextIntlClientProvider>);
+    fireEvent.click(screen.getByRole('button',{name:messages.Onboarding.quickStart.cta}));
+    expect(screen.getByRole('button',{name:messages.Onboarding.quickStart.useFullSetup})).toBeInTheDocument();
+    expect(screen.getByRole('button',{name:messages.Common.next})).toBeInTheDocument();
+    cleanup();
+
+    mount('macos');
+    expect(await screen.findByRole('button',{name:messages.Wizard.switchToQuick})).toBeInTheDocument();
+    cleanup();
+
+    mount('macos','quick-test','project-only');
+    expect(await screen.findByText(messages.Setup.quickTitle)).toBeInTheDocument();
+    expect(screen.getByRole('button',{name:messages.Wizard.switchToFull})).toBeInTheDocument();
+    expect(screen.queryByText(messages.SetupSteps.terminal.title)).not.toBeInTheDocument();
+    cleanup();
+
+    state.params=new URLSearchParams('os=macos&goal=web-nextjs&project=quick-test&ai=codex&mode=project-only');
+    render(<NextIntlClientProvider locale="ko" messages={messages}><PlanPage/></NextIntlClientProvider>);
+    expect(screen.getByRole('button',{name:messages.Plan.quickCtaButton}).closest('a')).toHaveAttribute('href',expect.stringContaining('mode=project-only'));
+  });
   it.each(['windows','macos'] as const)('%s: blocks unverified tools, handles errors, reuses tools, and requires a running project',async os=>{
     mount(os);
     await screen.findByRole('button',{name:'완료했어요!'});
@@ -56,7 +80,7 @@ describe('Installation wizard user journeys (simulated terminal evidence)',()=>{
       fireEvent.click(screen.getByRole('button',{name:'완료했어요!'}));
     }
     await waitFor(()=>expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow','100'));
-    const saved=localStorage.getItem(`vibestart-progress-v3-${os}-web-nextjs-claude-wizard-test`)!;
+    const saved=localStorage.getItem(setupProgressKey('full',os,'web-nextjs','claude','wizard-test'))!;
     expect(JSON.parse(saved)).toContain('run-check');
     cleanup(); mount(os);
     await waitFor(()=>expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow','100'));
@@ -66,7 +90,7 @@ describe('Installation wizard user journeys (simulated terminal evidence)',()=>{
     await waitFor(()=>expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow','0'));
   }, 20000);
   it('corrupt progress does not crash or report completion',async()=>{
-    localStorage.setItem('vibestart-progress-v3-macos-web-nextjs-claude-wizard-test','{"bad":true}');
+    localStorage.setItem(setupProgressKey('full','macos','web-nextjs','claude','wizard-test'),'{"bad":true}');
     mount('macos');
     await waitFor(()=>expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow','0'));
   }, 20000);
@@ -92,5 +116,14 @@ describe('Completion and clipboard failures',()=>{
     render(<NextIntlClientProvider locale="ko" messages={messages}><ScriptBlock script="node --version"/></NextIntlClientProvider>);
     fireEvent.click(screen.getByRole('button',{name:messages.Wizard.copyLabel}));
     expect(await screen.findByRole('alert')).toHaveTextContent(messages.Wizard.copyFailed);
+  });
+  it('quick completion reports project configuration and keeps a full-setup recovery link', async () => {
+    const ids = getSetupSteps('macos','web-nextjs','quick-done',key=>key,'codex','project-only').map(step=>step.id);
+    localStorage.setItem(setupProgressKey('project-only','macos','web-nextjs','codex','quick-done'),JSON.stringify(ids));
+    state.params=new URLSearchParams('os=macos&goal=web-nextjs&project=quick-done&ai=codex&mode=project-only');
+    render(<NextIntlClientProvider locale="ko" messages={messages}><CompletePage/></NextIntlClientProvider>);
+    expect(await screen.findByText(messages.Complete.configuredProject)).toBeInTheDocument();
+    expect(screen.queryByText(messages.Complete.installedTools)).not.toBeInTheDocument();
+    expect(screen.getByRole('link',{name:messages.Wizard.switchToFull})).toHaveAttribute('href',expect.not.stringContaining('mode=project-only'));
   });
 });

@@ -1,11 +1,11 @@
 "use client";
-import { parseSetupParams } from "@/lib/onboarding";
+import { applySetupMode, parseSetupParams } from "@/lib/onboarding";
 import { InvalidSetup } from "@/components/setup/invalid-setup";
 import { useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import type { OS, Goal } from "@/lib/onboarding";
+import type { OS, Goal, SetupMode } from "@/lib/onboarding";
 import { aiToolProvider, type AiTool } from "@/lib/ai-tools";
 import { Suspense } from "react";
 import { useTranslations } from "next-intl";
@@ -16,17 +16,17 @@ interface PlanItem {
   icon: string;
 }
 
-function getPlanItems(os: OS, goal: Goal, aiTool: AiTool, t: ReturnType<typeof useTranslations<"Plan">>): PlanItem[] {
+function getPlanItems(os: OS, goal: Goal, aiTool: AiTool, mode: SetupMode, t: ReturnType<typeof useTranslations<"Plan">>): PlanItem[] {
   const items: PlanItem[] = [];
 
-  items.push({
+  if (mode === "full") items.push({
     name: t("tools.git.name"),
     description: t("tools.git.description"),
     icon: "📦",
   });
 
   // 프론트엔드가 있는 Goal은 Node.js 필요
-  if (goal === "web-nextjs" || goal === "web-python" || goal === "web-java" || goal === "not-sure" || goal === "mobile") {
+  if (mode === "full" && (goal === "web-nextjs" || goal === "web-python" || goal === "web-java" || goal === "not-sure" || goal === "mobile")) {
     items.push({
       name: t("tools.nodejs.name"),
       description: t("tools.nodejs.description"),
@@ -35,19 +35,19 @@ function getPlanItems(os: OS, goal: Goal, aiTool: AiTool, t: ReturnType<typeof u
   }
 
   // 추가 런타임
-  if (goal === "web-python" || goal === "data-ai") {
+  if (mode === "full" && (goal === "web-python" || goal === "data-ai")) {
     items.push({
       name: "Python",
       description: goal === "data-ai" ? t("tools.python.description.dataAi") : t("tools.python.description.backend"),
       icon: "🐍",
     });
-  } else if (goal === "web-java") {
+  } else if (mode === "full" && goal === "web-java") {
     items.push({
       name: t("tools.java.name"),
       description: t("tools.java.description"),
       icon: "☕",
     });
-  } else if (goal === "mobile") {
+  } else if (mode === "full" && goal === "mobile") {
     items.push({
       name: t("tools.expo.name"),
       description: t("tools.expo.description"),
@@ -55,13 +55,13 @@ function getPlanItems(os: OS, goal: Goal, aiTool: AiTool, t: ReturnType<typeof u
     });
   }
 
-  items.push({
+  if (mode === "full") items.push({
     name: t("tools.vscode.name"),
     description: t("tools.vscode.description"),
     icon: "💻",
   });
 
-  items.push({
+  if (mode === "full") items.push({
     name: aiToolProvider(aiTool).displayName,
     description: t(aiTool === "claude" ? "tools.claudeCode.description" : "tools.codex.description"),
     icon: "🤖",
@@ -106,7 +106,7 @@ function getPlanItems(os: OS, goal: Goal, aiTool: AiTool, t: ReturnType<typeof u
 function PlanContent() {
   const params = useSearchParams();
   const config = parseSetupParams(params);
-  return config ? <PlanContentValid key={`${config.os}-${config.goal}-${config.aiTool}-${config.projectName}`} config={config} /> : <InvalidSetup />;
+  return config ? <PlanContentValid key={`${config.mode}-${config.os}-${config.goal}-${config.aiTool}-${config.projectName}`} config={config} /> : <InvalidSetup />;
 }
 
 function PlanContentValid({ config }: { config: NonNullable<ReturnType<typeof parseSetupParams>> }) {
@@ -115,31 +115,31 @@ function PlanContentValid({ config }: { config: NonNullable<ReturnType<typeof pa
   const tc = useTranslations("Common");
   const tw = useTranslations("Wizard");
 
-  const { os, goal, projectName, aiTool } = config;
+  const { os, goal, projectName, aiTool, mode } = config;
   // 설치 경험(exp) — 온보딩이 준 값을 /setup으로 그대로 전달. 없으면 생략(=first 폴백).
   const exp = searchParams.get("exp");
 
-  const planItems = getPlanItems(os, goal, aiTool, t);
+  const planItems = getPlanItems(os, goal, aiTool, mode, t);
 
-  const setupParams = new URLSearchParams({
+  const setupParams = applySetupMode(new URLSearchParams({
     os,
     goal,
     project: projectName,
     ai: aiTool,
-  });
-  if (exp) setupParams.set("exp", exp);
+  }), mode);
+  if (exp && mode === "full") setupParams.set("exp", exp);
 
   return (
     <main id="main-content" className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
       <div className="mx-auto w-full max-w-lg">
-        <h1 className="mb-2 text-center text-3xl font-bold">{t("title")}</h1>
+        <h1 className="mb-2 text-center text-3xl font-bold">{t(mode === "project-only" ? "quickTitle" : "title")}</h1>
         <p className="mb-10 text-center text-muted-foreground">
-          {t("subtitle")}
+          {t(mode === "project-only" ? "quickSubtitle" : "subtitle")}
         </p>
 
-        <div className="mb-6 space-y-2 rounded-lg border p-4 text-sm">
+        {mode === "full" && <div className="mb-6 space-y-2 rounded-lg border p-4 text-sm">
           <p>{tw("cost")}</p><p>{tw(os === "windows" ? "windowsPlan" : "macPlan")}</p>
-        </div>
+        </div>}
         {/* 플랜 아이템 리스트 */}
         <div className="mb-8 flex flex-col gap-3">
           {planItems.map((item, i) => (
@@ -166,7 +166,7 @@ function PlanContentValid({ config }: { config: NonNullable<ReturnType<typeof pa
         {/* AI 오리엔테이션 — 설치 후 무엇을 하는지 */}
         <div className="mb-8 flex items-start gap-3 rounded-xl border border-border/50 bg-card p-4">
           <span className="text-xl">🤖</span>
-          <p className="text-sm text-muted-foreground">{t("aiNote", { aiTool: aiToolProvider(aiTool).displayName })}</p>
+          <p className="text-sm text-muted-foreground">{t(mode === "project-only" ? "quickAiNote" : "aiNote", { aiTool: aiToolProvider(aiTool).displayName })}</p>
         </div>
 
         {/* 요약 */}
@@ -183,13 +183,13 @@ function PlanContentValid({ config }: { config: NonNullable<ReturnType<typeof pa
           </div>
           <div className="mt-2 flex justify-between">
             <span>{t("summary.estimatedTime")}</span>
-            <span className="text-foreground">{t("summary.estimatedTimeValue")}</span>
+            <span className="text-foreground">{t(mode === "project-only" ? "summary.quickEstimatedTimeValue" : "summary.estimatedTimeValue")}</span>
           </div>
         </div>
 
         {/* CTA */}
         <Link href={`/setup?${setupParams.toString()}`}>
-          <Button className="h-12 w-full text-base">{t("ctaButton")}</Button>
+          <Button className="h-12 w-full text-base">{t(mode === "project-only" ? "quickCtaButton" : "ctaButton")}</Button>
         </Link>
 
         <div className="mt-4 flex items-center justify-between">
@@ -199,9 +199,7 @@ function PlanContentValid({ config }: { config: NonNullable<ReturnType<typeof pa
           >
             ← {tc("previous")}
           </Link>
-          <p className="text-sm text-muted-foreground/70">
-            {tw("scanLimit")}
-          </p>
+          {mode === "full" && <p className="text-sm text-muted-foreground/70">{tw("scanLimit")}</p>}
         </div>
       </div>
     </main>

@@ -1,7 +1,7 @@
 "use client";
 import { getSetupSteps } from "@/lib/setup-steps";
 import { restoreCompleted } from "@/lib/setup-verification";
-import { parseSetupParams } from "@/lib/onboarding";
+import { applySetupMode, parseSetupParams, setupProgressKey } from "@/lib/onboarding";
 import { InvalidSetup } from "@/components/setup/invalid-setup";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -143,7 +143,7 @@ function PromptCopyBlock({ text }: { text: string }) {
 function CompleteContent() {
   const params = useSearchParams();
   const config = parseSetupParams(params);
-  return config ? <CompleteContentValid key={`${config.os}-${config.goal}-${config.aiTool}-${config.projectName}`} config={config} /> : <InvalidSetup />;
+  return config ? <CompleteContentValid key={`${config.mode}-${config.os}-${config.goal}-${config.aiTool}-${config.projectName}`} config={config} /> : <InvalidSetup />;
 }
 
 function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeof parseSetupParams>> }) {
@@ -153,12 +153,12 @@ function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeo
   const [ready, setReady] = useState(false);
   const [showStructure, setShowStructure] = useState(false);
 
-  const { os, goal, projectName, aiTool } = config;
+  const { os, goal, projectName, aiTool, mode } = config;
 
   useEffect(() => {
     try {
-      const ids = getSetupSteps(os, goal, projectName, key => key, aiTool).map(s => s.id);
-      const storageKey = `vibestart-progress-v3-${os}-${goal}-${aiTool}-${projectName}`;
+      const ids = getSetupSteps(os, goal, projectName, key => key, aiTool, mode).map(s => s.id);
+      const storageKey = setupProgressKey(mode, os, goal, aiTool, projectName);
       const completed = restoreCompleted(localStorage.getItem(storageKey), ids);
       const verified = ids.every(id => completed.has(id));
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -170,7 +170,7 @@ function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeo
         incrementCompletions();
       }
     } catch { /* Unavailable storage means unverified, never a success claim. */ }
-  }, [os, goal, aiTool, projectName]);
+  }, [os, goal, aiTool, mode, projectName]);
 
   const tools = getInstalledTools(goal, aiTool);
   const goalLabel = t(getGoalLabelKey(goal) as Parameters<typeof t>[0]);
@@ -198,9 +198,13 @@ function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeo
     t("claudeDesign.steps.3" as Parameters<typeof t>[0], { designPath }),
   ] : [];
 
-  const setupLink = `/setup?${new URLSearchParams({os, goal, project: projectName, ai: aiTool})}`;
+  const setupParams = applySetupMode(new URLSearchParams({os, goal, project: projectName, ai: aiTool}), mode);
+  const setupLink = `/setup?${setupParams.toString()}`;
+  const fullSetupLink = `/setup?${new URLSearchParams({os, goal, project: projectName, ai: aiTool}).toString()}`;
   if (!ready) return <main id="main-content" className="mx-auto max-w-lg space-y-6 px-6 py-20">
-    <p>{tw("unverifiedComplete")}</p><Link href={setupLink} className="underline">{tw("recheck")}</Link>
+    <p>{tw(mode === "project-only" ? "quickUnverifiedComplete" : "unverifiedComplete")}</p>
+    <Link href={setupLink} className="block underline">{tw(mode === "project-only" ? "quickRecheck" : "recheck")}</Link>
+    {mode === "project-only" && <Link href={fullSetupLink} className="block text-primary underline">{tw("switchToFull")}</Link>}
   </main>;
 
   return (
@@ -211,17 +215,18 @@ function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeo
           <div className="mb-4 text-6xl">🎉</div>
           <h1 className="text-3xl font-bold">{t("congratulations")}</h1>
           <p className="mt-2 text-lg text-muted-foreground">
-            {t.rich("envCompleteTemplate", { goalLabel, strong: (chunks) => <strong>{chunks}</strong> })}
+            {t.rich(mode === "project-only" ? "projectCompleteTemplate" : "envCompleteTemplate", { goalLabel, strong: (chunks) => <strong>{chunks}</strong> })}
           </p>
         </div>
 
-        <p className="mb-4 text-sm text-muted-foreground">{tw("completionNote")}</p>
-        <Link href={setupLink} className="mb-6 inline-block underline">{tw("recheck")}</Link>
-        {/* 설치된 도구 */}
+        <p className="mb-4 text-sm text-muted-foreground">{tw(mode === "project-only" ? "quickCompletionNote" : "completionNote")}</p>
+        <Link href={setupLink} className="mb-6 inline-block underline">{tw(mode === "project-only" ? "quickRecheck" : "recheck")}</Link>
+        {mode === "project-only" && <Link href={fullSetupLink} className="mb-6 ml-4 inline-block text-primary underline">{tw("switchToFull")}</Link>}
+        {/* 설치된 도구 / 빠른 시작에서 구성한 항목 */}
         <div className="mb-6 rounded-xl border border-border/50 bg-card p-6">
-          <h2 className="mb-4 font-semibold">{t("installedTools")}</h2>
+          <h2 className="mb-4 font-semibold">{t(mode === "project-only" ? "configuredProject" : "installedTools")}</h2>
           <div className="flex flex-wrap gap-2">
-            {tools.map((tool) => (
+            {(mode === "project-only" ? [projectName, aiToolProvider(aiTool).instructionFile] : tools).map((tool) => (
               <span
                 key={tool}
                 className="rounded-lg bg-primary/10 px-3 py-1.5 text-sm font-medium text-primary"

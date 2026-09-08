@@ -507,6 +507,12 @@
   "Onboarding": {
     "progressLabel": "{current} / {total}",
     "lastStepButton": "View My Plan",
+    "quickStart": {
+      "title": "Already have your development environment ready?",
+      "description": "Skip installation and create only the project folder and AI instructions.",
+      "cta": "Use Project Quick Start",
+      "useFullSetup": "Use Full Environment Setup"
+    },
     "steps": {
       "os": {
         "title": "Operating System",
@@ -587,7 +593,10 @@
   "Plan": {
     "title": "Your Custom Setup Plan",
     "subtitle": "We'll install these tools step by step",
+    "quickTitle": "Your Project Quick Start Plan",
+    "quickSubtitle": "Create only the project folder, structure, and AI instructions",
     "aiNote": "Once everything is installed, tell {aiTool} what you want in plain words — the AI writes the code for you.",
+    "quickAiNote": "This path assumes {aiTool} and the required runtimes are already installed and signed in.",
     "tools": {
       "git": {
         "name": "Git",
@@ -647,14 +656,18 @@
       "os": "Operating System",
       "projectName": "Project Name",
       "estimatedTime": "Estimated Time",
-      "estimatedTimeValue": "About 15–30+ min; downloads and restarts vary"
+      "estimatedTimeValue": "About 15–30+ min; downloads and restarts vary",
+      "quickEstimatedTimeValue": "About 3–10 min"
     },
     "ctaButton": "Start Setup",
+    "quickCtaButton": "Configure My Project",
     "skipNote": "Already-installed tools will be automatically skipped"
   },
   "Setup": {
     "title": "Step-by-Step Setup",
     "subtitle": "Copy each step's commands using the <strong>copy button</strong> and paste them into your terminal",
+    "quickTitle": "Project Quick Start",
+    "quickSubtitle": "Create your project folder and <strong>AI instructions</strong> without repeating environment setup",
     "progressLabel": "Progress",
     "progressAriaLabel": "Setup progress",
     "resultPreviewLabel": "Expected output",
@@ -671,6 +684,7 @@
     "completeButton": "Done!",
     "undoCompleteButton": "Undo",
     "allDoneButton": "All done! Next",
+    "quickAllDoneButton": "Project configured! Next",
     "groups": {
       "envPrep": "Environment Setup",
       "toolInstall": "Tool Installation",
@@ -1033,7 +1047,9 @@
   "Complete": {
     "congratulations": "Congratulations!",
     "envCompleteTemplate": "Your <strong>{goalLabel}</strong> development environment is ready",
+    "projectCompleteTemplate": "Your <strong>{goalLabel}</strong> project configuration is ready",
     "installedTools": "Installed Tools",
+    "configuredProject": "Configured Project",
     "projectStructure": "Project structure created on your computer",
     "goalLabels": {
       "webNextjs": "Next.js Website",
@@ -1810,6 +1826,11 @@
     "windowsPlan": "Windows route: PowerShell → VS Code → Ubuntu (WSL) → restart → Ubuntu terminal. Allow extra time for downloads and a restart; administrator access is required for WSL.",
     "macPlan": "macOS route: Terminal → Homebrew → Git and runtimes → VS Code. Apple Silicon and Intel paths are handled separately. Homebrew may request your Mac password.",
     "scanLimit": "This website cannot run commands or read installed software on your computer. You run checks and provide results; progress is saved only in this browser.",
+    "quickModeNote": "Quick Start includes project creation only. If a command is missing or sign-in fails, use the full environment setup below.",
+    "fullModeNote": "Need only a new project? You can skip installation and go straight to project creation.",
+    "switchToQuick": "Switch to Project Quick Start",
+    "switchToFull": "Open Full Environment Setup",
+    "quickStorageNote": "Quick Start progress is saved separately in this browser and does not change your full setup progress.",
     "saveFailed": "Progress could not be saved in this browser. Keep your setup URL and note the current step before restarting.",
     "loading": "Restoring progress…",
     "pending": "Not started",
@@ -1832,8 +1853,11 @@
     "copyLabel": "Copy command",
     "terminalHint": "Execution environment: {environment}",
     "completionNote": "Completion is based on your checks, not a remote inspection of your computer. Reopen the setup to check again if you changed tools.",
+    "quickCompletionNote": "Only the project folder and AI instructions were configured; existing tools were not installed or changed.",
     "recheck": "Return to setup checks",
+    "quickRecheck": "Return to Project Quick Start",
     "unverifiedComplete": "Setup has not been verified in this browser. Complete the checks before treating this environment as ready.",
+    "quickUnverifiedComplete": "Project configuration has not been completed in this browser. Return to Quick Start, or use full setup if a prerequisite is missing.",
     "architecture": "CPU / terminal check (optional)",
     "architectureGuide": "Windows: Settings → System → About → System type. macOS: Apple menu → About This Mac (Apple chip or Intel). Browser OS detection cannot reliably determine CPU architecture.",
     "backStep": "Previous step",
