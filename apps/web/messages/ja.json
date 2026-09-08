@@ -520,6 +520,7 @@
         "title": "目標",
         "description": "何を作りたいですか？"
       },
+      "aiTool": { "title": "AIツール", "description": "どのAIコーディングアシスタントで始めますか？" },
       "projectName": {
         "title": "プロジェクト名",
         "description": "プロジェクトに名前をつけましょう"
@@ -568,6 +569,11 @@
       }
     },
     "recommended": "おすすめ",
+    "aiToolOptions": {
+      "ariaLabel": "AIコーディングツールを選択",
+      "codex": { "name": "Codex", "badge": "ChatGPTユーザー向け", "description": "ChatGPTアカウントで始める" },
+      "claude": { "name": "Claude Code", "badge": "Claudeユーザー向け", "description": "Claudeアカウントで始める" }
+    },
     "projectName": {
       "label": "プロジェクト名",
       "placeholder": "my-first-app",
@@ -578,7 +584,7 @@
   "Plan": {
     "title": "カスタムインストールプラン",
     "subtitle": "以下のツールをステップごとにインストールします",
-    "aiNote": "インストールが終わったら、この中の Claude Code に会話するようにお願いするだけ — コードはAIが代わりに書いてくれます。",
+    "aiNote": "インストール後は{aiTool}に作りたいものを伝えるだけで、AIがコードを書きます。",
     "tools": {
       "git": {
         "name": "Git",
@@ -610,6 +616,7 @@
         "name": "Claude Code",
         "description": "AIコーディングアシスタント（CLI + VS Code拡張機能）"
       },
+      "codex": { "description": "ChatGPTアカウントで使うAIコーディングアシスタント（CLI + VS Code拡張）" },
       "nextjsProject": {
         "name": "Next.js プロジェクト作成",
         "description": "ウェブサイトプロジェクトを自動で作成します"
@@ -647,6 +654,7 @@
     "progressAriaLabel": "インストール進捗",
     "resultPreviewLabel": "実行結果の例",
     "claudeMdGuide": "An existing <code>CLAUDE.md</code> is preserved. Project guidance is created only when the file does not exist.",
+    "instructionFileGuide": "既存の<code>{instructionFile}</code>は保持し、存在しない場合のみ作成します。",
     "whyNeededToggle": {
       "open": "▾ 閉じる",
       "closed": "▸ これは何ですか？"
@@ -683,6 +691,8 @@
       "nodejsMissing": "Node.js — インストールが必要",
       "claudeFound": "✓ Claude Code — すでにインストール済み",
       "claudeMissing": "Claude Code — インストールが必要",
+      "codexFound": "✓ Codex — インストール済みです",
+      "codexMissing": "Codex — インストールが必要です",
       "resultNote": "すでにインストール済みの項目は完了にしておきました。残りのステップだけ進めればOKです！",
       "continueButton": "続ける"
     },
@@ -900,6 +910,7 @@
         }
       ]
     },
+    "aiSetupCodex":{"title":"AIコーディングアシスタントをインストール（Codex）","description":"まずCodex CLIをインストールし、次にChatGPTへログインします。","whyNeeded":"Codexは会話でコードを作成・編集します。","detailedGuide":"UbuntuまたはMacのターミナルでOpenAI公式インストーラーを実行します。","troubleshooting":[{"symptom":"codex: command not found","solution":"新しいターミナルでcodex --versionを実行してください。"},{"symptom":"curl error","solution":"ネットワーク、プロキシ、証明書を確認してください。"},{"symptom":"Permission denied","solution":"sudoを使わずホームフォルダの権限を確認してください。"}]},
     "projectFrontend": {
       "title": {
         "standalone": "プロジェクト作成",
@@ -962,17 +973,17 @@
         "default": "AIツールが従うアーキテクチャルールを設定します",
         "dataAi": "AIツールが従う分析プロジェクトルールを設定します"
       },
-      "detailedGuide": "以下のコマンドがフォルダ構成とCLAUDE.mdファイルをまとめて作成します。"
+      "detailedGuide": "以下のコマンドがフォルダ構成と{instructionFile}ファイルをまとめて作成します。"
     },
     "firstRun": {
       "title": "初回起動！",
       "description": "VS Codeでプロジェクトを開いてAIコーディングを始めます",
       "detailedGuide": {
-        "simple": "以下のコマンドでVS Codeが開きます。VS Code内でターミナル（Ctrl+`またはCmd+`）を開き、claudeと入力するとAIコーディングが始まります。",
-        "withBackend": "以下のコマンドでVS Codeが開きます。VS Code内でターミナル（Ctrl+`またはCmd+`）を開き、claudeと入力するとAIコーディングが始まります。frontend/とbackend/フォルダが一緒に表示されます。",
+        "simple": "以下のコマンドでVS Codeが開きます。VS Code内でターミナル（Ctrl+`またはCmd+`）を開き、{aiCommand}と入力するとAIコーディングが始まります。",
+        "withBackend": "以下のコマンドでVS Codeが開きます。VS Code内でターミナル（Ctrl+`またはCmd+`）を開き、{aiCommand}と入力するとAIコーディングが始まります。frontend/とbackend/フォルダが一緒に表示されます。",
         "wsl": {
-          "simple": "以下のコマンドでVS CodeがWSL Remoteモードで開きます。VS Code内でターミナル（Ctrl+`）を開き、claudeと入力するとAIコーディングが始まります。\n\n💡 プロジェクトフォルダはファイルエクスプローラー左側の Linux → Ubuntu → home → 自分のアカウント → {projectName} にあります。",
-          "withBackend": "以下のコマンドでVS CodeがWSL Remoteモードで開きます。VS Code内でターミナル（Ctrl+`）を開き、claudeと入力するとAIコーディングが始まります。frontend/とbackend/フォルダが一緒に表示されます。\n\n💡 プロジェクトフォルダはファイルエクスプローラー左側の Linux → Ubuntu → home → 自分のアカウント → {projectName} にあります。",
+          "simple": "以下のコマンドでVS CodeがWSL Remoteモードで開きます。VS Code内でターミナル（Ctrl+`）を開き、{aiCommand}と入力するとAIコーディングが始まります。\n\n💡 プロジェクトフォルダはファイルエクスプローラー左側の Linux → Ubuntu → home → 自分のアカウント → {projectName} にあります。",
+          "withBackend": "以下のコマンドでVS CodeがWSL Remoteモードで開きます。VS Code内でターミナル（Ctrl+`）を開き、{aiCommand}と入力するとAIコーディングが始まります。frontend/とbackend/フォルダが一緒に表示されます。\n\n💡 プロジェクトフォルダはファイルエクスプローラー左側の Linux → Ubuntu → home → 自分のアカウント → {projectName} にあります。",
           "imageAlt": "ファイルエクスプローラーのサイドバーにあるLinux項目と、Ubuntu/home/アカウント/プロジェクトのフォルダパスを示すサンプル画像"
         }
       }
@@ -989,11 +1000,13 @@
       "description": "Sign in separately from installation",
       "guide": "Run this in Ubuntu on Windows, or Terminal on Mac. Complete login in the opened browser. An eligible paid plan or billed API access is required. If no browser opens, use the login URL shown in your own terminal. Do not paste credentials into this website. Then run the status check."
     },
+    "authCodex":{"title":"ChatGPTアカウントを接続","description":"別途サインインします","guide":"ブラウザでChatGPTへのサインインを完了してください。認証情報をここに貼らないでください。"},
     "extensions": {
       "title": "Connect VS Code to the AI tool",
       "description": "Install editor extensions after CLI login",
       "guide": "Run in Ubuntu (Windows) or Terminal (Mac). If code is not found, reopen the terminal. On Mac, open VS Code → Command Palette → Shell Command: Install code command in PATH. On Windows, save work, run wsl --shutdown in PowerShell, then reopen Ubuntu. You can also install the WSL and Claude Code extensions in VS Code Extensions."
     },
+    "extensionsCodex":{"title":"VS CodeをCodexに接続","description":"Codex IDE拡張をインストール","guide":"codeが見つからない場合はターミナルを開き直してください。"},
     "runCheck": {
       "title": "Run your project and verify readiness",
       "description": "See a working result before finishing",
@@ -1670,7 +1683,7 @@
     "step2Title": "AIに最初の修正をお願いする",
     "step2Desc": "種類を選んでプロンプトをコピーしてください。自由に変更してもOKです。",
     "step3Title": "変更をpushする",
-    "step3Desc": "Claude Codeに以下のように依頼してください",
+    "step3Desc": "選択したAIコーディングツールに次のように依頼してください",
     "step3Prompt": "まず `git pull` で最新のファイルを取ってきてから、これまでの変更をコミットしてGitHubにpushして",
     "step4Title": "自動デプロイの結果を確認",
     "step4Desc": "pushするとVercelが自動でデプロイします。1〜2分後にサイトを確認してみてください",
@@ -1703,6 +1716,12 @@
       }
     },
     "step1Tools": {
+      "codex": {
+        "label": "Codex",
+        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && codex",
+        "winCmd": "cd '{'project'}' && code . && codex",
+        "note": "VS Codeが開き、ターミナルでCodexが起動します。"
+      },
       "claudeCode": {
         "label": "Claude Code",
         "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
@@ -1729,7 +1748,7 @@
         },
         "aiNoResponse": {
           "title": "AIが返事しない/止まる",
-          "symptom": "Claude Code/Cursorが応答せずに止まる、または 'cannot help with that' を繰り返すとき。",
+          "symptom": "Claude Code/Codex/Cursorが応答せずに止まる、または 'cannot help with that' を繰り返すとき。",
           "fix": "プロンプトをもっと細かく分けてください。1回に1つの変更だけにすればほぼ解決します。",
           "linkLabel": "AIプロンプト作成法10選",
           "linkUrl": "https://1daymillion.com/ai-coding-prompt-writing-tips/"
@@ -1786,11 +1805,11 @@
     "reused": "Already installed",
     "skipped": "Skipped (optional)",
     "skipOptional": "Skip advanced project structure",
-    "finalGuide": "Keep the server terminal open. In a NEW terminal of the same type, run the command below to open Claude in your project. Ask it to explain this project in one sentence; account usage may be billed. Confirm the three items after seeing the results.",
+    "finalGuide": "Keep the server terminal open. In a NEW terminal of the same type, run the command below to open {aiTool} in your project. Ask it to explain this project in one sentence; account usage may be billed. Confirm the three items after seeing the results.",
     "final": {
       "editor": "The correct project opens in VS Code (Windows: WSL / Ubuntu).",
       "preview": "The web page, Expo app, or Jupyter notebook actually opens and runs.",
-      "ai": "Claude is signed in and has responded to my first prompt."
+      "ai": "{aiTool} is signed in and has responded to my first prompt."
     },
     "detected": "Detected: {os}. Confirm the computer you will install on.",
     "unsupported": "Linux and mobile devices do not have a local installation route here yet. Select Windows or Mac only if that is your target computer.",

@@ -520,6 +520,10 @@
         "title": "목표",
         "description": "어떤 걸 만들고 싶으세요?"
       },
+      "aiTool": {
+        "title": "AI 도구",
+        "description": "어떤 AI 코딩 도우미와 시작할까요?"
+      },
       "projectName": {
         "title": "프로젝트 이름",
         "description": "프로젝트 이름을 지어주세요"
@@ -568,6 +572,11 @@
       }
     },
     "recommended": "추천",
+    "aiToolOptions": {
+      "ariaLabel": "AI 코딩 도구 선택",
+      "codex": { "name": "Codex", "badge": "ChatGPT 사용자 추천", "description": "ChatGPT 계정으로 시작하는 AI 코딩 도우미" },
+      "claude": { "name": "Claude Code", "badge": "Claude 사용자 추천", "description": "Claude 계정으로 시작하는 AI 코딩 도우미" }
+    },
     "projectName": {
       "label": "프로젝트 이름",
       "placeholder": "my-first-app",
@@ -578,7 +587,7 @@
   "Plan": {
     "title": "맞춤 설치 플랜",
     "subtitle": "아래 도구들을 단계별로 설치할 거예요",
-    "aiNote": "설치가 끝나면 이 도구들 중 Claude Code에게 말로 시켜서 원하는 걸 만들어요 — 코드는 AI가 대신 써줘요.",
+    "aiNote": "설치가 끝나면 {aiTool}에게 말로 원하는 것을 만들 수 있어요 — 코드는 AI가 대신 써줘요.",
     "tools": {
       "git": {
         "name": "Git",
@@ -609,6 +618,9 @@
       "claudeCode": {
         "name": "Claude Code",
         "description": "AI 코딩 도우미 (CLI + VS Code 확장)"
+      },
+      "codex": {
+        "description": "ChatGPT 계정으로 사용하는 AI 코딩 도우미 (CLI + VS Code 확장)"
       },
       "nextjsProject": {
         "name": "Next.js 프로젝트 생성",
@@ -646,7 +658,8 @@
     "progressLabel": "진행률",
     "progressAriaLabel": "설치 진행률",
     "resultPreviewLabel": "실행 결과 예시",
-    "claudeMdGuide": "기존 <code>CLAUDE.md</code>가 있으면 보존합니다. 파일이 없는 경우에만 프로젝트 안내 파일을 생성합니다.",
+    "claudeMdGuide": "기존 CLAUDE.md 파일을 보존합니다.",
+    "instructionFileGuide": "기존 <code>{instructionFile}</code>가 있으면 보존합니다. 파일이 없는 경우에만 프로젝트 안내 파일을 생성합니다.",
     "whyNeededToggle": {
       "open": "▾ 닫기",
       "closed": "▸ 이게 뭔가요?"
@@ -683,6 +696,8 @@
       "nodejsMissing": "Node.js — 설치가 필요해요",
       "claudeFound": "✓ Claude Code — 이미 설치돼 있어요",
       "claudeMissing": "Claude Code — 설치가 필요해요",
+      "codexFound": "✓ Codex — 이미 설치돼 있어요",
+      "codexMissing": "Codex — 설치가 필요해요",
       "resultNote": "이미 설치된 항목은 완료로 표시해뒀어요. 남은 단계만 진행하면 돼요!",
       "continueButton": "계속하기"
     },
@@ -900,6 +915,17 @@
         }
       ]
     },
+    "aiSetupCodex": {
+      "title": "AI 코딩 도우미 설치 (Codex)",
+      "description": "Codex CLI를 먼저 설치해요. ChatGPT 계정 연결은 다음 단계입니다.",
+      "whyNeeded": "Codex는 대화로 코드를 만들고 수정하는 AI 코딩 도우미예요.",
+      "detailedGuide": "Windows는 Ubuntu, Mac은 터미널에서 실행합니다. OpenAI 공식 설치 스크립트를 사용하며, 이미 codex가 실행되면 재설치하지 않습니다.",
+      "troubleshooting": [
+        { "symptom": "codex: command not found", "solution": "새 터미널을 열어 codex --version을 실행하세요. 계속 안 되면 설치 명령을 다시 실행해 PATH를 확인하세요." },
+        { "symptom": "curl 다운로드 오류", "solution": "인터넷·프록시·인증서 설정을 확인한 뒤 다시 실행하세요." },
+        { "symptom": "Permission denied", "solution": "sudo를 사용하지 말고 사용자 홈 폴더의 쓰기 권한을 확인하세요." }
+      ]
+    },
     "projectFrontend": {
       "title": {
         "standalone": "프로젝트 생성",
@@ -962,17 +988,17 @@
         "default": "AI 도구가 따를 아키텍처 규칙을 세팅해요",
         "dataAi": "AI 도구가 따를 분석 프로젝트 규칙을 세팅해요"
       },
-      "detailedGuide": "아래 명령어가 폴더 구조와 CLAUDE.md 파일을 자동으로 만들어줍니다."
+      "detailedGuide": "아래 명령어가 폴더 구조와 {instructionFile} 파일을 자동으로 만들어줍니다."
     },
     "firstRun": {
       "title": "첫 실행!",
       "description": "VS Code에서 프로젝트를 열고 AI 코딩을 시작해요",
       "detailedGuide": {
-        "simple": "아래 명령어로 VS Code가 열립니다. VS Code 안에서 터미널(Ctrl+` 또는 Cmd+`)을 열고 claude를 입력하면 AI 코딩이 시작됩니다.",
-        "withBackend": "아래 명령어로 VS Code가 열립니다. VS Code 안에서 터미널(Ctrl+` 또는 Cmd+`)을 열고 claude를 입력하면 AI 코딩이 시작됩니다. frontend/와 backend/ 폴더가 함께 보여요.",
+        "simple": "아래 명령어로 VS Code가 열립니다. VS Code 안에서 터미널(Ctrl+` 또는 Cmd+`)을 열고 {aiCommand}를 입력하면 AI 코딩이 시작됩니다.",
+        "withBackend": "아래 명령어로 VS Code가 열립니다. VS Code 안에서 터미널(Ctrl+` 또는 Cmd+`)을 열고 {aiCommand}를 입력하면 AI 코딩이 시작됩니다. frontend/와 backend/ 폴더가 함께 보여요.",
         "wsl": {
-          "simple": "아래 명령어로 VS Code가 WSL Remote 모드로 열립니다. VS Code 안에서 터미널(Ctrl+`)을 열고 claude를 입력하면 AI 코딩이 시작돼요.\n\n💡 내 프로젝트 폴더는 파일 탐색기 왼쪽의 Linux → Ubuntu → home → 내 계정 → {projectName} 에 있어요.",
-          "withBackend": "아래 명령어로 VS Code가 WSL Remote 모드로 열립니다. VS Code 안에서 터미널(Ctrl+`)을 열고 claude를 입력하면 AI 코딩이 시작돼요. frontend/와 backend/ 폴더가 함께 보여요.\n\n💡 내 프로젝트 폴더는 파일 탐색기 왼쪽의 Linux → Ubuntu → home → 내 계정 → {projectName} 에 있어요.",
+          "simple": "아래 명령어로 VS Code가 WSL Remote 모드로 열립니다. VS Code 안에서 터미널(Ctrl+`)을 열고 {aiCommand}를 입력하면 AI 코딩이 시작돼요.\n\n💡 내 프로젝트 폴더는 파일 탐색기 왼쪽의 Linux → Ubuntu → home → 내 계정 → {projectName} 에 있어요.",
+          "withBackend": "아래 명령어로 VS Code가 WSL Remote 모드로 열립니다. VS Code 안에서 터미널(Ctrl+`)을 열고 {aiCommand}를 입력하면 AI 코딩이 시작돼요. frontend/와 backend/ 폴더가 함께 보여요.\n\n💡 내 프로젝트 폴더는 파일 탐색기 왼쪽의 Linux → Ubuntu → home → 내 계정 → {projectName} 에 있어요.",
           "imageAlt": "파일 탐색기 사이드바의 Linux 항목과 Ubuntu/home/계정/프로젝트 폴더 경로를 보여주는 예시 이미지"
         }
       }
@@ -989,10 +1015,20 @@
       "description": "프로그램 설치와 별도로 로그인해요",
       "guide": "Windows는 Ubuntu, Mac은 터미널에서 실행하세요. 열린 브라우저에서 로그인을 마칩니다. 이용 가능한 유료 플랜 또는 사용량 과금 API 계정이 필요합니다. 브라우저가 열리지 않으면 본인 터미널에 표시된 로그인 주소를 여세요. 이 사이트에는 인증 정보를 붙여넣지 마세요. 이후 상태 확인 명령을 실행합니다."
     },
+    "authCodex": {
+      "title": "ChatGPT 계정 연결",
+      "description": "Codex 설치와 별도로 로그인해요",
+      "guide": "Windows는 Ubuntu, Mac은 터미널에서 실행하세요. 열린 브라우저에서 ChatGPT 로그인을 마치고, 인증 정보는 이 사이트에 붙여넣지 마세요."
+    },
     "extensions": {
       "title": "VS Code와 AI 도구 연결",
       "description": "로그인 후 편집기 확장을 설치해요",
       "guide": "Windows는 Ubuntu, Mac은 터미널에서 실행합니다. code를 찾지 못하면 터미널을 다시 여세요. Mac은 VS Code → 명령 팔레트 → Shell Command: Install code command in PATH를 실행하세요. Windows는 작업을 저장하고 PowerShell에서 wsl --shutdown 실행 후 Ubuntu를 다시 여세요. VS Code 확장 메뉴에서 WSL과 Claude Code를 직접 설치할 수도 있습니다."
+    },
+    "extensionsCodex": {
+      "title": "VS Code와 Codex 연결",
+      "description": "Codex IDE 확장을 설치해요",
+      "guide": "code 명령을 찾지 못하면 터미널을 다시 여세요. Mac은 VS Code → 명령 팔레트 → Shell Command: Install code command in PATH를 먼저 실행하세요."
     },
     "runCheck": {
       "title": "프로젝트 실행과 최종 점검",
@@ -1670,7 +1706,7 @@
     "step2Title": "AI에게 첫 수정 요청하기",
     "step2Desc": "원하는 종류를 골라 프롬프트를 복사하세요. 자유롭게 바꿔도 됩니다.",
     "step3Title": "변경사항 push하기",
-    "step3Desc": "Claude Code에게 아래와 같이 요청하세요",
+    "step3Desc": "선택한 AI 코딩 도구에게 아래와 같이 요청하세요",
     "step3Prompt": "먼저 `git pull`로 최신 파일을 받아온 다음, 지금까지 수정한 내용을 커밋하고 GitHub에 push해줘",
     "step4Title": "자동 배포 결과 확인",
     "step4Desc": "push하면 Vercel이 자동으로 배포해요. 1~2분 후 사이트를 확인해 보세요",
@@ -1703,6 +1739,12 @@
       }
     },
     "step1Tools": {
+      "codex": {
+        "label": "Codex",
+        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && codex",
+        "winCmd": "cd '{'project'}' && code . && codex",
+        "note": "VS Code가 열리고 Codex가 터미널에서 시작됩니다."
+      },
       "claudeCode": {
         "label": "Claude Code",
         "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
@@ -1729,7 +1771,7 @@
         },
         "aiNoResponse": {
           "title": "AI가 답을 안 하거나 멈춰요",
-          "symptom": "Claude Code/Cursor가 응답 없이 멈추거나 'cannot help with that' 같은 답변만 반복할 때.",
+          "symptom": "Claude Code/Codex/Cursor가 응답 없이 멈추거나 'cannot help with that' 같은 답변만 반복할 때.",
           "fix": "프롬프트를 더 짧게 쪼개세요. 한 번에 한 가지 변경만 요청하면 거의 풀립니다.",
           "linkLabel": "AI 프롬프트 작성법 10가지",
           "linkUrl": "https://1daymillion.com/ai-coding-prompt-writing-tips/"
@@ -1786,11 +1828,11 @@
     "reused": "기존 설치 확인",
     "skipped": "선택 단계 건너뜀",
     "skipOptional": "고급 프로젝트 구조는 나중에 설정",
-    "finalGuide": "서버가 실행 중인 창은 열어두세요. 같은 종류의 새 터미널을 열어 아래 명령을 실행하고, Claude에게 “이 프로젝트가 무엇인지 한 문장으로 설명해줘”라고 입력하세요. 계정 사용량에 따라 요금이 발생할 수 있습니다. 실제 결과를 본 뒤 아래 세 항목을 체크하세요.",
+    "finalGuide": "서버가 실행 중인 창은 열어두세요. 같은 종류의 새 터미널을 열어 아래 명령을 실행하고, {aiTool}에게 “이 프로젝트가 무엇인지 한 문장으로 설명해줘”라고 입력하세요. 계정 사용량에 따라 요금이 발생할 수 있습니다. 실제 결과를 본 뒤 아래 세 항목을 체크하세요.",
     "final": {
       "editor": "VS Code에 내 프로젝트가 열립니다. (Windows: WSL / Ubuntu 연결)",
       "preview": "웹페이지·Expo 앱·Jupyter 노트북 중 선택한 결과물이 실제로 열리고 실행됩니다.",
-      "ai": "Claude에 로그인했고 첫 프롬프트에 대한 응답을 받았습니다."
+      "ai": "{aiTool}에 로그인했고 첫 프롬프트에 대한 응답을 받았습니다."
     },
     "detected": "감지된 환경: {os}. 실제 설치할 컴퓨터가 맞는지 확인하세요.",
     "unsupported": "Linux·모바일의 직접 설치 경로는 아직 제공하지 않습니다. 설치 대상 컴퓨터가 Windows 또는 Mac일 때만 해당 항목을 선택하세요.",

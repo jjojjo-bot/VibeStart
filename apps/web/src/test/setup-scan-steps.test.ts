@@ -7,12 +7,13 @@
  * 4) 스캔 스크립트와 parseScanOutput의 마커 계약 동기화
  */
 import { describe, expect, it } from "vitest";
-import { parseScanOutput } from "@vibestart/diagnosis-catalog";
+import { parseScanOutput, parseWslScanOutput } from "@vibestart/diagnosis-catalog";
 import {
   WINDOWS_SCAN_SCRIPT,
   scanPrecompletedStepIds,
   getSetupSteps,
   diagnosisStepFor,
+  wslScanScript,
 } from "@/lib/setup-steps";
 
 const t = (key: string): string => key;
@@ -41,6 +42,24 @@ describe("Windows 단계 순서", () => {
   it("macOS 단계 순서는 변하지 않는다", () => {
     const ids = getSetupSteps("macos", "web-nextjs", "demo", t).map((s) => s.id);
     expect(ids.slice(0, 4)).toEqual(["terminal", "brew", "dev-tools", "editor"]);
+  });
+});
+
+describe("선택한 AI 도구 WSL 스캔", () => {
+  it("Codex 경로는 codex 명령과 일반화된 마커를 사용한다", () => {
+    const script = wslScanScript("web-nextjs", "codex");
+    expect(script).toContain("codex --version");
+    expect(script).toContain("scan-ai-tool");
+    expect(script).not.toContain("claude --version");
+  });
+
+  it("일반화된 AI 도구 마커를 파싱한다", () => {
+    const output = [
+      "VIBESTART::step=scan-devtools::result=ok",
+      "VIBESTART::step=scan-node::result=fail",
+      "VIBESTART::step=scan-ai-tool::result=ok",
+    ].join("\n");
+    expect(parseWslScanOutput(output)).toEqual({ devTools: true, nodejs: false, aiTool: true });
   });
 });
 

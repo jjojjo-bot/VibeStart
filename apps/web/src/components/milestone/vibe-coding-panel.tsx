@@ -30,8 +30,8 @@ export interface VibeCodingPromptCategory {
 }
 
 export interface VibeCodingEditorTool {
-  /** Stable id — Cursor or Claude Code. */
-  id: "claudeCode" | "cursor";
+  /** Stable id — supported AI coding tool. */
+  id: "claudeCode" | "codex" | "cursor";
   /** Locale-agnostic display label (brand name kept in English). */
   label: string;
   /** OS별 단일 체인 명령어 — `{project}` placeholder가 프로젝트명으로 치환된다. */
@@ -227,7 +227,7 @@ function TroubleshootSection({
       </summary>
       <div className="space-y-3 border-t border-border/40 px-5 py-4">
         {labels.items.map((item) => {
-          const isCommand = /^(git |npm |pnpm |code |claude |cursor |open |cd )/.test(
+          const isCommand = /^(git |npm |pnpm |code |claude |codex |cursor |open |cd )/.test(
             item.fix,
           );
           return (

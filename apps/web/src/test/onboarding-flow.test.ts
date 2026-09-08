@@ -12,21 +12,22 @@ import {
 } from "@/lib/onboarding";
 
 describe("onboardingStepKeys", () => {
-  it("Windows는 experience 단계를 포함한 4단계다", () => {
+  it("Windows는 experience와 AI 도구 선택을 포함한 5단계다", () => {
     expect(onboardingStepKeys("windows")).toEqual([
       "os",
       "experience",
       "goal",
+      "aiTool",
       "projectName",
     ]);
   });
 
-  it("macOS는 3단계다", () => {
-    expect(onboardingStepKeys("macos")).toEqual(["os", "goal", "projectName"]);
+  it("macOS는 AI 도구 선택을 포함한 4단계다", () => {
+    expect(onboardingStepKeys("macos")).toEqual(["os", "goal", "aiTool", "projectName"]);
   });
 
-  it("OS 미선택 상태는 3단계다 (선택 시 재계산)", () => {
-    expect(onboardingStepKeys(null)).toEqual(["os", "goal", "projectName"]);
+  it("OS 미선택 상태는 4단계다 (선택 시 재계산)", () => {
+    expect(onboardingStepKeys(null)).toEqual(["os", "goal", "aiTool", "projectName"]);
   });
 });
 
@@ -46,6 +47,11 @@ describe("canProceedFrom", () => {
   it("goal 단계는 goal 선택 후 진행 가능", () => {
     expect(canProceedFrom("goal", base)).toBe(false);
     expect(canProceedFrom("goal", { ...base, goal: "web-nextjs" })).toBe(true);
+  });
+
+  it("aiTool 단계는 도구 선택 후 진행 가능", () => {
+    expect(canProceedFrom("aiTool", base)).toBe(false);
+    expect(canProceedFrom("aiTool", { ...base, aiTool: "codex" })).toBe(true);
   });
 
   it("projectName 단계는 2자 이상 입력 후 진행 가능", () => {

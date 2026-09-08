@@ -33,13 +33,14 @@ import {
   trackSetupScanResult,
   trackSetupScanSkipped,
 } from "@/lib/ga";
+import { aiToolProvider } from "@/lib/ai-tools";
 
 const GROUP_ORDER: SetupGroup[] = ["envPrep", "toolInstall", "aiSetup", "projectCreate"];
 
 function SetupContent() {
   const params = useSearchParams();
   const config = parseSetupParams(params);
-  return config ? <SetupContentValid key={`${config.os}-${config.goal}-${config.projectName}`} config={config} /> : <InvalidSetup />;
+  return config ? <SetupContentValid key={`${config.os}-${config.goal}-${config.aiTool}-${config.projectName}`} config={config} /> : <InvalidSetup />;
 }
 
 function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof parseSetupParams>> }) {
@@ -49,15 +50,15 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
   const ts = useTranslations("SetupSteps");
   const tw = useTranslations("Wizard");
 
-  const { os, goal, projectName } = config;
+  const { os, goal, projectName, aiTool } = config;
   // 설치 경험 — 이상값·부재는 first 폴백(기존 링크·북마크 하위호환)
   const rawExp = searchParams.get("exp");
   const exp = rawExp === "prior" || rawExp === "unsure" ? rawExp : "first";
 
-  const steps = getSetupSteps(os, goal, projectName, ts);
-  const storageKey = `vibestart-progress-v2-${os}-${goal}-${projectName}`;
-  const scanKey = `vibestart-scan-${os}-${goal}-${projectName}`;
-  const wslScanKey = `vibestart-wslscan-${os}-${goal}-${projectName}`;
+  const steps = getSetupSteps(os, goal, projectName, ts, aiTool);
+  const storageKey = `vibestart-progress-v3-${os}-${goal}-${aiTool}-${projectName}`;
+  const scanKey = `vibestart-scan-${os}-${goal}-${aiTool}-${projectName}`;
+  const wslScanKey = `vibestart-wslscan-${os}-${goal}-${aiTool}-${projectName}`;
 
   const [beginnerGuide, setBeginnerGuide] = useState(exp === "first");
   const [openTroubleshooting, setOpenTroubleshooting] = useState<Set<string>>(new Set());
@@ -89,7 +90,7 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
       const saved = localStorage.getItem(storageKey);
       if (saved) {
         // eslint-disable-next-line react-hooks/set-state-in-effect
-        setCompleted(restoreCompleted(saved, getSetupSteps(os, goal, projectName, ts).map(s => s.id)));
+        setCompleted(restoreCompleted(saved, getSetupSteps(os, goal, projectName, ts, aiTool).map(s => s.id)));
       }
       const originData: unknown = JSON.parse(localStorage.getItem(storageKey + '-origins') ?? '{}');
       if (originData && typeof originData === 'object' && !Array.isArray(originData)) {
@@ -105,7 +106,7 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
     } catch { setSaveFailed(true); }
     setHydrated(true);
     trackSetupStart(os, goal, os === "windows" ? exp : undefined);
-  }, [storageKey, scanKey, wslScanKey, os, goal, exp, projectName, ts]);
+  }, [storageKey, scanKey, wslScanKey, os, goal, aiTool, exp, projectName, ts]);
 
   // 완료 상태 변경 시 저장 (hydration 완료 후에만)
   useEffect(() => {
@@ -227,7 +228,7 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
     if (needsNode(goal)) {
       rowsList.push({ found: r.nodejs, foundKey: "nodejsFound", missingKey: "nodejsMissing" });
     }
-    rowsList.push({ found: r.claude, foundKey: "claudeFound", missingKey: "claudeMissing" });
+    rowsList.push({ found: r.aiTool, foundKey: `${aiTool}Found`, missingKey: `${aiTool}Missing` });
     return rowsList;
   };
 
@@ -333,7 +334,7 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
         <div className="flex flex-col gap-6">
           {steps.map((step, i) => {
             const active = isStepActive(i) && !(os === "windows" && exp !== "first" && !wslScanResolved && i > steps.findIndex(s => s.id === "wsl-open"));
-            const verification = verificationFor(step.id, os, goal);
+            const verification = verificationFor(step.id, os, goal, aiTool);
             const done = completed.has(step.id);
             // 완료 단계는 기본 접힘(스크롤 최소화), 헤더 클릭으로 재확장. 진행 중 단계는 항상 펼침.
             const bodyOpen = done ? expandedDone.has(step.id) : active;
@@ -485,11 +486,11 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
                   </div>
                 )}
 
-                {/* CLAUDE.md 자동 생성 안내 (내용은 명령어 heredoc에 이미 포함 — 중복 표시 안 함) */}
-                {bodyOpen && step.claudeMdContent && (
+                {/* 선택한 AI 도구의 지침 파일 자동 생성 안내 */}
+                {bodyOpen && step.instructionFileContent && step.instructionFileName && (
                   <div className="mb-4">
                     <div className="rounded-lg bg-primary/5 p-3 text-sm text-muted-foreground">
-                      {t.rich("claudeMdGuide", { code: (chunks) => <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">{chunks}</code> })}
+                      {t.rich("instructionFileGuide", { instructionFile: step.instructionFileName, code: (chunks) => <code className="rounded bg-muted px-1.5 py-0.5 text-xs font-mono">{chunks}</code> })}
                     </div>
                   </div>
                 )}
@@ -523,11 +524,11 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
                 )}
 
                 {bodyOpen && step.id === 'run-check' && !done && <div className="mb-4 space-y-3">
-                  <p className="text-sm">{tw('finalGuide')}</p>
-                  <ScriptBlock script={`cd ~/${projectName} && claude`} />
+                  <p className="text-sm">{tw('finalGuide', { aiTool: aiToolProvider(aiTool).displayName })}</p>
+                  <ScriptBlock script={`cd ~/${projectName} && ${aiTool}`} />
                   {['editor', 'preview', 'ai'].map(item => <label key={item} className="flex items-start gap-3 text-sm">
                     <input type="checkbox" checked={finalChecks.includes(item)} onChange={e => setFinalChecks(prev => e.target.checked ? [...prev, item] : prev.filter(x => x !== item))} />
-                    {tw(`final.${item}`)}
+                    {tw(`final.${item}`, { aiTool: aiToolProvider(aiTool).displayName })}
                   </label>)}
                 </div>}
                 {bodyOpen && step.optional && !done && <Button className="mb-3 mr-3" size="sm" variant="secondary" onClick={() => {
@@ -567,7 +568,7 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
               {step.id === "wsl-open" && done && showWslScanGate && (
                 <div ref={scanGateRef} className="mt-6 scroll-mt-28">
                   <ScanGate<WslScanResult>
-                    script={wslScanScript(goal)}
+                    script={wslScanScript(goal, aiTool)}
                     namespace="Setup.wslScanGate"
                     parse={parseWslScanOutput}
                     rows={wslScanRows}
@@ -588,7 +589,7 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
               className="h-12 px-8 text-base animate-pulse"
               onClick={() => {
                 trackSetupComplete(os, goal);
-                const params = new URLSearchParams({ os, goal, project: projectName, verified: "1" });
+                const params = new URLSearchParams({ os, goal, project: projectName, ai: aiTool, verified: "1" });
                 router.push(`/complete?${params.toString()}`);
               }}
             >

@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { OS, Goal } from "@/lib/onboarding";
+import { aiToolProvider, type AiTool } from "@/lib/ai-tools";
 import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 
@@ -15,7 +16,7 @@ interface PlanItem {
   icon: string;
 }
 
-function getPlanItems(os: OS, goal: Goal, t: ReturnType<typeof useTranslations<"Plan">>): PlanItem[] {
+function getPlanItems(os: OS, goal: Goal, aiTool: AiTool, t: ReturnType<typeof useTranslations<"Plan">>): PlanItem[] {
   const items: PlanItem[] = [];
 
   items.push({
@@ -61,8 +62,8 @@ function getPlanItems(os: OS, goal: Goal, t: ReturnType<typeof useTranslations<"
   });
 
   items.push({
-    name: t("tools.claudeCode.name"),
-    description: t("tools.claudeCode.description"),
+    name: aiToolProvider(aiTool).displayName,
+    description: t(aiTool === "claude" ? "tools.claudeCode.description" : "tools.codex.description"),
     icon: "🤖",
   });
 
@@ -105,7 +106,7 @@ function getPlanItems(os: OS, goal: Goal, t: ReturnType<typeof useTranslations<"
 function PlanContent() {
   const params = useSearchParams();
   const config = parseSetupParams(params);
-  return config ? <PlanContentValid key={`${config.os}-${config.goal}-${config.projectName}`} config={config} /> : <InvalidSetup />;
+  return config ? <PlanContentValid key={`${config.os}-${config.goal}-${config.aiTool}-${config.projectName}`} config={config} /> : <InvalidSetup />;
 }
 
 function PlanContentValid({ config }: { config: NonNullable<ReturnType<typeof parseSetupParams>> }) {
@@ -114,16 +115,17 @@ function PlanContentValid({ config }: { config: NonNullable<ReturnType<typeof pa
   const tc = useTranslations("Common");
   const tw = useTranslations("Wizard");
 
-  const { os, goal, projectName } = config;
+  const { os, goal, projectName, aiTool } = config;
   // 설치 경험(exp) — 온보딩이 준 값을 /setup으로 그대로 전달. 없으면 생략(=first 폴백).
   const exp = searchParams.get("exp");
 
-  const planItems = getPlanItems(os, goal, t);
+  const planItems = getPlanItems(os, goal, aiTool, t);
 
   const setupParams = new URLSearchParams({
     os,
     goal,
     project: projectName,
+    ai: aiTool,
   });
   if (exp) setupParams.set("exp", exp);
 
@@ -164,7 +166,7 @@ function PlanContentValid({ config }: { config: NonNullable<ReturnType<typeof pa
         {/* AI 오리엔테이션 — 설치 후 무엇을 하는지 */}
         <div className="mb-8 flex items-start gap-3 rounded-xl border border-border/50 bg-card p-4">
           <span className="text-xl">🤖</span>
-          <p className="text-sm text-muted-foreground">{t("aiNote")}</p>
+          <p className="text-sm text-muted-foreground">{t("aiNote", { aiTool: aiToolProvider(aiTool).displayName })}</p>
         </div>
 
         {/* 요약 */}

@@ -14,6 +14,11 @@ describe('Setup boundaries', () => {
     expect(parseSetupParams(new URLSearchParams('os=linux&goal=web-nextjs&project=app'))).toBeNull();
     expect(parseSetupParams(new URLSearchParams('os=windows&goal=nope&project=app'))).toBeNull();
   });
+  it('defaults legacy links to Claude and accepts an explicit Codex choice', () => {
+    expect(parseSetupParams(new URLSearchParams('os=macos&goal=web-nextjs&project=app'))?.aiTool).toBe('claude');
+    expect(parseSetupParams(new URLSearchParams('os=macos&goal=web-nextjs&project=app&ai=codex'))?.aiTool).toBe('codex');
+    expect(parseSetupParams(new URLSearchParams('os=macos&goal=web-nextjs&project=app&ai=unknown'))).toBeNull();
+  });
   it('restores known IDs from arrays only', () => {
     expect([...restoreCompleted('["one","ghost",123,"one"]',['one','two'])]).toEqual(['one']);
     for(const raw of ['null','{}','false','oops']) expect(restoreCompleted(raw,['one']).size).toBe(0);
@@ -48,8 +53,23 @@ describe('Shell contracts', () => {
   it('native Claude installation has no npm dependency and has separate login', () => {
     for(const os of ['windows','macos'] as const) {
       const steps=getSetupSteps(os,'data-ai','demo',t);
-      expect(steps.find(s=>s.id==='ai-setup')!.script).not.toContain('npm');
+      const installScript = steps.find(s=>s.id==='ai-setup')!.script;
+      expect(installScript).not.toContain('npm');
+      expect(installScript).toContain('https://claude.ai/install.sh | bash');
       expect(steps.map(s=>s.id)).toEqual(expect.arrayContaining(['ai-auth','editor-extensions','run-check']));
+    }
+  });
+  it('branches Codex install, login, verification, extension, and instruction file', () => {
+    for (const os of ['windows', 'macos'] as const) {
+      const steps = getSetupSteps(os, 'web-nextjs', 'demo', t, 'codex');
+      expect(steps.find(s => s.id === 'ai-setup')!.script).toContain('https://chatgpt.com/codex/install.sh | sh');
+      expect(steps.find(s => s.id === 'ai-setup')!.script).toContain('codex --version');
+      expect(steps.find(s => s.id === 'ai-auth')!.script).toBe('codex login');
+      expect(steps.find(s => s.id === 'editor-extensions')!.script).toContain('openai.chatgpt');
+      const architecture = steps.find(s => s.id === 'architecture')!;
+      expect(architecture.script).toContain('AGENTS.md');
+      expect(architecture.script).not.toContain('cat > CLAUDE.md');
+      expect(verificationFor('ai-auth', os, 'web-nextjs', 'codex')!.command).toContain('codex login status');
     }
   });
   it('curl failure cannot report install success', () => {
@@ -57,15 +77,15 @@ describe('Shell contracts', () => {
     const output=execFileSync('bash',['-c',`command() { return 1; }; curl() { return 22; }; ${s.script}`],{encoding:'utf8'});
     expect(output).toContain('result=fail'); expect(output).not.toContain('result=ok');
   });
-  it('Bash commands parse across all twelve routes', () => {
+  it('Bash commands parse across all 24 OS, goal, and AI tool routes', () => {
     const scripts: string[] = [];
-    for(const os of ['windows','macos'] as const) for(const goal of ['web-nextjs','web-python','web-java','mobile','data-ai','not-sure'] as const) {
-      for(const step of getSetupSteps(os,goal,'demo-app',t)) {
+    for(const os of ['windows','macos'] as const) for(const goal of ['web-nextjs','web-python','web-java','mobile','data-ai','not-sure'] as const) for (const aiTool of ['claude', 'codex'] as const) {
+      for(const step of getSetupSteps(os,goal,'demo-app',t,aiTool)) {
         if(!(os==='windows' && ['preflight','editor','wsl','wsl-open'].includes(step.id))) scripts.push(step.script);
-        const v=verificationFor(step.id,os,goal);
+        const v=verificationFor(step.id,os,goal,aiTool);
         if(v && !(os==='windows' && step.id==='editor')) scripts.push(v.command);
       }
-      scripts.push(wslScanScript(goal));
+      scripts.push(wslScanScript(goal,aiTool));
     }
     execFileSync('bash',['-n'],{input:scripts.join('\n\n')});
   });

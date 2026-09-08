@@ -99,5 +99,5 @@ export interface ScanResult {
 export interface WslScanResult {
   devTools: boolean;
   nodejs: boolean;
-  claude: boolean;
+  aiTool: boolean;
 }

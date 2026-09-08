@@ -2,6 +2,7 @@ import { PYTHON_READY_CHECK, JAVA_READY_CHECK } from "./setup-verification";
 import { hardenScript, type HardenShell } from "@vibestart/script-generator";
 import type { DiagnosisStep, ScanResult, WslScanResult } from "@vibestart/shared-types";
 import { isValidProjectName, type OS, type Goal } from "./onboarding";
+import { aiToolProvider, nativeAiInstallScript, type AiTool } from "./ai-tools";
 
 export type SetupGroup = "envPrep" | "toolInstall" | "aiSetup" | "projectCreate";
 
@@ -21,8 +22,9 @@ export interface SetupStep {
   script: string;
   /** 실행 환경 표시 — 초보자가 어디서 실행해야 하는지 알 수 있도록 */
   environment?: string;
-  /** CLAUDE.md 파일 내용 — 이 필드가 있으면 웹에서 내용을 보여주고 직접 저장하도록 안내 */
-  claudeMdContent?: string;
+  /** 선택한 AI 도구의 프로젝트 지침 파일 내용. */
+  instructionFileContent?: string;
+  instructionFileName?: "CLAUDE.md" | "AGENTS.md";
   /** 성공 시 예상 터미널 출력 — 사용자가 결과를 비교할 수 있도록 */
   resultPreview?: string;
   /** 흔한 에러와 해결 방법 */
@@ -85,10 +87,11 @@ export function scanPrecompletedStepIds(result: ScanResult): string[] {
 // 있으므로(미초기화 계정 생성 위험 없음) 여기서 스캔한다. goal이 실제로 설치하는 도구를 검사:
 //   - scan-devtools: git (+ python3 / java — dev-tools-basic이 까는 것 전부) 있어야 ok
 //   - scan-node: node (needsNode goal에서만 방출)
-//   - scan-claude: claude CLI (PATH 미갱신 대비 npm-global 경로도 확인)
+//   - scan-ai-tool: 온보딩에서 선택한 AI CLI
 
 /** 2차 WSL 스캔 스크립트(goal별). 마커 형식은 1차와 동일 — parseWslScanOutput이 파싱. */
-export function wslScanScript(goal: Goal): string {
+export function wslScanScript(goal: Goal, aiTool: AiTool = "claude"): string {
+  const provider = aiToolProvider(aiTool);
   const extra = extraRuntimeFor(goal);
   const devChecks: string[] = ["git --version >/dev/null 2>&1 && curl --version >/dev/null 2>&1"];
   if (extra === "python") devChecks.push(PYTHON_READY_CHECK);
@@ -103,7 +106,7 @@ export function wslScanScript(goal: Goal): string {
     );
   }
   lines.push(
-    `if claude --version >/dev/null 2>&1; then echo "VIBESTART::step=scan-claude::result=ok"; else echo "VIBESTART::step=scan-claude::result=fail"; fi`,
+    `if ${provider.command} --version >/dev/null 2>&1; then echo "VIBESTART::step=scan-ai-tool::result=ok"; else echo "VIBESTART::step=scan-ai-tool::result=fail"; fi`,
   );
   return lines.join("\n");
 }
@@ -113,7 +116,7 @@ export function wslScanPrecompletedStepIds(result: WslScanResult): string[] {
   const ids: string[] = [];
   if (result.devTools) ids.push("dev-tools-basic");
   if (result.nodejs) ids.push("dev-tools-nodejs");
-  if (result.claude) ids.push("ai-setup");
+  if (result.aiTool) ids.push("ai-setup");
   return ids;
 }
 
@@ -416,61 +419,50 @@ function wslVscodeStep(t: T): SetupStep {
   };
 }
 
-// Native CLI installation is independent from login and VS Code extensions.
-function nativeClaudeScript(os: OS): string {
-  const profile = os === "windows" ? "$HOME/.bashrc" : "$HOME/.zprofile";
-  return joinChain([
-    "set -o pipefail",
-    'export PATH="$HOME/.local/bin:$PATH"',
-    '(command -v claude >/dev/null 2>&1 || curl -fsSL https://claude.ai/install.sh | bash)',
-    `(grep -Fq '.local/bin' "${profile}" 2>/dev/null || printf '%s\\n' 'export PATH="$HOME/.local/bin:$PATH"' >> "${profile}")`,
-    'claude --version',
-  ]);
-}
-
-function claudeAuthStep(os: OS, t: T): SetupStep {
+function aiAuthStep(os: OS, aiTool: AiTool, t: T): SetupStep {
+  const provider = aiToolProvider(aiTool);
   return {
-    id: "ai-auth", group: "aiSetup", title: t("auth.title"),
-    description: t("auth.description"), detailedGuide: t("auth.guide"),
+    id: "ai-auth", group: "aiSetup", title: t(`${provider.authTranslationKey}.title`),
+    description: t(`${provider.authTranslationKey}.description`), detailedGuide: t(`${provider.authTranslationKey}.guide`),
     environment: t(os === "windows" ? "environments.linuxCmd" : "environments.macTerminal"),
-    script: "claude auth login", resultPreview: "claude auth status --text",
+    script: provider.loginCommand, resultPreview: provider.authCheckCommand,
   };
 }
 
-function editorExtensionsStep(os: OS, t: T): SetupStep {
+function editorExtensionsStep(os: OS, aiTool: AiTool, t: T): SetupStep {
+  const provider = aiToolProvider(aiTool);
   return {
-    id: "editor-extensions", group: "aiSetup", title: t("extensions.title"),
-    description: t("extensions.description"), detailedGuide: t("extensions.guide"),
+    id: "editor-extensions", group: "aiSetup", title: t(`${provider.extensionTranslationKey}.title`),
+    description: t(`${provider.extensionTranslationKey}.description`), detailedGuide: t(`${provider.extensionTranslationKey}.guide`),
     environment: t(os === "windows" ? "environments.linuxCmd" : "environments.macTerminal"),
     script: (os === "windows" ? "code --install-extension ms-vscode-remote.remote-wsl && " : "") +
-      "code --install-extension anthropic.claude-code",
+      `code --install-extension ${provider.extensionId}`,
   };
 }
 
-function wslClaudeStep(t: T): SetupStep {
+function aiSetupStep(os: OS, aiTool: AiTool, t: T): SetupStep {
   // `(grep ... || echo ...)`는 괄호 서브셸로 묶는다 — 안 그러면 `&& A || B && C`의
   // 좌결합 우선순위로 체인이 깨진다.
   //
   // `code` 견고 해석 블록: `{ …; }` 그룹의 종료코드가 이 단계의 성공/실패다. not-found
   // 분기는 exit 대신 `false`로 체인을 멈춰(대화형 창 보존) 하드닝 마커가 fail을 낸다.
-  const script = nativeClaudeScript("windows");
+  const provider = aiToolProvider(aiTool);
+  const script = nativeAiInstallScript(aiTool, os);
 
   return {
     id: "ai-setup",
-    title: t("aiSetup.title"),
-    description: t("aiSetup.description"),
-    whyNeeded: t("aiSetup.whyNeeded"),
+    title: t(`${provider.setupTranslationKey}.title`),
+    description: t(`${provider.setupTranslationKey}.description`),
+    whyNeeded: t(`${provider.setupTranslationKey}.whyNeeded`),
     group: "aiSetup",
-    environment: t("environments.linuxCmd"),
-    detailedGuide: t("aiSetup.detailedGuide"),
+    environment: t(os === "windows" ? "environments.linuxCmd" : "environments.macTerminal"),
+    detailedGuide: t(`${provider.setupTranslationKey}.detailedGuide`),
     script,
-    resultPreview: "2.x.x (Claude Code)",
+    resultPreview: `${provider.command} --version`,
     troubleshooting: [
-      { symptom: t("aiSetup.troubleshooting.0.symptom"), solution: t("aiSetup.troubleshooting.0.solution") },
-      { symptom: t("aiSetup.troubleshooting.1.symptom"), solution: t("aiSetup.troubleshooting.1.solution") },
-      { symptom: t("aiSetup.troubleshooting.2.symptom"), solution: t("aiSetup.troubleshooting.2.solution") },
-      { symptom: t("aiSetup.troubleshooting.3.symptom"), solution: t("aiSetup.troubleshooting.3.solution") },
-      { symptom: t("aiSetup.troubleshooting.4.symptom"), solution: t("aiSetup.troubleshooting.4.solution") },
+      { symptom: t(`${provider.setupTranslationKey}.troubleshooting.0.symptom`), solution: t(`${provider.setupTranslationKey}.troubleshooting.0.solution`) },
+      { symptom: t(`${provider.setupTranslationKey}.troubleshooting.1.symptom`), solution: t(`${provider.setupTranslationKey}.troubleshooting.1.solution`) },
+      { symptom: t(`${provider.setupTranslationKey}.troubleshooting.2.symptom`), solution: t(`${provider.setupTranslationKey}.troubleshooting.2.solution`) },
     ],
   };
 }
@@ -707,30 +699,9 @@ function macVscodeStep(t: T): SetupStep {
 }
 
 // Same native CLI installer on macOS; Homebrew supplies Git and project runtimes.
-function macClaudeStep(t: T): SetupStep {
-  const script = nativeClaudeScript("macos");
-
-  return {
-    id: "ai-setup",
-    title: t("aiSetup.title"),
-    description: t("aiSetup.description"),
-    whyNeeded: t("aiSetup.whyNeeded"),
-    group: "aiSetup",
-    environment: t("environments.macTerminal"),
-    detailedGuide: t("aiSetup.detailedGuide"),
-    script,
-    resultPreview: "2.x.x (Claude Code)",
-    troubleshooting: [
-      { symptom: t("aiSetup.troubleshooting.0.symptom"), solution: t("aiSetup.troubleshooting.0.solution") },
-      { symptom: t("aiSetup.troubleshooting.1.symptom"), solution: t("aiSetup.troubleshooting.1.solution") },
-      { symptom: t("aiSetup.troubleshooting.2.symptom"), solution: t("aiSetup.troubleshooting.2.solution") },
-    ],
-  };
-}
-
 // ─── 아키텍처 스캐폴딩 (Goal별 1개의 통합 단계) ───
-// script = 폴더 구조 생성 + heredoc으로 CLAUDE.md 파일까지 자동 작성(withClaudeMd)
-// claudeMdContent = 이 단계가 CLAUDE.md를 만든다는 게이트 플래그(원본 상수 보관).
+// script = 폴더 구조 생성 + 선택한 도구의 지침 파일까지 자동 작성
+// instructionFileContent = 이 단계가 지침 파일을 만든다는 게이트 플래그.
 //   UI는 내용을 다시 표시하지 않고 "자동 생성됨" 안내만 띄운다(명령어 heredoc과 중복 방지).
 
 const CLAUDE_MD_NEXTJS = `# Project Architecture Rules
@@ -884,15 +855,22 @@ function mkdirWithGitkeep(dirs: ReadonlyArray<string>): string {
  * 비전공자는 파일을 "새로 만드는" 심리적 부담이 크기 때문에 미리 파일이
  * 존재하도록 만들어 두고, 필요하면 VS Code에서 열어 편집하게 유도한다.
  */
-function withClaudeMd(mkdirChain: string, projectRoot: string, content: string): string {
-  return `${mkdirChain} && cd ${projectRoot} && if [ ! -e CLAUDE.md ]; then cat > CLAUDE.md << 'VIBESTART_CLAUDE_MD_EOF'
+function withInstructionFile(
+  mkdirChain: string,
+  projectRoot: string,
+  content: string,
+  aiTool: AiTool,
+): string {
+  const file = aiToolProvider(aiTool).instructionFile;
+  return `${mkdirChain} && cd ${projectRoot} && if [ ! -e ${file} ]; then cat > ${file} << 'VIBESTART_AI_INSTRUCTIONS_EOF'
 ${content}
-VIBESTART_CLAUDE_MD_EOF
+VIBESTART_AI_INSTRUCTIONS_EOF
 fi`;
 }
 
-function architectureStep(goal: Goal, projectName: string, env: string, t: T): SetupStep {
+function architectureStep(goal: Goal, projectName: string, env: string, aiTool: AiTool, t: T): SetupStep {
   const home = `~/${projectName}`;
+  const instructionFileName = aiToolProvider(aiTool).instructionFile;
   const descKey = goal === "data-ai" ? "architecture.description.dataAi" : "architecture.description.default";
 
   switch (goal) {
@@ -912,13 +890,15 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         description: t(descKey),
         group: "projectCreate",
         environment: env,
-        detailedGuide: t("architecture.detailedGuide"),
-        script: withClaudeMd(
+        detailedGuide: t("architecture.detailedGuide", { instructionFile: instructionFileName }),
+        script: withInstructionFile(
           `cd ${home} && ${feCmd}`,
           home,
           CLAUDE_MD_NEXTJS,
+          aiTool,
         ),
-        claudeMdContent: CLAUDE_MD_NEXTJS,
+        instructionFileContent: CLAUDE_MD_NEXTJS,
+        instructionFileName,
       };
     }
     case "web-python": {
@@ -944,13 +924,15 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         description: t(descKey),
         group: "projectCreate",
         environment: env,
-        detailedGuide: t("architecture.detailedGuide"),
-        script: withClaudeMd(
+        detailedGuide: t("architecture.detailedGuide", { instructionFile: instructionFileName }),
+        script: withInstructionFile(
           `cd ${home}/frontend && ${feCmd} && cd ${home}/backend && ${beCmd}`,
           home,
           CLAUDE_MD_WEB_PYTHON,
+          aiTool,
         ),
-        claudeMdContent: CLAUDE_MD_WEB_PYTHON,
+        instructionFileContent: CLAUDE_MD_WEB_PYTHON,
+        instructionFileName,
       };
     }
     case "web-java": {
@@ -976,13 +958,15 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         description: t(descKey),
         group: "projectCreate",
         environment: env,
-        detailedGuide: t("architecture.detailedGuide"),
-        script: withClaudeMd(
+        detailedGuide: t("architecture.detailedGuide", { instructionFile: instructionFileName }),
+        script: withInstructionFile(
           `cd ${home}/frontend && ${feCmd} && cd ${home}/backend && ${beCmd}`,
           home,
           CLAUDE_MD_WEB_JAVA,
+          aiTool,
         ),
-        claudeMdContent: CLAUDE_MD_WEB_JAVA,
+        instructionFileContent: CLAUDE_MD_WEB_JAVA,
+        instructionFileName,
       };
     }
     case "mobile": {
@@ -1001,13 +985,15 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         description: t(descKey),
         group: "projectCreate",
         environment: env,
-        detailedGuide: t("architecture.detailedGuide"),
-        script: withClaudeMd(
+        detailedGuide: t("architecture.detailedGuide", { instructionFile: instructionFileName }),
+        script: withInstructionFile(
           `cd ${home} && ${cmd}`,
           home,
           CLAUDE_MD_EXPO,
+          aiTool,
         ),
-        claudeMdContent: CLAUDE_MD_EXPO,
+        instructionFileContent: CLAUDE_MD_EXPO,
+        instructionFileName,
       };
     }
     case "data-ai": {
@@ -1025,13 +1011,15 @@ function architectureStep(goal: Goal, projectName: string, env: string, t: T): S
         description: t(descKey),
         group: "projectCreate",
         environment: env,
-        detailedGuide: t("architecture.detailedGuide"),
-        script: withClaudeMd(
+        detailedGuide: t("architecture.detailedGuide", { instructionFile: instructionFileName }),
+        script: withInstructionFile(
           `cd ${home} && ${cmd}`,
           home,
           CLAUDE_MD_DATA_AI,
+          aiTool,
         ),
-        claudeMdContent: CLAUDE_MD_DATA_AI,
+        instructionFileContent: CLAUDE_MD_DATA_AI,
+        instructionFileName,
       };
     }
   }
@@ -1076,7 +1064,7 @@ Success! Created ${path}
   };
 }
 
-function firstRunStep(projectName: string, goal: Goal, variant: "wsl" | "mac", env: string, t: T): SetupStep {
+function firstRunStep(projectName: string, goal: Goal, variant: "wsl" | "mac", env: string, aiTool: AiTool, t: T): SetupStep {
   const hasFeBe = goal === "web-python" || goal === "web-java";
   const openCmd = variant === "mac"
     ? `open -a "Visual Studio Code" ~/${projectName}`
@@ -1095,7 +1083,7 @@ function firstRunStep(projectName: string, goal: Goal, variant: "wsl" | "mac", e
     description: t("firstRun.description"),
     group: "projectCreate",
     environment: env,
-    detailedGuide: t(guideKey, { projectName }),
+    detailedGuide: t(guideKey, { projectName, aiCommand: aiToolProvider(aiTool).command }),
     ...(variant === "wsl" && {
       guideImage: {
         src: "/setup/wsl-file-explorer.svg",
@@ -1111,6 +1099,7 @@ function appendProjectSteps(
   goal: Goal,
   projectName: string,
   variant: "wsl" | "mac",
+  aiTool: AiTool,
   t: T,
 ): void {
   const env = variant === "wsl" ? t("environments.linuxCmd") : t("environments.macTerminal");
@@ -1137,10 +1126,10 @@ function appendProjectSteps(
   }
 
   // 선택적 아키텍처 스캐폴딩 (기존 CLAUDE.md 보존)
-  steps.push(architectureStep(goal, projectName, env, t));
+  steps.push(architectureStep(goal, projectName, env, aiTool, t));
 
   // 첫 실행
-  steps.push(firstRunStep(projectName, goal, variant, env, t));
+  steps.push(firstRunStep(projectName, goal, variant, env, aiTool, t));
   const folder = `~/${projectName}` + (goal === "web-python" || goal === "web-java" ? "/frontend" : "");
   steps.push({
     id: "run-check", title: t("runCheck.title"), description: t("runCheck.description"),
@@ -1183,6 +1172,7 @@ export function getSetupSteps(
   goal: Goal,
   projectName: string,
   t: T,
+  aiTool: AiTool = "claude",
 ): SetupStep[] {
   if (!isValidProjectName(projectName)) throw new Error("Invalid project name");
   const steps: SetupStep[] = [];
@@ -1208,12 +1198,12 @@ export function getSetupSteps(
     }
 
     // AI 설정
-    steps.push(wslClaudeStep(t));
-    steps.push(claudeAuthStep(os, t));
-    steps.push(editorExtensionsStep(os, t));
+    steps.push(aiSetupStep(os, aiTool, t));
+    steps.push(aiAuthStep(os, aiTool, t));
+    steps.push(editorExtensionsStep(os, aiTool, t));
 
     // 프로젝트 생성
-    appendProjectSteps(steps, goal, projectName, "wsl", t);
+    appendProjectSteps(steps, goal, projectName, "wsl", aiTool, t);
   } else {
     // 환경 준비
     steps.push(brewStep(t));
@@ -1223,12 +1213,12 @@ export function getSetupSteps(
     steps.push(macVscodeStep(t));
 
     // AI 설정
-    steps.push(macClaudeStep(t));
-    steps.push(claudeAuthStep(os, t));
-    steps.push(editorExtensionsStep(os, t));
+    steps.push(aiSetupStep(os, aiTool, t));
+    steps.push(aiAuthStep(os, aiTool, t));
+    steps.push(editorExtensionsStep(os, aiTool, t));
 
     // 프로젝트 생성
-    appendProjectSteps(steps, goal, projectName, "mac", t);
+    appendProjectSteps(steps, goal, projectName, "mac", aiTool, t);
   }
 
   // 진단 마커 하드닝 — 실패-진단 규칙이 있는 단계의 스크립트에만 적용.

@@ -1125,7 +1125,7 @@ export default async function MilestoneRunPage({
     { id: "visual" as const, emoji: "✨" },
     { id: "font" as const, emoji: "✍️" },
   ];
-  const VIBE_EDITOR_TOOL_IDS = ["claudeCode", "cursor"] as const;
+  const VIBE_EDITOR_TOOL_IDS = ["codex", "claudeCode", "cursor"] as const;
   const VIBE_TROUBLESHOOT_IDS = ["gitConflict", "aiNoResponse", "deployFailed"] as const;
 
   let vibeCodingData: {

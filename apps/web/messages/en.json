@@ -520,6 +520,10 @@
         "title": "Goal",
         "description": "What do you want to build?"
       },
+      "aiTool": {
+        "title": "AI Tool",
+        "description": "Which AI coding assistant would you like to start with?"
+      },
       "projectName": {
         "title": "Project Name",
         "description": "Give your project a name"
@@ -568,6 +572,11 @@
       }
     },
     "recommended": "Recommended",
+    "aiToolOptions": {
+      "ariaLabel": "Choose an AI coding tool",
+      "codex": { "name": "Codex", "badge": "For ChatGPT users", "description": "Start with your ChatGPT account" },
+      "claude": { "name": "Claude Code", "badge": "For Claude users", "description": "Start with your Claude account" }
+    },
     "projectName": {
       "label": "Project Name",
       "placeholder": "my-first-app",
@@ -578,7 +587,7 @@
   "Plan": {
     "title": "Your Custom Setup Plan",
     "subtitle": "We'll install these tools step by step",
-    "aiNote": "Once everything's installed, you'll just tell Claude Code what you want in plain words — the AI writes the code for you.",
+    "aiNote": "Once everything is installed, tell {aiTool} what you want in plain words — the AI writes the code for you.",
     "tools": {
       "git": {
         "name": "Git",
@@ -609,6 +618,9 @@
       "claudeCode": {
         "name": "Claude Code",
         "description": "AI coding assistant (CLI + VS Code extension)"
+      },
+      "codex": {
+        "description": "AI coding assistant for your ChatGPT account (CLI + VS Code extension)"
       },
       "nextjsProject": {
         "name": "Create Next.js Project",
@@ -646,7 +658,8 @@
     "progressLabel": "Progress",
     "progressAriaLabel": "Setup progress",
     "resultPreviewLabel": "Expected output",
-    "claudeMdGuide": "An existing <code>CLAUDE.md</code> is preserved. Project guidance is created only when the file does not exist.",
+    "claudeMdGuide": "An existing CLAUDE.md file is preserved.",
+    "instructionFileGuide": "An existing <code>{instructionFile}</code> is preserved. Project guidance is created only when the file does not exist.",
     "whyNeededToggle": {
       "open": "▾ Close",
       "closed": "▸ What is this?"
@@ -683,6 +696,8 @@
       "nodejsMissing": "Node.js — need to install",
       "claudeFound": "✓ Claude Code — already installed",
       "claudeMissing": "Claude Code — need to install",
+      "codexFound": "✓ Codex — already installed",
+      "codexMissing": "Codex — need to install",
       "resultNote": "We've marked what's already installed as done. Just finish the remaining steps!",
       "continueButton": "Continue"
     },
@@ -900,6 +915,17 @@
         }
       ]
     },
+    "aiSetupCodex": {
+      "title": "Install AI Coding Assistant (Codex)",
+      "description": "Install the Codex CLI first. ChatGPT login follows separately.",
+      "whyNeeded": "Codex creates and edits code through conversation.",
+      "detailedGuide": "Run in Ubuntu on Windows, or Terminal on Mac. This uses OpenAI's official installer and reuses an existing codex command.",
+      "troubleshooting": [
+        { "symptom": "codex: command not found", "solution": "Open a new terminal and run codex --version. If it still fails, rerun the installer and check PATH." },
+        { "symptom": "curl download error", "solution": "Check internet, proxy, and certificate settings, then retry." },
+        { "symptom": "Permission denied", "solution": "Do not use sudo; check that your home directory is writable." }
+      ]
+    },
     "projectFrontend": {
       "title": {
         "standalone": "Create Project",
@@ -962,17 +988,17 @@
         "default": "Configure architecture rules for the AI tool to follow",
         "dataAi": "Configure analysis project rules for the AI tool to follow"
       },
-      "detailedGuide": "The command below creates the folder structure and the CLAUDE.md file for you."
+      "detailedGuide": "The command below creates the folder structure and {instructionFile} for you."
     },
     "firstRun": {
       "title": "First Run!",
       "description": "Open the project in VS Code and start coding with AI",
       "detailedGuide": {
-        "simple": "The command below opens VS Code. Inside VS Code, open the terminal (Ctrl+` or Cmd+`) and type claude to start AI coding.",
-        "withBackend": "The command below opens VS Code. Inside VS Code, open the terminal (Ctrl+` or Cmd+`) and type claude to start AI coding. You'll see both the frontend/ and backend/ folders.",
+        "simple": "The command below opens VS Code. Open its terminal and type {aiCommand} to start AI coding.",
+        "withBackend": "The command below opens VS Code. Open its terminal and type {aiCommand} to start AI coding. You'll see frontend/ and backend/.",
         "wsl": {
-          "simple": "The command below opens VS Code in WSL Remote mode. Inside VS Code, open the terminal (Ctrl+`) and type claude to start AI coding.\n\n💡 Your project folder is in File Explorer's sidebar under Linux → Ubuntu → home → your account → {projectName}.",
-          "withBackend": "The command below opens VS Code in WSL Remote mode. Inside VS Code, open the terminal (Ctrl+`) and type claude to start AI coding. You'll see both the frontend/ and backend/ folders.\n\n💡 Your project folder is in File Explorer's sidebar under Linux → Ubuntu → home → your account → {projectName}.",
+          "simple": "The command below opens VS Code in WSL Remote mode. Open its terminal and type {aiCommand} to start AI coding.\n\n💡 Your project folder is under Linux → Ubuntu → home → your account → {projectName}.",
+          "withBackend": "The command below opens VS Code in WSL Remote mode. Open its terminal and type {aiCommand} to start AI coding. You'll see frontend/ and backend/.\n\n💡 Your project folder is under Linux → Ubuntu → home → your account → {projectName}.",
           "imageAlt": "Example illustration of File Explorer showing the Linux sidebar entry and the Ubuntu/home/account/project folder path"
         }
       }
@@ -989,11 +1015,13 @@
       "description": "Sign in separately from installation",
       "guide": "Run this in Ubuntu on Windows, or Terminal on Mac. Complete login in the opened browser. An eligible paid plan or billed API access is required. If no browser opens, use the login URL shown in your own terminal. Do not paste credentials into this website. Then run the status check."
     },
+    "authCodex": { "title": "Connect your ChatGPT account", "description": "Sign in separately from installation", "guide": "Run in Ubuntu on Windows or Terminal on Mac, then finish ChatGPT sign-in in the browser. Never paste credentials into this website." },
     "extensions": {
       "title": "Connect VS Code to the AI tool",
       "description": "Install editor extensions after CLI login",
       "guide": "Run in Ubuntu (Windows) or Terminal (Mac). If code is not found, reopen the terminal. On Mac, open VS Code → Command Palette → Shell Command: Install code command in PATH. On Windows, save work, run wsl --shutdown in PowerShell, then reopen Ubuntu. You can also install the WSL and Claude Code extensions in VS Code Extensions."
     },
+    "extensionsCodex": { "title": "Connect VS Code to Codex", "description": "Install the Codex IDE extension", "guide": "If code is not found, reopen the terminal. On Mac, first run VS Code → Command Palette → Shell Command: Install code command in PATH." },
     "runCheck": {
       "title": "Run your project and verify readiness",
       "description": "See a working result before finishing",
@@ -1670,7 +1698,7 @@
     "step2Title": "Ask AI for Your First Edit",
     "step2Desc": "Pick a category and copy the prompt. Feel free to tweak it.",
     "step3Title": "Push Your Changes",
-    "step3Desc": "Ask Claude Code like this",
+    "step3Desc": "Ask your selected AI coding tool to do the following",
     "step3Prompt": "First run `git pull` to grab the latest files, then commit what we changed and push to GitHub",
     "step4Title": "Check the Auto-Deploy Result",
     "step4Desc": "After pushing, Vercel auto-deploys your site. Check it in 1–2 minutes",
@@ -1703,6 +1731,12 @@
       }
     },
     "step1Tools": {
+      "codex": {
+        "label": "Codex",
+        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && codex",
+        "winCmd": "cd '{'project'}' && code . && codex",
+        "note": "VS Code opens and Codex starts in the terminal."
+      },
       "claudeCode": {
         "label": "Claude Code",
         "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
@@ -1729,7 +1763,7 @@
         },
         "aiNoResponse": {
           "title": "AI doesn't respond or stalls",
-          "symptom": "Claude Code/Cursor hangs or keeps replying 'cannot help with that'.",
+          "symptom": "Claude Code/Codex/Cursor hangs or keeps replying 'cannot help with that'.",
           "fix": "Split your prompt into smaller pieces. One change at a time almost always unblocks it.",
           "linkLabel": "10 prompt writing tips",
           "linkUrl": "https://1daymillion.com/ai-coding-prompt-writing-tips/"
@@ -1786,11 +1820,11 @@
     "reused": "Already installed",
     "skipped": "Skipped (optional)",
     "skipOptional": "Skip advanced project structure",
-    "finalGuide": "Keep the server terminal open. In a NEW terminal of the same type, run the command below to open Claude in your project. Ask it to explain this project in one sentence; account usage may be billed. Confirm the three items after seeing the results.",
+    "finalGuide": "Keep the server terminal open. In a NEW terminal of the same type, run the command below to open {aiTool} in your project. Ask it to explain this project in one sentence; account usage may be billed. Confirm the three items after seeing the results.",
     "final": {
       "editor": "The correct project opens in VS Code (Windows: WSL / Ubuntu).",
       "preview": "The web page, Expo app, or Jupyter notebook actually opens and runs.",
-      "ai": "Claude is signed in and has responded to my first prompt."
+      "ai": "{aiTool} is signed in and has responded to my first prompt."
     },
     "detected": "Detected: {os}. Confirm the computer you will install on.",
     "unsupported": "Linux and mobile devices do not have a local installation route here yet. Select Windows or Mac only if that is your target computer.",

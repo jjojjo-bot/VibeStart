@@ -8,14 +8,15 @@ import { useEffect, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
 import type { Goal } from "@/lib/onboarding";
+import { aiToolProvider, type AiTool } from "@/lib/ai-tools";
 import { incrementCompletions } from "@/lib/stats";
 import { trackPhase2Login } from "@/lib/ga";
 import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 import { signInFromCompleteAction, goToDashboardWithPhase1Action } from "../login/actions";
 
-function getInstalledTools(goal: Goal): string[] {
-  const base = ["Git", "VS Code", "Claude Code"];
+function getInstalledTools(goal: Goal, aiTool: AiTool): string[] {
+  const base = ["Git", "VS Code", aiToolProvider(aiTool).displayName];
 
   switch (goal) {
     case "web-nextjs":
@@ -142,7 +143,7 @@ function PromptCopyBlock({ text }: { text: string }) {
 function CompleteContent() {
   const params = useSearchParams();
   const config = parseSetupParams(params);
-  return config ? <CompleteContentValid key={`${config.os}-${config.goal}-${config.projectName}`} config={config} /> : <InvalidSetup />;
+  return config ? <CompleteContentValid key={`${config.os}-${config.goal}-${config.aiTool}-${config.projectName}`} config={config} /> : <InvalidSetup />;
 }
 
 function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeof parseSetupParams>> }) {
@@ -152,27 +153,29 @@ function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeo
   const [ready, setReady] = useState(false);
   const [showStructure, setShowStructure] = useState(false);
 
-  const { os, goal, projectName } = config;
+  const { os, goal, projectName, aiTool } = config;
 
   useEffect(() => {
     try {
-      const ids = getSetupSteps(os, goal, projectName, key => key).map(s => s.id);
-      const completed = restoreCompleted(localStorage.getItem(`vibestart-progress-v2-${os}-${goal}-${projectName}`), ids);
+      const ids = getSetupSteps(os, goal, projectName, key => key, aiTool).map(s => s.id);
+      const storageKey = `vibestart-progress-v3-${os}-${goal}-${aiTool}-${projectName}`;
+      const completed = restoreCompleted(localStorage.getItem(storageKey), ids);
       const verified = ids.every(id => completed.has(id));
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setReady(verified);
-      const origins = JSON.parse(localStorage.getItem(`vibestart-progress-v2-${os}-${goal}-${projectName}-origins`) ?? "{}");
+      const origins = JSON.parse(localStorage.getItem(`${storageKey}-origins`) ?? "{}");
       setShowStructure(origins?.architecture !== "skipped");
       if (verified && !sessionStorage.getItem("vibestart_completed")) {
         sessionStorage.setItem("vibestart_completed", "1");
         incrementCompletions();
       }
     } catch { /* Unavailable storage means unverified, never a success claim. */ }
-  }, [os, goal, projectName]);
+  }, [os, goal, aiTool, projectName]);
 
-  const tools = getInstalledTools(goal);
+  const tools = getInstalledTools(goal, aiTool);
   const goalLabel = t(getGoalLabelKey(goal) as Parameters<typeof t>[0]);
-  const tree = t(getProjectTreeKey(goal) as Parameters<typeof t>[0], { projectName });
+  const tree = t(getProjectTreeKey(goal) as Parameters<typeof t>[0], { projectName })
+    .replaceAll("CLAUDE.md", aiToolProvider(aiTool).instructionFile);
   const promptTemplate = t(getPromptTemplateKey(goal) as Parameters<typeof t>[0]);
   const firstPrompt = t(getPromptExampleKey(goal) as Parameters<typeof t>[0]);
   const designPath = getDesignUnzipPath(goal, projectName);
@@ -195,7 +198,7 @@ function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeo
     t("claudeDesign.steps.3" as Parameters<typeof t>[0], { designPath }),
   ] : [];
 
-  const setupLink = `/setup?${new URLSearchParams({os, goal, project: projectName})}`;
+  const setupLink = `/setup?${new URLSearchParams({os, goal, project: projectName, ai: aiTool})}`;
   if (!ready) return <main id="main-content" className="mx-auto max-w-lg space-y-6 px-6 py-20">
     <p>{tw("unverifiedComplete")}</p><Link href={setupLink} className="underline">{tw("recheck")}</Link>
   </main>;

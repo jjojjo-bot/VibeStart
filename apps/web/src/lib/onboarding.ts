@@ -1,3 +1,5 @@
+import type { AiTool } from "./ai-tools";
+
 export type OS = "windows" | "macos";
 
 export type Goal = "web-nextjs" | "web-python" | "web-java" | "mobile" | "data-ai" | "not-sure";
@@ -8,6 +10,7 @@ export type InstallExperience = "first" | "prior" | "unsure";
 export interface OnboardingData {
   os: OS | null;
   goal: Goal | null;
+  aiTool: AiTool | null;
   projectName: string;
   /** Windows에서만 질문. macOS 플로우에선 null 유지. */
   experience: InstallExperience | null;
@@ -16,6 +19,7 @@ export interface OnboardingData {
 export const INITIAL_ONBOARDING: OnboardingData = {
   os: null,
   goal: null,
+  aiTool: null,
   projectName: "",
   experience: null,
 };
@@ -60,13 +64,13 @@ export const GOAL_OPTIONS = [
   { value: "not-sure" as Goal, label: "아직 잘 모르겠어요", icon: "🤔" },
 ] as const;
 
-export type OnboardingStepKey = "os" | "experience" | "goal" | "projectName";
+export type OnboardingStepKey = "os" | "experience" | "goal" | "aiTool" | "projectName";
 
 /** OS에 따른 온보딩 단계 구성. 설치 경험 질문은 Windows에만 (스캔 게이트가 Windows 전용). */
 export function onboardingStepKeys(os: OS | null): readonly OnboardingStepKey[] {
   return os === "windows"
-    ? (["os", "experience", "goal", "projectName"] as const)
-    : (["os", "goal", "projectName"] as const);
+    ? (["os", "experience", "goal", "aiTool", "projectName"] as const)
+    : (["os", "goal", "aiTool", "projectName"] as const);
 }
 
 /** 단계별 진행 가능 조건 — 온보딩 페이지의 '다음' 버튼 활성화 규칙. */
@@ -78,6 +82,8 @@ export function canProceedFrom(stepKey: OnboardingStepKey, data: OnboardingData)
       return data.experience !== null;
     case "goal":
       return data.goal !== null;
+    case "aiTool":
+      return data.aiTool !== null;
     case "projectName":
       return isValidProjectName(data.projectName);
   }
@@ -92,10 +98,12 @@ export function parseSetupParams(params: { get(key: string): string | null }) {
   const os = params.get("os");
   const goal = params.get("goal");
   const projectName = params.get("project");
+  const rawAiTool = params.get("ai");
   if ((os !== "windows" && os !== "macos") ||
       !["web-nextjs", "web-python", "web-java", "mobile", "data-ai", "not-sure"].includes(goal ?? "") ||
       !projectName || !isValidProjectName(projectName)) return null;
-  return { os: os as OS, goal: goal as Goal, projectName };
+  if (rawAiTool !== null && rawAiTool !== "claude" && rawAiTool !== "codex") return null;
+  return { os: os as OS, goal: goal as Goal, projectName, aiTool: (rawAiTool ?? "claude") as AiTool };
 }
 
 export function detectOS(userAgent: string): OS | "linux" | "mobile" | null {

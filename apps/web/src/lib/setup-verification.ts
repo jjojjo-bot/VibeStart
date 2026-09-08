@@ -1,4 +1,5 @@
 import type { OS, Goal } from './onboarding';
+import { aiToolProvider, type AiTool } from './ai-tools';
 
 // A Python executable alone is insufficient: venv needs ensurepip to bootstrap pip.
 export const PYTHON_READY_CHECK = `python3 -c 'import venv, ensurepip; print("Python venv ready")' && python3 -m pip --version`;
@@ -16,7 +17,8 @@ export type VerificationState = 'ok' | 'error' | 'unknown' | 'editor-path';
 const MAC_EDITOR_CHECK = `if command -v code >/dev/null 2>&1 && code --version; then printf '%s\\n' 'VIBESTART_CHECK::editor::ok'; elif [ -d '/Applications/Visual Studio Code.app' ] || [ -d "$HOME/Applications/Visual Studio Code.app" ]; then printf '%s\\n' 'VIBESTART_CHECK::editor::path-missing'; else printf '%s\\n' 'VIBESTART_CHECK::editor::fail'; fi`;
 
 /** A successful command is evidence supplied by the user, never a browser scan. */
-export function verificationFor(id: string, os: OS, goal: Goal): Verification | null {
+export function verificationFor(id: string, os: OS, goal: Goal, aiTool: AiTool = 'claude'): Verification | null {
+  const provider = aiToolProvider(aiTool);
   const basic = ['git --version', 'curl --version'];
   if (goal === 'data-ai' || goal === 'web-python') basic.push(PYTHON_READY_CHECK);
   if (goal === 'web-java') basic.push(JAVA_READY_CHECK);
@@ -26,9 +28,9 @@ export function verificationFor(id: string, os: OS, goal: Goal): Verification | 
     'dev-tools-basic': basic.join(' && '),
     'dev-tools-nodejs': node,
     'dev-tools': [...basic.filter(c => !c.startsWith('curl')), ...(goal === 'data-ai' ? [] : [node])].join(' && '),
-    'ai-setup': 'claude --version',
-    'ai-auth': 'claude auth status --text',
-    'editor-extensions': 'code --list-extensions | grep -Fx anthropic.claude-code' +
+    'ai-setup': `${provider.command} --version`,
+    'ai-auth': provider.authCheckCommand,
+    'editor-extensions': `code --list-extensions | grep -Fx ${provider.extensionId}` +
       (os === 'windows' ? ' && code --list-extensions | grep -Fx ms-vscode-remote.remote-wsl' : ''),
     editor: os === 'macos' ? MAC_EDITOR_CHECK :
       `$c = Get-Command code -ErrorAction SilentlyContinue; if ($c) { & $c --version; if ($LASTEXITCODE -eq 0) { Write-Output 'VIBESTART_CHECK::editor::ok' } else { Write-Output 'VIBESTART_CHECK::editor::fail' } } else { Write-Output 'VIBESTART_CHECK::editor::fail' }`,

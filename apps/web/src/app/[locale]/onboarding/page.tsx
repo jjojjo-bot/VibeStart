@@ -10,6 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { StepOS } from "@/components/onboarding/step-os";
 import { StepExperience } from "@/components/onboarding/step-experience";
 import { StepGoal } from "@/components/onboarding/step-goal";
+import { StepAiTool } from "@/components/onboarding/step-ai-tool";
 import { StepProjectName } from "@/components/onboarding/step-project-name";
 import {
   OnboardingData,
@@ -34,6 +35,7 @@ export default function OnboardingPage() {
         setData({
           os: saved.os === 'windows' || saved.os === 'macos' ? saved.os : null,
           goal: ['web-nextjs','web-python','web-java','mobile','data-ai','not-sure'].includes(saved.goal) ? saved.goal : null,
+          aiTool: saved.aiTool === 'codex' || saved.aiTool === 'claude' ? saved.aiTool : null,
           projectName: typeof saved.projectName === 'string' && isValidProjectName(saved.projectName) ? saved.projectName : '',
           experience: ['first','prior','unsure'].includes(saved.experience) ? saved.experience : null,
         });
@@ -75,6 +77,7 @@ export default function OnboardingPage() {
         os: data.os!,
         goal: data.goal!,
         project: data.projectName,
+        ai: data.aiTool!,
       });
       if (data.os === "windows") {
         params.set("exp", data.experience ?? "first");
@@ -122,6 +125,12 @@ export default function OnboardingPage() {
             <StepGoal
               value={data.goal}
               onChange={(goal) => setData({ ...data, goal })}
+            />
+          )}
+          {stepKey === "aiTool" && (
+            <StepAiTool
+              value={data.aiTool}
+              onChange={(aiTool) => setData({ ...data, aiTool })}
             />
           )}
           {stepKey === "projectName" && (

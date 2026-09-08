@@ -51,12 +51,12 @@ describe('Installation wizard user journeys (simulated terminal evidence)',()=>{
       if(step.optional) { fireEvent.click(screen.getByRole('button',{name:'고급 프로젝트 구조는 나중에 설정'})); continue; }
       if(step.id==='run-check') {
         expect(screen.getByRole('button',{name:'완료했어요!'})).toBeDisabled();
-        for(const label of Object.values(messages.Wizard.final)) fireEvent.click(screen.getByLabelText(label));
+        for(const label of Object.values(messages.Wizard.final)) fireEvent.click(screen.getByLabelText(label.replace('{aiTool}', 'Claude Code')));
       }
       fireEvent.click(screen.getByRole('button',{name:'완료했어요!'}));
     }
     await waitFor(()=>expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow','100'));
-    const saved=localStorage.getItem(`vibestart-progress-v2-${os}-web-nextjs-wizard-test`)!;
+    const saved=localStorage.getItem(`vibestart-progress-v3-${os}-web-nextjs-claude-wizard-test`)!;
     expect(JSON.parse(saved)).toContain('run-check');
     cleanup(); mount(os);
     await waitFor(()=>expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow','100'));
@@ -66,7 +66,7 @@ describe('Installation wizard user journeys (simulated terminal evidence)',()=>{
     await waitFor(()=>expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow','0'));
   }, 20000);
   it('corrupt progress does not crash or report completion',async()=>{
-    localStorage.setItem('vibestart-progress-v2-macos-web-nextjs-wizard-test','{"bad":true}');
+    localStorage.setItem('vibestart-progress-v3-macos-web-nextjs-claude-wizard-test','{"bad":true}');
     mount('macos');
     await waitFor(()=>expect(screen.getByRole('progressbar')).toHaveAttribute('aria-valuenow','0'));
   }, 20000);

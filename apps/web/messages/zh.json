@@ -520,6 +520,7 @@
         "title": "目标",
         "description": "你想做什么？"
       },
+      "aiTool": { "title": "AI 工具", "description": "你想从哪个 AI 编程助手开始？" },
       "projectName": {
         "title": "项目名称",
         "description": "给你的项目起个名字吧"
@@ -568,6 +569,11 @@
       }
     },
     "recommended": "推荐",
+    "aiToolOptions": {
+      "ariaLabel": "选择 AI 编程工具",
+      "codex": { "name": "Codex", "badge": "适合 ChatGPT 用户", "description": "使用 ChatGPT 账号开始" },
+      "claude": { "name": "Claude Code", "badge": "适合 Claude 用户", "description": "使用 Claude 账号开始" }
+    },
     "projectName": {
       "label": "项目名称",
       "placeholder": "my-first-app",
@@ -578,7 +584,7 @@
   "Plan": {
     "title": "定制安装方案",
     "subtitle": "将按步骤安装以下工具",
-    "aiNote": "安装完成后，你只要用大白话告诉这里的 Claude Code 想要什么 —— 代码由 AI 帮你写。",
+    "aiNote": "安装完成后，告诉 {aiTool} 你想做什么，AI 会为你编写代码。",
     "tools": {
       "git": {
         "name": "Git",
@@ -610,6 +616,7 @@
         "name": "Claude Code",
         "description": "AI 编程助手（CLI + VS Code 扩展）"
       },
+      "codex": { "description": "使用 ChatGPT 账号的 AI 编程助手（CLI + VS Code 扩展）" },
       "nextjsProject": {
         "name": "创建 Next.js 项目",
         "description": "自动创建网站项目"
@@ -647,6 +654,7 @@
     "progressAriaLabel": "安装进度",
     "resultPreviewLabel": "运行结果示例",
     "claudeMdGuide": "An existing <code>CLAUDE.md</code> is preserved. Project guidance is created only when the file does not exist.",
+    "instructionFileGuide": "保留已有的 <code>{instructionFile}</code>；仅在文件不存在时创建。",
     "whyNeededToggle": {
       "open": "▾ 收起",
       "closed": "▸ 这是什么？"
@@ -683,6 +691,8 @@
       "nodejsMissing": "Node.js — 需要安装",
       "claudeFound": "✓ Claude Code — 已安装",
       "claudeMissing": "Claude Code — 需要安装",
+      "codexFound": "✓ Codex — 已安装",
+      "codexMissing": "Codex — 需要安装",
       "resultNote": "已把安装好的项目标记为完成。只需完成剩下的步骤！",
       "continueButton": "继续"
     },
@@ -900,6 +910,7 @@
         }
       ]
     },
+    "aiSetupCodex":{"title":"安装 AI 编程助手（Codex）","description":"先安装 Codex CLI，下一步再登录 ChatGPT。","whyNeeded":"Codex 可通过对话创建和修改代码。","detailedGuide":"在 Ubuntu 或 Mac 终端运行 OpenAI 官方安装程序。","troubleshooting":[{"symptom":"codex: command not found","solution":"打开新终端并运行 codex --version。"},{"symptom":"curl error","solution":"检查网络、代理和证书设置。"},{"symptom":"Permission denied","solution":"不要使用 sudo；请检查主目录权限。"}]},
     "projectFrontend": {
       "title": {
         "standalone": "创建项目",
@@ -962,17 +973,17 @@
         "default": "设置AI工具遵循的架构规则",
         "dataAi": "设置AI工具遵循的分析项目规则"
       },
-      "detailedGuide": "下面的命令会为你创建文件夹结构和 CLAUDE.md 文件。"
+      "detailedGuide": "下面的命令会为你创建文件夹结构和 {instructionFile} 文件。"
     },
     "firstRun": {
       "title": "首次运行！",
       "description": "在VS Code中打开项目，开始AI编程",
       "detailedGuide": {
-        "simple": "以下命令会打开VS Code。在VS Code中打开终端（Ctrl+` 或 Cmd+`），输入 claude 即可开始AI编程。",
-        "withBackend": "以下命令会打开VS Code。在VS Code中打开终端（Ctrl+` 或 Cmd+`），输入 claude 即可开始AI编程。可以同时看到 frontend/ 和 backend/ 文件夹。",
+        "simple": "以下命令会打开VS Code。在VS Code中打开终端（Ctrl+` 或 Cmd+`），输入 {aiCommand} 即可开始AI编程。",
+        "withBackend": "以下命令会打开VS Code。在VS Code中打开终端（Ctrl+` 或 Cmd+`），输入 {aiCommand} 即可开始AI编程。可以同时看到 frontend/ 和 backend/ 文件夹。",
         "wsl": {
-          "simple": "以下命令会以 WSL Remote 模式打开 VS Code。在 VS Code 中打开终端（Ctrl+`），输入 claude 即可开始 AI 编程。\n\n💡 项目文件夹在文件资源管理器左侧的 Linux → Ubuntu → home → 你的账户 → {projectName} 下。",
-          "withBackend": "以下命令会以 WSL Remote 模式打开 VS Code。在 VS Code 中打开终端（Ctrl+`），输入 claude 即可开始 AI 编程。可以同时看到 frontend/ 和 backend/ 文件夹。\n\n💡 项目文件夹在文件资源管理器左侧的 Linux → Ubuntu → home → 你的账户 → {projectName} 下。",
+          "simple": "以下命令会以 WSL Remote 模式打开 VS Code。在 VS Code 中打开终端（Ctrl+`），输入 {aiCommand} 即可开始 AI 编程。\n\n💡 项目文件夹在文件资源管理器左侧的 Linux → Ubuntu → home → 你的账户 → {projectName} 下。",
+          "withBackend": "以下命令会以 WSL Remote 模式打开 VS Code。在 VS Code 中打开终端（Ctrl+`），输入 {aiCommand} 即可开始 AI 编程。可以同时看到 frontend/ 和 backend/ 文件夹。\n\n💡 项目文件夹在文件资源管理器左侧的 Linux → Ubuntu → home → 你的账户 → {projectName} 下。",
           "imageAlt": "文件资源管理器侧边栏中的 Linux 项目以及 Ubuntu/home/账户/项目文件夹路径的示例图"
         }
       }
@@ -989,11 +1000,13 @@
       "description": "Sign in separately from installation",
       "guide": "Run this in Ubuntu on Windows, or Terminal on Mac. Complete login in the opened browser. An eligible paid plan or billed API access is required. If no browser opens, use the login URL shown in your own terminal. Do not paste credentials into this website. Then run the status check."
     },
+    "authCodex":{"title":"连接 ChatGPT 账号","description":"单独登录","guide":"在浏览器完成 ChatGPT 登录。不要在此粘贴凭据。"},
     "extensions": {
       "title": "Connect VS Code to the AI tool",
       "description": "Install editor extensions after CLI login",
       "guide": "Run in Ubuntu (Windows) or Terminal (Mac). If code is not found, reopen the terminal. On Mac, open VS Code → Command Palette → Shell Command: Install code command in PATH. On Windows, save work, run wsl --shutdown in PowerShell, then reopen Ubuntu. You can also install the WSL and Claude Code extensions in VS Code Extensions."
     },
+    "extensionsCodex":{"title":"连接 VS Code 与 Codex","description":"安装 Codex IDE 扩展","guide":"如果找不到 code，请重新打开终端。"},
     "runCheck": {
       "title": "Run your project and verify readiness",
       "description": "See a working result before finishing",
@@ -1670,7 +1683,7 @@
     "step2Title": "向AI提出第一次修改请求",
     "step2Desc": "选择一个类别并复制提示。可以自由调整。",
     "step3Title": "推送你的更改",
-    "step3Desc": "向 Claude Code 这样请求",
+    "step3Desc": "请所选 AI 编程工具执行以下操作",
     "step3Prompt": "先执行 `git pull` 拉取最新文件，然后把改动 commit 并 push 到 GitHub",
     "step4Title": "查看自动部署结果",
     "step4Desc": "push之后Vercel会自动部署你的网站。1-2分钟后查看你的网站吧",
@@ -1703,6 +1716,12 @@
       }
     },
     "step1Tools": {
+      "codex": {
+        "label": "Codex",
+        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && codex",
+        "winCmd": "cd '{'project'}' && code . && codex",
+        "note": "VS Code 打开后，Codex 会在终端中启动。"
+      },
       "claudeCode": {
         "label": "Claude Code",
         "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
@@ -1729,7 +1748,7 @@
         },
         "aiNoResponse": {
           "title": "AI没回复或卡住",
-          "symptom": "Claude Code/Cursor没响应,或者反复回 'cannot help with that'。",
+          "symptom": "Claude Code/Codex/Cursor没响应,或者反复回 'cannot help with that'。",
           "fix": "把提示词拆得更小。一次只改一处几乎都能解决。",
           "linkLabel": "AI提示词10条",
           "linkUrl": "https://1daymillion.com/ai-coding-prompt-writing-tips/"
@@ -1786,11 +1805,11 @@
     "reused": "Already installed",
     "skipped": "Skipped (optional)",
     "skipOptional": "Skip advanced project structure",
-    "finalGuide": "Keep the server terminal open. In a NEW terminal of the same type, run the command below to open Claude in your project. Ask it to explain this project in one sentence; account usage may be billed. Confirm the three items after seeing the results.",
+    "finalGuide": "Keep the server terminal open. In a NEW terminal of the same type, run the command below to open {aiTool} in your project. Ask it to explain this project in one sentence; account usage may be billed. Confirm the three items after seeing the results.",
     "final": {
       "editor": "The correct project opens in VS Code (Windows: WSL / Ubuntu).",
       "preview": "The web page, Expo app, or Jupyter notebook actually opens and runs.",
-      "ai": "Claude is signed in and has responded to my first prompt."
+      "ai": "{aiTool} is signed in and has responded to my first prompt."
     },
     "detected": "Detected: {os}. Confirm the computer you will install on.",
     "unsupported": "Linux and mobile devices do not have a local installation route here yet. Select Windows or Mac only if that is your target computer.",
