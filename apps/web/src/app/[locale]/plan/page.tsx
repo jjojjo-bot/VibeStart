@@ -4,9 +4,9 @@ import { InvalidSetup } from "@/components/setup/invalid-setup";
 import { useSearchParams } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import type { OS, Goal, SetupMode } from "@/lib/onboarding";
 import { aiToolProvider, type AiTool } from "@/lib/ai-tools";
+import { getSetupSteps } from "@/lib/setup-steps";
 import { Suspense } from "react";
 import { useTranslations } from "next-intl";
 
@@ -114,12 +114,14 @@ function PlanContentValid({ config }: { config: NonNullable<ReturnType<typeof pa
   const t = useTranslations("Plan");
   const tc = useTranslations("Common");
   const tw = useTranslations("Wizard");
+  const ts = useTranslations("SetupSteps");
 
   const { os, goal, projectName, aiTool, mode } = config;
   // 설치 경험(exp) — 온보딩이 준 값을 /setup으로 그대로 전달. 없으면 생략(=first 폴백).
   const exp = searchParams.get("exp");
 
   const planItems = getPlanItems(os, goal, aiTool, mode, t);
+  const executionStepCount = getSetupSteps(os, goal, projectName, ts, aiTool, mode).length;
 
   const setupParams = applySetupMode(new URLSearchParams({
     os,
@@ -142,19 +144,14 @@ function PlanContentValid({ config }: { config: NonNullable<ReturnType<typeof pa
         </div>}
         {/* 플랜 아이템 리스트 */}
         <div className="mb-8 flex flex-col gap-3">
-          {planItems.map((item, i) => (
+          {planItems.map((item) => (
             <div
               key={item.name}
               className="flex items-center gap-4 rounded-xl border border-border/50 bg-card p-4"
             >
               <span className="text-2xl">{item.icon}</span>
               <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="font-medium">{item.name}</span>
-                  <Badge variant="secondary" className="text-xs">
-                    Step {i + 1}
-                  </Badge>
-                </div>
+                <span className="font-medium">{item.name}</span>
                 <p className="text-sm text-muted-foreground">
                   {item.description}
                 </p>
@@ -180,6 +177,10 @@ function PlanContentValid({ config }: { config: NonNullable<ReturnType<typeof pa
           <div className="mt-2 flex justify-between">
             <span>{t("summary.projectName")}</span>
             <code className="text-foreground">{projectName}</code>
+          </div>
+          <div className="mt-2 flex justify-between">
+            <span>{t("summary.executionSteps")}</span>
+            <span className="font-semibold text-primary">{t("summary.executionStepsValue", { count: executionStepCount })}</span>
           </div>
           <div className="mt-2 flex justify-between">
             <span>{t("summary.estimatedTime")}</span>

@@ -505,9 +505,34 @@
     }
   },
   "Onboarding": {
-    "progressLabel": "{current} / {total}",
+    "progressLabel": "Información básica {current} / {total}",
     "lastStepButton": "Ver mi plan",
-    "quickStart": { "title": "¿Ya tienes listo tu entorno de desarrollo?", "description": "Omite la instalación y crea solo la carpeta del proyecto y las instrucciones para la IA.", "cta": "Usar inicio rápido", "useFullSetup": "Usar configuración completa" },
+    "quickStart": {
+      "selectorTitle": "¿Cómo quieres empezar?",
+      "selectorDescription": "Compara las tareas reales y el tiempo de cada opción, no solo la cantidad de preguntas.",
+      "ariaLabel": "Elegir modalidad de configuración",
+      "recommended": "Ideal para principiantes",
+      "selected": "Seleccionada",
+      "full": {
+        "title": "Configurar todo desde cero",
+        "description": "Te guiaremos desde la instalación de las herramientas hasta la ejecución del proyecto nuevo.",
+        "bestFor": "Es tu primera vez o no sabes qué herramientas están listas",
+        "time": "Unos 15–30 min",
+        "steps": "11–16 tareas reales"
+      },
+      "projectOnly": {
+        "title": "Inicio rápido del proyecto",
+        "description": "Omite la instalación y crea solo el proyecto y su archivo de instrucciones para la IA.",
+        "bestFor": "Git, las herramientas y tu sesión de IA ya están listos",
+        "time": "Unos 3–10 min",
+        "steps": "4–5 tareas reales"
+      },
+      "continue": "Empezar con la opción elegida",
+      "current": "Modalidad actual",
+      "change": "Cambiar modalidad",
+      "infoNote": "Ahora estás completando la información básica para la configuración.",
+      "changeNote": "Puedes cambiar la modalidad más tarde desde la pantalla de configuración."
+    },
     "steps": {
       "os": {
         "title": "Sistema operativo",
@@ -645,6 +670,8 @@
     "summary": {
       "os": "Sistema operativo",
       "projectName": "Nombre del proyecto",
+      "executionSteps": "Tareas reales",
+      "executionStepsValue": "{count} tareas",
       "estimatedTime": "Tiempo estimado",
       "estimatedTimeValue": "About 15–30+ min; downloads and restarts vary",
       "quickEstimatedTimeValue": "Unos 3–10 min"

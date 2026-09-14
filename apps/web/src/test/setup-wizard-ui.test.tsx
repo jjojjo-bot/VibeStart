@@ -32,10 +32,20 @@ function mount(os: 'windows'|'macos', project='wizard-test', mode?: 'project-onl
 }
 
 describe('Installation wizard user journeys (simulated terminal evidence)',()=>{
-  it('shows Quick Start entry points without replacing the beginner path', async () => {
+  it('compares setup paths before showing basic-info progress', async () => {
     render(<NextIntlClientProvider locale="ko" messages={messages}><OnboardingPage/></NextIntlClientProvider>);
-    fireEvent.click(screen.getByRole('button',{name:messages.Onboarding.quickStart.cta}));
-    expect(screen.getByRole('button',{name:messages.Onboarding.quickStart.useFullSetup})).toBeInTheDocument();
+    expect(screen.getByRole('radio',{name:messages.Onboarding.quickStart.full.title})).toHaveAttribute('aria-checked','false');
+    expect(screen.getByRole('radio',{name:messages.Onboarding.quickStart.projectOnly.title})).toHaveAttribute('aria-checked','false');
+    expect(screen.getByText(messages.Onboarding.quickStart.full.steps)).toBeInTheDocument();
+    expect(screen.getByText(messages.Onboarding.quickStart.projectOnly.steps)).toBeInTheDocument();
+    expect(screen.queryByText(messages.Onboarding.progressLabel.replace('{current}','1').replace('{total}','4'))).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole('radio',{name:messages.Onboarding.quickStart.projectOnly.title}));
+    expect(screen.getByRole('radio',{name:messages.Onboarding.quickStart.projectOnly.title})).toHaveAttribute('aria-checked','true');
+    fireEvent.click(screen.getByRole('button',{name:messages.Onboarding.quickStart.continue}));
+
+    expect(screen.getByText(messages.Onboarding.progressLabel.replace('{current}','1').replace('{total}','4'))).toBeInTheDocument();
+    expect(screen.getByRole('button',{name:messages.Onboarding.quickStart.change})).toBeInTheDocument();
     expect(screen.getByRole('button',{name:messages.Common.next})).toBeInTheDocument();
     cleanup();
 
@@ -44,7 +54,7 @@ describe('Installation wizard user journeys (simulated terminal evidence)',()=>{
     cleanup();
 
     mount('macos','quick-test','project-only');
-    expect(await screen.findByText(messages.Setup.quickTitle)).toBeInTheDocument();
+    expect(await screen.findByRole('heading',{name:messages.Setup.quickTitle})).toBeInTheDocument();
     expect(screen.getByRole('button',{name:messages.Wizard.switchToFull})).toBeInTheDocument();
     expect(screen.queryByText(messages.SetupSteps.terminal.title)).not.toBeInTheDocument();
     cleanup();
@@ -52,6 +62,7 @@ describe('Installation wizard user journeys (simulated terminal evidence)',()=>{
     state.params=new URLSearchParams('os=macos&goal=web-nextjs&project=quick-test&ai=codex&mode=project-only');
     render(<NextIntlClientProvider locale="ko" messages={messages}><PlanPage/></NextIntlClientProvider>);
     expect(screen.getByRole('button',{name:messages.Plan.quickCtaButton}).closest('a')).toHaveAttribute('href',expect.stringContaining('mode=project-only'));
+    expect(screen.getByText(messages.Plan.summary.executionStepsValue.replace('{count}','4'))).toBeInTheDocument();
   });
   it.each(['windows','macos'] as const)('%s: blocks unverified tools, handles errors, reuses tools, and requires a running project',async os=>{
     mount(os);

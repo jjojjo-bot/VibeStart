@@ -12,6 +12,8 @@ import { StepExperience } from "@/components/onboarding/step-experience";
 import { StepGoal } from "@/components/onboarding/step-goal";
 import { StepAiTool } from "@/components/onboarding/step-ai-tool";
 import { StepProjectName } from "@/components/onboarding/step-project-name";
+import { SetupModePicker } from "@/components/onboarding/setup-mode-picker";
+import { SetupModeIcon } from "@/components/onboarding/setup-mode-icon";
 import {
   OnboardingData,
   INITIAL_ONBOARDING,
@@ -19,6 +21,7 @@ import {
   canProceedFrom,
   isValidProjectName,
   applySetupMode,
+  type SetupMode,
 } from "@/lib/onboarding";
 
 export default function OnboardingPage() {
@@ -27,6 +30,8 @@ export default function OnboardingPage() {
   const tc = useTranslations("Common");
   const [step, setStep] = useState(0);
   const [data, setData] = useState<OnboardingData>(INITIAL_ONBOARDING);
+  const [selectingMode, setSelectingMode] = useState(true);
+  const [draftMode, setDraftMode] = useState<SetupMode | null>(null);
   const [restored, setRestored] = useState(false);
   useEffect(() => {
     try {
@@ -89,27 +94,81 @@ export default function OnboardingPage() {
   }
 
   function handleBack() {
-    if (step > 0) setStep(step - 1);
+    if (step > 0) {
+      setStep(step - 1);
+      return;
+    }
+    setDraftMode(data.mode);
+    setSelectingMode(true);
+  }
+
+  function confirmMode() {
+    if (!draftMode) return;
+    setData((current) => ({
+      ...current,
+      mode: draftMode,
+      experience: draftMode === "project-only" ? null : current.experience,
+    }));
+    setStep(0);
+    setSelectingMode(false);
+  }
+
+  if (selectingMode) {
+    return (
+      <main id="main-content" className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
+        <div className="mx-auto w-full max-w-3xl">
+          <div className="mb-10 text-center">
+            <p className="mb-3 text-sm font-semibold text-primary">VibeStart</p>
+            <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{t("quickStart.selectorTitle")}</h1>
+            <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">{t("quickStart.selectorDescription")}</p>
+          </div>
+
+          <SetupModePicker value={draftMode} onChange={setDraftMode} />
+
+          <div className="mx-auto mt-8 max-w-md">
+            <Button className="h-12 w-full text-base" disabled={!draftMode} onClick={confirmMode}>
+              {t("quickStart.continue")}
+            </Button>
+            <p className="mt-3 text-center text-xs text-muted-foreground">{t("quickStart.changeNote")}</p>
+          </div>
+        </div>
+      </main>
+    );
   }
 
   return (
     <main id="main-content" className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
       <div className="mx-auto w-full max-w-lg">
-        {step === 0 && (
-          <div className={`mb-8 rounded-xl border p-4 ${data.mode === "project-only" ? "border-primary/50 bg-primary/5" : "border-border/60 bg-card"}`}>
-            <p className="font-semibold">{t("quickStart.title")}</p>
-            <p className="mt-1 text-sm text-muted-foreground">{t("quickStart.description")}</p>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="mt-3"
-              onClick={() => setData({ ...data, mode: data.mode === "project-only" ? "full" : "project-only", experience: null })}
-            >
-              {t(data.mode === "project-only" ? "quickStart.useFullSetup" : "quickStart.cta")}
-            </Button>
+        <div className="mb-8 flex items-center gap-3 rounded-xl border-2 border-primary/30 bg-primary/5 p-4">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <SetupModeIcon mode={data.mode} className="h-5 w-5" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-medium text-muted-foreground">{t("quickStart.current")}</p>
+            <p className="font-semibold text-foreground">
+              {t(data.mode === "project-only" ? "quickStart.projectOnly.title" : "quickStart.full.title")}
+            </p>
+            <p className="mt-0.5 text-xs font-medium text-primary">
+              {t(data.mode === "project-only" ? "quickStart.projectOnly.steps" : "quickStart.full.steps")}
+              <span className="mx-1.5" aria-hidden="true">·</span>
+              {t(data.mode === "project-only" ? "quickStart.projectOnly.time" : "quickStart.full.time")}
+            </p>
           </div>
-        )}
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="shrink-0"
+            onClick={() => {
+              setDraftMode(data.mode);
+              setSelectingMode(true);
+            }}
+          >
+            {t("quickStart.change")}
+          </Button>
+        </div>
+
+        <p className="mb-4 text-center text-sm text-muted-foreground">{t("quickStart.infoNote")}</p>
         {/* 진행 바 */}
         <div className="mb-2 flex items-center justify-between text-sm text-muted-foreground">
           <span>
@@ -160,11 +219,9 @@ export default function OnboardingPage() {
 
         {/* 네비게이션 */}
         <div className="flex gap-3">
-          {step > 0 && (
-            <Button variant="outline" onClick={handleBack} className="flex-1">
-              {tc("previous")}
-            </Button>
-          )}
+          <Button variant="outline" onClick={handleBack} className="flex-1">
+            {tc("previous")}
+          </Button>
           <Button
             onClick={handleNext}
             disabled={!canProceed()}

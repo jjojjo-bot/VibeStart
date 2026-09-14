@@ -505,9 +505,34 @@
     }
   },
   "Onboarding": {
-    "progressLabel": "{current} / {total}",
+    "progressLabel": "基本信息 {current} / {total}",
     "lastStepButton": "查看方案",
-    "quickStart": { "title": "开发环境已经准备好了吗？", "description": "跳过安装，只创建项目文件夹和 AI 指令文件。", "cta": "使用项目快速开始", "useFullSetup": "使用完整环境设置" },
+    "quickStart": {
+      "selectorTitle": "你想用哪种方式开始？",
+      "selectorDescription": "请比较实际操作范围和所需时间，而不只是问题数量。",
+      "ariaLabel": "选择设置方式",
+      "recommended": "新手推荐",
+      "selected": "已选择",
+      "full": {
+        "title": "从头设置开发环境",
+        "description": "从安装所需开发工具到运行新项目，我们会逐步引导你完成。",
+        "bestFor": "初次开始或不确定工具是否已安装",
+        "time": "约 15–30 分钟",
+        "steps": "实际操作 11–16 步"
+      },
+      "projectOnly": {
+        "title": "仅快速创建项目",
+        "description": "跳过工具安装，只创建项目和 AI 指令文件。",
+        "bestFor": "Git、开发工具和 AI 登录均已准备好",
+        "time": "约 3–10 分钟",
+        "steps": "实际操作 4–5 步"
+      },
+      "continue": "使用所选方式开始",
+      "current": "当前设置方式",
+      "change": "更改方式",
+      "infoNote": "现在正在填写设置所需的基本信息。",
+      "changeNote": "之后也可以在设置页面随时更改方式。"
+    },
     "steps": {
       "os": {
         "title": "操作系统",
@@ -645,6 +670,8 @@
     "summary": {
       "os": "操作系统",
       "projectName": "项目名称",
+      "executionSteps": "实际操作",
+      "executionStepsValue": "{count} 步",
       "estimatedTime": "预计用时",
       "estimatedTimeValue": "About 15–30+ min; downloads and restarts vary",
       "quickEstimatedTimeValue": "约 3–10 分钟"

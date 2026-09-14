@@ -1,6 +1,7 @@
 "use client";
 import { applySetupMode, parseSetupParams, setupProgressKey } from "@/lib/onboarding";
 import { InvalidSetup } from "@/components/setup/invalid-setup";
+import { SetupModeIcon } from "@/components/onboarding/setup-mode-icon";
 import { useState, useRef, useCallback, useEffect, Suspense } from "react";
 import confetti from "canvas-confetti";
 import { useSearchParams } from "next/navigation";
@@ -49,6 +50,7 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
   const t = useTranslations("Setup");
   const ts = useTranslations("SetupSteps");
   const tw = useTranslations("Wizard");
+  const tp = useTranslations("Plan");
 
   const { os, goal, projectName, aiTool, mode } = config;
   // 설치 경험 — 이상값·부재는 first 폴백(기존 링크·북마크 하위호환)
@@ -281,11 +283,26 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
           {t.rich(mode === "project-only" ? "quickSubtitle" : "subtitle", { strong: (chunks) => <strong className="text-foreground">{chunks}</strong> })}
         </p>
 
-        <div className="mb-4 rounded-lg border border-primary/30 bg-primary/5 p-3 text-sm">
-          <p>{mode === "project-only" ? tw("quickModeNote") : tw("fullModeNote")}</p>
-          <button
+        <div className="mb-5 flex flex-col gap-4 rounded-xl border-2 border-primary/30 bg-primary/5 p-4 sm:flex-row sm:items-center">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+            <SetupModeIcon mode={mode} className="h-5 w-5" />
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="font-semibold text-foreground">{t(mode === "project-only" ? "quickTitle" : "title")}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{mode === "project-only" ? tw("quickModeNote") : tw("fullModeNote")}</p>
+            <div className="mt-2 flex flex-wrap gap-2 text-xs font-semibold text-primary">
+              <span className="rounded-full bg-primary/10 px-2.5 py-1">
+                {tp("summary.executionStepsValue", { count: steps.length })}
+              </span>
+              <span className="rounded-full bg-primary/10 px-2.5 py-1">
+                {tp(mode === "project-only" ? "summary.quickEstimatedTimeValue" : "summary.estimatedTimeValue")}
+              </span>
+            </div>
+          </div>
+          <Button
             type="button"
-            className="mt-2 font-medium text-primary underline underline-offset-2"
+            variant="outline"
+            className="shrink-0"
             onClick={() => {
               const next = applySetupMode(new URLSearchParams({ os, goal, project: projectName, ai: aiTool }), mode === "full" ? "project-only" : "full");
               if (mode === "full" && os === "windows") next.set("exp", exp);
@@ -293,7 +310,7 @@ function SetupContentValid({ config }: { config: NonNullable<ReturnType<typeof p
             }}
           >
             {tw(mode === "project-only" ? "switchToFull" : "switchToQuick")}
-          </button>
+          </Button>
         </div>
         <p role="status" className="mb-4 rounded-lg border p-3 text-sm">{saveFailed ? tw("saveFailed") : tw(mode === "project-only" ? "quickStorageNote" : "scanLimit")}</p>
         <label className="mb-4 flex items-center gap-3 text-sm"><input type="checkbox" checked={beginnerGuide} onChange={e => setBeginnerGuide(e.target.checked)} />{tw("beginnerGuide")}</label>

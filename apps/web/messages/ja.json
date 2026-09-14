@@ -505,9 +505,34 @@
     }
   },
   "Onboarding": {
-    "progressLabel": "{current} / {total}",
+    "progressLabel": "基本情報 {current} / {total}",
     "lastStepButton": "プランを確認する",
-    "quickStart": { "title": "開発環境はすでに準備できていますか？", "description": "インストールを省略し、プロジェクトフォルダとAI指示ファイルだけを作成します。", "cta": "プロジェクトクイックスタートを使う", "useFullSetup": "開発環境を一から設定する" },
+    "quickStart": {
+      "selectorTitle": "どの方法で始めますか？",
+      "selectorDescription": "質問数ではなく、実際の作業範囲と所要時間を比較してください。",
+      "ariaLabel": "セットアップ方法を選択",
+      "recommended": "初心者におすすめ",
+      "selected": "選択中",
+      "full": {
+        "title": "開発環境を一から設定",
+        "description": "必要な開発ツールのインストールから新しいプロジェクトの実行まで順に進めます。",
+        "bestFor": "初めての方、またはインストール状況が不明な場合",
+        "time": "約15〜30分",
+        "steps": "実作業11〜16ステップ"
+      },
+      "projectOnly": {
+        "title": "プロジェクトだけクイックスタート",
+        "description": "ツールのインストールを省き、プロジェクトとAI指示ファイルだけを作成します。",
+        "bestFor": "Git、開発ツール、AIログインの準備が完了している場合",
+        "time": "約3〜10分",
+        "steps": "実作業4〜5ステップ"
+      },
+      "continue": "選択した方法で始める",
+      "current": "現在のセットアップ方法",
+      "change": "方法を変更",
+      "infoNote": "現在はセットアップに必要な基本情報を入力しています。",
+      "changeNote": "セットアップ画面からいつでも方法を変更できます。"
+    },
     "steps": {
       "os": {
         "title": "OS",
@@ -645,6 +670,8 @@
     "summary": {
       "os": "OS",
       "projectName": "プロジェクト名",
+      "executionSteps": "実際に行う作業",
+      "executionStepsValue": "{count}ステップ",
       "estimatedTime": "所要時間の目安",
       "estimatedTimeValue": "About 15–30+ min; downloads and restarts vary",
       "quickEstimatedTimeValue": "約3〜10分"

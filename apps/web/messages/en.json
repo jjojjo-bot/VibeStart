@@ -505,13 +505,33 @@
     }
   },
   "Onboarding": {
-    "progressLabel": "{current} / {total}",
+    "progressLabel": "Basic info {current} / {total}",
     "lastStepButton": "View My Plan",
     "quickStart": {
-      "title": "Already have your development environment ready?",
-      "description": "Skip installation and create only the project folder and AI instructions.",
-      "cta": "Use Project Quick Start",
-      "useFullSetup": "Use Full Environment Setup"
+      "selectorTitle": "How would you like to start?",
+      "selectorDescription": "Compare the actual tasks and time for each path—not just the number of questions.",
+      "ariaLabel": "Choose a setup path",
+      "recommended": "Best for beginners",
+      "selected": "Selected",
+      "full": {
+        "title": "Set up everything",
+        "description": "We'll guide you from installing the development tools through running your new project.",
+        "bestFor": "You are new or are not sure which tools are ready",
+        "time": "About 15–30 min",
+        "steps": "11–16 actual tasks"
+      },
+      "projectOnly": {
+        "title": "Quick-start a project",
+        "description": "Skip tool installation and create only the project and its AI instruction file.",
+        "bestFor": "Git, development tools, and your AI login are ready",
+        "time": "About 3–10 min",
+        "steps": "4–5 actual tasks"
+      },
+      "continue": "Start with this option",
+      "current": "Current setup path",
+      "change": "Change path",
+      "infoNote": "You are now entering the basic information needed for setup.",
+      "changeNote": "You can change the setup path later from the setup screen."
     },
     "steps": {
       "os": {
@@ -655,6 +675,8 @@
     "summary": {
       "os": "Operating System",
       "projectName": "Project Name",
+      "executionSteps": "Tasks to complete",
+      "executionStepsValue": "{count} tasks",
       "estimatedTime": "Estimated Time",
       "estimatedTimeValue": "About 15–30+ min; downloads and restarts vary",
       "quickEstimatedTimeValue": "About 3–10 min"
@@ -1826,7 +1848,7 @@
     "windowsPlan": "Windows route: PowerShell → VS Code → Ubuntu (WSL) → restart → Ubuntu terminal. Allow extra time for downloads and a restart; administrator access is required for WSL.",
     "macPlan": "macOS route: Terminal → Homebrew → Git and runtimes → VS Code. Apple Silicon and Intel paths are handled separately. Homebrew may request your Mac password.",
     "scanLimit": "This website cannot run commands or read installed software on your computer. You run checks and provide results; progress is saved only in this browser.",
-    "quickModeNote": "Quick Start includes project creation only. If a command is missing or sign-in fails, use the full environment setup below.",
+    "quickModeNote": "Quick Start includes project creation only. If a command is missing or sign-in fails, switch to the full environment setup.",
     "fullModeNote": "Need only a new project? You can skip installation and go straight to project creation.",
     "switchToQuick": "Switch to Project Quick Start",
     "switchToFull": "Open Full Environment Setup",
