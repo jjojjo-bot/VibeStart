@@ -1,4 +1,6 @@
 // @vitest-environment node
+import { spawnSync } from "node:child_process";
+
 import { describe, expect, it } from "vitest";
 
 import {
@@ -7,19 +9,15 @@ import {
 } from "@/lib/projects/project-readiness";
 
 describe("project readiness", () => {
-  it("builds a read-only check for the validated home-folder project", () => {
-    const script = buildProjectReadinessScript("my-portfolio");
+  it("builds a read-only check for the current project folder", () => {
+    const script = buildProjectReadinessScript();
 
-    expect(script).toContain('p="$HOME/my-portfolio"');
+    expect(script).toContain('p="$PWD"');
     expect(script).toContain("command -v git");
+    expect(script).toContain("a===22&&b>=12");
     expect(script).toContain('"$p/package.json"');
     expect(script).not.toMatch(/\b(?:rm|mv|mkdir|touch|install)\b/);
-  });
-
-  it("rejects a project name that could alter the shell command", () => {
-    expect(() => buildProjectReadinessScript("site;echo-bad")).toThrow(
-      "Invalid project name",
-    );
+    expect(spawnSync("bash", ["-n", "-c", script]).status).toBe(0);
   });
 
   it("accepts only a complete ready marker", () => {
@@ -38,6 +36,14 @@ describe("project readiness", () => {
     expect(
       parseProjectReadiness(
         "VIBESTART_READY::git=missing::node=ok::npm=ok::project=missing::next=missing",
+      ).state,
+    ).toBe("missing-tools");
+  });
+
+  it("routes an unsupported Node.js version to full setup", () => {
+    expect(
+      parseProjectReadiness(
+        "VIBESTART_READY::git=ok::node=outdated::npm=ok::project=ok::next=ok",
       ).state,
     ).toBe("missing-tools");
   });

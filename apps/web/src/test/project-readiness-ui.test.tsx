@@ -27,13 +27,13 @@ function renderCheck(): void {
 }
 
 describe("ProjectReadinessCheck", () => {
-  it("builds the command from the folder name and unlocks the ready path", () => {
+  it("checks the terminal's current folder and unlocks the ready path", () => {
     renderCheck();
     fireEvent.change(screen.getByLabelText(messages.Readiness.project.label), {
       target: { value: "launch-site" },
     });
 
-    expect(screen.getByText(/HOME\/launch-site/)).toBeInTheDocument();
+    expect(screen.getByText(/p="\$PWD"/)).toBeInTheDocument();
 
     fireEvent.change(screen.getByLabelText(messages.Readiness.check.outputLabel), {
       target: {

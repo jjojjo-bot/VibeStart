@@ -1463,12 +1463,12 @@
     "metaDescription": "Check whether Git, Node.js, npm, and your local Next.js project are ready for a first deployment.",
     "badge": "About 30 seconds · Before sign-in",
     "title": "Is your site ready to deploy?",
-    "description": "One read-only command checks the essential tools and project folder. If something is missing, we will guide you to the right starting path.",
+    "description": "Run one read-only command from your project folder to check the essential tools and deployment readiness. If something is missing, we will guide you to the right starting path.",
     "project": {
-      "title": "Tell us about your local project",
-      "description": "Choose the operating system and enter the folder name of the Next.js project you want to deploy.",
-      "label": "Local project folder name",
-      "hint": "We check directly under your home folder, for example ~/my-portfolio.",
+      "title": "Name the site you will deploy",
+      "description": "Choose the project's operating system and the name to use on GitHub and Vercel.",
+      "label": "Site and GitHub repository name",
+      "hint": "Your local folder can have a different name and live anywhere. Example: my-portfolio.",
       "invalid": "Use 2–63 lowercase letters, numbers, or hyphens."
     },
     "os": {
@@ -1480,33 +1480,33 @@
     },
     "check": {
       "title": "Check readiness",
-      "windowsDescription": "Open an Ubuntu (WSL) terminal, then copy and run the command below.",
-      "macosDescription": "Open the Terminal app, then copy and run the command below.",
-      "nameFirst": "Enter a valid project folder name first.",
+      "windowsDescription": "Open the project folder in VS Code, then paste this into its Ubuntu (WSL) terminal.",
+      "macosDescription": "Open a terminal in the project folder, then paste the command below. A VS Code terminal works too.",
+      "nameFirst": "Enter a valid site name first.",
       "copy": "Copy command",
       "copied": "Copied",
-      "readOnly": "This only checks what exists. It does not install or change files.",
+      "readOnly": "This only reads the current terminal folder and Node.js version. It does not change files.",
       "copyFailed": "Automatic copy failed. Select and copy the command manually.",
       "outputLabel": "Paste the final VIBESTART_READY line after running it",
       "submit": "Check result"
     },
     "items": {
       "git": "Git",
-      "node": "Node.js",
+      "node": "Node.js 22.12 or newer",
       "npm": "npm",
-      "project": "Project folder",
+      "project": "package.json in this folder",
       "next": "Next.js project"
     },
     "result": {
       "title": "Check result",
       "readyTitle": "You are ready for your first deployment",
-      "readyDescription": "Continue to sign in, connect this folder name, and open the first deployment step.",
+      "readyDescription": "Continue to sign in, connect the site name you entered, and open the first deployment step.",
       "continue": "Continue to first deployment",
-      "projectMissingTitle": "Create the project first",
-      "projectMissingDescription": "Your essential tools are ready. Use Project Quick Start to create the folder and Next.js app, then continue.",
+      "projectMissingTitle": "Check the current terminal folder",
+      "projectMissingDescription": "No Next.js project was found here. Reopen the terminal in your project folder and check again. If you do not have a project yet, create one with Quick Start.",
       "quickStart": "Open Project Quick Start",
       "toolsMissingTitle": "Set up the development tools first",
-      "toolsMissingDescription": "Git, Node.js, or npm is missing. Prepare the required tools in the full development environment setup.",
+      "toolsMissingDescription": "Git or npm is missing, or Node.js is below the supported version (22.12). Prepare them in the full environment setup.",
       "fullSetup": "Open full environment setup",
       "invalid": "No valid result was found. Run the command and paste the final VIBESTART_READY line exactly as shown."
     },
@@ -1597,14 +1597,14 @@
   },
   "GitPush": {
     "title": "Push your project to GitHub",
-    "description": "Paste the commands below into your terminal to upload the project you created in Phase 1 to GitHub",
+    "description": "Paste these commands into a terminal opened in your project folder to upload it to GitHub. The folder can live anywhere.",
     "copyButton": "Copy",
     "copiedButton": "Copied!",
     "doneButton": "I pushed it",
     "waitingRepo": "Create a repository first",
     "completedMessage": "Your project is on GitHub",
-    "folderMovedHint": "Moved your project folder? Ask Claude Code instead",
-    "folderMovedPrompt": "Initialize only this folder as a new independent git repository and push it to GitHub. Ignore any git repository in parent folders — only upload files inside this folder."
+    "folderMovedHint": "If the command reports a folder error, reopen a terminal in the project folder and retry. Ask your AI tool if you cannot find it.",
+    "folderMovedPrompt": "Open a terminal in the Next.js project folder I want to deploy, initialize only that folder as an independent git repository, and push it to GitHub."
   },
   "CreateSupabaseProject": {
     "title": "Create a Supabase project",
@@ -1796,7 +1796,7 @@
     "title": "Start Vibe Coding",
     "description": "Open your project in an AI editor, request changes in natural language, then push — auto-deploy takes care of the rest",
     "step1Title": "Open the project in your editor",
-    "step1Desc": "Pick your AI editor and paste the line below into your terminal.",
+    "step1Desc": "Open a terminal in your project folder, pick your AI editor, and paste the line below.",
     "step2Title": "Ask AI for Your First Edit",
     "step2Desc": "Pick a category and copy the prompt. Feel free to tweak it.",
     "step3Title": "Push Your Changes",
@@ -1835,20 +1835,20 @@
     "step1Tools": {
       "codex": {
         "label": "Codex",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && codex",
-        "winCmd": "cd ~/'{'project'}' && code . && codex",
+        "macCmd": "open -a \"Visual Studio Code\" . && codex",
+        "winCmd": "code . && codex",
         "note": "VS Code opens and Codex starts in the terminal."
       },
       "claudeCode": {
         "label": "Claude Code",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && claude",
-        "winCmd": "cd ~/'{'project'}' && code . && claude",
+        "macCmd": "open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "code . && claude",
         "note": "VS Code opens and Claude Code starts in the terminal in one go."
       },
       "cursor": {
         "label": "Cursor",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Cursor\" .",
-        "winCmd": "cd ~/'{'project'}' && cursor .",
+        "macCmd": "open -a \"Cursor\" .",
+        "winCmd": "cursor .",
         "note": "Cursor opens — chat with AI directly from the right side panel."
       }
     },

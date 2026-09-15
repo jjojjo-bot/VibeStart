@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { Link } from "@/i18n/navigation";
@@ -34,10 +34,7 @@ export function ProjectReadinessCheck({
   const [copyFailed, setCopyFailed] = useState(false);
 
   const validName = isValidProjectName(projectName);
-  const script = useMemo(
-    () => (validName ? buildProjectReadinessScript(projectName) : ""),
-    [projectName, validName],
-  );
+  const script = validName ? buildProjectReadinessScript() : "";
 
   function resetResult(): void {
     setResult(null);

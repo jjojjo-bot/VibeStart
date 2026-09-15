@@ -1471,12 +1471,12 @@
     "metaDescription": "Git, Node.js, npm과 로컬 Next.js 프로젝트가 첫 배포를 시작할 준비가 되었는지 확인합니다.",
     "badge": "약 30초 · 로그인 전 확인",
     "title": "내 사이트, 바로 배포할 수 있을까요?",
-    "description": "읽기 전용 명령 한 번으로 필수 도구와 프로젝트 폴더를 확인해요. 부족한 것이 있으면 맞는 시작 경로로 안내합니다.",
+    "description": "프로젝트 폴더에서 읽기 전용 명령을 한 번 실행하면 필수 도구와 배포 준비 상태를 확인해요. 부족한 것이 있으면 맞는 시작 경로로 안내합니다.",
     "project": {
-      "title": "내 컴퓨터의 프로젝트 알려주기",
-      "description": "배포하려는 Next.js 프로젝트가 있는 운영체제와 폴더명을 입력하세요.",
-      "label": "로컬 프로젝트 폴더명",
-      "hint": "홈 폴더 바로 아래의 프로젝트를 확인합니다. 예: ~/my-portfolio",
+      "title": "배포할 사이트 이름 정하기",
+      "description": "프로젝트가 있는 운영체제와 GitHub·Vercel에서 사용할 이름을 입력하세요.",
+      "label": "사이트·GitHub 저장소 이름",
+      "hint": "로컬 폴더명이나 위치는 달라도 괜찮아요. 예: my-portfolio",
       "invalid": "영문 소문자, 숫자, 하이픈만 사용해 2~63자로 입력하세요."
     },
     "os": {
@@ -1488,33 +1488,33 @@
     },
     "check": {
       "title": "준비 상태 확인하기",
-      "windowsDescription": "Ubuntu(WSL) 터미널을 열고 아래 명령을 복사해 붙여넣으세요.",
-      "macosDescription": "터미널 앱을 열고 아래 명령을 복사해 붙여넣으세요.",
-      "nameFirst": "올바른 프로젝트 폴더명을 먼저 입력해 주세요.",
+      "windowsDescription": "VS Code에서 프로젝트 폴더를 연 뒤 Ubuntu(WSL) 터미널에 아래 명령을 붙여넣으세요.",
+      "macosDescription": "프로젝트 폴더에서 터미널을 연 뒤 아래 명령을 붙여넣으세요. VS Code 터미널도 괜찮아요.",
+      "nameFirst": "올바른 사이트 이름을 먼저 입력해 주세요.",
       "copy": "명령 복사",
       "copied": "복사됨",
-      "readOnly": "설치하거나 파일을 바꾸지 않고 존재 여부만 확인합니다.",
+      "readOnly": "현재 터미널 폴더와 Node.js 버전을 읽기만 하며 파일을 바꾸지 않습니다.",
       "copyFailed": "자동 복사에 실패했습니다. 명령을 직접 선택해 복사해 주세요.",
       "outputLabel": "실행 후 마지막 VIBESTART_READY 줄을 붙여넣으세요",
       "submit": "결과 확인"
     },
     "items": {
       "git": "Git",
-      "node": "Node.js",
+      "node": "Node.js 22.12 이상",
       "npm": "npm",
-      "project": "프로젝트 폴더",
+      "project": "현재 폴더의 package.json",
       "next": "Next.js 프로젝트"
     },
     "result": {
       "title": "확인 결과",
       "readyTitle": "첫 배포를 시작할 준비가 됐어요",
-      "readyDescription": "계속하면 로그인 후 이 폴더명으로 프로젝트를 연결하고 첫 배포 단계로 이동합니다.",
+      "readyDescription": "계속하면 로그인 후 입력한 사이트 이름으로 프로젝트를 연결하고 첫 배포 단계로 이동합니다.",
       "continue": "첫 배포로 계속하기",
-      "projectMissingTitle": "프로젝트부터 만들어야 해요",
-      "projectMissingDescription": "필수 도구는 준비되어 있습니다. 프로젝트 빠른 시작으로 폴더와 Next.js 앱을 만든 뒤 이어가세요.",
+      "projectMissingTitle": "현재 터미널 폴더를 확인해 주세요",
+      "projectMissingDescription": "여기서 Next.js 프로젝트를 찾지 못했어요. 프로젝트 폴더에서 터미널을 다시 열어 점검하세요. 아직 프로젝트가 없다면 빠른 시작으로 만들 수 있어요.",
       "quickStart": "프로젝트 빠른 시작",
       "toolsMissingTitle": "개발 도구 준비가 먼저예요",
-      "toolsMissingDescription": "Git, Node.js 또는 npm이 없습니다. 전체 개발환경 설정에서 필요한 도구를 준비해 주세요.",
+      "toolsMissingDescription": "Git·npm이 없거나 Node.js가 지원 버전(22.12 이상)이 아닙니다. 전체 개발환경 설정에서 준비해 주세요.",
       "fullSetup": "전체 개발환경 설정",
       "invalid": "확인 결과를 찾지 못했습니다. 명령을 실행한 뒤 마지막 VIBESTART_READY 줄을 그대로 붙여넣어 주세요."
     },
@@ -1605,14 +1605,14 @@
   },
   "GitPush": {
     "title": "내 프로젝트를 GitHub에 올리기",
-    "description": "아래 명령어를 터미널에 붙여넣으면 Phase 1에서 만든 프로젝트가 GitHub에 올라가요",
+    "description": "프로젝트 폴더에서 연 터미널에 아래 명령어를 붙여넣으면 GitHub에 올라가요. 폴더 위치는 어디든 괜찮습니다.",
     "copyButton": "복사",
     "copiedButton": "복사됨!",
     "doneButton": "push 완료했어요",
     "waitingRepo": "먼저 저장소를 만들어 주세요",
     "completedMessage": "GitHub에 프로젝트가 올라갔어요",
-    "folderMovedHint": "프로젝트 폴더를 다른 곳으로 옮겼나요? Claude Code에게 요청해 보세요",
-    "folderMovedPrompt": "이 폴더만 새 git 저장소로 독립시켜서 GitHub에 올려줘. 상위 폴더에 다른 git이 있어도 무시하고, 이 폴더 안의 파일만 올리면 돼."
+    "folderMovedHint": "명령이 폴더 오류를 표시하면 프로젝트 폴더에서 터미널을 다시 연 뒤 실행하세요. 위치가 헷갈리면 AI에게 요청해 보세요.",
+    "folderMovedPrompt": "지금 배포하려는 Next.js 프로젝트 폴더에서 터미널을 열고, 이 폴더만 새 git 저장소로 독립시켜 GitHub에 올려줘."
   },
   "CreateSupabaseProject": {
     "title": "Supabase 프로젝트 만들기",
@@ -1804,7 +1804,7 @@
     "title": "바이브코딩 시작",
     "description": "AI 에디터로 프로젝트를 열고, 자연어로 수정 요청한 뒤 push → 자동 배포까지 완성해요",
     "step1Title": "에디터로 프로젝트 열기",
-    "step1Desc": "사용하실 AI 에디터를 고르고, 아래 한 줄을 터미널에 붙여넣어 주세요.",
+    "step1Desc": "프로젝트 폴더에서 터미널을 열고 AI 에디터를 고른 뒤, 아래 한 줄을 붙여넣어 주세요.",
     "step2Title": "AI에게 첫 수정 요청하기",
     "step2Desc": "원하는 종류를 골라 프롬프트를 복사하세요. 자유롭게 바꿔도 됩니다.",
     "step3Title": "변경사항 push하기",
@@ -1843,20 +1843,20 @@
     "step1Tools": {
       "codex": {
         "label": "Codex",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && codex",
-        "winCmd": "cd ~/'{'project'}' && code . && codex",
+        "macCmd": "open -a \"Visual Studio Code\" . && codex",
+        "winCmd": "code . && codex",
         "note": "VS Code가 열리고 Codex가 터미널에서 시작됩니다."
       },
       "claudeCode": {
         "label": "Claude Code",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && claude",
-        "winCmd": "cd ~/'{'project'}' && code . && claude",
+        "macCmd": "open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "code . && claude",
         "note": "VS Code가 열리고 별도 터미널에서 Claude Code가 시작됩니다."
       },
       "cursor": {
         "label": "Cursor",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Cursor\" .",
-        "winCmd": "cd ~/'{'project'}' && cursor .",
+        "macCmd": "open -a \"Cursor\" .",
+        "winCmd": "cursor .",
         "note": "Cursor가 열리면 우측 채팅 패널에서 바로 AI에게 요청할 수 있어요."
       }
     },

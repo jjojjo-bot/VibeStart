@@ -1448,12 +1448,12 @@
     "metaDescription": "检查Git、Node.js、npm和本地Next.js项目是否已准备好进行首次部署。",
     "badge": "约30秒 · 登录前检查",
     "title": "你的网站可以立即部署吗？",
-    "description": "通过一条只读命令检查必备工具和项目文件夹。如有缺失，我们会引导你进入合适的开始路径。",
+    "description": "在项目文件夹中运行一次只读命令，检查必备工具和部署准备状态。如有缺失，我们会引导你进入合适的开始路径。",
     "project": {
-      "title": "告诉我们本地项目的位置",
-      "description": "选择操作系统，并输入要部署的Next.js项目文件夹名称。",
-      "label": "本地项目文件夹名称",
-      "hint": "我们会检查主目录下的项目，例如 ~/my-portfolio。",
+      "title": "设置要部署的网站名称",
+      "description": "选择项目所在的操作系统，并输入要在GitHub和Vercel上使用的名称。",
+      "label": "网站和GitHub仓库名称",
+      "hint": "本地文件夹可以使用不同名称，也可以位于任意位置。例如 my-portfolio。",
       "invalid": "请使用2–63个小写字母、数字或连字符。"
     },
     "os": {
@@ -1465,33 +1465,33 @@
     },
     "check": {
       "title": "检查准备状态",
-      "windowsDescription": "打开Ubuntu（WSL）终端，复制并运行下面的命令。",
-      "macosDescription": "打开终端应用，复制并运行下面的命令。",
-      "nameFirst": "请先输入有效的项目文件夹名称。",
+      "windowsDescription": "在VS Code中打开项目文件夹，然后将下面的命令粘贴到Ubuntu（WSL）终端。",
+      "macosDescription": "在项目文件夹中打开终端，然后粘贴下面的命令。也可以使用VS Code终端。",
+      "nameFirst": "请先输入有效的网站名称。",
       "copy": "复制命令",
       "copied": "已复制",
-      "readOnly": "只检查是否存在，不会安装或修改文件。",
+      "readOnly": "只读取当前终端文件夹和Node.js版本，不会修改文件。",
       "copyFailed": "自动复制失败，请手动选择并复制命令。",
       "outputLabel": "运行后粘贴最后一行VIBESTART_READY结果",
       "submit": "检查结果"
     },
     "items": {
       "git": "Git",
-      "node": "Node.js",
+      "node": "Node.js 22.12或更高版本",
       "npm": "npm",
-      "project": "项目文件夹",
+      "project": "当前文件夹中的package.json",
       "next": "Next.js项目"
     },
     "result": {
       "title": "检查结果",
       "readyTitle": "已准备好首次部署",
-      "readyDescription": "继续后，登录并使用此文件夹名称连接项目，然后进入首次部署步骤。",
+      "readyDescription": "继续后，登录并使用你输入的网站名称连接项目，然后进入首次部署步骤。",
       "continue": "继续首次部署",
-      "projectMissingTitle": "请先创建项目",
-      "projectMissingDescription": "必备工具已经就绪。使用项目快速开始创建文件夹和Next.js应用后再继续。",
+      "projectMissingTitle": "请检查当前终端文件夹",
+      "projectMissingDescription": "这里没有找到Next.js项目。请在项目文件夹中重新打开终端并再次检查。如果还没有项目，可以使用快速开始创建。",
       "quickStart": "打开项目快速开始",
       "toolsMissingTitle": "请先准备开发工具",
-      "toolsMissingDescription": "缺少Git、Node.js或npm。请在完整开发环境设置中准备所需工具。",
+      "toolsMissingDescription": "缺少Git或npm，或者Node.js低于支持版本（22.12）。请在完整开发环境设置中准备。",
       "fullSetup": "打开完整环境设置",
       "invalid": "未找到有效结果。请运行命令，并原样粘贴最后一行VIBESTART_READY结果。"
     },
@@ -1582,14 +1582,14 @@
   },
   "GitPush": {
     "title": "把项目推送到 GitHub",
-    "description": "把下面的命令粘贴到终端，Phase 1 创建的项目就会上传到 GitHub",
+    "description": "把下面的命令粘贴到在项目文件夹中打开的终端，即可上传到GitHub。文件夹可以位于任意位置。",
     "copyButton": "复制",
     "copiedButton": "已复制!",
     "doneButton": "我已经 push 了",
     "waitingRepo": "请先创建仓库",
     "completedMessage": "项目已上传到 GitHub",
-    "folderMovedHint": "移动了项目文件夹？试试让 Claude Code 帮你",
-    "folderMovedPrompt": "把这个文件夹作为一个新的独立 git 仓库初始化后上传到 GitHub。即使上级文件夹里有其他 git，也请忽略，只上传这个文件夹里的文件。"
+    "folderMovedHint": "如果命令显示文件夹错误，请在项目文件夹中重新打开终端后再试。找不到位置时可以让AI工具帮忙。",
+    "folderMovedPrompt": "在我要部署的Next.js项目文件夹中打开终端，只把该文件夹初始化为独立的git仓库并推送到GitHub。"
   },
   "CreateSupabaseProject": {
     "title": "创建 Supabase 项目",
@@ -1781,7 +1781,7 @@
     "title": "开始 Vibe Coding",
     "description": "用AI编辑器打开项目，用自然语言请求修改，然后push — 自动部署搞定一切",
     "step1Title": "在编辑器中打开项目",
-    "step1Desc": "选择你要使用的AI编辑器,然后把下面这一行粘贴到终端。",
+    "step1Desc": "在项目文件夹中打开终端，选择AI编辑器，然后粘贴下面这一行。",
     "step2Title": "向AI提出第一次修改请求",
     "step2Desc": "选择一个类别并复制提示。可以自由调整。",
     "step3Title": "推送你的更改",
@@ -1820,20 +1820,20 @@
     "step1Tools": {
       "codex": {
         "label": "Codex",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && codex",
-        "winCmd": "cd ~/'{'project'}' && code . && codex",
+        "macCmd": "open -a \"Visual Studio Code\" . && codex",
+        "winCmd": "code . && codex",
         "note": "VS Code 打开后，Codex 会在终端中启动。"
       },
       "claudeCode": {
         "label": "Claude Code",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && claude",
-        "winCmd": "cd ~/'{'project'}' && code . && claude",
+        "macCmd": "open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "code . && claude",
         "note": "VS Code会打开,另一个终端自动启动Claude Code。"
       },
       "cursor": {
         "label": "Cursor",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Cursor\" .",
-        "winCmd": "cd ~/'{'project'}' && cursor .",
+        "macCmd": "open -a \"Cursor\" .",
+        "winCmd": "cursor .",
         "note": "Cursor打开后,可以直接在右侧聊天面板向AI提出请求。"
       }
     },

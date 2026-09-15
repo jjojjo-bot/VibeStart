@@ -1518,7 +1518,6 @@ export default async function MilestoneRunPage({
           {/* M3 바이브코딩 패널 */}
           {milestone.id === "m3-vibe-coding" && vibeCodingData && (
             <VibeCodingPanel
-              projectName={project.slug}
               os={project.os}
               deployedUrl={vibeCodingData.deployedUrl}
               labels={vibeCodingData.labels}

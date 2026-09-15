@@ -1448,12 +1448,12 @@
     "metaDescription": "Comprueba si Git, Node.js, npm y tu proyecto Next.js local están listos para el primer despliegue.",
     "badge": "Unos 30 segundos · Antes de iniciar sesión",
     "title": "¿Tu sitio está listo para desplegar?",
-    "description": "Un comando de solo lectura comprueba las herramientas esenciales y la carpeta del proyecto. Si falta algo, te guiaremos al inicio adecuado.",
+    "description": "Ejecuta un comando de solo lectura desde la carpeta del proyecto para comprobar las herramientas y la preparación del despliegue. Si falta algo, te guiaremos al inicio adecuado.",
     "project": {
-      "title": "Indica tu proyecto local",
-      "description": "Elige el sistema operativo e introduce el nombre de la carpeta del proyecto Next.js que quieres desplegar.",
-      "label": "Nombre de la carpeta local",
-      "hint": "Comprobamos la carpeta directamente dentro de tu directorio personal, por ejemplo ~/my-portfolio.",
+      "title": "Elige el nombre del sitio",
+      "description": "Elige el sistema operativo del proyecto y el nombre que usarás en GitHub y Vercel.",
+      "label": "Nombre del sitio y repositorio de GitHub",
+      "hint": "La carpeta local puede tener otro nombre y estar en cualquier ubicación. Ejemplo: my-portfolio.",
       "invalid": "Usa entre 2 y 63 letras minúsculas, números o guiones."
     },
     "os": {
@@ -1465,33 +1465,33 @@
     },
     "check": {
       "title": "Comprobar preparación",
-      "windowsDescription": "Abre una terminal Ubuntu (WSL), copia y ejecuta el comando siguiente.",
-      "macosDescription": "Abre la app Terminal, copia y ejecuta el comando siguiente.",
-      "nameFirst": "Introduce primero un nombre de carpeta válido.",
+      "windowsDescription": "Abre la carpeta del proyecto en VS Code y pega el comando en su terminal Ubuntu (WSL).",
+      "macosDescription": "Abre una terminal en la carpeta del proyecto y pega el comando. También sirve la terminal de VS Code.",
+      "nameFirst": "Introduce primero un nombre de sitio válido.",
       "copy": "Copiar comando",
       "copied": "Copiado",
-      "readOnly": "Solo comprueba lo que existe; no instala ni modifica archivos.",
+      "readOnly": "Solo lee la carpeta actual de la terminal y la versión de Node.js; no modifica archivos.",
       "copyFailed": "No se pudo copiar automáticamente. Selecciona y copia el comando manualmente.",
       "outputLabel": "Pega la última línea VIBESTART_READY después de ejecutarlo",
       "submit": "Comprobar resultado"
     },
     "items": {
       "git": "Git",
-      "node": "Node.js",
+      "node": "Node.js 22.12 o posterior",
       "npm": "npm",
-      "project": "Carpeta del proyecto",
+      "project": "package.json en esta carpeta",
       "next": "Proyecto Next.js"
     },
     "result": {
       "title": "Resultado",
       "readyTitle": "Todo listo para el primer despliegue",
-      "readyDescription": "Continúa para iniciar sesión, conectar este nombre de carpeta y abrir el primer paso de despliegue.",
+      "readyDescription": "Continúa para iniciar sesión, conectar el nombre de sitio introducido y abrir el primer paso de despliegue.",
       "continue": "Continuar al primer despliegue",
-      "projectMissingTitle": "Primero crea el proyecto",
-      "projectMissingDescription": "Las herramientas esenciales están listas. Usa el inicio rápido para crear la carpeta y la app Next.js.",
+      "projectMissingTitle": "Comprueba la carpeta actual de la terminal",
+      "projectMissingDescription": "No encontramos un proyecto Next.js aquí. Vuelve a abrir la terminal en la carpeta del proyecto y comprueba de nuevo. Si aún no tienes uno, créalo con el inicio rápido.",
       "quickStart": "Abrir inicio rápido del proyecto",
       "toolsMissingTitle": "Primero prepara las herramientas",
-      "toolsMissingDescription": "Falta Git, Node.js o npm. Prepara las herramientas necesarias con la configuración completa del entorno.",
+      "toolsMissingDescription": "Falta Git o npm, o Node.js no alcanza la versión compatible (22.12). Prepáralos con la configuración completa del entorno.",
       "fullSetup": "Abrir configuración completa",
       "invalid": "No se encontró un resultado válido. Ejecuta el comando y pega exactamente la última línea VIBESTART_READY."
     },
@@ -1582,14 +1582,14 @@
   },
   "GitPush": {
     "title": "Subir tu proyecto a GitHub",
-    "description": "Pega los comandos en tu terminal para subir el proyecto que creaste en la Fase 1 a GitHub",
+    "description": "Pega estos comandos en una terminal abierta en la carpeta del proyecto para subirlo a GitHub. La carpeta puede estar en cualquier ubicación.",
     "copyButton": "Copiar",
     "copiedButton": "Copiado!",
     "doneButton": "Ya hice push",
     "waitingRepo": "Primero crea un repositorio",
     "completedMessage": "Tu proyecto está en GitHub",
-    "folderMovedHint": "¿Moviste la carpeta del proyecto? Pídele a Claude Code",
-    "folderMovedPrompt": "Inicializa solo esta carpeta como un nuevo repositorio git independiente y súbela a GitHub. Ignora cualquier repositorio git en carpetas superiores — sube únicamente los archivos dentro de esta carpeta."
+    "folderMovedHint": "Si aparece un error de carpeta, vuelve a abrir una terminal en el proyecto y repite. Pide ayuda a tu herramienta de IA si no encuentras la ubicación.",
+    "folderMovedPrompt": "Abre una terminal en la carpeta del proyecto Next.js que quiero desplegar, inicializa solo esa carpeta como repositorio git independiente y súbela a GitHub."
   },
   "CreateSupabaseProject": {
     "title": "Crear un proyecto de Supabase",
@@ -1781,7 +1781,7 @@
     "title": "Iniciar Vibe Coding",
     "description": "Abre tu proyecto en un editor IA, solicita cambios en lenguaje natural, haz push y el despliegue automático se encarga del resto",
     "step1Title": "Abre el proyecto en tu editor",
-    "step1Desc": "Elige tu editor de IA y pega la línea de abajo en tu terminal.",
+    "step1Desc": "Abre una terminal en la carpeta del proyecto, elige tu editor de IA y pega la línea de abajo.",
     "step2Title": "Pide a la IA tu primera edición",
     "step2Desc": "Elige una categoría y copia el prompt. Siéntete libre de modificarlo.",
     "step3Title": "Sube tus cambios",
@@ -1820,20 +1820,20 @@
     "step1Tools": {
       "codex": {
         "label": "Codex",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && codex",
-        "winCmd": "cd ~/'{'project'}' && code . && codex",
+        "macCmd": "open -a \"Visual Studio Code\" . && codex",
+        "winCmd": "code . && codex",
         "note": "VS Code se abre y Codex arranca en la terminal."
       },
       "claudeCode": {
         "label": "Claude Code",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && claude",
-        "winCmd": "cd ~/'{'project'}' && code . && claude",
+        "macCmd": "open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "code . && claude",
         "note": "VS Code se abre y Claude Code arranca en la terminal automáticamente."
       },
       "cursor": {
         "label": "Cursor",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Cursor\" .",
-        "winCmd": "cd ~/'{'project'}' && cursor .",
+        "macCmd": "open -a \"Cursor\" .",
+        "winCmd": "cursor .",
         "note": "Cursor se abre — pide a la IA desde el panel de chat de la derecha."
       }
     },

@@ -34,7 +34,7 @@ export interface VibeCodingEditorTool {
   id: "claudeCode" | "codex" | "cursor";
   /** Locale-agnostic display label (brand name kept in English). */
   label: string;
-  /** OS별 단일 체인 명령어 — `{project}` placeholder가 프로젝트명으로 치환된다. */
+  /** OS별 단일 체인 명령어 — 사용자가 연 현재 프로젝트 폴더에서 실행한다. */
   macCmd: string;
   winCmd: string;
   /** 한 줄 설명 — 명령어 아래에 표시. */
@@ -114,7 +114,6 @@ export interface VibeCodingTroubleshootItem {
 }
 
 export interface VibeCodingPanelProps {
-  projectName: string;
   os: "macos" | "windows" | null;
   deployedUrl: string | null;
   labels: VibeCodingPanelLabels;
@@ -437,7 +436,6 @@ function CopyButton({
 }
 
 export function VibeCodingPanel({
-  projectName,
   os,
   deployedUrl,
   labels,
@@ -466,11 +464,7 @@ export function VibeCodingPanel({
       id: "m3-s1-open-editor",
       title: labels.step1Title,
       desc: labels.step1Desc,
-      tools: labels.step1Tools.map((tool) => ({
-        ...tool,
-        macCmd: tool.macCmd.replace("{project}", projectName),
-        winCmd: tool.winCmd.replace("{project}", projectName),
-      })),
+      tools: labels.step1Tools,
     },
     {
       id: "m3-s2-first-ai-edit",

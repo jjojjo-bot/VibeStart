@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { buildGitPushScript } from "@/lib/projects/git-push";
 
 export interface GitPushPanelProps {
   projectName: string;
@@ -45,21 +46,7 @@ export function GitPushPanel({
   const [saving, setSaving] = useState(false);
   const router = useRouter();
 
-  const repoUrl = githubUsername
-    ? `https://github.com/${githubUsername}/${projectName}.git`
-    : `https://github.com/<username>/${projectName}.git`;
-
-  const commands = `cd ~/${projectName}
-rm -rf frontend/.git
-echo ".DS_Store" >> .gitignore
-git init
-git config user.name "${githubUsername ?? "VibeStart User"}"
-git config user.email "${githubUsername ?? "vibestart"}@users.noreply.github.com"
-git add .
-git commit -m "first commit"
-git remote add origin ${repoUrl}
-git branch -M main
-git push -u origin main`;
+  const commands = buildGitPushScript(projectName, githubUsername);
 
   async function handleCopy(): Promise<void> {
     try {

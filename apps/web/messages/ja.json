@@ -1448,12 +1448,12 @@
     "metaDescription": "Git、Node.js、npm、ローカルのNext.jsプロジェクトが初回デプロイの準備を完了しているか確認します。",
     "badge": "約30秒 · ログイン前に確認",
     "title": "サイトをすぐデプロイできますか？",
-    "description": "読み取り専用のコマンド1回で、必須ツールとプロジェクトフォルダを確認します。不足があれば適切な開始方法をご案内します。",
+    "description": "プロジェクトフォルダで読み取り専用コマンドを1回実行し、必須ツールとデプロイ準備を確認します。不足があれば適切な開始方法をご案内します。",
     "project": {
-      "title": "ローカルプロジェクトを指定",
-      "description": "デプロイするNext.jsプロジェクトのOSとフォルダ名を入力してください。",
-      "label": "ローカルプロジェクトのフォルダ名",
-      "hint": "ホームフォルダ直下を確認します。例: ~/my-portfolio",
+      "title": "デプロイするサイト名を決める",
+      "description": "プロジェクトのOSと、GitHub・Vercelで使用する名前を入力してください。",
+      "label": "サイト・GitHubリポジトリ名",
+      "hint": "ローカルフォルダの名前や場所は異なっていても構いません。例: my-portfolio",
       "invalid": "英小文字、数字、ハイフンを使って2〜63文字で入力してください。"
     },
     "os": {
@@ -1465,33 +1465,33 @@
     },
     "check": {
       "title": "準備状況を確認",
-      "windowsDescription": "Ubuntu（WSL）ターミナルを開き、下のコマンドをコピーして実行してください。",
-      "macosDescription": "ターミナルアプリを開き、下のコマンドをコピーして実行してください。",
-      "nameFirst": "有効なプロジェクトフォルダ名を先に入力してください。",
+      "windowsDescription": "VS Codeでプロジェクトフォルダを開き、そのUbuntu（WSL）ターミナルに下のコマンドを貼り付けてください。",
+      "macosDescription": "プロジェクトフォルダでターミナルを開き、下のコマンドを貼り付けてください。VS Codeのターミナルでも構いません。",
+      "nameFirst": "有効なサイト名を先に入力してください。",
       "copy": "コマンドをコピー",
       "copied": "コピー済み",
-      "readOnly": "インストールやファイル変更は行わず、存在だけを確認します。",
+      "readOnly": "現在のターミナルフォルダとNode.jsのバージョンを読むだけで、ファイルは変更しません。",
       "copyFailed": "自動コピーに失敗しました。コマンドを選択して手動でコピーしてください。",
       "outputLabel": "実行後、最後のVIBESTART_READY行を貼り付けてください",
       "submit": "結果を確認"
     },
     "items": {
       "git": "Git",
-      "node": "Node.js",
+      "node": "Node.js 22.12以上",
       "npm": "npm",
-      "project": "プロジェクトフォルダ",
+      "project": "現在のフォルダのpackage.json",
       "next": "Next.jsプロジェクト"
     },
     "result": {
       "title": "確認結果",
       "readyTitle": "初回デプロイの準備ができました",
-      "readyDescription": "続行すると、ログイン後にこのフォルダ名でプロジェクトを接続し、初回デプロイへ進みます。",
+      "readyDescription": "続行すると、ログイン後に入力したサイト名でプロジェクトを接続し、初回デプロイへ進みます。",
       "continue": "初回デプロイへ進む",
-      "projectMissingTitle": "まずプロジェクトを作成しましょう",
-      "projectMissingDescription": "必須ツールは準備済みです。プロジェクトクイックスタートでフォルダとNext.jsアプリを作成してください。",
+      "projectMissingTitle": "現在のターミナルフォルダを確認してください",
+      "projectMissingDescription": "ここにNext.jsプロジェクトが見つかりません。プロジェクトフォルダでターミナルを開き直して再確認してください。まだプロジェクトがなければクイックスタートで作成できます。",
       "quickStart": "プロジェクトクイックスタート",
       "toolsMissingTitle": "開発ツールの準備が必要です",
-      "toolsMissingDescription": "Git、Node.js、またはnpmがありません。完全な開発環境設定で必要なツールを準備してください。",
+      "toolsMissingDescription": "Git・npmがないか、Node.jsが対応バージョン（22.12以上）ではありません。完全な開発環境設定で準備してください。",
       "fullSetup": "完全な開発環境設定",
       "invalid": "有効な結果が見つかりません。コマンドを実行し、最後のVIBESTART_READY行をそのまま貼り付けてください。"
     },
@@ -1582,14 +1582,14 @@
   },
   "GitPush": {
     "title": "プロジェクトをGitHubにプッシュ",
-    "description": "下のコマンドをターミナルに貼り付けると、Phase 1で作ったプロジェクトがGitHubにアップロードされます",
+    "description": "プロジェクトフォルダで開いたターミナルに下のコマンドを貼り付けるとGitHubへアップロードできます。フォルダの場所はどこでも構いません。",
     "copyButton": "コピー",
     "copiedButton": "コピー済み!",
     "doneButton": "pushしました",
     "waitingRepo": "まずリポジトリを作成してください",
     "completedMessage": "プロジェクトがGitHubにアップロードされました",
-    "folderMovedHint": "プロジェクトフォルダを移動しましたか？Claude Codeに頼んでみてください",
-    "folderMovedPrompt": "このフォルダだけを新しい独立した git リポジトリとして初期化して GitHub にアップロードして。上の階層に別の git があっても無視して、このフォルダの中のファイルだけアップロードすればいいよ。"
+    "folderMovedHint": "フォルダエラーが出たら、プロジェクトフォルダでターミナルを開き直して実行してください。場所が分からなければAIツールに頼めます。",
+    "folderMovedPrompt": "デプロイするNext.jsプロジェクトフォルダでターミナルを開き、そのフォルダだけを独立したgitリポジトリとして初期化してGitHubへpushして。"
   },
   "CreateSupabaseProject": {
     "title": "Supabaseプロジェクトを作成",
@@ -1781,7 +1781,7 @@
     "title": "バイブコーディング開始",
     "description": "AIエディターでプロジェクトを開き、自然言語で修正を依頼してpush → 自動デプロイまで完成します",
     "step1Title": "エディタでプロジェクトを開く",
-    "step1Desc": "使用するAIエディタを選んで、下の1行をターミナルに貼り付けてください。",
+    "step1Desc": "プロジェクトフォルダでターミナルを開き、AIエディタを選んで下の1行を貼り付けてください。",
     "step2Title": "AIに最初の修正をお願いする",
     "step2Desc": "種類を選んでプロンプトをコピーしてください。自由に変更してもOKです。",
     "step3Title": "変更をpushする",
@@ -1820,20 +1820,20 @@
     "step1Tools": {
       "codex": {
         "label": "Codex",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && codex",
-        "winCmd": "cd ~/'{'project'}' && code . && codex",
+        "macCmd": "open -a \"Visual Studio Code\" . && codex",
+        "winCmd": "code . && codex",
         "note": "VS Codeが開き、ターミナルでCodexが起動します。"
       },
       "claudeCode": {
         "label": "Claude Code",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && claude",
-        "winCmd": "cd ~/'{'project'}' && code . && claude",
+        "macCmd": "open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "code . && claude",
         "note": "VS Codeが開き、別ターミナルでClaude Codeが起動します。"
       },
       "cursor": {
         "label": "Cursor",
-        "macCmd": "cd ~/'{'project'}' && open -a \"Cursor\" .",
-        "winCmd": "cd ~/'{'project'}' && cursor .",
+        "macCmd": "open -a \"Cursor\" .",
+        "winCmd": "cursor .",
         "note": "Cursorが開いたら、右側のチャットパネルで直接AIに依頼できます。"
       }
     },

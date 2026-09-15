@@ -1,5 +1,3 @@
-import { isValidProjectName } from "@/lib/onboarding";
-
 export const PROJECT_READINESS_KEYS = [
   "git",
   "node",
@@ -9,7 +7,7 @@ export const PROJECT_READINESS_KEYS = [
 ] as const;
 
 export type ProjectReadinessKey = (typeof PROJECT_READINESS_KEYS)[number];
-export type ProjectReadinessCheck = "ok" | "missing";
+export type ProjectReadinessCheck = "ok" | "missing" | "outdated";
 export type ProjectReadinessState =
   | "ready"
   | "missing-tools"
@@ -23,23 +21,22 @@ export interface ProjectReadinessResult {
 
 /**
  * macOS Terminal과 Windows WSL/Ubuntu에서 실행하는 읽기 전용 점검 명령.
- * 프로젝트명은 셸 문자열에 들어가므로 공개 헬퍼와 같은 규칙으로 검증한다.
+ * 사용자가 연 현재 폴더를 검사하므로 프로젝트의 절대 경로를 수집할 필요가 없다.
  */
-export function buildProjectReadinessScript(projectName: string): string {
-  if (!isValidProjectName(projectName)) {
-    throw new Error("Invalid project name");
-  }
-
-  return `p="$HOME/${projectName}"
+export function buildProjectReadinessScript(): string {
+  return `p="$PWD"
 git_status=missing
 node_status=missing
 npm_status=missing
 project_status=missing
 next_status=missing
 command -v git >/dev/null 2>&1 && git_status=ok
-command -v node >/dev/null 2>&1 && node_status=ok
+if command -v node >/dev/null 2>&1; then
+  node_status=outdated
+  node -e 'const [a,b]=process.versions.node.split(".").map(Number);process.exit((a===22&&b>=12)||a>=24?0:1)' >/dev/null 2>&1 && node_status=ok
+fi
 command -v npm >/dev/null 2>&1 && npm_status=ok
-[ -d "$p" ] && project_status=ok
+[ -f "$p/package.json" ] && project_status=ok
 [ -f "$p/package.json" ] && grep -Eq '"next"[[:space:]]*:' "$p/package.json" && next_status=ok
 printf 'VIBESTART_READY::git=%s::node=%s::npm=%s::project=%s::next=%s\\n' "$git_status" "$node_status" "$npm_status" "$project_status" "$next_status"`;
 }
@@ -61,7 +58,7 @@ export function parseProjectReadiness(output: string): ProjectReadinessResult {
       if (extra.length > 0) continue;
       if (
         PROJECT_READINESS_KEYS.includes(rawKey as ProjectReadinessKey) &&
-        (rawValue === "ok" || rawValue === "missing")
+        (rawValue === "ok" || rawValue === "missing" || rawValue === "outdated")
       ) {
         checks[rawKey as ProjectReadinessKey] = rawValue;
       }
@@ -69,10 +66,10 @@ export function parseProjectReadiness(output: string): ProjectReadinessResult {
 
     if (!PROJECT_READINESS_KEYS.every((key) => checks[key])) continue;
 
-    if (["git", "node", "npm"].some((key) => checks[key as ProjectReadinessKey] === "missing")) {
+    if (["git", "node", "npm"].some((key) => checks[key as ProjectReadinessKey] !== "ok")) {
       return { state: "missing-tools", checks };
     }
-    if (checks.project === "missing" || checks.next === "missing") {
+    if (checks.project !== "ok" || checks.next !== "ok") {
       return { state: "missing-project", checks };
     }
     return { state: "ready", checks };
