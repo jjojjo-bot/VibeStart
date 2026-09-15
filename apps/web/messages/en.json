@@ -1118,17 +1118,6 @@
       "reassurance": "Don't worry about saying the wrong thing. You can always say \"Undo that and try again.\"",
       "forwardNote": "💡 After you deploy your site in the next step, you'll get a richer guide organized into 5 categories (text · color · new section · gradient · font)."
     },
-    "claudeDesign": {
-      "heading": "Stuck on the Design?",
-      "subtitle": "Create a UI with AI first, then bring it straight into your project.",
-      "steps": [
-        "Go to claude.ai/design and describe the screen you want, like \"Create a login page\"",
-        "When you like it, open the Export menu, choose \"Send to local coding agent\", then click Copy command",
-        "Paste it into a Claude Code terminal opened in your project folder — the design is applied automatically",
-        "Using a different AI agent (Cursor, etc.)? Check \"Download zip instead\", extract the ZIP, and drop the files into {designPath}"
-      ],
-      "note": "Available only to Claude Pro, Max, Team, and Enterprise subscribers. It's in research preview with its own weekly limit — usage here doesn't count toward other Claude limits."
-    },
     "phase2": {
       "badge": "Next Step",
       "heading": "Ready to put your site on the real internet?",

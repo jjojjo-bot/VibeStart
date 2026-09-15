@@ -146,6 +146,7 @@ describe('Completion and clipboard failures',()=>{
     render(<NextIntlClientProvider locale="ko" messages={messages}><CompletePage/></NextIntlClientProvider>);
     expect(await screen.findByText(messages.Complete.configuredProject)).toBeInTheDocument();
     expect(screen.queryByText(messages.Complete.installedTools)).not.toBeInTheDocument();
+    expect(screen.queryByRole('link',{name:'Claude Design'})).not.toBeInTheDocument();
     expect(screen.getByRole('link',{name:messages.Wizard.switchToFull})).toHaveAttribute('href',expect.not.stringContaining('mode=project-only'));
   });
 });

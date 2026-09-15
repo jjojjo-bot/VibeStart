@@ -1103,17 +1103,6 @@
       "reassurance": "うまく言えなくても大丈夫です。「さっきのやつ取り消してやり直して」と言えばOKです。",
       "forwardNote": "💡 次のステップでサイトを公開すると、5つのカテゴリ(テキスト・色・新セクション・グラデーション・フォント)に整理されたガイドがまた登場します。"
     },
-    "claudeDesign": {
-      "heading": "デザインに困ったら",
-      "subtitle": "AIで画面を先に作り、自分のプロジェクトにそのまま取り込めます。",
-      "steps": [
-        "claude.ai/designにアクセスして「ログインページを作って」のように作りたい画面を説明してください",
-        "気に入ったらExportメニューで「Send to local coding agent」を選び、Copy commandを押してください",
-        "プロジェクトフォルダを開いたClaude Codeのターミナルに貼り付け — デザインが自動で適用されます",
-        "Cursorなど他のAIエージェントを使うときは「Download zip instead」にチェックしてZIPを取得し、解凍して{designPath}フォルダに入れてください"
-      ],
-      "note": "Claude Pro・Max・Team・Enterpriseの加入者のみ利用可能です。リサーチプレビュー中で独自の週次上限があり、ここでの使用量は他のClaude上限には含まれません。"
-    },
     "phase2": {
       "badge": "次のステップ",
       "heading": "本物のインターネットに自分のサイトを公開しませんか？",

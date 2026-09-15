@@ -87,21 +87,6 @@ function getPromptExampleKey(goal: Goal): string {
   }
 }
 
-/** Claude Design 내보내기 ZIP을 풀어야 할 경로 (웹 프로젝트만 해당) */
-function getDesignUnzipPath(goal: Goal, projectName: string): string | null {
-  switch (goal) {
-    case "web-nextjs":
-    case "not-sure":
-      return `~/${projectName}/`;
-    case "web-python":
-    case "web-java":
-      return `~/${projectName}/frontend/`;
-    case "mobile":
-    case "data-ai":
-      return null;
-  }
-}
-
 function PromptCopyBlock({ text }: { text: string }) {
   const [copied, setCopied] = useState(false);
   const tc = useTranslations("Common");
@@ -179,7 +164,6 @@ function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeo
     .replaceAll("CLAUDE.md", aiToolProvider(aiTool).instructionFile);
   const promptTemplate = t(getPromptTemplateKey(goal) as Parameters<typeof t>[0]);
   const firstPrompt = t(getPromptExampleKey(goal) as Parameters<typeof t>[0]);
-  const designPath = getDesignUnzipPath(goal, projectName);
 
   // Follow-up examples from translation
   const followUpExamples = [
@@ -190,14 +174,6 @@ function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeo
     t("followUp.examples.4" as Parameters<typeof t>[0]),
     t("followUp.examples.5" as Parameters<typeof t>[0]),
   ];
-
-  // Claude Design steps from translation
-  const designSteps = designPath ? [
-    t("claudeDesign.steps.0" as Parameters<typeof t>[0]),
-    t("claudeDesign.steps.1" as Parameters<typeof t>[0]),
-    t("claudeDesign.steps.2" as Parameters<typeof t>[0]),
-    t("claudeDesign.steps.3" as Parameters<typeof t>[0], { designPath }),
-  ] : [];
 
   const setupParams = applySetupMode(new URLSearchParams({os, goal, project: projectName, ai: aiTool}), mode);
   const setupLink = `/setup?${setupParams.toString()}`;
@@ -289,28 +265,6 @@ function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeo
             {t("followUp.forwardNote")}
           </p>
         </div>
-
-        {/* Claude Design 팁 (웹 프로젝트만) */}
-        {designPath && (
-          <div className="mb-6 rounded-xl border border-border/50 bg-card p-6">
-            <h2 className="mb-1 font-semibold">{t("claudeDesign.heading")}</h2>
-            <p className="mb-4 text-sm text-muted-foreground">
-              <a href="https://claude.ai/design" target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2">Claude Design</a>
-              {" — "}{t("claudeDesign.subtitle")}
-            </p>
-            <ol className="flex flex-col gap-3 text-sm text-muted-foreground">
-              {designSteps.map((step, idx) => (
-                <li key={idx} className="flex items-start gap-2">
-                  <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">{idx + 1}</span>
-                  <span>{step}</span>
-                </li>
-              ))}
-            </ol>
-            <p className="mt-4 text-xs text-muted-foreground/70">
-              {t("claudeDesign.note")}
-            </p>
-          </div>
-        )}
 
         {/* Phase 2 진입 — web 트랙만 지원. data-ai/mobile은 Phase 2 마일스톤이 아직 없으므로 안내만. */}
         {goal !== "data-ai" && goal !== "mobile" ? (

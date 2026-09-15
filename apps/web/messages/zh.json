@@ -1103,17 +1103,6 @@
       "reassurance": "说错了也没关系。说「把刚才的撤销重来」就行。",
       "forwardNote": "💡 下一步把网站上线之后,还会有一份分5类(文本·颜色·新模块·渐变·字体)整理过的指南。"
     },
-    "claudeDesign": {
-      "heading": "不知道怎么设计？",
-      "subtitle": "用AI先做好页面，再直接导入到你的项目中。",
-      "steps": [
-        "打开 claude.ai/design 并描述你想要的页面，比如「帮我做个登录页面」",
-        "满意的话在 Export 菜单里选择「Send to local coding agent」，然后点 Copy command",
-        "在打开项目文件夹的 Claude Code 终端里粘贴 — 设计会自动应用",
-        "如果用的是其他 AI 代理（比如 Cursor）就勾选「Download zip instead」，解压后放到 {designPath} 文件夹"
-      ],
-      "note": "仅限 Claude Pro、Max、Team、Enterprise 订阅用户使用。目前处于研究预览阶段，拥有独立的每周使用限额，这里的用量不计入其他 Claude 限额。"
-    },
     "phase2": {
       "badge": "下一步",
       "heading": "现在把你的网站发布到真正的互联网上吧？",

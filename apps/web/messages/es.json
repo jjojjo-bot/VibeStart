@@ -1103,17 +1103,6 @@
       "reassurance": "No te preocupes si no lo dices perfecto. Puedes decir \"Cancela lo anterior y hazlo de nuevo\" y listo.",
       "forwardNote": "💡 Tras desplegar tu sitio en el próximo paso, aparece otra guía organizada en 5 categorías (texto · color · nueva sección · gradiente · fuente)."
     },
-    "claudeDesign": {
-      "heading": "Si no sabes cómo diseñar",
-      "subtitle": "Crea pantallas con IA primero y llévalas directamente a tu proyecto.",
-      "steps": [
-        "Abre claude.ai/design y describe la pantalla que quieres, por ejemplo \"Hazme una página de login\"",
-        "Cuando te guste, en el menú Export elige \"Send to local coding agent\" y pulsa Copy command",
-        "Pégalo en un terminal de Claude Code abierto en tu carpeta de proyecto — el diseño se aplica automáticamente",
-        "Si usas otro agente de IA (Cursor, etc.), marca \"Download zip instead\", descomprime y coloca los archivos en {designPath}"
-      ],
-      "note": "Solo disponible para suscriptores de Claude Pro, Max, Team y Enterprise. Está en vista previa de investigación con su propio límite semanal independiente; el uso aquí no cuenta para los demás límites de Claude."
-    },
     "phase2": {
       "badge": "Siguiente paso",
       "heading": "¿Listo para poner tu sitio en internet de verdad?",
