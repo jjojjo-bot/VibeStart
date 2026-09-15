@@ -261,9 +261,6 @@ function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeo
           <p className="mt-3 text-xs text-muted-foreground/60">
             {t("followUp.reassurance")}
           </p>
-          <p className="mt-2 text-xs text-primary/80">
-            {t("followUp.forwardNote")}
-          </p>
         </div>
 
         {/* Phase 2 진입 — web 트랙만 지원. data-ai/mobile은 Phase 2 마일스톤이 아직 없으므로 안내만. */}

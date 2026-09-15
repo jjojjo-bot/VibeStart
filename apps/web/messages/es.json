@@ -1100,8 +1100,7 @@
         "Me sale un error, ¿puedes ayudarme? (pega el mensaje de error)",
         "Explícame lo que hemos hecho hasta ahora"
       ],
-      "reassurance": "No te preocupes si no lo dices perfecto. Puedes decir \"Cancela lo anterior y hazlo de nuevo\" y listo.",
-      "forwardNote": "💡 Tras desplegar tu sitio en el próximo paso, aparece otra guía organizada en 5 categorías (texto · color · nueva sección · gradiente · fuente)."
+      "reassurance": "No te preocupes si no lo dices perfecto. Puedes decir \"Cancela lo anterior y hazlo de nuevo\" y listo."
     },
     "phase2": {
       "badge": "Siguiente paso",
