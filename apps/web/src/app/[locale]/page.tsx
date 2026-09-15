@@ -58,14 +58,9 @@ export default function LandingPage() {
           </div>
 
           {/* CTA */}
-          <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-            <Link href="/start">
-              <Button size="lg" className="h-12 px-8 text-base">
-                {t("startCta")}
-              </Button>
-            </Link>
+          <div className="mt-10 flex justify-center">
             <Link href="/onboarding">
-              <Button variant="outline" size="lg" className="h-12 px-8 text-base">
+              <Button size="lg" className="h-12 px-8 text-base">
                 {t("fullSetupCta")}
               </Button>
             </Link>
@@ -223,14 +218,9 @@ export default function LandingPage() {
       <section className="w-full max-w-2xl pb-24 text-center">
         <h2 className="text-2xl font-bold">{t("bottomCta.title")}</h2>
         <p className="mt-3 text-muted-foreground">{t("bottomCta.desc")}</p>
-        <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <Link href="/start">
-            <Button size="lg" className="h-12 px-8 text-base">
-              {t("startCta")}
-            </Button>
-          </Link>
+        <div className="mt-8 flex justify-center">
           <Link href="/onboarding">
-            <Button variant="outline" size="lg" className="h-12 px-8 text-base">
+            <Button size="lg" className="h-12 px-8 text-base">
               {t("fullSetupCta")}
             </Button>
           </Link>
