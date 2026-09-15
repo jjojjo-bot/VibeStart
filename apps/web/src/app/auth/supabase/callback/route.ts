@@ -16,6 +16,7 @@ import { cookies } from "next/headers";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { createSupabaseMgmtAdapter } from "@/lib/adapters/supabase-mgmt/supabase-mgmt-adapter";
+import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { saveOAuthConnection } from "@/lib/auth/oauth-connections";
 import {
@@ -26,7 +27,6 @@ import {
   getProject,
   markSubstepCompleted,
 } from "@/lib/projects/project-store";
-import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 
 function errorRedirect(url: URL, error: string): NextResponse {
   url.searchParams.set("oauth_error", error);
@@ -75,6 +75,11 @@ export async function GET(request: NextRequest): Promise<Response> {
   const project = await getProject(payload.projectId);
   if (!project || project.userId !== user.id) {
     return errorRedirect(returnTo, "project_not_found");
+  }
+
+  const catalog = createInMemoryMilestoneCatalog();
+  if (!catalog.getMilestone(project.track, payload.milestoneId)) {
+    return errorRedirect(returnTo, "milestone_unavailable");
   }
 
   // beginAuthorize에서 사용한 redirect_uri와 정확히 동일해야 한다.

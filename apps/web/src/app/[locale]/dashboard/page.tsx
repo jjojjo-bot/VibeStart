@@ -13,12 +13,11 @@ import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 
 import { Link, redirect } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/dal";
-import { TrackBadge, TrackChangeDropdown } from "@/components/milestone";
+import { TrackBadge } from "@/components/milestone";
 import { Button } from "@/components/ui/button";
 import { listProjects } from "@/lib/projects/project-store";
 
 import { signOutAction } from "../login/actions";
-import { updateProjectTrackAction } from "./actions";
 import { DeleteProjectButton } from "./delete-project-button";
 
 interface DashboardPageProps {
@@ -50,15 +49,7 @@ export default async function DashboardPage({
 
   const projects = await listProjects(user.id);
   const catalog = createInMemoryMilestoneCatalog();
-  const allTracks = catalog.listTracks().filter((t) => t.enabled);
-
-  const trackLabels = {
-    change: tProjects("changeTrack"),
-    title: tProjects("changeTrackTitle"),
-    subtitle: tProjects("changeTrackSubtitle"),
-    cta: tProjects("changeTrackCta"),
-    saving: tProjects("changeTrackSaving"),
-  };
+  const websiteTrack = catalog.getTrack("static");
 
   return (
     <main id="main-content" className="mx-auto max-w-4xl px-6 py-16">
@@ -108,7 +99,8 @@ export default async function DashboardPage({
       ) : (
         <ul className="space-y-3">
           {projects.map((project) => {
-            const track = catalog.getTrack(project.track);
+            const storedTrack = catalog.getTrack(project.track);
+            const track = storedTrack?.enabled ? storedTrack : websiteTrack;
             if (!track) return null;
             return (
               <li
@@ -116,28 +108,10 @@ export default async function DashboardPage({
                 className="rounded-lg border border-border bg-card transition-colors hover:border-primary/60"
               >
                 <article className="flex items-center gap-4 p-4">
-                  <TrackChangeDropdown
-                    projectId={project.id}
-                    currentBadge={
-                      <TrackBadge
-                        track={track.id}
-                        color={track.colorToken}
-                        size="sm"
-                      />
-                    }
-                    options={allTracks.map((t) => ({
-                      id: t.id,
-                      badge: (
-                        <TrackBadge
-                          track={t.id}
-                          color={t.colorToken}
-                          size="sm"
-                        />
-                      ),
-                      isCurrent: t.id === project.track,
-                    }))}
-                    labels={trackLabels}
-                    action={updateProjectTrackAction}
+                  <TrackBadge
+                    track={track.id}
+                    color={track.colorToken}
+                    size="sm"
                   />
                   <Link
                     href={`/projects/${project.id}`}

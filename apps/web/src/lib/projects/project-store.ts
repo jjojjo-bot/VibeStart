@@ -24,6 +24,10 @@ import type {
 } from "@vibestart/shared-types";
 
 import { createAuthServerClient } from "@/lib/supabase/auth-server";
+import {
+  deriveProjectProgress,
+  type ProgressMilestone,
+} from "@/lib/projects/project-progress";
 
 // ─── 타입 ───────────────────────────────────────────────
 
@@ -97,13 +101,27 @@ export async function createProject(
   input: CreateProjectInput,
 ): Promise<Project> {
   const supabase = await createAuthServerClient();
+  const slug = toSlug(input.name);
+
+  // 같은 사용자의 같은 로컬 폴더는 하나의 외부 저장소와 배포를 가리킨다.
+  // OAuth 콜백 재시도나 더블 클릭이 중복 프로젝트를 만들지 않게 기존 row를
+  // 먼저 돌려준다.
+  const { data: existing } = await supabase
+    .from("projects")
+    .select()
+    .eq("user_id", input.userId)
+    .eq("slug", slug)
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (existing) return rowToProject(existing);
 
   const { data, error } = await supabase
     .from("projects")
     .insert({
       user_id: input.userId,
       name: input.name,
-      slug: toSlug(input.name),
+      slug,
       track: input.track,
       os: input.os ?? null,
       goal: input.goal ?? null,
@@ -153,9 +171,8 @@ export async function deleteProject(id: string): Promise<boolean> {
 }
 
 /**
- * Phase 2a에서 트랙은 실제 마일스톤 진행에 영향을 주지 않는 배지 라벨이므로
- * 언제든 안전하게 변경 가능하다. Phase 2b에서 트랙별 고유 마일스톤이 생기면
- * 이 함수 호출 시점에 이주/가드 로직을 추가해야 한다.
+ * 레거시 프로젝트 트랙을 현재 웹사이트 트랙으로 이관할 때 사용하는 저장소
+ * 함수. 사용자 UI에서는 전용 여정이 없는 트랙으로 변경할 수 없다.
  */
 export async function updateProjectTrack(
   id: string,
@@ -173,7 +190,7 @@ export async function updateProjectTrack(
 
 export async function getProjectProgress(
   projectId: string,
-  milestoneIds: ReadonlyArray<MilestoneId>,
+  milestones: ReadonlyArray<ProgressMilestone>,
 ): Promise<Record<MilestoneId, MilestoneState>> {
   const supabase = await createAuthServerClient();
 
@@ -183,37 +200,7 @@ export async function getProjectProgress(
     .select("milestone_id, substep_id")
     .eq("project_id", projectId);
 
-  // 프로젝트의 current_milestone 조회
-  const { data: project } = await supabase
-    .from("projects")
-    .select("current_milestone")
-    .eq("id", projectId)
-    .single();
-
-  const currentMilestone = project?.current_milestone ?? 1;
-
-  // 마일스톤별 완료된 substep 수 계산
-  const completedByMilestone = new Map<string, number>();
-  for (const row of substeps ?? []) {
-    const mid = row.milestone_id as string;
-    completedByMilestone.set(mid, (completedByMilestone.get(mid) ?? 0) + 1);
-  }
-
-  const result: Record<MilestoneId, MilestoneState> = {};
-  for (let i = 0; i < milestoneIds.length; i++) {
-    const mid = milestoneIds[i]!;
-    const milestoneOrder = i + 1; // 1-based
-
-    if (milestoneOrder < currentMilestone) {
-      result[mid] = "completed";
-    } else if (milestoneOrder === currentMilestone) {
-      result[mid] = "in_progress";
-    } else {
-      result[mid] = "locked";
-    }
-  }
-
-  return result;
+  return deriveProjectProgress(milestones, substeps ?? []);
 }
 
 export async function getCompletedSubstepIds(

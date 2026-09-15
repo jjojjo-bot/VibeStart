@@ -44,7 +44,7 @@
 - `NEXT_PUBLIC_AUTH_SUPABASE_URL` / `NEXT_PUBLIC_AUTH_SUPABASE_ANON_KEY` / `AUTH_SUPABASE_SERVICE_ROLE_KEY` — Supabase 프로젝트 (사용자 데이터 + 통계 통합)
 - `GITHUB_OAUTH_CLIENT_ID` / `GITHUB_OAUTH_CLIENT_SECRET` — GitHub OAuth App
 - `SUPABASE_OAUTH_CLIENT_ID` / `SUPABASE_OAUTH_CLIENT_SECRET` — Supabase Management OAuth App (https://supabase.com/dashboard/org/<slug>/apps)
-- `OAUTH_STATE_SECRET` — 32+자 랜덤 문자열 (`openssl rand -base64 48`)
+- `OAUTH_STATE_SECRET` — OAuth state 서명과 연결 토큰 저장 암호화에 쓰는 32+자 랜덤 문자열 (`openssl rand -base64 48`)
 
 `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`는 **삭제됨** (옛 통계 프로젝트 폐기됨, 통합 완료).
 

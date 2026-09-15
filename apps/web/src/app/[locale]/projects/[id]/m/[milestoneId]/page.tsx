@@ -4,8 +4,8 @@ export const dynamic = "force-dynamic";
  * /projects/[id]/m/[milestoneId] — 마일스톤 실행 화면.
  *
  * 와이어프레임(project_phase2_design.md M1~M5)과 일치하는 레이아웃:
- *   - 헤더: 트랙 뱃지 + 마일스톤 인덱스 + 제목 + 결과물 문구 + Extension 상태
- *   - 본문: SubstepList (좌) + ResultPreview (우)
+ *   - 헤더: 트랙 뱃지 + 마일스톤 인덱스 + 제목 + 결과물 문구
+ *   - 본문: SubstepList (좌) + 실제 작업 패널 (우)
  *   - 하단: MCP 자동 설치 안내 + 다음 마일스톤 CTA
  *
  * i18n 해석은 모두 서버에서 수행해 SubstepList(Client)에 문자열로 전달한다
@@ -28,12 +28,10 @@ import {
   type DisplaySubstep,
   EnableGoogleProviderPanel,
   type EnableGoogleProviderPanelState,
-  ExtensionStatus,
   GoogleOAuthKeysPanel,
   type GoogleOAuthKeysPanelState,
   InstallAuthUiPanel,
   type InstallAuthUiPanelState,
-  ResultPreview,
   SubstepList,
   TrackBadge,
   VerifyAuthButtonPanel,
@@ -115,6 +113,8 @@ function resolveDeployError(
   if (raw.includes("no_repo")) return t("errorNoRepo");
   if (raw.includes("no_github_token")) return t("errorNoGithubToken");
   if (raw.includes("no_vercel_token")) return t("errorNoVercelToken");
+  if (raw.includes("empty_repo")) return t("errorEmptyRepo");
+  if (raw.includes("non_next_repo")) return t("errorNonNextRepo");
   if (raw.includes("plan_limit")) return t("errorPlanLimit");
   if (raw.includes("github_app_not_installed"))
     return t("errorGithubAppNotInstalled");
@@ -234,7 +234,10 @@ export default async function MilestoneRunPage({
         : [];
 
   const catalog = createInMemoryMilestoneCatalog();
-  const track = catalog.getTrack(project.track);
+  const storedTrack = catalog.getTrack(project.track);
+  const track = storedTrack?.enabled
+    ? storedTrack
+    : catalog.getTrack("static");
   const milestone = catalog.getMilestone(project.track, milestoneId);
   if (!track || !milestone) {
     notFound();
@@ -246,7 +249,10 @@ export default async function MilestoneRunPage({
 
   const progress = await getProjectProgress(
     project.id,
-    allMilestones.map((m) => m.id),
+    allMilestones.map((m) => ({
+      id: m.id,
+      substepIds: m.substeps.map((step) => step.id),
+    })),
   );
   let currentState = progress[milestone.id] ?? "locked";
   const storedCompletedSubsteps = await getCompletedSubstepIds(
@@ -1216,7 +1222,10 @@ export default async function MilestoneRunPage({
   if (storeChanged) {
     const updatedProgress = await getProjectProgress(
       project.id,
-      allMilestones.map((m) => m.id),
+      allMilestones.map((m) => ({
+        id: m.id,
+        substepIds: m.substeps.map((step) => step.id),
+      })),
     );
     currentState = updatedProgress[milestone.id] ?? currentState;
   }
@@ -1269,7 +1278,6 @@ export default async function MilestoneRunPage({
           <span className="text-xs font-mono text-muted-foreground">
             {tProjects("milestoneIndex", { current: order, total })}
           </span>
-          <ExtensionStatus state="disconnected" />
         </div>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
@@ -1513,7 +1521,6 @@ export default async function MilestoneRunPage({
               projectName={project.slug}
               os={project.os}
               deployedUrl={vibeCodingData.deployedUrl}
-              completedSteps={initialCompletedSubsteps}
               labels={vibeCodingData.labels}
               onComplete={async (substepId: string, checked: boolean) => {
                 "use server";
@@ -1528,12 +1535,6 @@ export default async function MilestoneRunPage({
             />
           )}
 
-          {/* 결과 미리보기 */}
-          <ResultPreview
-            kind={milestone.previewKind}
-            completed={currentState === "completed"}
-            title={tRun("previewTitle")}
-          />
         </div>
       </div>
       {/* 마일스톤 완료 축하 — Provider 안에서 context 기반 즉시 판단.

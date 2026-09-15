@@ -34,6 +34,13 @@ export default function PrivacyPage() {
             <li>{t("sections.1.loginItems.1")}</li>
             <li>{t("sections.1.loginItems.2")}</li>
           </ul>
+          <h3 className="mt-3 font-medium text-foreground">
+            {t("sections.1.connectionTitle")}
+          </h3>
+          <ul className="mt-1 list-disc space-y-1 pl-5">
+            <li>{t("sections.1.connectionItems.0")}</li>
+            <li>{t("sections.1.connectionItems.1")}</li>
+          </ul>
           <p className="mt-2">{t("sections.1.note")}</p>
         </section>
 
@@ -73,6 +80,8 @@ export default function PrivacyPage() {
           <ul className="mt-2 list-disc space-y-1 pl-5">
             <li>{t("sections.4.delegateItems.0")}</li>
             <li>{t("sections.4.delegateItems.1")}</li>
+            <li>{t("sections.4.delegateItems.2")}</li>
+            <li>{t("sections.4.delegateItems.3")}</li>
           </ul>
         </section>
 

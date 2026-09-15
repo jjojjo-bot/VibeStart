@@ -12,7 +12,7 @@ import { aiToolProvider, type AiTool } from "@/lib/ai-tools";
 import { incrementCompletions } from "@/lib/stats";
 import { trackPhase2Login } from "@/lib/ga";
 import { Suspense } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { signInFromCompleteAction, goToDashboardWithPhase1Action } from "../login/actions";
 
 function getInstalledTools(goal: Goal, aiTool: AiTool): string[] {
@@ -148,6 +148,7 @@ function CompleteContent() {
 
 function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeof parseSetupParams>> }) {
   const t = useTranslations("Complete");
+  const locale = useLocale();
   const tc = useTranslations("Common");
   const tw = useTranslations("Wizard");
   const [ready, setReady] = useState(false);
@@ -323,7 +324,7 @@ function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeo
           </p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row">
             <form action={signInFromCompleteAction} onSubmit={() => trackPhase2Login()}>
-              <input type="hidden" name="locale" value="" />
+              <input type="hidden" name="locale" value={locale} />
               <input type="hidden" name="os" value={os} />
               <input type="hidden" name="goal" value={goal} />
               <input type="hidden" name="project" value={projectName} />
@@ -332,6 +333,7 @@ function CompleteContentValid({ config }: { config: NonNullable<ReturnType<typeo
               </Button>
             </form>
             <form action={goToDashboardWithPhase1Action}>
+              <input type="hidden" name="locale" value={locale} />
               <input type="hidden" name="os" value={os} />
               <input type="hidden" name="goal" value={goal} />
               <input type="hidden" name="project" value={projectName} />

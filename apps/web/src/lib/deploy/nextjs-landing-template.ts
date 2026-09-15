@@ -212,7 +212,7 @@ export default function RootLayout({
         >
           Built with{" "}
           <a
-            href="https://vibestart.com"
+            href="https://vibe-start.com"
             style={{
               color: "inherit",
               textDecoration: "underline",

@@ -5,10 +5,8 @@
  *   - code: Supabase가 세션으로 교환할 OAuth 코드
  *   - locale: 로그인 시작 시점의 사용자 언어 (next-intl 프리픽스에 사용)
  *
- * Phase 1 쿠키가 있으면 프로젝트를 **자동 생성하지 않고** 트랙 선택 화면
- * (`/projects/new`)으로 유도한다. Phase 1 goal(기술 스택)과 Phase 2 track
- * (제품 유형)은 orthogonal이라 사용자가 직접 골라야 정확하다. 쿠키는
- * `/projects/new`의 createProjectAction이 소비한다. data-ai/mobile goal은
+ * Phase 1 쿠키가 있으면 웹사이트 프로젝트를 자동 생성하고 첫 배포 여정으로
+ * 보낸다. data-ai/mobile goal은
  * Phase 2 마일스톤이 맞지 않아 쿠키를 지우고 대시보드로 보낸다.
  */
 
@@ -19,6 +17,8 @@ import { createSupabaseAuthAdapter } from "@/lib/auth/supabase-auth.adapter";
 import { routing } from "@/i18n/routing";
 import { PHASE1_DATA_COOKIE } from "@/lib/auth/phase1-cookie";
 import { claimPendingPublishForUser } from "@/lib/publish/claim-pending";
+import { createProject } from "@/lib/projects/project-store";
+import { isValidProjectName } from "@/lib/onboarding";
 
 const VALID_GOALS = [
   "web-nextjs",
@@ -49,9 +49,11 @@ export async function GET(request: NextRequest): Promise<Response> {
     return NextResponse.redirect(errorUrl);
   }
 
+  let userId: string;
   try {
     const adapter = createSupabaseAuthAdapter();
     const user = await adapter.exchangeCode(code);
+    userId = user.id;
     // 익명 발행해 둔 페이지가 있으면 이 사용자로 영구 claim(실패는 조용히 무시).
     await claimPendingPublishForUser(user.id);
   } catch (err) {
@@ -62,13 +64,17 @@ export async function GET(request: NextRequest): Promise<Response> {
     return NextResponse.redirect(errorUrl);
   }
 
-  // Phase 1 쿠키 확인 → 트랙 선택 화면으로 유도
+  // Phase 1 쿠키 확인 → 웹사이트 프로젝트 자동 생성
   const jar = await cookies();
   const phase1Raw = jar.get(PHASE1_DATA_COOKIE)?.value;
 
   if (phase1Raw) {
     try {
-      const phase1 = JSON.parse(phase1Raw) as { goal?: string };
+      const phase1 = JSON.parse(phase1Raw) as {
+        os?: string;
+        goal?: string;
+        project?: string;
+      };
       const goal: ValidGoal | null =
         typeof phase1.goal === "string" &&
         (VALID_GOALS as readonly string[]).includes(phase1.goal)
@@ -78,17 +84,34 @@ export async function GET(request: NextRequest): Promise<Response> {
       if (goal !== null && PHASE2_UNSUPPORTED_GOALS.has(goal)) {
         // data-ai/mobile — Phase 2 skip, 쿠키도 정리
         jar.delete(PHASE1_DATA_COOKIE);
-      } else {
-        // web-* — 트랙 선택 화면으로. 쿠키는 createProjectAction이 소비.
-        const newProjectUrl = new URL(
-          `${localePrefix}/projects/new`,
-          url.origin,
+      } else if (
+        goal !== null &&
+        typeof phase1.project === "string" &&
+        isValidProjectName(phase1.project)
+      ) {
+        const project = await createProject({
+          userId,
+          track: "static",
+          name: phase1.project,
+          os: phase1.os === "macos" ? "macos" : "windows",
+          goal,
+        });
+        jar.delete(PHASE1_DATA_COOKIE);
+        return NextResponse.redirect(
+          new URL(`${localePrefix}/projects/${project.id}`, url.origin),
         );
-        return NextResponse.redirect(newProjectUrl);
+      } else {
+        jar.delete(PHASE1_DATA_COOKIE);
+        return NextResponse.redirect(
+          new URL(`${localePrefix}/projects/new`, url.origin),
+        );
       }
     } catch {
-      // 파싱 실패 시 쿠키 정리하고 대시보드로
-      jar.delete(PHASE1_DATA_COOKIE);
+      // 파싱 또는 자동 생성 실패 시 사용자가 폴더명을 다시 확인할 수 있게
+      // 수동 연결 화면으로 보낸다. 쿠키는 그 화면의 생성 액션이 소비한다.
+      return NextResponse.redirect(
+        new URL(`${localePrefix}/projects/new`, url.origin),
+      );
     }
   }
 

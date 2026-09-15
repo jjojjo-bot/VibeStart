@@ -16,7 +16,7 @@ export const m1Deploy: MilestoneDefinition = {
   outcomeKey: 'Milestones.m1-deploy.outcome',
   shortDescriptionKey: 'Milestones.m1-deploy.short',
   previewKind: 'vercel-deploy',
-  unlocks: 'm2-google-auth',
+  unlocks: 'm3-vibe-coding',
   substeps: [
     {
       id: 'm1-s1-github-oauth',

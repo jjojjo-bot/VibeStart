@@ -117,7 +117,6 @@ export interface VibeCodingPanelProps {
   projectName: string;
   os: "macos" | "windows" | null;
   deployedUrl: string | null;
-  completedSteps: ReadonlyArray<string>;
   labels: VibeCodingPanelLabels;
   onComplete: (substepId: string, checked: boolean) => Promise<void>;
   /** Step 4 자동 검증 액션 — 클릭 시 호출. */
@@ -127,9 +126,11 @@ export interface VibeCodingPanelProps {
 function DeployVerifyButton({
   labels,
   onVerify,
+  onVerified,
 }: {
   labels: VibeCodingPanelLabels["step4Verify"];
   onVerify: () => Promise<VibeDeployVerifyResult>;
+  onVerified: () => Promise<void>;
 }): React.ReactNode {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<VibeDeployVerifyResult | null>(null);
@@ -139,6 +140,13 @@ function DeployVerifyButton({
     try {
       const r = await onVerify();
       setResult(r);
+      if (
+        r.ok &&
+        r.readyState === "READY" &&
+        r.ageSeconds < 1800
+      ) {
+        await onVerified();
+      }
     } finally {
       setLoading(false);
     }
@@ -432,7 +440,6 @@ export function VibeCodingPanel({
   projectName,
   os,
   deployedUrl,
-  completedSteps,
   labels,
   onComplete,
   onVerifyDeploy,
@@ -572,6 +579,7 @@ export function VibeCodingPanel({
                 <DeployVerifyButton
                   labels={labels.step4Verify}
                   onVerify={onVerifyDeploy}
+                  onVerified={() => handleToggle(step.id, true)}
                 />
               </div>
             )}

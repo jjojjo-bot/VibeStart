@@ -1,10 +1,10 @@
 export const dynamic = "force-dynamic";
 
 /**
- * /projects/[id] — 프로젝트 마일스톤 트리 (정적 트랙 5개).
+ * /projects/[id] — 프로젝트의 핵심 마일스톤 트리.
  *
- * 프로젝트 소유자만 접근 가능. 헤더에 트랙 뱃지, 진행도 점, Extension 상태를
- * 배치하고 본문에 5개 마일스톤 카드를 세로로 나열한다. 잠긴 카드는 Link
+ * 프로젝트 소유자만 접근 가능. 헤더에 트랙 뱃지와 진행도 점을 배치하고
+ * 본문에 마일스톤 카드를 세로로 나열한다. 잠긴 카드는 Link
  * 없이 렌더되고, 활성/완료 카드만 상세 페이지로 이동 가능.
  */
 
@@ -15,7 +15,6 @@ import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
 import { Link, redirect } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth/dal";
 import {
-  ExtensionStatus,
   MilestoneCard,
   ProgressDots,
   TrackBadge,
@@ -75,13 +74,19 @@ export default async function ProjectTreePage({
         : [];
 
   const catalog = createInMemoryMilestoneCatalog();
-  const track = catalog.getTrack(project.track);
+  const storedTrack = catalog.getTrack(project.track);
+  const track = storedTrack?.enabled
+    ? storedTrack
+    : catalog.getTrack("static");
   if (!track) notFound();
 
   const milestones = catalog.listMilestones(project.track);
   const progress = await getProjectProgress(
     project.id,
-    milestones.map((m) => m.id),
+    milestones.map((m) => ({
+      id: m.id,
+      substepIds: m.substeps.map((step) => step.id),
+    })),
   );
 
   const tProjects = await getTranslations("Projects");
@@ -137,7 +142,6 @@ export default async function ProjectTreePage({
       <header className="mb-10 flex flex-col gap-4">
         <div className="flex flex-wrap items-center gap-3">
           <TrackBadge track={track.id} color={track.colorToken} size="sm" />
-          <ExtensionStatus state="disconnected" />
         </div>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
@@ -152,7 +156,7 @@ export default async function ProjectTreePage({
           completedCount={completedCount}
           activeIndex={activeIndex}
           ariaLabel={tProjects("milestoneIndex", {
-            current: completedCount + 1,
+            current: Math.min(completedCount + 1, milestones.length),
             total: milestones.length,
           })}
         />

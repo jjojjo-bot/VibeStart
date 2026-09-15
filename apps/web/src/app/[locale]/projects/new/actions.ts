@@ -17,6 +17,7 @@ import type { ProjectGoal, ProjectOs } from "@vibestart/shared-types";
 import { getCurrentUser } from "@/lib/auth/dal";
 import { createProject } from "@/lib/projects/project-store";
 import { PHASE1_DATA_COOKIE } from "@/lib/auth/phase1-cookie";
+import { isValidProjectName } from "@/lib/onboarding";
 
 const VALID_TRACKS = ["static", "dynamic", "ai", "ecommerce"] as const;
 type ValidTrack = (typeof VALID_TRACKS)[number];
@@ -57,10 +58,10 @@ export async function createProjectAction(formData: FormData): Promise<void> {
   }
 
   const rawName = formData.get("name");
-  const name =
-    typeof rawName === "string" && rawName.trim().length > 0
-      ? rawName.trim()
-      : "my-portfolio";
+  const name = typeof rawName === "string" ? rawName.trim() : "";
+  if (!isValidProjectName(name)) {
+    throw new Error("Invalid project folder name");
+  }
 
   // os/goal: formData → Phase 1 쿠키 → User-Agent 추론 순서로 결정
   const VALID_GOALS: readonly string[] = [

@@ -1,17 +1,15 @@
 /**
- * 정적 트랙 (포트폴리오, 랜딩 페이지) 정의.
- * Phase 2a에서 유일하게 enabled=true인 트랙.
+ * 정적 웹사이트 트랙 정의.
+ * 첫 배포 직후 AI로 첫 수정을 경험하는 두 단계 핵심 여정이다.
  */
 
 import type { MilestoneDefinition, TrackDefinition } from '@vibestart/shared-types';
 
 import { m1Deploy } from '../milestones/m1-deploy';
-import { m2GoogleAuth } from '../milestones/m2-google-auth';
 import { m3VibeCoding } from '../milestones/m3-vibe-coding';
 
 export const SHARED_MILESTONE_IDS = [
   'm1-deploy',
-  'm2-google-auth',
   'm3-vibe-coding',
 ];
 
@@ -26,6 +24,5 @@ export const staticTrack: TrackDefinition = {
 
 export const staticMilestones: ReadonlyArray<MilestoneDefinition> = [
   m1Deploy,
-  m2GoogleAuth,
   m3VibeCoding,
 ];

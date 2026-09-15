@@ -26,7 +26,10 @@ vi.mock("@/lib/adapters/github/github-env", () => ({
   }),
 }));
 
-import { createGitHubAdapter } from "@/lib/adapters/github/github-adapter";
+import {
+  createGitHubAdapter,
+  isGitHubRepoEmpty,
+} from "@/lib/adapters/github/github-adapter";
 
 interface FetchCall {
   url: string;
@@ -179,5 +182,35 @@ describe("createGitHubAdapter().createRepo", () => {
         isPrivate: true,
       }),
     ).rejects.toThrow("github:http_500");
+  });
+});
+
+describe("isGitHubRepoEmpty", () => {
+  it.each([404, 409])("treats GitHub %s as an empty repository", async (status) => {
+    stubFetch(new Response(null, { status }));
+
+    await expect(isGitHubRepoEmpty("token", "octocat", "empty")).resolves.toBe(true);
+  });
+
+  it("returns false when any user file exists", async () => {
+    stubFetch(
+      new Response(JSON.stringify([{ name: "README.md", type: "file" }]), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    await expect(isGitHubRepoEmpty("token", "octocat", "existing")).resolves.toBe(false);
+    expect(fetchCalls[0]?.url).toBe(
+      "https://api.github.com/repos/octocat/existing/contents",
+    );
+  });
+
+  it("does not hide permission failures as an empty repository", async () => {
+    stubFetch(new Response(null, { status: 403 }));
+
+    await expect(isGitHubRepoEmpty("token", "octocat", "private")).rejects.toThrow(
+      "github:forbidden",
+    );
   });
 });

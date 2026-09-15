@@ -27,7 +27,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
 import { createInMemoryMilestoneCatalog } from "@vibestart/track-catalog";
-import type { VcsRepo } from "@vibestart/shared-types";
+import type { ProjectTrack, VcsRepo } from "@vibestart/shared-types";
 
 import crypto from "node:crypto";
 
@@ -52,6 +52,7 @@ import {
 } from "@/lib/adapters/vercel/vercel-adapter";
 import {
   getFileFromGitHub,
+  isGitHubRepoEmpty,
   pushFilesToGitHub,
 } from "@/lib/adapters/github/github-adapter";
 import {
@@ -59,7 +60,6 @@ import {
   buildAuthButtonComponent,
   buildSupabaseClientFile,
 } from "@/lib/deploy/auth-ui-nextjs-template";
-import { buildNextJsLandingFiles } from "@/lib/deploy/nextjs-landing-template";
 import {
   OAUTH_STATE_COOKIE,
   OAUTH_STATE_TTL_SECONDS,
@@ -100,6 +100,16 @@ function buildReturnTo(
 ): string {
   const prefix = locale === routing.defaultLocale ? "" : `/${locale}`;
   return `${prefix}/projects/${projectId}/m/${milestoneId}`;
+}
+
+function assertMilestoneAvailable(
+  track: ProjectTrack,
+  milestoneId: string,
+): void {
+  const catalog = createInMemoryMilestoneCatalog();
+  if (!catalog.getMilestone(track, milestoneId)) {
+    throw new Error("사용할 수 없는 마일스톤입니다");
+  }
 }
 
 /**
@@ -227,6 +237,7 @@ export async function connectSupabaseAction(
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
+  assertMilestoneAvailable(project.track, milestoneId);
 
   const payload = buildPayload({
     userId: user.id,
@@ -612,9 +623,9 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
     redirect(`${returnTo}?deploy_error=invalid_repo`);
   }
 
-  // 3) 저장소가 비어 있으면(= m1-s3 git push를 건너뛴 경우) 최소 Next.js
-  // 프로젝트 세트를 fallback으로 push한다. 정상적으로 Phase 1 프로젝트를
-  // push했으면 package.json에 `next`가 이미 있으므로 건드리지 않는다.
+  // 3) 설치 단계에서 만든 실제 Next.js 프로젝트가 올라왔는지 확인한다.
+  // 빈 저장소에도 대체 템플릿을 몰래 넣지 않는다. 사용자가 만든 사이트만
+  // 배포한다는 제품 약속을 지키고 기존 코드를 건드리지 않기 위해서다.
   //
   // goal에 따라 경로 prefix 결정: frontend/backend 분리 트랙은 frontend/ 아래
   // 에 Next.js 앱이 위치하고 Vercel rootDirectory도 frontend로 맞춘다.
@@ -642,38 +653,28 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
   const hasUserNextProject =
     existingPkgJson !== null && /"next"\s*:/.test(existingPkgJson);
 
-  let errCode: string | null = null;
   if (!hasUserNextProject) {
-    console.log("[firstDeployAction] no user Next.js project found, pushing fallback template", {
-      projectId: project.id,
-      pathPrefix,
-    });
+    let repoIsEmpty: boolean;
     try {
-      const templateFiles = buildNextJsLandingFiles({
-        projectName: project.name,
-      });
-      const filesToPush = templateFiles.map((f) => ({
-        path: `${pathPrefix}${f.path}`,
-        content: f.content,
-      }));
-      await pushFilesToGitHub(
-        ghToken,
-        owner,
-        repoName,
-        filesToPush,
-        "feat: scaffold Next.js landing via VibeStart",
-      );
+      repoIsEmpty = await isGitHubRepoEmpty(ghToken, owner, repoName);
     } catch (err) {
-      console.error("[firstDeployAction] pushFilesToGitHub failed", {
+      console.error("[firstDeployAction] repository contents check failed", {
         userId: user.id,
         projectId: project.id,
         error: err instanceof Error ? err.message : String(err),
       });
-      errCode =
+      const code =
         err instanceof Error
           ? err.message.replace(/\s+/g, "_").slice(0, 120)
           : "unknown";
+      redirect(
+        `${returnTo}?deploy_error=${encodeURIComponent(`repo_check_failed:${code}`)}`,
+      );
     }
+
+    redirect(
+      `${returnTo}?deploy_error=${repoIsEmpty ? "empty_repo" : "non_next_repo"}`,
+    );
   } else {
     console.log("[firstDeployAction] user Next.js project detected, skipping template push", {
       projectId: project.id,
@@ -681,14 +682,9 @@ export async function firstDeployAction(formData: FormData): Promise<void> {
     });
   }
 
-  if (errCode) {
-    redirect(
-      `${returnTo}?deploy_error=${encodeURIComponent(`push_failed:${errCode}`)}`,
-    );
-  }
-
   // 4) Vercel 프로젝트 생성 + GitHub repo 연결
 
+  let errCode: string | null = null;
   let vercelProject: { id: string; name: string } | null = null;
   try {
     vercelProject = await createVercelProject(
@@ -890,6 +886,7 @@ export async function createSupabaseProjectAction(
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
+  assertMilestoneAvailable(project.track, milestoneId);
 
   const returnTo = buildReturnTo(locale, projectId, milestoneId);
 
@@ -1086,6 +1083,7 @@ export async function saveGoogleOAuthKeysAction(
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
+  assertMilestoneAvailable(project.track, milestoneId);
 
   const returnTo = buildReturnTo(locale, projectId, milestoneId);
 
@@ -1176,6 +1174,7 @@ export async function resetGoogleOAuthKeysAction(
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
+  assertMilestoneAvailable(project.track, milestoneId);
 
   const returnTo = buildReturnTo(locale, projectId, milestoneId);
 
@@ -1221,6 +1220,7 @@ export async function enableGoogleProviderAction(
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
+  assertMilestoneAvailable(project.track, milestoneId);
 
   const returnTo = buildReturnTo(locale, projectId, milestoneId);
 
@@ -1362,6 +1362,7 @@ export async function installAuthUiAction(
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
+  assertMilestoneAvailable(project.track, milestoneId);
 
   const returnTo = buildReturnTo(locale, projectId, milestoneId);
 
@@ -1712,6 +1713,7 @@ export async function verifyAuthButtonAction(
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
+  assertMilestoneAvailable(project.track, milestoneId);
 
   const returnTo = buildReturnTo(locale, projectId, milestoneId);
 
@@ -1802,6 +1804,7 @@ export async function confirmSignupTestAction(
   if (!project || project.userId !== user.id) {
     throw new Error("프로젝트를 찾을 수 없습니다");
   }
+  assertMilestoneAvailable(project.track, milestoneId);
 
   const returnTo = buildReturnTo(locale, projectId, milestoneId);
 
@@ -1881,4 +1884,3 @@ export async function toggleSubstepAction(
 
   revalidatePath(`/projects/${projectId}/m/${milestoneId}`);
 }
-

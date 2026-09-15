@@ -1,8 +1,8 @@
 /**
  * @vibestart/track-catalog
  *
- * 정적 트랙 + 마일스톤 "정의"를 담는 카탈로그 패키지.
- * Phase 2a에서는 정적 트랙(포트폴리오) 5개 마일스톤만 enabled.
+ * 웹사이트 트랙 + 마일스톤 "정의"를 담는 카탈로그 패키지.
+ * 실제 사용자 여정에는 첫 배포와 AI 첫 수정만 노출한다.
  *
  * 사용 예:
  *   import { createInMemoryMilestoneCatalog } from '@vibestart/track-catalog';

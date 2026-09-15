@@ -1,9 +1,9 @@
 /**
  * OAuth 연결 정보 Repository — oauth_connections 테이블 접근.
  *
- * Phase 2a (라)-1: 평문 access_token 저장 (migration 002). RLS로 user_id
- * 기준 격리. Phase 2b에서 Vault(pgsodium)로 이관 예정 — 이 Repository의
- * 시그니처를 유지하면 호출부 변경 없음.
+ * OAuth access/refresh token은 애플리케이션 계층 AES-256-GCM으로 암호화해
+ * 저장한다. 기존 평문 row는 읽기 호환을 유지하고, 사용자가 해당 서비스를
+ * 다시 연결할 때 암호문으로 교체한다.
  */
 
 import "server-only";
@@ -11,6 +11,10 @@ import "server-only";
 import type { OAuthProvider } from "@vibestart/shared-types";
 
 import { createAuthServerClient } from "@/lib/supabase/auth-server";
+import {
+  decryptOAuthToken,
+  encryptOAuthToken,
+} from "@/lib/auth/token-crypto";
 
 export interface OAuthConnectionSummary {
   id: string;
@@ -54,8 +58,10 @@ export async function saveOAuthConnection(
     {
       user_id: input.userId,
       provider: input.provider,
-      access_token: input.accessToken,
-      refresh_token: input.refreshToken,
+      access_token: encryptOAuthToken(input.accessToken),
+      refresh_token: input.refreshToken
+        ? encryptOAuthToken(input.refreshToken)
+        : null,
       scope: input.scope,
       expires_at: input.expiresAt,
       metadata: input.metadata,
@@ -117,7 +123,8 @@ export async function getOAuthAccessToken(
     .maybeSingle();
 
   if (error || !data) return null;
-  return data.access_token ?? null;
+  if (typeof data.access_token !== "string") return null;
+  return decryptOAuthToken(data.access_token);
 }
 
 /**

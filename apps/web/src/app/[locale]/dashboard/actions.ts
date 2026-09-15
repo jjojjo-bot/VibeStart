@@ -30,9 +30,8 @@ export async function deleteProjectAction(formData: FormData): Promise<void> {
 /**
  * 대시보드에서 프로젝트의 Phase 2 트랙 변경.
  *
- * Phase 2a에서는 모든 트랙이 동일한 M1/M2/M3 마일스톤을 공유하므로 트랙을
- * 바꿔도 진행 상태가 유지된다. Phase 2b에서 트랙별 고유 마일스톤이 생기면
- * 이 액션에 마이그레이션/가드 로직을 추가해야 한다.
+ * 전용 여정이 준비된 트랙만 서버에서 허용한다. 현재 UI에서는 트랙 변경을
+ * 노출하지 않지만 기존 호출을 안전하게 거부하기 위해 액션 검증을 유지한다.
  */
 const VALID_TRACKS = ["static", "dynamic", "ai", "ecommerce"] as const;
 type ValidTrack = (typeof VALID_TRACKS)[number];

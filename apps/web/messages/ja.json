@@ -1170,7 +1170,7 @@
   },
   "Privacy": {
     "title": "プライバシーポリシー",
-    "effectiveDate": "施行日：2026年4月15日",
+    "effectiveDate": "施行日：2026年9月15日",
     "sections": {
       "1": {
         "title": "1. 収集する情報および収集方法",
@@ -1185,6 +1185,11 @@
           "メールアドレス",
           "表示名（ニックネーム）",
           "プロフィール画像URL"
+        ],
+        "connectionTitle": "GitHub・Vercel接続時の収集項目",
+        "connectionItems": [
+          "接続アカウントのユーザー名、リポジトリまたはデプロイプロジェクトの識別子とURL",
+          "リポジトリ作成とデプロイに必要なOAuthアクセストークンまたは個人アクセストークン"
         ],
         "note": "Googleログインを使用しない場合、個人識別情報は収集されません。"
       },
@@ -1212,7 +1217,9 @@
         "delegateIntro": "サービス運営のために、以下の外部サービスに個人情報処理を委託しています。",
         "delegateItems": [
           "Supabase（認証およびデータ保存）：メールアドレス、表示名、プロフィール画像",
-          "Google（ソーシャルログイン提供）：OAuth認証情報"
+          "Google（ソーシャルログイン提供）：OAuth認証情報",
+          "GitHub（リポジトリ作成とコードアップロード）：接続アカウント情報、リポジトリ情報、OAuthアクセストークン",
+          "Vercel（ウェブサイトのデプロイ）：接続アカウント情報、デプロイプロジェクト情報、個人アクセストークン"
         ]
       },
       "5": {
@@ -1220,8 +1227,8 @@
         "content": "VibeStartはサービス改善のためにGoogle Analyticsなどのウェブ分析ツールを使用する場合があり、その過程でCookieが使用されることがあります。また、ログイン状態の維持のために認証セッションCookieを使用します。ブラウザの設定でCookieの保存を拒否できますが、ログイン機能を含む一部のサービス利用に制限がある場合があります。"
       },
       "6": {
-        "title": "6. ソーシャルログイン（OAuth）",
-        "content": "VibeStartはGoogle OAuth 2.0を通じてログイン機能を提供します。ログイン時にGoogleからメールアドレス、氏名、プロフィール画像の情報を受け取ります。VibeStartはGoogleアカウントのパスワードにアクセスしません。利用者はGoogleアカウントの設定からVibeStartのアクセス権限をいつでも解除できます。"
+        "title": "6. ログインと外部サービス接続",
+        "content": "VibeStartはGoogle OAuth 2.0によるログインを提供し、Googleのパスワードにはアクセスしません。GitHubまたはVercelへの接続を選択した場合、リポジトリ作成とデプロイに必要なトークンを保存し、その操作にのみ使用します。各サービスの設定またはVibeStartでの接続解除により権限を取り消せます。"
       },
       "7": {
         "title": "7. 利用者の権利",
@@ -1386,8 +1393,8 @@
   },
   "Tracks": {
     "static": {
-      "name": "ポートフォリオ",
-      "tagline": "5ステップであなたのサイトがネットに公開"
+      "name": "ウェブサイト",
+      "tagline": "初回デプロイからAIでの初編集まで完成させます"
     },
     "dynamic": {
       "name": "ブログ/SaaS",
@@ -1406,11 +1413,13 @@
     }
   },
   "Projects": {
-    "newTitle": "何を作りたいですか?",
-    "newSubtitle": "トラックを選ぶと5〜10個のマイルストーンが表示されます",
-    "phase1HandoffTitle": "Phase 1 環境構築が完了しました!",
-    "phase1HandoffSubtitle": "作りたいサイトの種類を選んでください。プロジェクト名は先ほど作成したローカルフォルダと同じにしてあります。",
-    "createButton": "このトラックで始める",
+    "newTitle": "デプロイするプロジェクトを接続してください",
+    "newSubtitle": "パソコン上のNext.jsフォルダをGitHubとVercelに接続します",
+    "phase1HandoffTitle": "開発環境とプロジェクトの準備が完了しました!",
+    "phase1HandoffSubtitle": "ローカルフォルダ名を確認すると、初回デプロイへすぐ進めます。",
+    "projectNameLabel": "ローカルプロジェクトのフォルダ名",
+    "projectNameHint": "セットアップ時に作成したフォルダ名と完全に一致させてください。英小文字、数字、ハイフンのみ使用できます。",
+    "createButton": "初回デプロイを始める",
     "comingSoonBadge": "近日公開",
     "treeTitle": "{name} マイルストーン",
     "treeSubtitle": "ステップごとに本物の変化が起きます",
@@ -1444,7 +1453,7 @@
     "nextMilestoneCta": "次のマイルストーンへ →",
     "allDoneTitle": "すべてのマイルストーンを完了しました",
     "estimatedSeconds": "約{seconds}秒",
-    "autoRunning": "自動実行中",
+    "autoRunning": "操作ボタンを押すと自動実行",
     "userActionRequired": "ご自身で行ってください",
     "openExternal": "外部ページを開く",
     "verifyCta": "確認しました",
@@ -1658,6 +1667,8 @@
     "errorNoRepo": "GitHubリポジトリが見つかりません。リポジトリを再作成してください。",
     "errorPlanLimit": "Vercel無料プランの上限を超えました。",
     "errorTimeout": "デプロイはまだ進行中です。しばらくしてからサイトを確認してください。",
+    "errorEmptyRepo": "GitHubリポジトリが空です。上の「プロジェクトをGitHubにアップロード」を完了してから、もう一度デプロイしてください。",
+    "errorNonNextRepo": "リポジトリにファイルがありますが、Next.jsプロジェクトが見つかりません。既存ファイルを保護するため自動作成を停止しました。ローカルプロジェクトをこのリポジトリへpushしてから再試行してください。",
     "errorGithubAppNotInstalled": "VercelがあなたのGitHubリポジトリにアクセスできません。たいていはVercelアカウントにGitHubが接続されていない(Google/メール登録)か、Vercel GitHub Appが未インストールのときに起きます。vercel.com/account/login-connections でGitHubを接続し、github.com/apps/vercel でVercel GitHub Appもインストールしてから再デプロイしてください。"
   },
   "Milestones": {
@@ -1755,20 +1766,20 @@
     "step1Tools": {
       "codex": {
         "label": "Codex",
-        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && codex",
-        "winCmd": "cd '{'project'}' && code . && codex",
+        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && codex",
+        "winCmd": "cd ~/'{'project'}' && code . && codex",
         "note": "VS Codeが開き、ターミナルでCodexが起動します。"
       },
       "claudeCode": {
         "label": "Claude Code",
-        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
-        "winCmd": "cd '{'project'}' && code . && claude",
+        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "cd ~/'{'project'}' && code . && claude",
         "note": "VS Codeが開き、別ターミナルでClaude Codeが起動します。"
       },
       "cursor": {
         "label": "Cursor",
-        "macCmd": "cd '{'project'}' && open -a \"Cursor\" .",
-        "winCmd": "cd '{'project'}' && cursor .",
+        "macCmd": "cd ~/'{'project'}' && open -a \"Cursor\" .",
+        "winCmd": "cd ~/'{'project'}' && cursor .",
         "note": "Cursorが開いたら、右側のチャットパネルで直接AIに依頼できます。"
       }
     },

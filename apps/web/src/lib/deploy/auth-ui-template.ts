@@ -95,7 +95,7 @@ export function buildAuthUiHtml(input: AuthUiTemplateInput): string {
       <div id="error-box" class="mt-6 hidden rounded-md border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400"></div>
 
       <p class="mt-12 text-xs text-gray-600">
-        Built with <a href="https://vibestart.com" class="underline underline-offset-2 hover:text-gray-400">VibeStart</a>
+        Built with <a href="https://vibe-start.com" class="underline underline-offset-2 hover:text-gray-400">VibeStart</a>
       </p>
     </div>
   </div>

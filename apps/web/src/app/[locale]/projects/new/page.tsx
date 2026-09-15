@@ -1,12 +1,10 @@
 export const dynamic = "force-dynamic";
 
 /**
- * /projects/new — 트랙 선택 화면 (Phase 2a 정적만 활성).
+ * /projects/new — 로컬 웹 프로젝트 연결 화면.
  *
- * 4개 트랙을 카드로 표시한다. 정적만 선택 가능하고 나머지 3개는 "곧 제공"
- * 뱃지와 함께 비활성. 사용자가 트랙을 고르고 프로젝트 이름을 입력한 뒤
- * 제출하면 Server Action이 더미 store에 프로젝트를 만들고 트리 페이지로
- * 리다이렉트한다.
+ * 설치 완료 화면에서 넘어오지 않고 대시보드에서 새로 시작한 사용자가 로컬
+ * 폴더명을 확인한 뒤 핵심 웹사이트 여정을 시작한다.
  */
 
 import { getTranslations, setRequestLocale } from "next-intl/server";
@@ -44,7 +42,7 @@ export default async function NewProjectPage({
   const tTracks = await getTranslations("Tracks");
 
   const catalog = createInMemoryMilestoneCatalog();
-  const tracks = catalog.listTracks();
+  const tracks = catalog.listTracks().filter((track) => track.enabled);
 
   // Phase 1 쿠키가 있으면 이름 pre-fill + 안내 배너 표시.
   // 쿠키 삭제는 createProjectAction(Server Action)에서 처리해야 한다 —
@@ -100,44 +98,51 @@ export default async function NewProjectPage({
         </div>
       )}
 
-      <ProjectCreateForm action={createProjectAction}>
-        <input type="hidden" name="locale" value={locale} />
+      <div className="mx-auto max-w-xl">
+        <ProjectCreateForm action={createProjectAction}>
+          <input type="hidden" name="locale" value={locale} />
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {tracks.map((track) => (
-            <TrackOptionCard
-              key={track.id}
-              track={track}
-              name={tTracks(`${track.id}.name`)}
-              tagline={tTracks(`${track.id}.tagline`)}
-              comingSoonLabel={
-                track.enabled ? null : tProjects("comingSoonBadge")
-              }
+          <div className="grid gap-4">
+            {tracks.map((track) => (
+              <TrackOptionCard
+                key={track.id}
+                track={track}
+                name={tTracks(`${track.id}.name`)}
+                tagline={tTracks(`${track.id}.tagline`)}
+                comingSoonLabel={
+                  track.enabled ? null : tProjects("comingSoonBadge")
+                }
+              />
+            ))}
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="project-name" className="text-sm font-medium">
+              {tProjects("projectNameLabel")}
+            </label>
+            <input
+              id="project-name"
+              name="name"
+              type="text"
+              required
+              minLength={2}
+              maxLength={63}
+              pattern="[a-z0-9][a-z0-9-]{0,61}[a-z0-9]"
+              defaultValue={phase1Name ?? "my-portfolio"}
+              className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
             />
-          ))}
-        </div>
+            <p className="text-xs text-muted-foreground">
+              {tProjects("projectNameHint")}
+            </p>
+          </div>
 
-        <div className="space-y-2">
-          <label htmlFor="project-name" className="text-sm font-medium">
-            {tProjects("createButton")}
-          </label>
-          <input
-            id="project-name"
-            name="name"
-            type="text"
-            required
-            maxLength={60}
-            defaultValue={phase1Name ?? "my-portfolio"}
-            className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none"
-          />
-        </div>
-
-        <div className="flex justify-center">
-          <Button type="submit" size="lg" className="h-11 px-8">
-            {tProjects("createButton")}
-          </Button>
-        </div>
-      </ProjectCreateForm>
+          <div className="flex justify-center">
+            <Button type="submit" size="lg" className="h-11 px-8">
+              {tProjects("createButton")}
+            </Button>
+          </div>
+        </ProjectCreateForm>
+      </div>
     </main>
   );
 }

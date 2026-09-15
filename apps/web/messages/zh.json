@@ -1170,7 +1170,7 @@
   },
   "Privacy": {
     "title": "隐私政策",
-    "effectiveDate": "生效日期：2026年4月15日",
+    "effectiveDate": "生效日期：2026年9月15日",
     "sections": {
       "1": {
         "title": "1. 收集的个人信息项目及方式",
@@ -1185,6 +1185,11 @@
           "电子邮箱地址",
           "显示名称（昵称）",
           "头像URL"
+        ],
+        "connectionTitle": "连接GitHub或Vercel时收集的信息",
+        "connectionItems": [
+          "连接账户的用户名、仓库或部署项目标识符及URL",
+          "创建仓库和部署网站所需的OAuth访问令牌或个人访问令牌"
         ],
         "note": "如果不使用Google登录，则不会收集个人身份信息。"
       },
@@ -1212,7 +1217,9 @@
         "delegateIntro": "为服务运营，以下外部服务受托处理个人信息。",
         "delegateItems": [
           "Supabase（认证及数据存储）：邮箱、显示名称、头像",
-          "Google（社交登录提供商）：OAuth认证信息"
+          "Google（社交登录提供商）：OAuth认证信息",
+          "GitHub（创建仓库和上传代码）：连接账户信息、仓库信息、OAuth访问令牌",
+          "Vercel（网站部署）：连接账户信息、部署项目信息、个人访问令牌"
         ]
       },
       "5": {
@@ -1220,8 +1227,8 @@
         "content": "VibeStart可能使用Google Analytics等网络分析工具来改进服务，此过程中可能使用Cookie。此外，还使用认证会话Cookie来维持登录状态。您可以通过浏览器设置拒绝Cookie存储，但包括登录功能在内的部分服务可能受到限制。"
       },
       "6": {
-        "title": "6. 社交登录（OAuth）",
-        "content": "VibeStart通过Google OAuth 2.0提供登录功能。登录时从Google接收邮箱、姓名、头像信息。VibeStart不会访问您的Google账户密码。用户可以随时在Google账户设置中撤销VibeStart的访问权限。"
+        "title": "6. 登录和外部服务连接",
+        "content": "VibeStart通过Google OAuth 2.0提供登录，且不会访问您的Google密码。如果您选择连接GitHub或Vercel，VibeStart会保存创建仓库和部署网站所需的令牌，并仅用于这些操作。您可以在各服务的账户设置中或通过VibeStart断开连接来撤销权限。"
       },
       "7": {
         "title": "7. 用户权利",
@@ -1386,8 +1393,8 @@
   },
   "Tracks": {
     "static": {
-      "name": "作品集",
-      "tagline": "5 步让你的网站上线"
+      "name": "网站",
+      "tagline": "从首次部署到第一次AI修改"
     },
     "dynamic": {
       "name": "博客 / SaaS",
@@ -1406,11 +1413,13 @@
     }
   },
   "Projects": {
-    "newTitle": "你想做什么?",
-    "newSubtitle": "选择一个赛道,将展开 5~10 个里程碑",
-    "phase1HandoffTitle": "Phase 1 环境配置完成!",
-    "phase1HandoffSubtitle": "现在请选择你想制作的网站类型。项目名称已预填为你刚创建的本地文件夹名。",
-    "createButton": "用这个赛道开始",
+    "newTitle": "连接要部署的项目",
+    "newSubtitle": "将电脑上的Next.js文件夹连接到GitHub和Vercel",
+    "phase1HandoffTitle": "开发环境和项目已准备好!",
+    "phase1HandoffSubtitle": "确认本地文件夹名称后即可直接进入首次部署。",
+    "projectNameLabel": "本地项目文件夹名称",
+    "projectNameHint": "必须与配置时创建的文件夹名称完全一致。只能使用小写字母、数字和连字符。",
+    "createButton": "开始首次部署",
     "comingSoonBadge": "即将推出",
     "treeTitle": "{name} 里程碑",
     "treeSubtitle": "每一步都会带来真正的变化",
@@ -1444,7 +1453,7 @@
     "nextMilestoneCta": "下一个里程碑 →",
     "allDoneTitle": "所有里程碑已完成",
     "estimatedSeconds": "约 {seconds} 秒",
-    "autoRunning": "自动执行中",
+    "autoRunning": "点击操作按钮后自动执行",
     "userActionRequired": "请您自行操作",
     "openExternal": "打开外部页面",
     "verifyCta": "已确认",
@@ -1658,6 +1667,8 @@
     "errorNoRepo": "找不到 GitHub 仓库。请先创建仓库。",
     "errorPlanLimit": "已超出 Vercel 免费计划限制。",
     "errorTimeout": "部署仍在进行中。请稍后查看您的网站。",
+    "errorEmptyRepo": "GitHub仓库为空。请先完成上方的“将我的项目上传到GitHub”，然后重新部署。",
+    "errorNonNextRepo": "仓库中已有文件，但未找到Next.js项目。为保护现有文件，自动创建已停止。请先将本地项目推送到此仓库，然后重试。",
     "errorGithubAppNotInstalled": "Vercel 无法访问您的 GitHub 仓库。常见原因是：您的 Vercel 账号没有连上 GitHub（用 Google/邮箱注册的情况），或者没有在仓库上安装 Vercel GitHub App。请到 vercel.com/account/login-connections 连接 GitHub，并在 github.com/apps/vercel 安装 Vercel GitHub App 后重新部署。"
   },
   "Milestones": {
@@ -1755,20 +1766,20 @@
     "step1Tools": {
       "codex": {
         "label": "Codex",
-        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && codex",
-        "winCmd": "cd '{'project'}' && code . && codex",
+        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && codex",
+        "winCmd": "cd ~/'{'project'}' && code . && codex",
         "note": "VS Code 打开后，Codex 会在终端中启动。"
       },
       "claudeCode": {
         "label": "Claude Code",
-        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
-        "winCmd": "cd '{'project'}' && code . && claude",
+        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "cd ~/'{'project'}' && code . && claude",
         "note": "VS Code会打开,另一个终端自动启动Claude Code。"
       },
       "cursor": {
         "label": "Cursor",
-        "macCmd": "cd '{'project'}' && open -a \"Cursor\" .",
-        "winCmd": "cd '{'project'}' && cursor .",
+        "macCmd": "cd ~/'{'project'}' && open -a \"Cursor\" .",
+        "winCmd": "cd ~/'{'project'}' && cursor .",
         "note": "Cursor打开后,可以直接在右侧聊天面板向AI提出请求。"
       }
     },

@@ -1170,7 +1170,7 @@
   },
   "Privacy": {
     "title": "Política de privacidad",
-    "effectiveDate": "Fecha de vigencia: 15 de abril de 2026",
+    "effectiveDate": "Fecha de vigencia: 15 de septiembre de 2026",
     "sections": {
       "1": {
         "title": "1. Información recopilada y métodos de recopilación",
@@ -1185,6 +1185,11 @@
           "Dirección de correo electrónico",
           "Nombre para mostrar (apodo)",
           "URL de la foto de perfil"
+        ],
+        "connectionTitle": "Datos recopilados al conectar GitHub o Vercel",
+        "connectionItems": [
+          "Nombre de usuario de la cuenta conectada e identificadores y URL del repositorio o proyecto de despliegue",
+          "Tokens de acceso OAuth o personales necesarios para crear repositorios y desplegar sitios"
         ],
         "note": "Si no utilizas el inicio de sesión con Google, no se recopila información de identificación personal."
       },
@@ -1212,7 +1217,9 @@
         "delegateIntro": "Los siguientes servicios externos están encargados del procesamiento de información personal para la operación del servicio.",
         "delegateItems": [
           "Supabase (autenticación y almacenamiento de datos): correo electrónico, nombre para mostrar, foto de perfil",
-          "Google (proveedor de inicio de sesión social): información de autenticación OAuth"
+          "Google (proveedor de inicio de sesión social): información de autenticación OAuth",
+          "GitHub (creación de repositorios y carga de código): datos de la cuenta conectada, del repositorio y token OAuth",
+          "Vercel (despliegue del sitio web): datos de la cuenta conectada, del proyecto y token de acceso personal"
         ]
       },
       "5": {
@@ -1220,8 +1227,8 @@
         "content": "VibeStart puede utilizar herramientas de análisis web como Google Analytics para mejorar el servicio, y en este proceso se pueden usar cookies. También se utilizan cookies de sesión de autenticación para mantener el estado de inicio de sesión. Puedes rechazar el almacenamiento de cookies a través de la configuración del navegador, aunque algunas funciones, incluido el inicio de sesión, podrían verse limitadas."
       },
       "6": {
-        "title": "6. Inicio de sesión social (OAuth)",
-        "content": "VibeStart ofrece inicio de sesión mediante Google OAuth 2.0. Al iniciar sesión, VibeStart recibe tu correo electrónico, nombre y foto de perfil de Google. VibeStart no accede a la contraseña de tu cuenta de Google. Puedes revocar el acceso de VibeStart en cualquier momento desde la configuración de tu cuenta de Google."
+        "title": "6. Inicio de sesión y conexiones externas",
+        "content": "VibeStart ofrece inicio de sesión mediante Google OAuth 2.0 y no accede a tu contraseña de Google. Si conectas GitHub o Vercel, VibeStart guarda los tokens necesarios para crear repositorios y desplegar sitios, y los usa solo para esas operaciones. Puedes revocar el acceso en la configuración de cada servicio o desconectándolo en VibeStart."
       },
       "7": {
         "title": "7. Derechos del usuario",
@@ -1386,8 +1393,8 @@
   },
   "Tracks": {
     "static": {
-      "name": "Portafolio",
-      "tagline": "Tu sitio en internet en 5 pasos"
+      "name": "Sitio web",
+      "tagline": "Del primer despliegue a tu primera edición con IA"
     },
     "dynamic": {
       "name": "Blog / SaaS",
@@ -1406,11 +1413,13 @@
     }
   },
   "Projects": {
-    "newTitle": "¿Qué te gustaría construir?",
-    "newSubtitle": "Elige una pista y se desplegarán 5 a 10 hitos",
-    "phase1HandoffTitle": "¡Configuración del entorno de Phase 1 completada!",
-    "phase1HandoffSubtitle": "Ahora elige el tipo de sitio que quieres crear. Hemos pre-rellenado el nombre del proyecto con la carpeta local que acabas de crear.",
-    "createButton": "Empezar con esta pista",
+    "newTitle": "Conecta el proyecto que quieres desplegar",
+    "newSubtitle": "Conecta la carpeta Next.js de tu equipo con GitHub y Vercel",
+    "phase1HandoffTitle": "¡Tu entorno y proyecto están listos!",
+    "phase1HandoffSubtitle": "Confirma el nombre de la carpeta local para ir directamente al primer despliegue.",
+    "projectNameLabel": "Nombre de la carpeta local del proyecto",
+    "projectNameHint": "Debe coincidir exactamente con la carpeta creada durante la configuración. Usa solo minúsculas, números y guiones.",
+    "createButton": "Iniciar el primer despliegue",
     "comingSoonBadge": "Próximamente",
     "treeTitle": "Hitos de {name}",
     "treeSubtitle": "Cada paso trae un cambio real",
@@ -1444,7 +1453,7 @@
     "nextMilestoneCta": "Siguiente hito →",
     "allDoneTitle": "Todos los hitos completados",
     "estimatedSeconds": "~{seconds}s",
-    "autoRunning": "Ejecutándose automáticamente",
+    "autoRunning": "Se ejecuta al pulsar el botón de acción",
     "userActionRequired": "Por favor, hazlo tú mismo",
     "openExternal": "Abrir página externa",
     "verifyCta": "Lo he verificado",
@@ -1658,6 +1667,8 @@
     "errorNoRepo": "No se encontró el repositorio de GitHub. Crea un repositorio primero.",
     "errorPlanLimit": "Se superó el límite del plan gratuito de Vercel.",
     "errorTimeout": "El despliegue aún está en progreso. Revisa tu sitio en un momento.",
+    "errorEmptyRepo": "Tu repositorio de GitHub está vacío. Completa «Subir mi proyecto a GitHub» arriba y vuelve a desplegar.",
+    "errorNonNextRepo": "Este repositorio contiene archivos, pero no se encontró un proyecto Next.js. La configuración automática se detuvo para proteger tus archivos. Sube tu proyecto local a este repositorio e inténtalo de nuevo.",
     "errorGithubAppNotInstalled": "Vercel no puede acceder a tu repositorio de GitHub. Normalmente ocurre cuando tu cuenta de Vercel no está conectada a GitHub (si te registraste con Google/email) o cuando la Vercel GitHub App no está instalada. Conecta GitHub en vercel.com/account/login-connections, instala la app en github.com/apps/vercel y vuelve a desplegar."
   },
   "Milestones": {
@@ -1755,20 +1766,20 @@
     "step1Tools": {
       "codex": {
         "label": "Codex",
-        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && codex",
-        "winCmd": "cd '{'project'}' && code . && codex",
+        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && codex",
+        "winCmd": "cd ~/'{'project'}' && code . && codex",
         "note": "VS Code se abre y Codex arranca en la terminal."
       },
       "claudeCode": {
         "label": "Claude Code",
-        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
-        "winCmd": "cd '{'project'}' && code . && claude",
+        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "cd ~/'{'project'}' && code . && claude",
         "note": "VS Code se abre y Claude Code arranca en la terminal automáticamente."
       },
       "cursor": {
         "label": "Cursor",
-        "macCmd": "cd '{'project'}' && open -a \"Cursor\" .",
-        "winCmd": "cd '{'project'}' && cursor .",
+        "macCmd": "cd ~/'{'project'}' && open -a \"Cursor\" .",
+        "winCmd": "cd ~/'{'project'}' && cursor .",
         "note": "Cursor se abre — pide a la IA desde el panel de chat de la derecha."
       }
     },

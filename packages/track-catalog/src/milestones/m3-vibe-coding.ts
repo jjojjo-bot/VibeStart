@@ -1,5 +1,5 @@
 /**
- * M3 — 바이브코딩으로 내 사이트 바꿔보기.
+ * M2 — 바이브코딩으로 내 사이트 바꿔보기.
  *
  * AI 도구(Cursor / Claude Code)로 프로젝트를 열고, 자연어로 수정 요청을
  * 한 뒤 git push → 자동 배포 → 결과 확인까지 바이브코딩 루프를 완성한다.
@@ -10,7 +10,7 @@ import type { MilestoneDefinition } from '@vibestart/shared-types';
 export const m3VibeCoding: MilestoneDefinition = {
   id: 'm3-vibe-coding',
   track: 'static',
-  order: 3,
+  order: 2,
   titleKey: 'Milestones.m3-vibe-coding.title',
   outcomeKey: 'Milestones.m3-vibe-coding.outcome',
   shortDescriptionKey: 'Milestones.m3-vibe-coding.short',

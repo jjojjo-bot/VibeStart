@@ -234,6 +234,38 @@ export async function getFileFromGitHub(
   return Buffer.from(data.content, "base64").toString("utf-8");
 }
 
+/**
+ * 저장소 기본 브랜치의 루트에 파일이 하나라도 있는지 확인한다.
+ *
+ * GitHub은 아직 첫 커밋이 없는 저장소에 Contents API를 호출하면 404 또는
+ * 409를 반환한다. 그 경우에만 템플릿 초기화를 허용하고, 이미 파일이 있는
+ * 저장소는 사용자의 코드를 보호하기 위해 절대 자동 덮어쓰지 않는다.
+ */
+export async function isGitHubRepoEmpty(
+  accessToken: string,
+  owner: string,
+  repo: string,
+): Promise<boolean> {
+  const url = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents`;
+  const res = await fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      Accept: "application/vnd.github+json",
+      "User-Agent": "VibeStart",
+      "X-GitHub-Api-Version": "2022-11-28",
+    },
+  });
+
+  if (res.status === 404 || res.status === 409) return true;
+  if (res.status === 401) throw new Error("github:unauthorized");
+  if (res.status === 403) throw new Error("github:forbidden");
+  if (!res.ok) throw new Error(`github:http_${res.status}`);
+
+  const contents = (await res.json()) as unknown;
+  return Array.isArray(contents) && contents.length === 0;
+}
+
 export async function pushFileToGitHub(
   accessToken: string,
   owner: string,

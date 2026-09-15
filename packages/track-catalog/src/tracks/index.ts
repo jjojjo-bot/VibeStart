@@ -1,9 +1,8 @@
 /**
- * 트랙 레지스트리 — Phase 2a에서는 정적만 enabled.
+ * 트랙 레지스트리.
  *
- * Phase 2b에서 동적/AI/이커머스 트랙 정의가 추가되면 이 파일에 import + 배열
- * 추가만 하면 된다. 마일스톤 정의 파일은 `milestones/` 하위에 트랙별 접두로
- * 구분해 관리한다.
+ * 실제로 고유한 여정이 준비된 정적 웹사이트 트랙만 선택할 수 있다. 아직
+ * 전용 마일스톤이 없는 트랙을 활성화해 같은 흐름을 반복 노출하지 않는다.
  */
 
 import type { MilestoneDefinition, TrackDefinition } from '@vibestart/shared-types';
@@ -15,7 +14,7 @@ const dynamicTrack: TrackDefinition = {
   nameKey: 'Tracks.dynamic.name',
   taglineKey: 'Tracks.dynamic.tagline',
   milestoneIds: SHARED_MILESTONE_IDS,
-  enabled: true,
+  enabled: false,
   colorToken: 'green',
 };
 
@@ -24,7 +23,7 @@ const aiTrack: TrackDefinition = {
   nameKey: 'Tracks.ai.name',
   taglineKey: 'Tracks.ai.tagline',
   milestoneIds: SHARED_MILESTONE_IDS,
-  enabled: true,
+  enabled: false,
   colorToken: 'purple',
 };
 
@@ -33,7 +32,7 @@ const ecommerceTrack: TrackDefinition = {
   nameKey: 'Tracks.ecommerce.name',
   taglineKey: 'Tracks.ecommerce.tagline',
   milestoneIds: SHARED_MILESTONE_IDS,
-  enabled: true,
+  enabled: false,
   colorToken: 'orange',
 };
 
@@ -49,7 +48,8 @@ export const ALL_TRACKS: ReadonlyArray<TrackDefinition> = [
 
 /**
  * 트랙 ID → 해당 트랙의 마일스톤 배열 매핑.
- * enabled=false 트랙은 빈 배열.
+ * 기존에 다른 트랙으로 만들어진 프로젝트도 중단되지 않도록 현재의 핵심
+ * 웹사이트 여정은 유지한다. enabled 플래그는 신규 선택과 변경만 막는다.
  */
 export const MILESTONES_BY_TRACK: Readonly<
   Record<TrackDefinition['id'], ReadonlyArray<MilestoneDefinition>>

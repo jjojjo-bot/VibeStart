@@ -1185,7 +1185,7 @@
   },
   "Privacy": {
     "title": "Privacy Policy",
-    "effectiveDate": "Effective Date: April 15, 2026",
+    "effectiveDate": "Effective Date: September 15, 2026",
     "sections": {
       "1": {
         "title": "1. Information We Collect",
@@ -1200,6 +1200,11 @@
           "Email address",
           "Display name (nickname)",
           "Profile picture URL"
+        ],
+        "connectionTitle": "Collected when connecting GitHub or Vercel",
+        "connectionItems": [
+          "Connected account username and repository or deployment project identifiers and URLs",
+          "OAuth access tokens or personal access tokens required to create repositories and deploy sites"
         ],
         "note": "If you do not use Google Sign-In, no personally identifiable information is collected."
       },
@@ -1227,7 +1232,9 @@
         "delegateIntro": "The following external services are entrusted with processing personal information for service operation.",
         "delegateItems": [
           "Supabase (authentication and data storage): email, display name, profile picture",
-          "Google (social login provider): OAuth authentication information"
+          "Google (social login provider): OAuth authentication information",
+          "GitHub (repository creation and code upload): connected account details, repository details, OAuth access token",
+          "Vercel (website deployment): connected account details, deployment project details, personal access token"
         ]
       },
       "5": {
@@ -1235,8 +1242,8 @@
         "content": "VibeStart may use web analytics tools such as Google Analytics for service improvement, which may involve the use of cookies. Authentication session cookies are also used to maintain your login state. You may refuse cookie storage through your browser settings; however, some features including login may be limited as a result."
       },
       "6": {
-        "title": "6. Social Login (OAuth)",
-        "content": "VibeStart provides login functionality through Google OAuth 2.0. During sign-in, VibeStart receives your email, name, and profile picture from Google. VibeStart does not access your Google account password. You can revoke VibeStart's access at any time through your Google account settings."
+        "title": "6. Sign-In and External Service Connections",
+        "content": "VibeStart provides sign-in through Google OAuth 2.0 and does not access your Google password. If you choose to connect GitHub or Vercel, VibeStart stores the tokens required to create repositories and deploy sites and uses them only for those operations. You can revoke access in each provider's account settings or by disconnecting it in VibeStart."
       },
       "7": {
         "title": "7. Your Rights",
@@ -1401,8 +1408,8 @@
   },
   "Tracks": {
     "static": {
-      "name": "Portfolio",
-      "tagline": "Your site on the internet in 5 steps"
+      "name": "Website",
+      "tagline": "Go from first deploy to your first AI edit"
     },
     "dynamic": {
       "name": "Blog / SaaS",
@@ -1421,11 +1428,13 @@
     }
   },
   "Projects": {
-    "newTitle": "What would you like to build?",
-    "newSubtitle": "Pick a track and 5–10 milestones will unfold",
-    "phase1HandoffTitle": "Phase 1 environment setup complete!",
-    "phase1HandoffSubtitle": "Now pick the kind of site you want to build. We've pre-filled the project name to match the local folder you just created.",
-    "createButton": "Start with this track",
+    "newTitle": "Connect the project you want to deploy",
+    "newSubtitle": "Connect the Next.js folder on your computer to GitHub and Vercel",
+    "phase1HandoffTitle": "Your environment and project are ready!",
+    "phase1HandoffSubtitle": "Confirm the local folder name to continue straight to your first deployment.",
+    "projectNameLabel": "Local project folder name",
+    "projectNameHint": "It must exactly match the folder created during setup. Use lowercase letters, numbers, and hyphens only.",
+    "createButton": "Start first deployment",
     "comingSoonBadge": "Coming soon",
     "treeTitle": "{name} Milestones",
     "treeSubtitle": "Every step brings a real change",
@@ -1459,7 +1468,7 @@
     "nextMilestoneCta": "Next milestone →",
     "allDoneTitle": "All milestones complete",
     "estimatedSeconds": "~{seconds}s",
-    "autoRunning": "Running automatically",
+    "autoRunning": "Runs when you press the action button",
     "userActionRequired": "Please do this yourself",
     "openExternal": "Open external page",
     "verifyCta": "I verified it",
@@ -1673,6 +1682,8 @@
     "errorNoRepo": "GitHub repository not found. Please create a repository first.",
     "errorPlanLimit": "Vercel free plan limit exceeded.",
     "errorTimeout": "Deployment is still in progress. Check your site in a moment.",
+    "errorEmptyRepo": "Your GitHub repository is empty. Complete ‘Push my project to GitHub’ above, then deploy again.",
+    "errorNonNextRepo": "This repository contains files, but no Next.js project was found. Automatic setup stopped to protect your existing files. Push your local project to this repository, then try again.",
     "errorGithubAppNotInstalled": "Vercel can't reach your GitHub repository. This usually means your Vercel account isn't linked to GitHub (if you signed up with Google/email), or the Vercel GitHub App isn't installed on your repo. Connect GitHub at vercel.com/account/login-connections, install the app at github.com/apps/vercel, then redeploy."
   },
   "Milestones": {
@@ -1770,20 +1781,20 @@
     "step1Tools": {
       "codex": {
         "label": "Codex",
-        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && codex",
-        "winCmd": "cd '{'project'}' && code . && codex",
+        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && codex",
+        "winCmd": "cd ~/'{'project'}' && code . && codex",
         "note": "VS Code opens and Codex starts in the terminal."
       },
       "claudeCode": {
         "label": "Claude Code",
-        "macCmd": "cd '{'project'}' && open -a \"Visual Studio Code\" . && claude",
-        "winCmd": "cd '{'project'}' && code . && claude",
+        "macCmd": "cd ~/'{'project'}' && open -a \"Visual Studio Code\" . && claude",
+        "winCmd": "cd ~/'{'project'}' && code . && claude",
         "note": "VS Code opens and Claude Code starts in the terminal in one go."
       },
       "cursor": {
         "label": "Cursor",
-        "macCmd": "cd '{'project'}' && open -a \"Cursor\" .",
-        "winCmd": "cd '{'project'}' && cursor .",
+        "macCmd": "cd ~/'{'project'}' && open -a \"Cursor\" .",
+        "winCmd": "cd ~/'{'project'}' && cursor .",
         "note": "Cursor opens — chat with AI directly from the right side panel."
       }
     },
