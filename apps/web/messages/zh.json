@@ -358,8 +358,8 @@
     "ctaButton": "开始",
     "fullSetupCta": "搭建开发环境",
     "secondaryCta": {
-      "prefix": "已经完成环境安装了？",
-      "link": "创建我的网站 →"
+      "prefix": "已经有Next.js项目了？",
+      "link": "检查部署准备 →"
     },
     "steps": {
       "1": {
@@ -1442,6 +1442,60 @@
     "deleteWarning": "仅从 VibeStart 中删除。GitHub 仓库、Vercel 部署、Supabase 项目需要在各自网站上单独清理。",
     "confirmDelete": "确认删除",
     "cancelDelete": "取消"
+  },
+  "Readiness": {
+    "metaTitle": "检查部署准备 | VibeStart",
+    "metaDescription": "检查Git、Node.js、npm和本地Next.js项目是否已准备好进行首次部署。",
+    "badge": "约30秒 · 登录前检查",
+    "title": "你的网站可以立即部署吗？",
+    "description": "通过一条只读命令检查必备工具和项目文件夹。如有缺失，我们会引导你进入合适的开始路径。",
+    "project": {
+      "title": "告诉我们本地项目的位置",
+      "description": "选择操作系统，并输入要部署的Next.js项目文件夹名称。",
+      "label": "本地项目文件夹名称",
+      "hint": "我们会检查主目录下的项目，例如 ~/my-portfolio。",
+      "invalid": "请使用2–63个小写字母、数字或连字符。"
+    },
+    "os": {
+      "label": "项目所在的操作系统",
+      "windows": "Windows",
+      "windowsHint": "在Ubuntu（WSL）终端中检查",
+      "macos": "Mac",
+      "macosHint": "在终端应用中检查"
+    },
+    "check": {
+      "title": "检查准备状态",
+      "windowsDescription": "打开Ubuntu（WSL）终端，复制并运行下面的命令。",
+      "macosDescription": "打开终端应用，复制并运行下面的命令。",
+      "nameFirst": "请先输入有效的项目文件夹名称。",
+      "copy": "复制命令",
+      "copied": "已复制",
+      "readOnly": "只检查是否存在，不会安装或修改文件。",
+      "copyFailed": "自动复制失败，请手动选择并复制命令。",
+      "outputLabel": "运行后粘贴最后一行VIBESTART_READY结果",
+      "submit": "检查结果"
+    },
+    "items": {
+      "git": "Git",
+      "node": "Node.js",
+      "npm": "npm",
+      "project": "项目文件夹",
+      "next": "Next.js项目"
+    },
+    "result": {
+      "title": "检查结果",
+      "readyTitle": "已准备好首次部署",
+      "readyDescription": "继续后，登录并使用此文件夹名称连接项目，然后进入首次部署步骤。",
+      "continue": "继续首次部署",
+      "projectMissingTitle": "请先创建项目",
+      "projectMissingDescription": "必备工具已经就绪。使用项目快速开始创建文件夹和Next.js应用后再继续。",
+      "quickStart": "打开项目快速开始",
+      "toolsMissingTitle": "请先准备开发工具",
+      "toolsMissingDescription": "缺少Git、Node.js或npm。请在完整开发环境设置中准备所需工具。",
+      "fullSetup": "打开完整环境设置",
+      "invalid": "未找到有效结果。请运行命令，并原样粘贴最后一行VIBESTART_READY结果。"
+    },
+    "privacy": "粘贴的结果只在此浏览器中判断，不会发送或保存到服务器。"
   },
   "MilestoneRun": {
     "headerOutcome": "完成这一步后",

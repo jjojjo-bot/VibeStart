@@ -69,7 +69,7 @@ export default function LandingPage() {
           <div className="mt-5 text-center text-sm text-muted-foreground">
             <span>{t("secondaryCta.prefix")} </span>
             <Link
-              href="/dashboard"
+              href="/readiness"
               className="text-primary underline underline-offset-4 hover:text-primary/80"
             >
               {t("secondaryCta.link")}

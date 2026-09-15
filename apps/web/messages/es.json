@@ -358,8 +358,8 @@
     "ctaButton": "Empezar",
     "fullSetupCta": "Configurar entorno de desarrollo",
     "secondaryCta": {
-      "prefix": "¿Ya terminaste la instalación?",
-      "link": "Crear mi sitio →"
+      "prefix": "¿Ya tienes un proyecto Next.js?",
+      "link": "Comprobar preparación →"
     },
     "steps": {
       "1": {
@@ -1442,6 +1442,60 @@
     "deleteWarning": "Solo se elimina de VibeStart. Limpia el repositorio de GitHub, el despliegue de Vercel y el proyecto de Supabase por separado en cada servicio.",
     "confirmDelete": "Confirmar",
     "cancelDelete": "Cancelar"
+  },
+  "Readiness": {
+    "metaTitle": "Comprobar preparación para desplegar | VibeStart",
+    "metaDescription": "Comprueba si Git, Node.js, npm y tu proyecto Next.js local están listos para el primer despliegue.",
+    "badge": "Unos 30 segundos · Antes de iniciar sesión",
+    "title": "¿Tu sitio está listo para desplegar?",
+    "description": "Un comando de solo lectura comprueba las herramientas esenciales y la carpeta del proyecto. Si falta algo, te guiaremos al inicio adecuado.",
+    "project": {
+      "title": "Indica tu proyecto local",
+      "description": "Elige el sistema operativo e introduce el nombre de la carpeta del proyecto Next.js que quieres desplegar.",
+      "label": "Nombre de la carpeta local",
+      "hint": "Comprobamos la carpeta directamente dentro de tu directorio personal, por ejemplo ~/my-portfolio.",
+      "invalid": "Usa entre 2 y 63 letras minúsculas, números o guiones."
+    },
+    "os": {
+      "label": "Sistema operativo donde está el proyecto",
+      "windows": "Windows",
+      "windowsHint": "Comprobar en una terminal Ubuntu (WSL)",
+      "macos": "Mac",
+      "macosHint": "Comprobar en la app Terminal"
+    },
+    "check": {
+      "title": "Comprobar preparación",
+      "windowsDescription": "Abre una terminal Ubuntu (WSL), copia y ejecuta el comando siguiente.",
+      "macosDescription": "Abre la app Terminal, copia y ejecuta el comando siguiente.",
+      "nameFirst": "Introduce primero un nombre de carpeta válido.",
+      "copy": "Copiar comando",
+      "copied": "Copiado",
+      "readOnly": "Solo comprueba lo que existe; no instala ni modifica archivos.",
+      "copyFailed": "No se pudo copiar automáticamente. Selecciona y copia el comando manualmente.",
+      "outputLabel": "Pega la última línea VIBESTART_READY después de ejecutarlo",
+      "submit": "Comprobar resultado"
+    },
+    "items": {
+      "git": "Git",
+      "node": "Node.js",
+      "npm": "npm",
+      "project": "Carpeta del proyecto",
+      "next": "Proyecto Next.js"
+    },
+    "result": {
+      "title": "Resultado",
+      "readyTitle": "Todo listo para el primer despliegue",
+      "readyDescription": "Continúa para iniciar sesión, conectar este nombre de carpeta y abrir el primer paso de despliegue.",
+      "continue": "Continuar al primer despliegue",
+      "projectMissingTitle": "Primero crea el proyecto",
+      "projectMissingDescription": "Las herramientas esenciales están listas. Usa el inicio rápido para crear la carpeta y la app Next.js.",
+      "quickStart": "Abrir inicio rápido del proyecto",
+      "toolsMissingTitle": "Primero prepara las herramientas",
+      "toolsMissingDescription": "Falta Git, Node.js o npm. Prepara las herramientas necesarias con la configuración completa del entorno.",
+      "fullSetup": "Abrir configuración completa",
+      "invalid": "No se encontró un resultado válido. Ejecuta el comando y pega exactamente la última línea VIBESTART_READY."
+    },
+    "privacy": "El resultado pegado se evalúa solo en este navegador; no se envía ni se guarda en el servidor."
   },
   "MilestoneRun": {
     "headerOutcome": "Cuando termines esto",

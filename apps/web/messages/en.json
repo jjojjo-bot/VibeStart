@@ -358,8 +358,8 @@
     "ctaButton": "Get Started",
     "fullSetupCta": "Set up dev environment",
     "secondaryCta": {
-      "prefix": "Already finished setup?",
-      "link": "Build my site →"
+      "prefix": "Already have a Next.js project?",
+      "link": "Check deployment readiness →"
     },
     "steps": {
       "1": {
@@ -1457,6 +1457,60 @@
     "deleteWarning": "This only removes the project from VibeStart. Please clean up your GitHub repo, Vercel deployment, and Supabase project separately on each service.",
     "confirmDelete": "Confirm delete",
     "cancelDelete": "Cancel"
+  },
+  "Readiness": {
+    "metaTitle": "Check deployment readiness | VibeStart",
+    "metaDescription": "Check whether Git, Node.js, npm, and your local Next.js project are ready for a first deployment.",
+    "badge": "About 30 seconds · Before sign-in",
+    "title": "Is your site ready to deploy?",
+    "description": "One read-only command checks the essential tools and project folder. If something is missing, we will guide you to the right starting path.",
+    "project": {
+      "title": "Tell us about your local project",
+      "description": "Choose the operating system and enter the folder name of the Next.js project you want to deploy.",
+      "label": "Local project folder name",
+      "hint": "We check directly under your home folder, for example ~/my-portfolio.",
+      "invalid": "Use 2–63 lowercase letters, numbers, or hyphens."
+    },
+    "os": {
+      "label": "Operating system where the project lives",
+      "windows": "Windows",
+      "windowsHint": "Check in an Ubuntu (WSL) terminal",
+      "macos": "Mac",
+      "macosHint": "Check in the Terminal app"
+    },
+    "check": {
+      "title": "Check readiness",
+      "windowsDescription": "Open an Ubuntu (WSL) terminal, then copy and run the command below.",
+      "macosDescription": "Open the Terminal app, then copy and run the command below.",
+      "nameFirst": "Enter a valid project folder name first.",
+      "copy": "Copy command",
+      "copied": "Copied",
+      "readOnly": "This only checks what exists. It does not install or change files.",
+      "copyFailed": "Automatic copy failed. Select and copy the command manually.",
+      "outputLabel": "Paste the final VIBESTART_READY line after running it",
+      "submit": "Check result"
+    },
+    "items": {
+      "git": "Git",
+      "node": "Node.js",
+      "npm": "npm",
+      "project": "Project folder",
+      "next": "Next.js project"
+    },
+    "result": {
+      "title": "Check result",
+      "readyTitle": "You are ready for your first deployment",
+      "readyDescription": "Continue to sign in, connect this folder name, and open the first deployment step.",
+      "continue": "Continue to first deployment",
+      "projectMissingTitle": "Create the project first",
+      "projectMissingDescription": "Your essential tools are ready. Use Project Quick Start to create the folder and Next.js app, then continue.",
+      "quickStart": "Open Project Quick Start",
+      "toolsMissingTitle": "Set up the development tools first",
+      "toolsMissingDescription": "Git, Node.js, or npm is missing. Prepare the required tools in the full development environment setup.",
+      "fullSetup": "Open full environment setup",
+      "invalid": "No valid result was found. Run the command and paste the final VIBESTART_READY line exactly as shown."
+    },
+    "privacy": "The pasted result is evaluated only in this browser. It is not sent to or stored on the server."
   },
   "MilestoneRun": {
     "headerOutcome": "When you finish this",

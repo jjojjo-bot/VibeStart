@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { incrementVisitors } from "@/lib/stats";
@@ -24,14 +25,29 @@ import {
   type SetupMode,
 } from "@/lib/onboarding";
 
-export default function OnboardingPage() {
+function OnboardingContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const t = useTranslations("Onboarding");
   const tc = useTranslations("Common");
+  const requestedMode = searchParams.get("mode") === "project-only"
+    ? "project-only"
+    : searchParams.get("mode") === "full"
+      ? "full"
+      : null;
+  const requestedOs = searchParams.get("os") === "macos"
+    ? "macos"
+    : searchParams.get("os") === "windows"
+      ? "windows"
+      : null;
+  const rawRequestedProject = searchParams.get("project");
+  const requestedProject = rawRequestedProject && isValidProjectName(rawRequestedProject)
+    ? rawRequestedProject
+    : null;
   const [step, setStep] = useState(0);
   const [data, setData] = useState<OnboardingData>(INITIAL_ONBOARDING);
   const [selectingMode, setSelectingMode] = useState(true);
-  const [draftMode, setDraftMode] = useState<SetupMode | null>(null);
+  const [draftMode, setDraftMode] = useState<SetupMode | null>(requestedMode);
   const [restored, setRestored] = useState(false);
   useEffect(() => {
     try {
@@ -39,17 +55,24 @@ export default function OnboardingPage() {
       if (saved && typeof saved === 'object') {
         // eslint-disable-next-line react-hooks/set-state-in-effect
         setData({
-          mode: saved.mode === 'project-only' ? 'project-only' : 'full',
-          os: saved.os === 'windows' || saved.os === 'macos' ? saved.os : null,
+          mode: requestedMode ?? (saved.mode === 'project-only' ? 'project-only' : 'full'),
+          os: requestedOs ?? (saved.os === 'windows' || saved.os === 'macos' ? saved.os : null),
           goal: ['web-nextjs','web-python','web-java','mobile','data-ai','not-sure'].includes(saved.goal) ? saved.goal : null,
           aiTool: saved.aiTool === 'codex' || saved.aiTool === 'claude' ? saved.aiTool : null,
-          projectName: typeof saved.projectName === 'string' && isValidProjectName(saved.projectName) ? saved.projectName : '',
+          projectName: requestedProject ?? (typeof saved.projectName === 'string' && isValidProjectName(saved.projectName) ? saved.projectName : ''),
           experience: ['first','prior','unsure'].includes(saved.experience) ? saved.experience : null,
+        });
+      } else if (requestedMode || requestedOs || requestedProject) {
+        setData({
+          ...INITIAL_ONBOARDING,
+          mode: requestedMode ?? "full",
+          os: requestedOs,
+          projectName: requestedProject ?? "",
         });
       }
     } catch { /* Missing or corrupt preferences are safe to ignore. */ }
     setRestored(true);
-  }, []);
+  }, [requestedMode, requestedOs, requestedProject]);
   useEffect(() => {
     if (!restored) return;
     try { localStorage.setItem("vibestart-onboarding", JSON.stringify(data)); } catch { /* Optional persistence. */ }
@@ -232,5 +255,13 @@ export default function OnboardingPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function OnboardingPage() {
+  return (
+    <Suspense>
+      <OnboardingContent />
+    </Suspense>
   );
 }

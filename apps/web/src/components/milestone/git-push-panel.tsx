@@ -53,6 +53,8 @@ export function GitPushPanel({
 rm -rf frontend/.git
 echo ".DS_Store" >> .gitignore
 git init
+git config user.name "${githubUsername ?? "VibeStart User"}"
+git config user.email "${githubUsername ?? "vibestart"}@users.noreply.github.com"
 git add .
 git commit -m "first commit"
 git remote add origin ${repoUrl}

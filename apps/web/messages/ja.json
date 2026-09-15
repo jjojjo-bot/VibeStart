@@ -358,8 +358,8 @@
     "ctaButton": "始める",
     "fullSetupCta": "開発環境を設定",
     "secondaryCta": {
-      "prefix": "もう環境のインストールは終わりましたか？",
-      "link": "自分のサイトを作る →"
+      "prefix": "すでにNext.jsプロジェクトがありますか？",
+      "link": "デプロイ準備を確認 →"
     },
     "steps": {
       "1": {
@@ -1442,6 +1442,60 @@
     "deleteWarning": "VibeStartからのみ削除されます。GitHubリポジトリ、Vercelデプロイ、Supabaseプロジェクトは各サイトで直接削除してください。",
     "confirmDelete": "削除する",
     "cancelDelete": "キャンセル"
+  },
+  "Readiness": {
+    "metaTitle": "デプロイ準備を確認 | VibeStart",
+    "metaDescription": "Git、Node.js、npm、ローカルのNext.jsプロジェクトが初回デプロイの準備を完了しているか確認します。",
+    "badge": "約30秒 · ログイン前に確認",
+    "title": "サイトをすぐデプロイできますか？",
+    "description": "読み取り専用のコマンド1回で、必須ツールとプロジェクトフォルダを確認します。不足があれば適切な開始方法をご案内します。",
+    "project": {
+      "title": "ローカルプロジェクトを指定",
+      "description": "デプロイするNext.jsプロジェクトのOSとフォルダ名を入力してください。",
+      "label": "ローカルプロジェクトのフォルダ名",
+      "hint": "ホームフォルダ直下を確認します。例: ~/my-portfolio",
+      "invalid": "英小文字、数字、ハイフンを使って2〜63文字で入力してください。"
+    },
+    "os": {
+      "label": "プロジェクトがあるOS",
+      "windows": "Windows",
+      "windowsHint": "Ubuntu（WSL）ターミナルで確認",
+      "macos": "Mac",
+      "macosHint": "ターミナルアプリで確認"
+    },
+    "check": {
+      "title": "準備状況を確認",
+      "windowsDescription": "Ubuntu（WSL）ターミナルを開き、下のコマンドをコピーして実行してください。",
+      "macosDescription": "ターミナルアプリを開き、下のコマンドをコピーして実行してください。",
+      "nameFirst": "有効なプロジェクトフォルダ名を先に入力してください。",
+      "copy": "コマンドをコピー",
+      "copied": "コピー済み",
+      "readOnly": "インストールやファイル変更は行わず、存在だけを確認します。",
+      "copyFailed": "自動コピーに失敗しました。コマンドを選択して手動でコピーしてください。",
+      "outputLabel": "実行後、最後のVIBESTART_READY行を貼り付けてください",
+      "submit": "結果を確認"
+    },
+    "items": {
+      "git": "Git",
+      "node": "Node.js",
+      "npm": "npm",
+      "project": "プロジェクトフォルダ",
+      "next": "Next.jsプロジェクト"
+    },
+    "result": {
+      "title": "確認結果",
+      "readyTitle": "初回デプロイの準備ができました",
+      "readyDescription": "続行すると、ログイン後にこのフォルダ名でプロジェクトを接続し、初回デプロイへ進みます。",
+      "continue": "初回デプロイへ進む",
+      "projectMissingTitle": "まずプロジェクトを作成しましょう",
+      "projectMissingDescription": "必須ツールは準備済みです。プロジェクトクイックスタートでフォルダとNext.jsアプリを作成してください。",
+      "quickStart": "プロジェクトクイックスタート",
+      "toolsMissingTitle": "開発ツールの準備が必要です",
+      "toolsMissingDescription": "Git、Node.js、またはnpmがありません。完全な開発環境設定で必要なツールを準備してください。",
+      "fullSetup": "完全な開発環境設定",
+      "invalid": "有効な結果が見つかりません。コマンドを実行し、最後のVIBESTART_READY行をそのまま貼り付けてください。"
+    },
+    "privacy": "貼り付けた結果はこのブラウザ内だけで判定され、サーバーへ送信・保存されません。"
   },
   "MilestoneRun": {
     "headerOutcome": "このステップが終わると",

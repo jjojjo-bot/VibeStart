@@ -22,7 +22,7 @@ import PlanPage from '@/app/[locale]/plan/page';
 import { ScriptBlock } from '@/components/onboarding/script-block';
 
 beforeEach(()=>{
-  cleanup(); localStorage.clear(); state.push.mockClear();
+  cleanup(); localStorage.clear(); state.params=new URLSearchParams(); state.push.mockClear();
   Element.prototype.scrollIntoView=vi.fn();
   window.matchMedia=vi.fn().mockReturnValue({matches:true});
 });
@@ -32,6 +32,17 @@ function mount(os: 'windows'|'macos', project='wizard-test', mode?: 'project-onl
 }
 
 describe('Installation wizard user journeys (simulated terminal evidence)',()=>{
+  it('prefills the recovery path chosen by the readiness check', async () => {
+    state.params=new URLSearchParams('mode=project-only&os=macos&project=recovered-site');
+    render(<NextIntlClientProvider locale="ko" messages={messages}><OnboardingPage/></NextIntlClientProvider>);
+
+    expect(screen.getByRole('radio',{name:messages.Onboarding.quickStart.projectOnly.title})).toHaveAttribute('aria-checked','true');
+    fireEvent.click(screen.getByRole('button',{name:messages.Onboarding.quickStart.continue}));
+
+    expect(await screen.findByText(messages.Onboarding.progressLabel.replace('{current}','1').replace('{total}','4'))).toBeInTheDocument();
+    expect(screen.getByRole('radio',{name:messages.Onboarding.osOptions.macos})).toHaveAttribute('aria-checked','true');
+  });
+
   it('compares setup paths before showing basic-info progress', async () => {
     render(<NextIntlClientProvider locale="ko" messages={messages}><OnboardingPage/></NextIntlClientProvider>);
     expect(screen.getByRole('radio',{name:messages.Onboarding.quickStart.full.title})).toHaveAttribute('aria-checked','false');

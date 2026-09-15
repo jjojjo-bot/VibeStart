@@ -74,7 +74,7 @@ export default async function DashboardPage({
 
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-lg font-semibold">{tProjects("myProjectsTitle")}</h2>
-        <Link href="/projects/new" className="no-underline">
+        <Link href="/readiness" className="no-underline">
           <Button
             size="sm"
             variant="outline"
@@ -91,7 +91,7 @@ export default async function DashboardPage({
             {tProjects("emptyHint")}
           </p>
           <div className="mt-4">
-            <Link href="/projects/new" className="no-underline">
+            <Link href="/readiness" className="no-underline">
               <Button>{tProjects("createNewButton")}</Button>
             </Link>
           </div>
